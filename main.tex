@@ -1,0 +1,63 @@
+\documentclass[%
+twoside,%
+english,% Global language, passed down to packages
+listof=leveldown,% List of XYZ gets pushed down one hierarchical level
+BCOR=5mm,% Binding Correction. Cannot be known in theory, only guesstimated.
+chapterprefix=true,% Print 'Chapter' etc. label in front of number
+open=right,%
+headlines=2.1,% Increase headheight, equiv. to 2.1 lines of text
+numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
+]{scrreprt}
+
+\input{./settings/preamble.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\publishedtrue % Toggle here. 'Published' means 'publicly available', aka you would want info redacted
+\ifpublished
+\RestartCensoring
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Included/imported only compiles parts listed here.
+%%%%%%%%%%%%%% Auxiliary files are kept, retaining references, page numbers etc., but
+%%%%%%%%%%%%%% compilation speeds are accelerated by only including small document parts.
+%%%%%%%%%%%%%% Toggle here for that to happen and specify parts to be imported below.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\includeonly{%
+%	frontmatter,%
+	intro,%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Titlepage and document metadata content:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{Your Name}%
+%
+\date{\today}
+%
+\title{The title of your very nice and highly important, never before seen scientific work of excellence}
+%
+\subtitle{% Examiners or other, rather arbitrary content
+	\begin{tabular}{@{}l@{\ }ll@{}}
+		\nth{1} & Examiner & Prof.\ Alfreb Einstime\\
+		\nth{2} & Examiner & Prof.\ Rufols Diebels\\
+		\multicolumn{2}{@{}l}{Supervisor} & Unimportant Person, M.Sc.%
+	\end{tabular}
+}%
+%
+\thesis{Your Thesis}% Thesis Type
+%
+\immnumber{666}% Student Registration Number
+%
+\publishers{%
+	\hspace{2em}% use 'em' for anything where relative WIDTH is relevant, 'ex' where height is relevant
+	\includegraphics[height=10ex]{./images/logos/university_logo.pdf}%
+	\hfill%
+	\includegraphics[height=10ex]{./images/logos/university_logo.pdf}%
+}% Institutions, university, etc.
+\begin{document}
+\subincludefrom{chapters/}{frontmatter}%
+%
+\subincludefrom{chapters/}{intro}%
+%
+\end{document}

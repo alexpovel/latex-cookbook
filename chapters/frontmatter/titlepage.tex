@@ -1,0 +1,45 @@
+% Original credit to https://www.latextemplates.com/template/vertical-line-title-page
+% Modifications by mail(at)alexpovel.de
+\begin{titlepage}
+\hfill%
+\begin{minipage}[b][1\textheight]{0.05\textwidth}
+	\textcolor{black}{\rule{2pt}{\textheight}}\hfill% Vertical line
+\end{minipage}%
+\begin{minipage}[b][1\textheight]{0.75\textwidth}% https://tex.stackexchange.com/a/135364/120853
+\makeatletter% https://tex.stackexchange.com/a/10131/120853
+
+\onehalfspacing% From setspace package
+
+\vspace{2\baselineskip}
+
+{%
+\faGraduationCap{} \sffamily\scshape\@thesis
+}
+\hrulefill\\
+
+\begin{spacing}{1.1}% https://tex.stackexchange.com/a/328303/120853
+	\sffamily\bfseries\LARGE\raggedright\@title
+\end{spacing}
+\hrulefill\\
+
+{%
+	\Large\scshape\textls[100]{\@author}
+}%
+\\[\baselineskip]% textls from microtype
+
+{%
+	\textcolor{black!80}{\textit{\@subtitle}}
+}%
+
+\vfill
+
+\begin{center}
+	{\large\@date}\\[0.3\baselineskip]
+\end{center}
+
+{%
+	\@publishers
+}%\\[0.5\baselineskip]
+\makeatother
+\end{minipage}
+\end{titlepage}

@@ -1,0 +1,436 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Document-specific settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{showframe}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Language etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{polyglossia}%
+	\setmainlanguage[variant=uk]{english}
+\usepackage[style=british]{csquotes}
+\usepackage[useregional]{datetime2}%
+\usepackage{microtype}
+\usepackage{ragged2e}% For \justifying in the Abstract
+\usepackage{booktabs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Auxiliary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{scalerel}% Scale stuff relative
+
+\newcommand*{\scaletox}[1]{\scalerel*{\includegraphics{./logos/#1.pdf}}{X}}%logos to Xheight
+
+\newcommand*{\simplecross}{\scaletox{cross}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{array}
+	\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}% Vert.+Hor. centering
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[outline]{contour}% Incomptatible with xelatex
+	\contourlength{0.15em}% default width is not 'strong' enough
+	\newcommand*{\ctrw}[1]{\hypersetup{hidelinks}\contour{bg}{#1}}% bg colour
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{hyperref}%loads url-package internally
+\hypersetup{%
+pdfpagelayout=SinglePage,%
+unicode,%https://tex.stackexchange.com/a/66771/120853
+pdfsubject = {{Master Thesis Presentation (MSc Energy Systems)}},%
+pdfkeywords = {TUHH : TECHNICAL UNIVERSITY HAMBURG - TECHNISCHE UNIVERSITÄT HAMBURG; ASM : ARBEITSGRUPPE SCHIFFSMASCHINENBAU - DME : DEPARTMENT OF MARINE ENGINEERING; TURBOCHARGER ONE-DIMENSIONAL MODELLING WITH LOSSES RESERVOIR APPROACH},%
+}%
+\usepackage[% biber is default backend
+	style=numeric-comp,% Compress numeric into ranges
+	autocite=superscript,% Behaviour of all \autocite commands
+	sorting=none,% None: process in order of citation
+	sortcites=true,% Sortcites sorts multiple \cite-entries the way the sorting-key dictates
+%	backref=slide,%https://tex.stackexchange.com/a/211631/120853. Do not use hyperref for this!
+	url=false,% Still prints URL for @online
+	doi=false,%
+	isbn=false,%
+	]{biblatex}%
+\addbibresource{Master_Thesis.bib}% *.bib file w/ file-suffix goes here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Color citations; previously: https://tex.stackexchange.com/a/165016/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtEveryCite{\color{black!40}}% https://tex.stackexchange.com/a/258415/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Math, Science etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{chemformula}
+\usepackage{siunitx}
+	\sisetup{%
+		detect-weight,%
+		per-mode=symbol,
+		unit-mode=text,% always print in text-font (so no italics)
+	}%
+%\usepackage{physics}
+\DeclareMathOperator{\Mach}{M}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Visuals and Graphics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+	\graphicspath{{images/}}%
+\usepackage{xcolor}
+	\definecolor{rdylbu1}{RGB}{215, 48, 39}%red; from colorbrewer RdYlBu
+	\definecolor{rdylbu2}{RGB}{252, 141, 89}%
+	\definecolor{rdylbu3}{RGB}{254, 224, 144}%
+	\definecolor{rdylbu4}{RGB}{224, 243, 248}%
+	\definecolor{rdylbu5}{RGB}{145, 191, 219}%
+	\definecolor{rdylbu6}{RGB}{69, 117, 180}%blue
+
+	\definecolor{mBlue}{RGB}{124, 196, 240}% Stronger blue than in thesis to match stronger orange of metropolis theme
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Tikz + Plots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pgfplots}
+
+\usetikzlibrary{%
+positioning,%
+calc,%
+tikzmark,%
+arrows,
+backgrounds,%
+shapes,% 'regular polygon'
+fit}
+
+\usepgfplotslibrary{%
+groupplots,%
+units,%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Colour Cycle for plots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotscreateplotcyclelist{mod RdYlBu3}{%modify existing colorbrewer
+	{mLightBrown},% mLightBrown as defined in metropolis theme
+	{mBlue},% mDarkTeal as defined in metropolis theme
+	{mDarkTeal}%no comma here
+}%
+\pgfplotscreateplotcyclelist{mod mark list}{%modify predefined to start without mark
+every mark/.append style={solid,fill=\pgfplotsmarklistfill}\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=*\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=square*\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=triangle*\\
+every mark/.append style={solid},mark=star\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=diamond*\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill!40},mark=otimes*\\
+every mark/.append style={solid},mark=|\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=pentagon*\\
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Global plot settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotstableset{col sep=comma}%if ALL files are comma-sep
+\pgfplotsset{%
+compat = newest,%
+axis lines=left,%
+cycle multi list = {%
+	mod mark list\nextlist%just in case; likely never reached
+	linestyles*\nextlist
+	mod RdYlBu3%iterate through this first; if at end, start anew using next in parent
+	},%
+%
+unit code/.code 2 args={\si{#1#2}},% Use siunitx for units library
+unit markings = {slash space},
+x SI prefix/micro/.style={/pgfplots/axis base prefix={axis x base 6 prefix \micro}},% https://tex.stackexchange.com/a/224574/120853
+y SI prefix/micro/.style={/pgfplots/axis base prefix={axis y base 6 prefix \micro}},
+z SI prefix/micro/.style={/pgfplots/axis base prefix={axis z base 6 prefix \micro}},
+%
+group style = {%
+	xticklabels at = edge bottom,
+	xlabels at = edge bottom,
+	vertical sep = 3ex,
+	group size = 1 by 2,
+},%
+%
+tuftelike/.style={%https://tex.stackexchange.com/a/155210/120853
+	axis line shift=10pt,% Also shifts label
+	axis line style={-},
+	try min ticks=3,% https://tex.stackexchange.com/a/95753/120853
+	max space between ticks=50,%
+},%
+minimalistic/.style={%
+	tuftelike,
+	thick,
+	axis line style = semithick,
+	tick style = {semithick, fg},% fg is current beamer foreground color
+	width=0.35\textwidth,
+	height=0.4\textheight,
+	ytick align=inside,%puts ticks inside the plot itself
+	xtick align=inside,%
+	title style = {font=\footnotesize},
+	xtick={% Always set min, max and middle ticks; if more desired, use 'extra x ticks={}'
+		\pgfkeysvalueof{/pgfplots/xmin},
+		\pgfkeysvalueof{/pgfplots/xmax},
+		(\pgfkeysvalueof{/pgfplots/xmax}+\pgfkeysvalueof{/pgfplots/xmin})/2
+	},
+	ytick={% Same as x
+		\pgfkeysvalueof{/pgfplots/ymin},
+		\pgfkeysvalueof{/pgfplots/ymax},
+		(\pgfkeysvalueof{/pgfplots/ymax}+\pgfkeysvalueof{/pgfplots/ymin})/2
+	},
+	clip = false,% https://tex.stackexchange.com/a/311194/120853
+	label style={font=\tiny},%https://tex.stackexchange.com/a/300673/120853
+	tick label style={font=\tiny, /pgf/number format/1000 sep={\,}},%
+},%
+invisible/.style={opacity=0},% https://tex.stackexchange.com/a/269558/120853
+visible on/.style={alt={#1{}{invisible}}},
+alt/.code args={<#1>#2#3}{%
+	\alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}} % \pgfkeysalso doesn't change the path
+},
+}%
+\tikzstyle{simblock} = [%
+	draw,%
+	line width=1.5pt,%
+	minimum size = 1.5em,%
+	rounded corners,%
+	fill = white,%
+	]%
+\tikzstyle{triangle} = [%https://tex.stackexchange.com/a/183092/120853
+	regular polygon,%
+	regular polygon sides=3,%
+	inner sep = 0.2ex,%fit tightly
+	outer sep = 0pt,
+	]%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Functions for plotting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzset{declare function={%https://tex.stackexchange.com/a/279234/120853
+cpm(\x)= (\x<=500) * (0.781*(28.98641+1.853978*((\x+273.15)/1000)-9.647459*((\x+273.15)/1000)^2+16.63537*((\x+273.15)/1000)^3+0.000117/(((\x+273.15)/1000)^2))+0.2093*(31.32234-20.23531*((\x+273.15)/1000)+57.86644*((\x+273.15)/1000)^2-36.50624*((\x+273.15)/1000)^3-0.007374/((\x+273.15)/1000)^2)  +0.0093*(20.78600+2.825911e-7*((\x+273.15)/1000)-1.464191e-7*((\x+273.15)/1000)^2+1.092131e-8*((\x+273.15)/1000)^3-3.661371e-8/((\x+273.15)/1000)^2)+0.0004*(24.99735+55.18696*((\x+273.15)/1000)-33.69137*((\x+273.15)/1000)^2+7.948387*((\x+273.15)/1000)^3-0.136638/((\x+273.15)/1000)^2)) +
+(\x>500) * (0.781*(19.50583+19.88705*((\x+273.15)/1000)-8.598535*((\x+273.15)/1000)^2+1.369784*((\x+273.15)/1000)^3+0.527691/(((\x+273.15)/1000)^2))+0.2093*(31.32234-20.23531*((\x+273.15)/1000)+57.86644*((\x+273.15)/1000)^2-36.50624*((\x+273.15)/1000)^3-0.007374/((\x+273.15)/1000)^2)+0.0093*(20.78600+2.825911e-7*((\x+273.15)/1000)-1.464191e-7*((\x+273.15)/1000)^2+1.092131e-8*((\x+273.15)/1000)^3-3.661371e-8/((\x+273.15)/1000)^2)+0.0004*(24.99735+55.18696*((\x+273.15)/1000)-33.69137*((\x+273.15)/1000)^2+7.948387*((\x+273.15)/1000)^3-0.136638/((\x+273.15)/1000)^2));%SHOMATE
+muoxy(\x) = 20.8e-6 * (300 + 127)/(\x + 127) * (\x / 300)^(3/2);%viscosity oxygen (mu oxygen)
+%
+munit(\x) = 17.9e-6 * (300 + 111)/(\x + 111) * (\x / 300)^(3/2);%viscosity nitrogen (mu nitrogen)
+%
+muar(\x) = 22.9e-6 * (300 + 170)/(\x + 170) * (\x / 300)^(3/2);%viscosity argon (mu argon)
+%
+mucoo(\x) = 15e-6 * (300 + 240)/(\x + 240) * (\x / 300)^(3/2);%viscosity carbon dioxide (mu coo)
+},%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Glossaries; dont use for presentations, but nice for consistent symbols etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[abbreviations, symbols, record, nomain]{glossaries-extra}
+% Record for bib2gls to work.
+% Nomain, aka no default glossary
+% Also see https://tex.stackexchange.com/q/477658/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% New Glossary 'types'. Load data into them from *.bib-files, then run bib2gls
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Abbreviations/Symbols package options creates these glossaries already.
+% Create the rest manually.
+\newglossary*{subsuper}{Sub- and Superscripts}%
+\GlsXtrLoadResources[%
+	src={./glossaries/abbreviations},%
+	selection = {all},% Enable for debugging
+]%
+\GlsXtrLoadResources[%
+	src={./glossaries/symbols},%
+	selection = {all},% Enable for debugging
+]%
+\GlsXtrLoadResources[%
+	src={./glossaries/subsuper},%
+	type=subsuper,%
+	category = subsuper,
+	selection = {all},% Enable for debugging
+]%
+% Disable hyperlinking in presentation:
+\glsdisablehyper
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Custom Commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In the original thesis document, \name is used alongside \sindex to produce index entries for all names; in order to use it here, too, define it but remove index capabilities:
+\newcommand*{\name}[1]{\textsc{#1}}% Just a wrapper for people's names
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\whitebox}[1]{\setlength{\fboxsep}{3pt}\colorbox{bg}{#1}} %https://tex.stackexchange.com/a/23682/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\angstanitz}[1]{\ensuremath{\gls{angabs}_{#1}^{\ast}}}%Stanitz shifted by 90deg
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\const}{const.}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Tikz
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\circnum}[1]{% A circled (preferably) number
+%	\tikzset{external/export=false}% Never externalize this
+	\tikz[baseline=(X.base)]%
+	\node (X) [draw, shape=circle, inner sep=1pt, fill=bg] {\textbf{#1}};%
+}%
+\newcommand*{\circlet}[1]{% A circled letter
+%	\tikzset{external/export=false}% Never externalize
+	\tikz[baseline=(char.base)]{%
+	\node [draw, shape=circle, inner sep=1pt, fill=bg] (char) {\textbf{#1}};}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Vectors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The bib2gls library (*.bib-files) uses \symbf etc. from unicode-math, since
+% the thesis documents is based on that package. The presentation here is not,
+% therefore we provide the command manually, so the bib-files are usable.
+\providecommand*{\symbf}{\mathbf}
+\newcommand*{\vect}[2]{\ensuremath{\vec{\symbf{#1}}_{\text{#2}}}}% Vector
+\newcommand*{\vectcomp}[3]{\ensuremath{\symbf{#1}_{\text{#2#3}}}}% Vector component
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Physics-package-like commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Physics package has problems. E.g., \dd prints roman -> poor for sans-serif presentation
+%\providecommand{\var}[1]{\ensuremath{\delta #1}}%
+\providecommand{\dd}[1]{\ensuremath{\textnormal{d}#1}}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Programs/Languages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\smlnk}{%https://tex.stackexchange.com/a/471263/120853
+	Simulink%
+	\nobreak
+	\textsuperscript{\textregistered}%
+}%
+\newcommand*{\mtlb}{%
+	MATLAB%
+	\nobreak
+	\textsuperscript{\textregistered}%
+}%
+\newcommand*{\mtlbsymb}{%
+	Symbolic Math Toolbox%
+	\nobreak
+	\textsuperscript{\texttrademark}%
+}%
+\newcommand*{\mtlbsmlnk}{%
+	\mtlb % MATLAB
+	\kern-0.25em % move the slash back
+	\slash % allow a break after the slash
+	\nobreak % the next space is not allowed for a break
+	\hspace{0pt}% allow the next word to be hyphenated
+	\smlnk
+}%
+\newcommand*{\smscp}{%
+	Simscape%
+	\nobreak%
+	\textsuperscript{\texttrademark}%
+}%
+\newcommand*{\fortran}{%
+FORTRAN\term{FORTRAN}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Metadata
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{Extension and Optimization of a Calculation Method for the Prediction of the Dynamic Behaviour of Turbochargers}
+\date{\DTMdate{2019-04-30}}
+\author{Alex Povel}
+\institute{University of Technology Hamburg --- Department of Marine Engineering}
+%\subtitle{Master Thesis Defense}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% System Information Banner
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{hologo}
+% Using fontspec, this document is incompatible with anything but XeLaTeX/LuaLaTeX.
+% LuaLaTeX can grab additional memory as needed, therefore no issues with tikz and
+% no need to tikzexternalize.
+% Further, contour-package and XeLaTeX are strictly incompatible (LuaLaTeX works).
+% Therefore, only ever use LuaLaTeX anyway.
+\usepackage{xstring}
+% Print only what occurs after 'This is ' and store in macro.
+% luatexbanner is provided by luatex engine.
+% https://tex.stackexchange.com/a/394043/120853
+\StrBehind*{\luatexbanner}{This is }[\shortbanner]
+% Take input and substitute strings, in this case make plain LuaTeX string into pretty logo.
+% StrSubstitue has no starred variant, therefore dekotenize.
+% https://tex.stackexchange.com/a/350583/120853
+\StrSubstitute{\shortbanner}{\detokenize{LuaTeX}}{\hologo{LuaTeX}}[\prettybanner]
+
+% Get contents of files
+\usepackage{catchfile}
+% Store textfile data in macro.
+% If required, e.g. if the build process does not involve replacing the defaults
+% with current values, set defaults in that file.
+\CatchFileDef{\gitmetafile}{gitmeta.txt}{}
+% Store result in new expandable macro, since xstring cmds are unexpandable.
+% https://tex.stackexchange.com/a/476839/120853
+\StrBetween[1,1]{\gitmetafile}{version=}{;}[\GitVersion]
+\StrBetween[1,2]{\gitmetafile}{shorthash=}{;}[\GitShorthash]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Beamer-specific settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{appendixnumberbeamer}% Fix totalframenumber so that appendix doesn't count
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Outer theme sets navigational elements/header/footer/sidebar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\useoutertheme[subsection=false]{miniframes}
+\setbeamercolor{section in head/foot}{fg=normal text.bg, bg=structure.fg}% Outer theme colors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Numbers and indentation in ToC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{section in toc}[sections numbered]%
+\setbeamertemplate{subsection in toc}%
+{\leavevmode\leftskip=3.2em\rlap{\hskip-2em\inserttocsectionnumber.\inserttocsubsectionnumber}\inserttocsubsection\par}% https://tex.stackexchange.com/a/371613/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Dynamic uncovering
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamercovered{highly dynamic}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Commands to exclude certain frames from *.nav-file/navigation bar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% https://tex.stackexchange.com/a/45038/120853
+\makeatletter
+\let\beamer@writeslidentry@miniframeson=\beamer@writeslidentry
+\def\beamer@writeslidentry@miniframesoff{%
+	\expandafter\beamer@ifempty\expandafter{\beamer@framestartpage}{}% does not happen normally
+	{%else
+		% removed \addtocontents commands
+		\clearpage\beamer@notesactions%
+	}
+}
+\newcommand*{\miniframeson}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframeson}
+\newcommand*{\miniframesoff}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframesoff}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Print an overview with current subsection highlighted at each subsection start
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[]{% Empty brackets: do nothing for \subsection*
+{%
+\setbeamertemplate{footline}{}% Hide footer/pagenumber; can't use plain style because we want to keep headline
+\miniframesoff
+\begin{frame}<handout:0>[noframenumbering]{Agenda}
+\tableofcontents[%
+currentsection,% Highlight this
+currentsubsection,% Highlight this
+subsectionstyle=show/shaded/hide,%https://tex.stackexchange.com/a/193981/120853
+]%
+\end{frame}%
+\miniframeson
+}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSection[]{% Empty brackets: do nothing for \section*
+{%
+\setbeamertemplate{footline}{}% Hide footer/pagenumber; can't use plain style because we want to keep headline
+\miniframesoff
+\begin{frame}<handout:0>[noframenumbering]{Agenda}
+\tableofcontents[%
+currentsection,% Highlight this
+%currentsubsection,% Highlight this
+subsectionstyle=show/shaded/hide,%https://tex.stackexchange.com/a/193981/120853
+]%
+\end{frame}%
+\miniframeson
+}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Other settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer+enumitem together are problematic: https://tex.stackexchange.com/a/24491/120853
+\setbeamertemplate{itemize items}{\raisebox{0.35ex}{\rule{0.55ex}{0.55ex}}}%[square]% All three levels; beamer-default [square] is too large

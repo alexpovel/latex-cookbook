@@ -1,0 +1,1574 @@
+\begin{lstlisting}[caption={[Vaneless adiabatic diffuser]Vaneless adiabatic diffuser, \iecfeg{cf.}\ \cref{ch:diffuser}},label={matlab:stanitz}]
+function [Pi_D, M_3, Theta_D, alpha_3] = ...
+	diffuser(M_2, alpha_2, r_d, r_o, h_d, k_df, adexp)
+%{
+Assumptions here: diffuser is adiabatic, therefore (since there is also no
+work input) the stagnation temperature remains constant across the radius
+and its derivate is zero, therefore neglected. The other derivate we do not
+care for is that of diffuser channel height. It is simply assumed constant,
+its derivate therefore zero. Adexp is the normal adiabatic exponent
+'kappa'; zeta is the (empirical) friction coefficient. All angles in RAD.
+The solver (ode45 as a normal standard) requires a (time)-span to work
+with; just taking the 'time' to mean 'radius' does not make a difference.
+The span starts at 1 (diffuser inlet: r_o/r_o = 1) and ends at r_d/r_o,
+i.e. diffuser exit. Also provide initial conditions; note the substitution:
+an initial value for Gamma, not alpha* is provided.
+%}
+R_span = [1 r_d/r_o];
+R_0 = [M_2^2 tan(alpha_2)];
+[R, y] = ode45(@(R,y) diffuser_flow(R, y, adexp, k_df, r_o, h_d),...
+	R_span, R_0);
+
+M = sqrt(y(:,1));
+M_3 = M(end);
+
+alpha = atan(y(:,2));
+alpha_3 = alpha(end);
+
+Pi = (r_o/r_d) .* (cos(alpha_2) ./ cos(alpha)) .* ...
+	(M_2 ./ M) .* sqrt( (1 + M_2^2*(adexp - 1)/2) ./ ...
+	(1 + M.^2*(adexp-1)/2));
+Pi_D = Pi(end);
+
+Theta = (1 + (adexp - 1)/2 * M_2^2)./(1 + (adexp - 1)/2 .* M.^2);
+Theta_D = Theta(end);
+end
+function dydR = diffuser_flow(R, y, adexp, k_df, r_o, h_d)
+%{
+M^2 is y(1), tan(alpha) is y(2). We subsitute tan(alpha) = Gamma, so that
+y(2) = tan(alpha) = Gamma and alpha = atan(y(2)).
+%}
+	dydR = zeros(2, 1);
+	zeta = k_df * r_o / h_d;
+	dydR(1) = ...
+		-2*y(1) * (1 + (adexp -1)/2*y(1) )/(y(1) - ...
+		sec(atan(y(2)))^2) *...
+		((adexp * y(1) - y(2)^2 )*zeta/(cos(atan(y(2))))...
+		- sec(atan(y(2)))^2 / R);
+	dydR(2) = ...
+		y(2) / (y(1) * cos(atan(y(2)))^2 -1 ) * ...
+		((1 + (adexp - 1 ) * y(1)) * zeta/(cos(atan(y(2)))) - y(1) / R);
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption={[Water saturation vapour pressure over temperature]Water saturation vapour pressure over temperature, \iecfeg{cf.}\ \cref{ch:humid_air}},label={matlab:buck}]
+T_BuckData = linspace(273.15,373.15,200);
+
+p_Buck = Buck(T_BuckData);
+
+T_Buck = Simulink.Breakpoint;
+	T_Buck.Breakpoints.Unit = 'K';
+	T_Buck.Breakpoints.Description = ['Temperature Breakpoint Data',...
+	' for Water Vapour Checking'];
+	T_Buck.Breakpoints.Value = T_BuckData;
+
+p_H2Osat = Simulink.LookupTable;
+	p_H2Osat.Table.Value = p_Buck;
+	p_H2Osat.Table.Unit = 'Pa';
+	p_H2Osat.StructTypeInfo.Name = 'LUT_Buck';
+	p_H2Osat.Breakpoints = {'T_Buck'};
+	p_H2Osat.Table.Description = ['Equilibrium Water Vapour',...
+	' Pressure over temperature'];
+
+clear('p_Buck', 'T_BuckData');
+
+function p = Buck(T)
+% Returns vector of water vapour saturation pressure over a temperature
+% vector. Temperature in Kelvin, Pressure in Pascal.
+	p = 611.21.*exp( (18.678-((T - 273.15)./234.5)).*...
+		((T - 273.15)./(257.14+(T - 273.15))) );
+end
+\end{lstlisting}
+
+\begin{lstlisting}[caption={[Geometry Inference Tool] Geometry inference tool, \iecfeg{cf.}\ \cref{ch:geometric_similitude}. To generate Tables as used in this work, refer to \cref{matlab:geometry_tables}},label={matlab:geometry_inferrer}]
+function geometry_inferrer
+% Appends stats to an existing table. From the stats and user input, infers
+% all missing values. The result is printed and the stats table saved as
+% *.MAT in the same DIR the function is called from.
+
+%% Set expected Defaults and other auxiliaries
+%{
+These are only used as suggestions and pre-filled into the dialogue. The
+user can change these anytime.
+%}
+dflt.comp = 'C';
+dflt.turb = 'T';
+dflt.filename.data = 'machine_parameters.m';
+dflt.filename.stats = 'geostats.mat';
+btnFF = 'From File';
+btnWS = 'From Base Workspace';
+btnNo = 'No';
+fullfilepath = mfilename('fullpath');
+[filepath, filename, ~] = fileparts(fullfilepath);
+%% Begin Dialogue
+%{
+Extract Data from user-specified input. Can be either a File that is run
+(an *.m-file), variables in the Base Workspace or existing data from a
+previous run (a *.MAT-file). All variables are expected to be in Table
+format, which is the data type best suited for this work. Therefore, we
+force it. No funny business with dynamically named variables or naked
+matrices allowed.
+%}
+pass_data = questdlg({'Would you like to pass existing machine data?', ...
+    'Its data would be used to compute your request.', ...
+    ['Regardless, note that data is expected to be in ',...
+    'Tables named ''', dflt.comp, ''' and ''', dflt.turb, '''.'], '',...
+    'If you choose no, existing values are used.'}, ...
+    'Machine Data Prompt', btnFF, btnWS, btnNo, btnFF);
+switch pass_data
+    case btnFF
+        prompt = {'File name containing the Tables:', ...
+            'Compressor Table name in that file:',...
+            'Turbine Table name in that file:'};
+        title = 'Machine Data Input';
+        dims = [1 50];
+        definput = {dflt.filename.data, dflt.comp, dflt.turb};
+        machine_data_file = inputdlg(prompt, title, dims, definput);
+        if isempty(machine_data_file)
+            fprintf('[%s] You left the dialogue and function.\n',...
+                datestr(now));
+            return
+        end
+        run(machine_data_file{1});%spills file contents into funcWS
+        C = eval(machine_data_file{2});
+        T = eval(machine_data_file{3});
+    case btnWS
+        prompt = {'Base Workspace Compressor Table name:',...
+                  'Base Workspace Turbine Table name:'};
+        title = 'Machine Data Input';
+        dims = [1 50];
+        definput = {dflt.comp, dflt.turb};
+        machine_data_ws = inputdlg(prompt, title, dims, definput);
+        if isempty(machine_data_ws)
+            fprintf('[%s] You left the dialogue and function.\n',...
+                datestr(now));
+            return
+        end
+        C = evalin('base', machine_data_ws{1});
+        T = evalin('base', machine_data_ws{2});
+    case btnNo
+        boxNo = msgbox(['Looking for stats in ''', dflt.filename.stats, ...
+            '''.'], 'Using Existing Data', 'help');
+        waitfor(boxNo);
+        try
+            stats = load(dflt.filename.stats);
+            stats = stats.stats;
+        catch ME
+            switch ME.identifier
+                case 'MATLAB:load:couldNotReadFile'
+                    warning(['File ''', dflt.filename.stats, ''' not ',...
+                        'found in search path. Make sure it has been ',...
+                        'generated in a previous run or created ',...
+                        'manually. Resorting to hard-coded data ',...
+                        'for now.']); `\phnote{see \cref{tab:statistical_parameters}}`
+                        R.ihC = 3.0045;
+                        R.oiC = 1.52;
+                        R.doC = 1.54;
+                        beta_1geoC = 138.4;
+                        R.ihT = 2.71;
+                        R.oiT = 1.17;
+                        H_T = 3.512;
+                        beta_2geoT = 139.1;
+                otherwise
+                    rethrow(ME);
+            end
+        end
+    case ''
+        fprintf('[%s] You left the dialogue and function.\n',datestr(now));
+        return
+    otherwise%Only gets here if buttons are misconfigured
+        error('This option is not coded, should not get here.');
+end
+name.mean = 'MEAN';
+name.stdev = 'STDEV';
+name.coeffvar = 'CV''';
+%% Compute Stats
+%{
+If user specified input of newly available data, use it here to compute a
+new stats file.
+%}
+if strcmp(pass_data, btnFF) || strcmp(pass_data, btnWS)
+    validTab = @(x,y) validateattributes(x, {'table'}, {'nonempty'},...
+        filename, y);
+    validTab(C, 'Compressor Data');
+    validTab(T, 'Turbine Data');
+    C = delusrdf(C);
+    T = delusrdf(T);    
+    [trbstats, cmprstats] = deal(table);    
+    cmprstats.R_ih = tblbld(C.r_i./C.r_h);
+    cmprstats.R_oi = tblbld(C.r_o./C.r_i);
+    cmprstats.H_o = tblbld(C.r_o./C.h_d);
+    cmprstats.R_do = tblbld(C.r_d./C.r_o);
+    cmprstats.beta_1geo = tblbld(C.beta_1geo);    
+    trbstats.R_ih = tblbld(T.r_i./T.r_h);
+    trbstats.R_oi = tblbld(T.r_o./T.r_i);
+    trbstats.H_o = tblbld(T.r_o./T.h);
+    trbstats.beta_2geo = tblbld(T.beta_2geo);    
+    assert(isequal(C.Properties.RowNames, T.Properties.RowNames), ...
+        'Compressor and Turbine Table Row Names differ.');
+    names = C.Properties.RowNames;
+    names{end + 1} = name.mean;
+    names{end + 1} = name.stdev;
+    names{end + 1} = name.coeffvar;    
+    [cmprstats.Properties.RowNames,trbstats.Properties.RowNames] = ...
+        deal(names);    
+    stats = table(cmprstats, trbstats);    
+    stats.Properties.RowNames = names;    
+    stats.Properties.Description =['Turbo-Machinery Statistical ',...
+        'Parameters. Filtered values are NaN.'];
+    fprintf('[%s] Using stats computed from input.\n', datestr(now));    
+    save(fullfile(filepath, dflt.filename.stats), 'stats');
+elseif strcmp(pass_data, btnNo)
+    fprintf('[%s] Using existing stats.\n', datestr(now));
+else%Only gets here if buttons are misconfigured
+    error('This option is not coded, should not get here.');
+end
+%% Compute Approximations from User Input
+%{
+Only run if stats file is present; otherwise, hard-coded data is
+overwritten if user did not supply anything.
+%}
+if exist('stats', 'var') == 1
+    R.ihC = stats.cmprstats{name.mean, 'R_ih'};
+    R.oiC = stats.cmprstats{name.mean, 'R_oi'};
+    R.doC = stats.cmprstats{name.mean, 'R_do'};
+    R.ihT = stats.trbstats{name.mean, 'R_ih'};
+    R.oiT = stats.trbstats{name.mean, 'R_oi'};
+    H_T = stats.trbstats{name.mean, 'H_o'};
+    beta_1geoC = stats.cmprstats{name.mean, 'beta_1geo'};
+    beta_2geoT = stats.trbstats{name.mean, 'beta_2geo'};
+end
+varnames.r_h = 'r_h';
+varnames.r_i = 'r_i';
+varnames.r_o = 'r_o';
+varnames.r_d = 'r_d';
+varnames.h = 'h';
+syms(struct2cell(varnames));
+prompt = {['Compressor ', varnames.r_h, ':'],...
+          ['Compressor ', varnames.r_i, ':'],...
+          ['Compressor ', varnames.r_o, ':'],...
+          ['Compressor ', varnames.r_d, ':'],...
+          ['Turbine ', varnames.r_h, ':'],...
+          ['Turbine ', varnames.r_i, ':'],...
+          ['Turbine ', varnames.r_o, ':'],...
+          ['Turbine ', varnames.h, ':']};
+title = 'Known Parameter Input';
+dims = [1 40];
+[definput{1:length(prompt)}] = deal('-');
+opts.Interpreter = 'tex';
+param_inpt = inputdlg(prompt, title, dims, definput, opts);
+param_inpt = num2cell(str2double(param_inpt));
+[Cg.(varnames.r_h), Cg.(varnames.r_i), Cg.(varnames.r_o), ...
+    Cg.(varnames.r_d), Tg.(varnames.r_h), Tg.(varnames.r_i), ...
+    Tg.(varnames.r_o), Tg.(varnames.h)] = ...
+    param_inpt{:};
+eqn.C1 = r_i/r_h == R.ihC;
+eqn.C2 = r_o/r_i == R.oiC;
+eqn.C3 = r_d/r_o == R.doC;%Compressor only
+eqn.T1 = r_i/r_h == R.ihT;
+eqn.T2 = r_o/r_i == R.oiT;
+eqn.T3 = r_o/h == H_T;%Turbine only
+% Order of Symbolics has to be the same as in the geoStruct that specifies
+% them (look into Cg and Tg for reference)
+Compressor = solveGeo(Cg, [eqn.C1 eqn.C2 eqn.C3], [r_h r_i r_o r_d]);
+Turbine = solveGeo(Tg, [eqn.T1 eqn.T2 eqn.T3], [r_h r_i r_o h]);
+Compressor(end + 1, 1) = {beta_1geoC};
+Compressor.Properties.RowNames(end) = {'beta_1'};
+Turbine(end + 1, 1) = {beta_2geoT};
+Turbine.Properties.RowNames(end) = {'beta_2'};
+approxs = table(Compressor, Turbine);
+approxs.Properties.Description = ['Approximate dimensions for a ',...
+    'radial compressor and radial turbine. For angles, only the mean ',...
+    'is specified and no inference took place.'];
+%Print computed approximations (no semicolon) and append summary
+approxs.Properties.DimensionNames ={'GeometryParameters', 'MachineType'}
+summary(approxs)
+end
+function tblObj = delusrdf(tblObj)
+%See if there is a table row specified for User Defined input. This could
+%be used for Debugging the simulation, but could ruin the stats.
+    try
+        usrrow = 'User Defined';
+        tblObj({usrrow},:) = [];
+        fprintf(['[%s] ''', usrrow, ''' row found & deleted for ',...
+            'analysis.\n'], datestr(now));
+    catch
+        fprintf(['[%s] ''', usrrow, ''' *not* row found & deleted for ',...
+            'analysis.\n'], datestr(now));
+    end
+end
+function S = solveGeo(geo_struct, eqns_in, symbs_in)
+% Take in a struct of geometry data, the equations that apply and all
+% symbolic variables that occur in these. Solve the eqns and store in a
+% Table column. The order of symbolics is highly important here.
+fln = fieldnames(geo_struct);
+S = table(NaN(length(fln),1), 'RowNames', ...
+        fln, 'VariableNames', {'approx'});
+switch nnz(~structfun(@isnan, geo_struct))
+    case 0
+        fprintf('[%s] Looks like no action is wanted.\n', datestr(now));
+    case 1
+        fprintf('[%s] Acting from one parameter.\n', datestr(now));
+        pick = fln(~structfun(@isnan, geo_struct));
+        eqn_pick = evalin('caller',pick{1}) == geo_struct.(pick{1});`\label{line:geo_system_of_eqns}`
+        eqns = [eqns_in eqn_pick];
+        S.approx = structfun(@double, solve(eqns, symbs_in));
+    case 2
+        fprintf('[%s] Please enter only one parameter.\n', datestr(now));
+    otherwise
+        fprintf('[%s] Looks like no action is required.\n', datestr(now));
+end
+end
+function tblelement = tblbld(vec)
+%Constructs one table column
+    tblelement = statsvec(vec.*~outl(vec));
+    function stdvec = statsvec(vec)
+    %Returns Vector with Statistics appened at end. Does not work if data
+    %contains zeroes, these are turned to NaN here so that they do not
+    %contribute to stats computation.
+       vec(vec == 0) = NaN;
+       stdvec = [vec; mn(vec); stdev(vec);...
+                (1 + 1/(4*length(vec(~isnan(vec)))))*stdev(vec)/mn(vec)];
+    end
+end
+function mean = mn(vec)
+%Returns mean of vector
+    vec = vec(~isnan(vec));
+    mean = sum(vec)/length(vec);
+end
+function std = stdev(vec)
+%Returns Standard Deviation of the Sample of Vector
+    vec = vec(~isnan(vec));
+    std = sqrt((sum((vec - mn(vec)).^2))/(length(vec) - 1));
+end
+function median = med(vec)
+ %Returns median of vector
+    vec = sort(vec);
+    if length(vec) == 1
+        median = vec;
+    elseif mod(length(vec),2) == 0
+        median = (vec(length(vec)/2) + vec(length(vec)/2 + 1))/2;
+    else
+        median = vec(ceil(length(vec)/2));
+    end
+end
+function outliers = outl(vec) `\phnote{see \cref{eq:stats_MAD}}`
+%Returns outliers within vector based on Median Absolute Deviation
+    MAD = med(abs(vec - med(vec)));
+    scaling = 4.5;
+    outliers = (abs(vec - med(vec)) >= scaling * MAD);
+    if any(outliers)
+        fprintf('[%s] %d of %d were found to be outliers.\n',...
+            datestr(now), nnz(outliers), length(outliers));
+    else
+        fprintf('[%s] No outliers detected.\n', datestr(now));
+    end
+end
+\end{lstlisting}
+
+\ifpublished
+	\begin{lstlisting}[caption={[Geometry parameter tables]Tables holding geometry parameters, \iecfeg{cf.}\ \cref{ch:geometric_similitude,tab:turbine_geometry,tab:compressor_geometry}}, label={matlab:geometry_tables}]
+		Content not printed in published version.
+	\end{lstlisting}
+\else
+\begin{lstlisting}[caption={[Geometry parameter tables]Tables holding geometry parameters, \iecfeg{cf.}\ \cref{ch:geometric_similitude,tab:turbine_geometry,tab:compressor_geometry}}, label={matlab:geometry_tables}]
+%% Machine Data Parameterization
+%{
+The first row is reserved for arbitrary user input, so that the remaining
+machine data/model is not dirtied. Use TC_Name (current turbocharger name)
+and E_Name to set the current machine to be used! NaN entries mean that no
+data was available at time of writing.
+%}
+tc_names = {'User Defined';'VATN'; 'T03'; 'K26'; 'ZR1'; 'ZR3'; 'ABB'};            
+TC_Name = tc_names{5};
+[C, T, S] = deal(table('RowNames',tc_names));
+%% Table: Compressors
+C.r_h = [0.00675; 0.0111; 0.00775; 0.00675; 0.013; 0.021; 0.0236];
+C.r_i = [0.0210; 0.02115; 0.02025; 0.0210; 0.04325; 0.065; 0.067883];
+C.r_o = [0.033; 0.031; 0.030; 0.033; 0.0675; 0.1025; 0.10];
+C.r_d = [0.07; 0.05; 0.05; 0.07; 0.103; 0.1625; 0.13238];
+C.h_d = [0.0072; 0.006325; 0.0046; 0.0072; 0.0074; 0.0112; 0.01156];
+%Careful: Angles are converted from Lyssewski to Povel
+C.beta_1geo = [142.5; 143.5; 143.5; 142.5; 136.2; 135.4; 129];
+C.beta_2geo = [120; 120; 120; 120; 150; 150; 150];
+C.Z_1 = [NaN; NaN; NaN; NaN; 6; 8; 8];
+C.Z_2 = [12; 18; 12; 12; 12; 16; 16];
+C.s = [0.001; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001];%all guesstimated
+C.b_1 = [NaN; NaN; NaN; NaN; 0.0012; 0.0013; 0.0013];%blade thickness in
+C.b_2 = [NaN; NaN; NaN; NaN; 0.0014; 0.0024; 0.0024];%blade thickness out
+C.Properties.Description = 'Compressor Parameters';
+C.Properties.VariableDescriptions = {'Hub Radius',...
+    'Inner Blade Radius (Inlet)', 'Outer Blade Radius (Outlet)',...
+    'Diffuser Radius', 'Axial Length of Diffuser (''height'')',...
+    'Rotor Inlet Metal Angle', 'Rotor Outlet Metal Angle',...
+    'No. of Full Blades', 'Number of Full and Splitter Blades', ...
+    'Clearance as a fraction of blade height',...
+    'Inducer Calibrated Blockage Factor', ...
+    'Discharge Calibrated Blockage Factor'};
+C.Properties.VariableUnits = {'m', 'm', 'm', 'm', 'm', 'deg',...
+                            'deg', '1', '1', '1', '1', '1'};
+C.Properties.DimensionNames = {'Names', 'Parameters'};
+%% Table: Turbines
+T.r_h = [0.01075; 0.00775; 0.0084; 0.01075; 0.025; 0.029; 0.031375];
+T.r_i = [0.02725; 0.0239; 0.0245; 0.02725; 0.0565; 0.0765; 0.088815];
+T.r_o = [0.032; 0.03; 0.0315; 0.032; 0.0615; 0.09; 0.09259];
+T.h = [0.0102; 0.0075; 0.0105; 0.0102; 0.0165; 0.023; 0.02812];
+%alpha_1 can only be set if stator is vaned. otherwise, it is calculated
+T.alpha_1 = [45; 45; 45; 45; NaN; NaN; 23.4];
+T.beta_1geo = [90; 90; 90; 90; 90; 90; 90];
+T.beta_2geo = [140; 147; 156; 140; 128; 131.7; 131.7];
+T.Z = [12; 12; 11; 12; 11; 13; 12];
+T.b_1 = [NaN; NaN; NaN; NaN; 1.2e-3; 1.2e-3; 1.2e-3];%blade thickness in
+T.b_2 = [NaN; NaN; NaN; NaN; 3.1e-3; 3.4e-3; 3.4e-3];%blade thickness out
+T.AR = [NaN; NaN; NaN; NaN; 0.0285; 0.0420; 0];
+T.vaned_stator = [NaN; NaN; NaN; NaN; false; false; true];
+T.Properties.Description = 'Turbine Parameters';
+T.Properties.VariableDescriptions = {'Hub Radius',...
+    'Blade Radius (Outlet)', 'Blade Radius (Inlet)',...
+    'Axial Stator Length (''height'')', 'Stator Outlet Metal Angle',...
+    'Rotor Inlet Metal Angle', 'Rotor Outlet Metal Angle',...
+    'No. of Blades', 'Inlet Calibrated Blockage Factor', ...
+    'Outler Calibrated Blockage Factor', 'Vaneless Stator Factor',...
+    'Possesion of vaned stator'};
+T.Properties.VariableUnits = {'m', 'm', 'm', 'm', 'deg', 'deg',...
+                            'deg', '1', '1', '1', '1', 'boolean'};
+T.Properties.DimensionNames = {'Names', 'Parameters'};
+%% Table: Shaft
+S.n_R = [108e3; 108e3; 108e3; 108e3; 80e3; NaN; NaN]/60;%all guessed
+S.I = [0.000136; NaN; 0.00012; 0.000136; 0.00239; 0.01346; 0.02442];
+S.Properties.Description = 'Turbocharger Shaft Parameters';
+S.Properties.VariableDescriptions = {'Rated (max) Rotational Speed',...
+                    'Moment of Inertia'};
+S.Properties.VariableUnits = {'1/s','kg*m^2'};
+S.Properties.DimensionNames = {'Names', 'Parameters'};
+%% Table: Engines
+eng_names = {'User Defined'; 'MaK 9M43 C'; 'Daimler-Benz OM 617A'};
+E_Name = eng_names{2};
+E = table('RowNames',eng_names);
+E.V_CD = [0.002998; 0.0886; 0.0006];
+E.z_cyl = [5; 9; 5];
+E.P_cyl = [NaN; 900000; NaN];
+E.b_e = [NaN; 4.91667e-8; NaN];
+E.I = [5; 4760; 5];
+E.p_RCA = [172000; 310000; 1720000];
+E.T_RCA = [318.15; 318.15; 318.15];
+E.n_R = [70; 8.333; 70];
+E.a = [2; 2; 2];
+E.V_exh = [0.01; 6.48; 0.01];
+E.V_int = E.V_exh;
+E.Properties.Description = 'IC-Engine Parameters';
+E.Properties.VariableDescriptions = {'Cylinder Displacement',...
+                    'Number of Cylinders', 'Rated Power per Cylinder',...
+                    'Specific Fuel Oil Consumption',...
+                    'Polar Moment of the Crankshaft with Attachments',...
+                    'Rated Charge Air Pressure',...
+                    'Rated Charge Air Temperature',...
+                    'Rated Rotational Speed', 'Working Principle',...
+                    'Exhaust Manifold Volume', 'Inlet Manifold Volume'};
+E.Properties.VariableUnits = {'m^3','1', 'W', 'kg/J', 'kg*m^2','Pa',...
+    'K','1/s','1','m^3','m^3'};
+E.Properties.DimensionNames = {'Names', 'Parameters'};
+%% Clean-Up
+clear('tc_names', 'eng_names');
+\end{lstlisting}
+\fi
+
+\clearpage%MANUAL clearing
+\begin{lstlisting}[caption = {[Test-stand function]Test-stand function, simulating a compressor or turbine on an actual, experimental test-stand as described in \cref{il:hot_gas,ch:test-stand}. For each rotational speed to be tested, one simulation is run in parallel. The function is mainly concerned with supplying and extracting data}, label={matlab:teststand}]
+function simOut = teststand(varargin)
+%Returns Pi-over-dotm etc. lines of constant speed for turbomachines.
+%{
+Script for Turbocharger Performance Map Generation. On a hot-gas test
+stand, in order to meassure the compressor map, a valve behind the machine
+is closed continuously. The test begins with a fully opened valve behind
+the machine, such that very low back-pressure is induced and only a small
+pressure ratio is built up. From there, the valve starts closing, building
+up back-pressure over time. As a consequence, the pressure rises, but mass
+throughput decreases. At or near the surge line, the test stops. 'p' is the
+pressure behind the machine, representing the valve closing (in Pa) for the
+compressor. For a turbine, 'p' is the pressure in front. This script tries
+to reenact a real test stand, where the testing is also a process over
+time. First, measure execution time for diagnostics:
+%}
+simInfo.tau.start.('script') = tic;
+%% Parse Input
+%{
+Validate that the input fulfills certain criteria. Also declare required
+and optional inputs, as well as optional parameters. The required and
+optional inputs are positional; that means, that the order *must* be as
+they occur when they are 'add'ed here. Conversely, 'addParameter'
+parameters can occur in any order. Example: "simulation_Output =
+simulation_Function('model_name', number_of_scenarios, 'max_step',1e-2)".
+The 'inputParser' object is then parsed; if required inputs are missing, an
+error is thrown. If criteria aren't met, an error is thrown. If unknown
+parameters are requested, an error is thrown. The goal is of course to stop
+funny business like imaginary numbers. We don't set the rotational speed
+defaults here, they are set later with the help of the Data Dictionary. The
+target is the simulation's target model, which can be from LYS (Lyssewski)
+or POV (Povel); these work quite differently, therefore different treatment
+is required.
+%}
+default.model_name = 'compressor_radial_StaticCode';
+default.no_of_scenarios = 3;
+default.max_step = '1e-1';
+%We do not actually want to use these, they are set later. Just check
+%whether defaults are being used or not. If anything slips, putting NaN
+%here helps tracking the bug from the resulting error.
+default.n_min = NaN;
+default.n_max = NaN;
+
+default.plot = true;
+default.author = 'LYS';
+default.scale = 1;
+default.write = true;
+default.redplot = true;
+
+P = inputParser;
+P.CaseSensitive = false;
+P.FunctionName = 'teststand';
+
+validNumber = @(x) validateattributes(x,...
+    {'numeric'},{'positive','nonempty'});
+validScenarioNumber = @(x) validateattributes(x,...
+    {'numeric'},{'integer','nonempty','>',1,'scalar'});
+validChar = @(x) validateattributes(x,{'char'},{'nonempty'});
+validBoolean = @(x) validateattributes(x,{'logical'},{'nonempty'});
+validShare = @(x) validateattributes(x,...
+    {'numeric'},{'positive','nonempty','>',0,'<',1}); 
+
+addOptional(P,'no_of_scenarios',default.no_of_scenarios,...
+    validScenarioNumber);
+addOptional(P,'model_name',default.model_name,validChar);
+
+addParameter(P,'author',default.author,validChar);
+addParameter(P,'n_min',default.n_min,validNumber);
+addParameter(P,'n_max',default.n_max,validNumber);
+addParameter(P,'max_step',default.max_step,validNumber);
+addParameter(P,'plot',default.plot,validBoolean);
+addParameter(P,'scale',default.scale,validShare);
+addParameter(P,'write',default.write,validBoolean);
+addParameter(P,'redplot',default.redplot,validBoolean);
+
+parse(P,varargin{:});
+
+%% Find and Load Model representing the Test Stand
+%{
+Create Struct to hold all names and info for all kinds of different
+purposes.
+%}
+simInfo.names.('model') = P.Results.model_name;
+%{
+The exist() function returns '4' if input exists and is a Simulink Model.
+%}
+assert(exist(simInfo.names.('model'),'file') == 4,...
+    'No Model of name ''%s'' found.',simInfo.names.('model'));
+%{
+Before commencing, check if the Simulink Model that is being loaded has in
+its name the type of machine. Depending on that name, the script decides
+whether to run a compressor or turbine performance simulation. If file is
+not named properly, notify. Afterwards, set a logical that determines
+whether the machine at hand is a compressor (=true/1). If untrue, turbine
+is implied. Note that the pattern against which we check have to be strings
+(double quote ") instead of just character arrays (single '). Since
+Compressor OR Turbine is a binary decision, a Boolean is a good tool (as
+opposed to switch/case).
+%}
+isCompressor = contains(simInfo.names.('model'), "compressor", ...
+    'IgnoreCase', true);
+if isCompressor
+    simInfo.names.('machine_type') = 'Compressor';
+else
+    if contains(simInfo.names.('model'), "turbine",'IgnoreCase', true)
+        simInfo.names.('machine_type') = 'Turbine';
+    else
+        isCompressor = true;
+        simInfo.names.('machine_type') = 'Compressor';        
+        warning(['The model to be run contains neither ''compressor'' ',...
+        'nor ''turbine'' in its name, as would be required for ',...
+        'automatic distinction. Setting it to ''%s'' as default.'],...
+        simInfo.names.('machine_type'));
+    end
+end
+fprintf(['[%s] It was inferred that ',...
+            'this machine is a %s.\n'], datestr(now),...
+            lower(simInfo.names.('machine_type')));
+%{
+Load the Model in order to be able to Compile and modify it. Using
+'open_system' actually opens a window with the Simulink Model.
+'load_system' loads it into memory in the background. If the model is
+already open, nothing further happens.
+%}
+load_system(simInfo.names.('model'));
+%{
+Forward the names of the Input Ports of the Rotational Speed input,
+backpressure input etc. If they are changed in the model, change them here
+too. Putting them into sub-struct for better overview. These are
+Case-Sensitive, take care.
+%}
+switch P.Results.author
+    case 'POV'
+        simInfo.names.ports.in.('rot_speed') = 'n';
+        simInfo.names.ports.in.('temperature') = 'T_0';
+        simInfo.names.ports.out.('pressure_ratio') = 'Pi';
+        simInfo.names.ports.out.('enthalpy_stream') = 'Stream';
+        if isCompressor
+            simInfo.names.ports.in.pressure.('exit') = 'p';
+            simInfo.names.ports.in.pressure.('entry') = 'p_0';
+        else
+            simInfo.names.ports.in.pressure.('exit') = 'p_0';
+            simInfo.names.ports.in.pressure.('entry') = 'p';
+        end
+    case 'LYS'
+        simInfo.names.ports.in.('in_state') = 'in_state';
+        simInfo.names.ports.in.pressure.('back') = 'p_back';
+        simInfo.names.ports.in.('rot_speed') = 'n';
+        simInfo.names.ports.in.('scale') = 'scale';
+        simInfo.names.ports.out.('enthalpy_stream') = 'stream';
+        simInfo.names.ports.out.('pressure_ratio') = 'Pi';
+        simInfo.names.ports.out.('efficiency') = 'eta';
+        simInfo.names.ports.out.('torque') = 'M';
+    otherwise
+        error('No model author codenamed ''%s'' known.', P.Results.author);
+end
+%% Find and Load Data Dictionary
+%{
+Use inital pressure offset and other parameters from Data Dictionary. We
+use the parent dictionary, since it already references the 'parameter'
+dictionary and all others. Look for it, so it can still be found after
+moving. Name of the expected Data Dictionary is put in. Afterwards, add
+Suffix so it is not confused with accompanying *.m-file.
+%}
+simInfo.names.('dd_parent') = 'parent';
+simInfo.names.('dd_parent') = strcat(simInfo.names.('dd_parent'),'.sldd');
+
+simInfo.names.('dd_maps') = 'performance_maps';
+simInfo.names.('dd_maps') = strcat(simInfo.names.('dd_maps'),'.sldd');
+%{
+The exist() function returns '2' if input exists and is a regular file. The
+assert() function asserts a logical expression, and complains with an error
+if the assertion fails/logical returns false.
+%}
+assert(exist(simInfo.names.('dd_parent'),'file') == 2,...
+'No Data Dictionary of name ''%s'' found.',simInfo.names.('dd_parent'));
+
+assert(exist(simInfo.names.('dd_maps'),'file') == 2,...
+'No Data Dictionary of name ''%s'' found.',simInfo.names.('dd_maps'));
+%{
+Load the DD ('represent' it) into the Function Workspace using a Variable.
+The function which() returns full path. Load the Data Dictionary's Section
+'Design Data' afterwards, also represent it.
+%}
+dObj = Simulink.data.dictionary.open(which(simInfo.names.('dd_parent')));
+dSectObj = getSection(dObj,'Design Data');
+%% Load Required Parameters from DD
+%{
+Having loaded the correct Section (there is just one for this, 'Design
+Data'), we start grabbing its Entries. An Entry is only an object that
+contains the value we are looking for, but also a lot of metadata info
+(Last Changed by) etc., which we don't need. So after the Entry is grabbed,
+grab its Value. This Value can for example be a SimulinkParameter or a
+struct. The former contains additional info too, like units. Its actual
+numerical value is retrieved as needed with 'dValueObj.Value'. We also
+require additional info like ambient conditions, as well as the currently
+selected machine model we are working on. This is used e.g. in the plot
+legend.
+%}
+dEntryObj = getEntry(dSectObj,'T_inletT');
+dValueObj = getValue(dEntryObj);
+T_inletT = dValueObj.Value;
+
+dEntryObj = getEntry(dSectObj,'ambient_no');
+dValueObj = getValue(dEntryObj);
+simInfo.number_of.('ambient') = dValueObj.Value;
+
+dEntryObj = getEntry(dSectObj,'ambient');
+dValueObj = getValue(dEntryObj);
+simInfo.('ambient_conditions') = dValueObj(simInfo.number_of.('ambient'));
+
+dEntryObj = getEntry(dSectObj,'air_no');
+dValueObj = getValue(dEntryObj);
+simInfo.number_of.('air') = dValueObj.Value;
+
+dEntryObj = getEntry(dSectObj,'air');
+dValueObj = getValue(dEntryObj);
+simInfo.('air') = dValueObj(simInfo.number_of.('air'));
+
+dEntryObj = getEntry(dSectObj,'exh_no');
+dValueObj = getValue(dEntryObj);
+simInfo.number_of.('exh') = dValueObj.Value;
+
+dEntryObj = getEntry(dSectObj,'exh');
+dValueObj = getValue(dEntryObj);
+simInfo.('exh') = dValueObj(simInfo.number_of.('exh'));
+%% TimeSeries: Pressure
+t = [0; 200];
+%{
+Initial Pressure is higher than Ambient by some margin. Final Pressure
+is a certain multiple of Initial (i.e. ambient) pressure. This is only to
+cover a wide range of possible pressure ratios. The simulation will likely
+stop before its designed stop time and before the high pressure ratios are
+reached anyway, once surging/zero mass flux occurs. Linearly Growing Vector
+of same length as time vector. Notice small apostrophe to transpose vector.
+%}
+p = linspace(... `\label{line:teststand_p}`
+    1.1 * simInfo.('ambient_conditions').p,...
+    5 * simInfo.('ambient_conditions').p,...
+    length(t));
+
+p = timeseries(p',t,'name','back_pressure');
+p.DataInfo.Units = 'Pa';
+%% TimeSeries: Constants
+%{
+Simply constant timeseries for the ambient conditions at their respective
+ports, among others.
+%}
+T_amb = timeseries(simInfo.('ambient_conditions').T,t,...
+    'name','ambient_temperature');
+p_amb = timeseries(simInfo.('ambient_conditions').p,t,...
+    'name','ambient_pressure');
+
+if isCompressor
+    phi.O2 = timeseries(simInfo.('air').phi_O2, t, ...
+        'name','inlet air oxygen volumetric concentration');
+    phi.N2 = timeseries(simInfo.('air').phi_N2, t, ...
+        'name','inlet air nitrogen volumetric concentration');
+    phi.Ar = timeseries(simInfo.('air').phi_Ar, t, ...
+        'name','inlet air argon volumetric concentration');
+    phi.CO2 = timeseries(simInfo.('air').phi_CO2, t, ...
+        'name','inlet air carbon dioxide volumetric concentration');
+    phi.H2Og = timeseries(0, t, ...
+        'name','inlet air water vapour volumetric concentration');
+    phi.SO2 = timeseries(0, t, ...
+        'name','inlet air sulphur dioxide volumetric concentration');
+else
+    phi.O2 = timeseries(simInfo.('exh').phi_O2, t, ...
+        'name','exhaust gas oxygen volumetric concentration');
+    phi.N2 = timeseries(simInfo.('exh').phi_N2, t, ...
+        'name','exhaust gas nitrogen volumetric concentration');
+    phi.Ar = timeseries(simInfo.('exh').phi_Ar, t, ...
+        'name','exhaust gas argon volumetric concentration');
+    phi.CO2 = timeseries(simInfo.('exh').phi_CO2, t, ...
+        'name','exhaust gas carbon dioxide volumetric concentration');
+    phi.H2Og = timeseries(simInfo.('exh').phi_H2O, t, ...
+        'name','exhaut gas water vapour volumetric concentration');
+    phi.SO2 = timeseries(simInfo.('exh').phi_SO2, t, ...
+        'name','exhaust gas sulphur dioxide volumetric concentration');    
+end
+scale = timeseries(P.Results.scale, t, ...
+    'name', 'scaling factor for the turbomachine (no scaling: 1)');
+%% TimeSeries: Rotational Speed
+%{
+Amount of Rotational Speed Values to be tested between min and max. This
+is equivalent to the amount of simulations that need to be run.
+%}
+simInfo.number_of.('scenarios') = P.Results.no_of_scenarios;
+%{
+Rated (maximum) Turbocharger Rotational Speed (TCR), after which testing
+halts. This info has moved to an *.m-file (used to be in the Data
+Dictionary, but DDs do not support 'table' objects). From the *.m-file with
+the machine parameters, the Model Workspace is initiated. Thus, get the
+Model Workspace of the model we are testing here. Then, extract the name of
+the turbocharger we are currently testing. If you want to change this,
+change it in the machine parameters' *.m-file! Afterwards, get table that
+contains the turbochargers rated rotational speed. Use it to set the upper
+bound of rotational speeds to be tested. In the *.m-file, the names of the
+'table' objects are as follows: C for Compressor, T for Turbine, S for
+shaft (of the turbocharger. This is used for values such as max. rot.
+speed, inertia etc.) and lastly E for engine.
+%}
+mdlWks = get_param(simInfo.names.('model'),'ModelWorkspace');
+reload(mdlWks);
+simInfo.names.('turbocharger') = getVariable(mdlWks,'TC_Name');
+S = getVariable(mdlWks,'S');
+n_TCR = S.n_R(simInfo.names.('turbocharger'));
+%{
+Initial Rotational Speed Fraction of the Rated Speed, yielding the initial
+rotational speed:
+%}
+dEntryObj = getEntry(dSectObj,'init_rot_speed_frac');
+dValueObj = getValue(dEntryObj);
+n_0 = dValueObj.Value * n_TCR;
+%{
+Create Linearly Spaced vector and also convert to RPM in order to round
+the RPM values. If Defaults are used, set the vector to the used grabbed
+from the Data sources (Data Dictionary, Model Workspace, etc.). If any of
+the two, or both, are set by the user, use these.
+%}
+if any(contains(P.UsingDefaults,'n_max'))
+   n_max = n_TCR;
+else
+   n_max = P.Results.n_max;
+end
+if any(contains(P.UsingDefaults,'n_min'))
+   n_min = n_0;
+else
+   n_min = P.Results.n_min;
+end
+if n_max > 6000
+   warning(['It is very likely n_max = %d was entered in RPM. ',...
+           'Please only use 1/s.'], n_max);
+elseif n_min > 3000
+   warning(['It is very likely n_min = %d was entered in RPM. ',...
+           'Please only use 1/s.'], n_min);
+end
+n = linspace(n_min, n_max, simInfo.number_of.('scenarios'));`\label{line:teststand_n}`
+%{
+Round numbers to closest multiple of something and convert back to RPS.
+Negative Value in round() denotes rounding to the left of the decimal
+point. We want smooth plotting in RPM, but all calculations are done in SI
+units and therefore RPS. Conversion to RPM comes last, and is only visual
+for plotting.
+%}
+n = round(n*60,-3)/60;
+if n(1) == 0
+    warning(['Lowest Rotational Speed to be tested was so low, ',...
+    'it was rounded to 0. Set back to 100rps/6000rpm for now. ',...
+    'Consider using higher speeds.']);
+     n(1) = 100;
+end
+%Check correctness and feed-back to user.
+fprintf('[%s] Working on these rot. speeds [krpm]:\n[%s] %s\n',...
+                datestr(now), datestr(now), sprintf('%d ', n*60/1000));
+%% DataSet Creation
+%{
+Number of Expected Inputs. Currently, this number is 4: the rotational
+speed and the pressure behind (compressor) or in front (turbine) of the
+machine need to be specified. Further, the Input temperature is controlled
+here, so is the entry (compressor) or exit (turbine) pressure; both these
+are ambient properties.
+%}
+simInfo.number_of.('inputs') = 4;
+%{
+Create/Get Inport Dataset for this Model, automatically fetched from all
+available inports in the Root level.
+%}
+inport_ds = createInputDataset(simInfo.names.('model'));
+
+if inport_ds.numElements ~= simInfo.number_of.('inputs')
+    warning(['Expected %d elements ',...
+        '(one inport for ''%s'' etc.) ',...
+        'in the fetched Dataset, instead got %d. ',...
+        'Maybe change the amount of Inputs in the actual model. ',...
+        'All superfluous Input Ports are left at their ',...
+        'default of Zero!'],...
+        simInfo.number_of.('inputs'),...
+        simInfo.names.ports.in.('rot_speed'),...
+        inport_ds.numElements);
+end
+%{
+Get and Store indices of the input ports for 'rotational speed' as well as
+the 'pressure' and others. These are important to fit the correct
+timeseries to the correct Input ports.
+%}
+switch P.Results.author
+    case 'POV'
+        simInfo.indices.('rot_speed') = idxSearch(...
+                    simInfo.names.ports.in.('rot_speed'),inport_ds);
+        simInfo.indices.pressure.('exit') = idxSearch(...
+                    simInfo.names.ports.in.pressure.('exit'),inport_ds);
+        simInfo.indices.pressure.('entry') = idxSearch(...
+                    simInfo.names.ports.in.pressure.('entry'),inport_ds);
+        simInfo.indices.('temperature') = idxSearch(...
+                    simInfo.names.ports.in.('temperature'),inport_ds);
+    case 'LYS'
+        simInfo.indices.('rot_speed') = idxSearch(...
+                    simInfo.names.ports.in.('rot_speed'),inport_ds);
+        simInfo.indices.('in_state') = idxSearch(...
+                    simInfo.names.ports.in.('in_state'),inport_ds);
+        simInfo.indices.('scale') = idxSearch(...
+                    simInfo.names.ports.in.('scale'),inport_ds);
+        simInfo.indices.pressure.('back') = idxSearch(...
+                    simInfo.names.ports.in.pressure.('back'),inport_ds); 
+    otherwise
+        error('No model author codenamed ''%s'' known.', P.Results.author);
+end                
+%{
+Equip the Dataset with the timeseries for the signals in the
+correct slots. We can only do this for all inputs that are the same in
+all scenarios, i.e. not the rotational speed. Note that for a compressor,
+the input temperature is simply ambient. However, for the turbine, this is
+another special parameter.
+%}
+switch P.Results.author
+    case 'POV'        
+        if isCompressor
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.('temperature'),...
+                T_amb, simInfo.names.ports.in.('temperature'));
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.pressure.('exit'),...
+                p, simInfo.names.ports.in.pressure.('exit'));
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.pressure.('entry'),...
+                p_amb, simInfo.names.ports.in.pressure.('entry'));
+        else
+            T_inletT = timeseries(T_inletT.Value,t,...
+            'name','turbine_inlet_temperature');
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.('temperature'),...
+                T_inletT, simInfo.names.ports.in.('temperature'));
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.pressure.('exit'),...
+                p_amb, simInfo.names.ports.in.pressure.('exit'));
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.pressure.('entry'),...
+                p, simInfo.names.ports.in.pressure.('entry'));   
+        end
+    case 'LYS'
+        in_state.phi = phi;
+        inport_ds = setElement(...
+            inport_ds,simInfo.indices.('scale'),...
+            scale, simInfo.names.ports.in.('scale'));
+        if isCompressor
+            in_state.T = T_amb;
+            in_state.p = p_amb;
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.('in_state'),...
+                in_state, simInfo.names.ports.in.('in_state'));
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.pressure.('back'),...
+                p, simInfo.names.ports.in.pressure.('back'));
+        else
+            in_state.T = timeseries(T_inletT,t,...
+            'name','turbine_inlet_temperature');
+            in_state.p = p;
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.('in_state'),...
+                in_state, simInfo.names.ports.in.('in_state'));
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.pressure.('back'),...
+                p_amb, simInfo.names.ports.in.pressure.('back'));
+        end
+    otherwise
+        error('No model author codenamed ''%s'' known.', P.Results.author);
+end
+%% Create Scenarios
+%{
+This part is hugely inspired from an automatically generated script. It can
+be generated by opening a Simulink Model, then selecting 'Connect Input'
+for an arbitrary Input Port. A Scenario dialogue opens, where data signals
+for all the model's inputs can be created. One such set is called
+'Scenario'. If multiple such sets are created, these scenarios can be run
+one by one in a script. Matlab offers to 'Generate MATLAB Script' in this
+window, generating a script that specifies all created scenarios to be run
+in parallel and the output results to be saved. This is exactly what the
+following code does, too. An array is created that contains multiple
+'Datasets'. Each dataset contains *all* timeseries required to run the
+model: one timeseries for each Input Port in the model. All these Datasets
+are then summarized in the array. Afterwards, they are used as
+'ExternalInput' for the model to be run. The models are run and the results
+stored in another array. All Output ports record their data automatically,
+no need for Displays, Signal Logging, Scopes etc. Create Array simIn of
+certain length, then put a skeleton SimulationInput object for our chosen
+model into each array cell:
+%}
+simIn(1:simInfo.number_of.('scenarios')) = ...
+                Simulink.SimulationInput(simInfo.names.('model'));
+%{
+Set all simulation durations to the specified end time. This has the
+advantage of not dirtying the model, since this change is only applied
+temporarily and the model is reverted to its last saved state after this
+simulation was run. Set MaxStep lower to force more precision in
+variable-stepsize mode.
+%}
+simIn = setModelParameter(simIn, 'StopTime', num2str(t(end)));
+simIn = setModelParameter(simIn, 'MaxStep', num2str(P.Results.max_step));
+%{
+For each Rotational Speed, create one Entry in the SimulationInput array.
+First, create one timeseries object from the vector of rotational speeds.
+Set its unit. Add this timeseries to the skeleton DataSet we pulled from
+the model earlier. This completes it, since the other timeseries were
+already loaded into the DataSet. So now, the DataSet can be put into the
+ExternalInput slot for the SimulationInput object. Each SimulationInput is
+different, so for-loop this (cannot be vectorized (?)). Also set the
+Initial Guess for the Algebraic Constraint to different values, depending
+on the rotational speed. This is important; if the first guess for p_1 is
+'too wrong', an error occurs. The slower the speed, the closer p_1 is to
+p_0. Refer to the local function itself for more info.
+%}
+switch P.Results.author
+    case 'POV'
+        for kScenario = 1:simInfo.number_of.('scenarios')
+            n_ts = timeseries(n(kScenario),t,'name','Rotational_Speed');
+            n_ts.DataInfo.Units = '1/s';
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.('rot_speed'),n_ts,...
+                        simInfo.names.ports.in.('rot_speed'));
+            simIn(kScenario).ExternalInput = inport_ds;
+            simIn(kScenario) = setBlockParameter(simIn(kScenario), ...
+                [simInfo.names.('model') '/Iteration'], 'InitialGuess',...
+                IC_p1(n(kScenario), simInfo.('ambient_conditions').p));
+            simIn(kScenario) = setBlockParameter(simIn(kScenario), ...
+                [simInfo.names.('model') '/IC_Pi_D'], 'Value',...
+                IC_Pi_D(n(kScenario)));
+            simIn(kScenario) = setBlockParameter(simIn(kScenario), ...
+                [simInfo.names.('model') '/IC_p_2'], 'Value', ...
+                IC_p_2(n(kScenario), simInfo.('ambient_conditions').p));
+        end
+    case 'LYS'
+        for kScenario = 1:simInfo.number_of.('scenarios')
+            n_ts = timeseries(n(kScenario),t,'name','Rotational_Speed');
+            n_ts.DataInfo.Units = '1/s';
+            inport_ds = setElement(...
+                inport_ds,simInfo.indices.('rot_speed'),n_ts,...
+                        simInfo.names.ports.in.('rot_speed'));
+            simIn(kScenario).ExternalInput = inport_ds;
+        end
+    otherwise
+        error('No model author codenamed ''%s'' known.', P.Results.author);
+end
+%% Run Simulations
+%{
+Run using parsim, which runs simulations in parallel. The simulations it
+runs are determined by the input cell array. Afterwards, add some Metadata
+to Output. Also collect simulations that ran with errors. 'UseFastRestart'
+cannot be used when setting block parameters with 'setBlockParameter'.
+%}
+simInfo.tau.start.('sim') = tic;
+simOut = parsim(simIn,... `\label{line:teststand_parsim}`
+        'ShowSimulationManager','on',...
+        'RunInBackground','off',...
+        'UseFastRestart','off');
+%{
+Iterate through the fields of the (sub-)struct that holds all the names for
+the expected output ports. If not all the expected output ports are found
+in the simulation output object, throw an error.
+%}
+for out_port = fieldnames(simInfo.names.ports.out)'
+    assert(~isempty(...
+    simOut.yout.find(...
+    simInfo.names.ports.out.(out_port{:}))),...
+    ['One or more of the expected output ports as defined in '...
+    'the simInfo struct is/are missing. Please add it to the model.']);
+end
+%{
+For good measure, make sure the relevant output ports have units assigned
+to them. This avoids confusion and makes plotting more straightforward.
+%}
+assert(~isempty(simOut(1).yout.find(...
+    simInfo.names.ports.out.('pressure_ratio')).Values.DataInfo.Units),...
+            'Assign a Unit (1) for the Pressure Ratio Port.');
+assert(~isempty(simOut(1).yout.find(...
+    simInfo.names.ports.out.(...
+    'enthalpy_stream')).Values.dotm.DataInfo.Units),...
+            'Assign a Unit (kg/s) for the Mass Flux Port.');
+assert(~isempty(simOut(1).yout.find(...
+    simInfo.names.ports.out.('efficiency')).Values.DataInfo.Units),...
+            'Assign a Unit (1) for the Efficiency Port.');
+        
+if exist('simOut','var')
+    simOut = simOut.setUserString(['For Rot. Speed [krpm], ',...
+            'see UserData.']);
+    for kScenario = 1:simInfo.number_of.('scenarios')
+         simOut(kScenario)=...
+             simOut(kScenario).setUserData(n(kScenario)*60/1000);   
+    end
+end
+simInfo.tau.stop.('sim') = toc(simInfo.tau.start.('sim'));
+
+simInfo.errors.messages = {simOut.ErrorMessage};
+simInfo.errors.indices = ~cellfun(@isempty, simInfo.errors.messages);
+
+if any(simInfo.errors.indices)
+    fprintf(['[%s] %u out of %u simulations ended erroneously. ',...
+        'Failed rotational speeds (in krpm) were [index bracketed]:\n',...
+        '[%s] %s.\n',...
+        '[%s] These are removed for plotting.\n'],...
+        datestr(now),...
+        nnz(simInfo.errors.indices),...
+        length(simOut),...
+        datestr(now),...
+        join(string(n(simInfo.errors.indices)*60/1000) + ...
+        " [" +...
+        string(find(simInfo.errors.indices)) +...
+        "]", ", "),...
+        datestr(now));
+    n = n(~simInfo.errors.indices);
+end
+%% Prepare Results
+%{
+Cells have to be used, since the simulations probably take unequal amounts
+of time-steps, and matrices need to be strictly rectangular, with equal
+row/column widths. Cells may contain arbitrary content in each cell array
+element. Preallocate Cells first. Assign Simulation values to cells (cells
+can contain different datatypes, so no idea how to vectorize this). Grab
+the maximum choke flux for each scenario; currently, these values are
+absolutely constant over time (maybe in the future, they aren't anymore).
+In any case, condense the values into a single one by building their
+mean(). Also remove the very first entry, since it is probably ruined from
+auxiliary initial conditions (like zero mass flux). If it is not but is
+still deleted, a single value won't be missed. So delete anyway. The 'deal'
+functions doesn't seem to work for dealing an empty '[]' entry. Afterwards,
+remove all empty entries in the created cells (for example, if a simulation
+did not run at all due to errors [losses too high and speed too low;
+Algebraic Constraint did not converge]).
+%}
+[Pi.complete, dotm.complete, eta.complete, torque.complete,...
+    T_after.complete] = ...
+    deal(cell(1,simInfo.number_of.('scenarios')));
+
+for kScenario = 1:simInfo.number_of.('scenarios')
+    dotm.complete{kScenario} = ...
+        simOut(kScenario).yout.find(...
+        simInfo.names.ports.out.('enthalpy_stream')).Values.dotm.Data;
+    Pi.complete{kScenario} = ...
+        simOut(kScenario).yout.find(...
+        simInfo.names.ports.out.('pressure_ratio')).Values.Data;
+    eta.complete{kScenario} = ...
+        simOut(kScenario).yout.find(...
+        simInfo.names.ports.out.('efficiency')).Values.Data;
+    torque.complete{kScenario} = ...
+        simOut(kScenario).yout.find(...
+        simInfo.names.ports.out.('torque')).Values.Data;
+    T_after.complete{kScenario} = ...
+        simOut(kScenario).yout.find(...
+        simInfo.names.ports.out.('enthalpy_stream')).Values.T.Data;
+end
+%{
+Truncate the result cell arrays slightly. At least cut off first and last
+entry. Otherwise, we run into off-by-one errors. '' 'un',0 '' is shorthand
+for '' 'UniformOutput', false ''. Cut of a certain percentage of initial
+junk values.
+%}
+cutoff = 0.02;
+truncvec = @(vec) vec(ceil(length(vec)*cutoff):...
+                        end-ceil(length(vec)*cutoff));
+Pi.oboe = cellfun(truncvec, Pi.complete, 'un', 0);
+dotm.oboe = cellfun(truncvec, dotm.complete, 'un', 0);
+eta.oboe = cellfun(truncvec, eta.complete, 'un', 0);
+torque.oboe = cellfun(truncvec, torque.complete, 'un', 0);
+T_after.oboe = cellfun(truncvec, T_after.complete, 'un', 0);
+%% Look-Up Table Generation
+%{
+These quantities are corrected/reduced, so that they are rendered
+independent of the environmental conditions they were created with. The
+total conditions at inlet are the same as static conditions since there is
+no initial velocity in front of the machine in our model. The LUT are saved
+in their own Data Dictionary, which needs to be loaded. Its name was
+already defined earlier.
+%}
+n_red = n / sqrt(in_state.T.Data(1));
+%{
+Turbine and Compressor are normalized differently. The reduced speed is the
+same for all. The expression for the mass flow is still dotm_red =
+dotm*sqrt(T)/p. T and p are constant in the compressor test, but p
+increases linearly in the turbine case. At each point, the normalization
+needs to be adjusted. Derive new 'p' cell array from existing dotm array,
+so that they are the same size. Initialize as zero to notice errors more
+clearly. Then resample existing pressure timeseries to be same length as
+each cell array vector. Then divide element-wise.
+%}
+if isCompressor
+    dotm.red = cellfun(@(x)...
+        (x * sqrt(in_state.T.Data(1))) / ...
+        (in_state.p.Data(1)), dotm.oboe, ...
+        'UniformOutput', false);
+else
+    p_rsmpl = cellfun(@(x) zeros(size(x)), dotm.oboe, 'un', 0);
+    p_rsmpl = cellfun(@(x) linspace(p.Data(1), p.Data(end), length(x))',...
+        p_rsmpl, 'un', 0);
+    dotm.red = cellfun(@(x, y) x./y*sqrt(in_state.T.Data(1)),...
+            dotm.oboe, p_rsmpl,'un', 0);
+end
+
+dotm_red = create_turbo_LUT(dotm.red, Pi.oboe, n_red);    
+    dotm_red.Table.Min = 0;
+    dotm_red.Table.Unit = '(kg*K^0.5)/(s*Pa)';
+    dotm_red.Table.Description = ['All reduced mass flows ',...
+        'computed in simulation. ',...
+        'Rows are (reduced) rot. speeds; columns are (static) ',...
+        'pressure ratios.'];
+    dotm_red.StructTypeInfo.Name = 'dotm_red';
+    dotm_red.Breakpoints(1).Unit = '1/(s*K^(0.5))';
+
+eta_tot = create_turbo_LUT(eta.oboe, Pi.oboe, n_red);
+    eta_tot.Table.Min = 0;
+    eta_tot.Table.Max = 1;
+    eta_tot.Table.Unit = '1';
+    eta_tot.Table.Description = 'Total-to-Total Efficiency';
+    eta_tot.StructTypeInfo.Name = 'eta';
+    eta_tot.Breakpoints(1).Unit = '1/(s*K^(0.5))';
+
+M = create_turbo_LUT(torque.oboe, Pi.oboe, n_red);
+    M.Table.Min = 0;
+    M.Table.Unit = 'N*m';
+    M.Table.Description = 'Torque';
+    M.StructTypeInfo.Name = 'M';
+    M.Breakpoints(1).Unit = '1/(s*K^(0.5))';
+
+T_after = create_turbo_LUT(T_after.oboe, Pi.oboe, n_red);    
+    T_after.Table.Min = 0;
+    T_after.Table.Unit = 'K';
+    T_after.Table.Description = 'Exit Temperature';
+    T_after.StructTypeInfo.Name = 'T_after';           
+    T_after.Breakpoints(1).Unit = '1/(s*K^(0.5))';
+
+cnamesc = [simInfo.names.turbocharger, '_', ...
+    upper(simInfo.names.('machine_type')(1)),...
+    '_',num2str(P.Results.scale*100)];
+%{
+We could put all LUT objects into one Struct whose fieldname is the
+turbocharger's name, but Simulink is unable to read LUT objects out of
+structs.
+%}
+add_to_DD(simInfo.names.('dd_maps'), [cnamesc,'_dotm_red'], dotm_red);
+add_to_DD(simInfo.names.('dd_maps'), [cnamesc,'_eta_tot'], eta_tot);
+add_to_DD(simInfo.names.('dd_maps'), [cnamesc,'_M'], M);
+add_to_DD(simInfo.names.('dd_maps'), [cnamesc,'_T'], T_after);
+%% Plot in Matlab
+if P.Results.plot
+%{
+Construct labels from the port names we find in the simulation. For this to
+work as in the original make sure to set groot interpreter to latex.
+%}
+if P.Results.redplot
+    label.('dotm') = ['\boldmath\bfseries ',simOut(1).yout.find(...
+        simInfo.names.ports.out.('enthalpy_stream')...
+                                ).Values.dotm.Name, '\_red ['...
+        simOut(1).yout.find(...
+        simInfo.names.ports.out.('enthalpy_stream')...
+                            ).Values.dotm.DataInfo.Units.Name,...
+                            ' * K\^ 0.5/Pa', ']'];
+else
+    label.('dotm') = ['\boldmath\bfseries ',simOut(1).yout.find(...
+        simInfo.names.ports.out.('enthalpy_stream')...
+                                ).Values.dotm.Name, ' ['...
+        simOut(1).yout.find(...
+        simInfo.names.ports.out.('enthalpy_stream')...
+                            ).Values.dotm.DataInfo.Units.Name,']'];
+end
+
+label.('Pi') = ['\bfseries $\',simOut(1).yout.find(...
+    simInfo.names.ports.out.('pressure_ratio')...
+                            ).Name, '$ ['...
+    simOut(1).yout.find(...
+    simInfo.names.ports.out.('pressure_ratio')...
+                        ).Values.DataInfo.Units.Name,']'];
+
+label.('efficiency') = ['\bfseries $\',simOut(1).yout.find(...
+    simInfo.names.ports.out.('efficiency')...
+                            ).Name, '$ ['...
+    simOut(1).yout.find(...
+    simInfo.names.ports.out.('efficiency')...
+                        ).Values.DataInfo.Units.Name,']'];
+%{
+Prepare Figure for the following Plot. Set axes limits such that the
+mass flow axis starts at 0, pressure ratio axis at 1. Upper limit 'inf'
+lets Matlab decide automatically.
+%}
+plots = figure;
+plots.Name = ['Turbomachine Performance Map at ', ...
+    num2str(P.Results.scale*100), ' %'];
+
+if isCompressor
+    subplot(2,1,1)
+        if P.Results.redplot
+            turboplot(dotm.red, Pi.oboe);
+        else
+            turboplot(dotm.oboe, Pi.oboe);
+        end
+        ylim([1 5.5]);
+        title(['\bfseries ', simInfo.names.('machine_type'),...
+            ' Performance Map for ',...
+            simInfo.names.('turbocharger')]);
+        xlabel(label.('dotm'));
+        ylabel(label.('Pi'));
+    subplot(2,1,2)
+        if P.Results.redplot
+            turboplot(dotm.red, eta.oboe);
+        else           
+            turboplot(dotm.oboe, eta.oboe);
+        end
+        ylim([0 1]);
+        title(['\bfseries ', simInfo.names.('machine_type'),...
+            ' Efficiency Map for ',...
+            simInfo.names.('turbocharger')]);
+        xlabel(label.('dotm'));
+        ylabel(label.('efficiency'));
+else
+    subplot(2,1,1)
+        if P.Results.redplot
+            turboplot(Pi.oboe, dotm.red);
+        else
+            turboplot(Pi.oboe, dotm.oboe);
+        end
+        ylim([0 inf]);
+        title(['\bfseries ', simInfo.names.('machine_type'),...
+            ' Performance Map for ',...
+            simInfo.names.('turbocharger')]);
+        xlabel(label.('Pi'));
+        ylabel(label.('dotm'));
+    subplot(2,1,2)
+        turboplot(Pi.oboe, eta.oboe);
+        ylim([0 1]);
+        title(['\bfseries ', simInfo.names.('machine_type'),...
+            ' Efficiency Map for ',...
+            simInfo.names.('turbocharger')]);
+        xlabel(label.('Pi'));
+        ylabel(label.('efficiency'));
+end
+subplot(2,1,1)
+if P.Results.redplot
+    lgd = legend( cellfun(...
+            @num2str, num2cell(n_red), 'UniformOutput', false) ,...
+        'Location', 'NorthWest');
+    title(lgd, 'n\_red [1/(s*K\^ 0.5)]');    
+else
+    lgd = legend( cellfun(...
+            @num2str, num2cell(n*60/1000), 'UniformOutput', false) ,...
+        'Location', 'NorthWest');
+    title(lgd, 'n [krpm]');
+end
+end
+%% Write to File
+%{
+Intended to write to CSV for plotting in LaTeX. Create a file for each run;
+awful approach, but tables/matrices are not allowed to be of unequal
+size. Trouble is alleviated using foreach in pgfplots.
+%}
+if P.Results.write
+    tbl = cellfun(@(x, y, z) [x y z], Pi.oboe, dotm.red, eta.oboe, 'un',0);
+    for kScenario = 1:simInfo.number_of.('scenarios')
+        tbldata = tbl{kScenario};
+        fl.name = [num2str(P.Results.scale*100), '_', ...
+            num2str(round(n_red(kScenario))), '.csv'];
+        fl.path = fullfile('X:\', 'Education', 'University', '13_MT', ...
+            'LaTeX', 'data', 'maps', simInfo.names.('turbocharger'),...
+            upper(simInfo.names.('machine_type')(1)), fl.name);
+        csvwrite(fl.path, tbldata);
+    end
+end
+%% Finish
+simInfo.tau.stop.('script') = toc(simInfo.tau.start.('script'));
+fprintf(['[%s] Script finished. ',...
+    'It took %d minute(s) and %2.1f seconds, %d minute(s) ',...
+    'and %2.1f seconds of which for the simulation of the ',...
+    '%d scenario(s).\n'],...
+    datestr(now), floor(simInfo.tau.stop.('script')/60),...
+    rem(simInfo.tau.stop.('script'),60),...
+    floor(simInfo.tau.stop.('sim')/60),...
+    rem(simInfo.tau.stop.('sim'),60), simInfo.number_of.('scenarios'));
+end
+%% Local Functions (i.e. not nested)
+function idx = idxSearch(port_name,dataset)
+%{ 
+Find Index of a port with a specific name in the model. The model is
+represented by its dataset. The input for 'port_name' is literally the name
+of the input port in the model that this is trying to match. If Strings
+compare succesfully, index is found. Thus, Break out of loop. However, if
+search comes to its last index and the correct string is still not found
+there, return fatal error: input not present.
+%}
+    for idx = 1:dataset.numElements
+        if strcmp(dataset{idx}.Name,port_name)
+            break
+        end
+        if idx == dataset.numElements...
+            && ~strcmp(dataset{idx}.Name,port_name)
+            error(['Could not find an Input Port named ''%s''. ',...
+                'Check that it is spelled correctly, ',...
+                'and that there are no trailing spaces or linebreaks.'],...
+                port_name);
+        end
+    end
+end
+
+function map = turboplot(x,y)
+%{
+Providing some simple but common plot commands. Create 'map' struct to hold
+the lines data. Modify all occurrences by deal()ing to them.
+%}
+    grid on
+    hold on
+    map = cellfun(@plot, x, y);
+    [map.Marker] = deal('o');
+    [map.LineWidth] = deal(1);
+    [map.MarkerSize] = deal(3);
+end
+
+function InitialCond_p1 = IC_p1(n, p_0)
+%{
+This function yields an initial condition for the pressure p_1. This
+pressure is part of the Algebraic Loop. p_1 is put out by the Algebraic
+Constraint (the iterator). Depending on the rotational speed the machine is
+run at, the pressure at inlet p_1 varies strongly. If the machine rotates
+very slowly, little energy is introduced; p_1 is very close to p_0 then.
+The faster the rotational speed (as always, in RPS), the stronger the first
+outflow is and the lower p_1 is. From manual experiments, the function
+p_1(n, t=0) -- meaning the initial condition for p_1 depending on rot.
+speed -- was found to resemble the sigmoid curve below, represented using
+tanh. Careful: all parameters are determinde manually. They need to be
+redone if a new machine does not fit anymore. Simulink is quite sensitive
+to a correct Initial Guess for the Algebraic Constraint. However, if the
+general direction is okay, we good. Probably, a simple linear curve fit
+would do a job just as good; it wouldn't be as good in the extreme
+rot-speed regions. Lastly, convert numeric output to string, because
+Simulink expects strings for 'setBlockParameter'.
+%}
+    InitialCond_p1 = (1 - tanh(n/600 - 3) ) * p_0/2;
+    InitialCond_p1 = num2str(InitialCond_p1);
+end
+
+function InitialCond_p_2 = IC_p_2(n, p_0)
+%{
+After introducing the diffuser, a new pressure p_3 appeared. Pressure p_2
+(behind impeller and in front of diffuser) is now part of the loop and
+requires a special initial condition. The relation was found out by hand
+and probably needs tweaking for new machines. The initial values are set to
+be a portion of the inlet (ambient) pressure.
+%}
+    InitialCond_p_2 = (1 - 0.1337 * n / 666 )*p_0;
+    InitialCond_p_2 = num2str(InitialCond_p_2);
+end
+
+function InitialCond_Pi_D = IC_Pi_D(n)
+%{
+The Initial Condition for the initial pressure ratio provided by the
+diffuser is also rather sensitive to its Initial Condition
+%}
+    InitialCond_Pi_D = n / 2250 + 0.8;
+    InitialCond_Pi_D = num2str(InitialCond_Pi_D);
+end
+
+function LUTobj = create_turbo_LUT(Your_c_arr, Pi_c_arr, n)
+%{
+Returns finished 2D-LookupTable Object from Cell Arrays of Pi (used for
+Breakpoint-Columns) and the desired quantity (used for table data). The
+latter can be dotm, eta etc. Also requires vector of rotational speeds
+(used for Breakpoint-Rows). The pressure ratios resulting from simulation
+might differ wildly. Due to variable step sizes, all computed
+timeseries/vectors are almost guaranteed to be of different lengths.
+Additionally, the contained values are going to have a large amount of
+significant digits (especially for type double). These cannot be arranged
+on the same grid for these reasons; rounding required. The rounding takes
+place until a high enough resolution to round even the most fine-grained
+results is reached. Once all results are rounded, they can be arranged on
+the same grid together. This is the prerequisite for breakpoints for lookup
+tables.
+%}
+decimalres = 0;
+repetitions_occurring = true;
+
+while repetitions_occurring
+    decimalres = decimalres + 1;
+    
+    res = 10^(-decimalres);
+    
+    rounded = cellfun(@(x) round(x, decimalres), Pi_c_arr,...
+                            'UniformOutput', false);
+                        
+    check_reps = @(arr) length(arr) ~= length(unique(arr));
+                        
+    repetitions = cellfun(check_reps, rounded);
+    
+    repetitions_occurring = any(repetitions);
+    
+    if decimalres > 6
+        error(['In rounding, a very high step resolution of %d ',...
+            'was reached. This is probably an issue originating from ',...
+            'elsewhere.'], res)
+    end
+end
+%{
+This is weird numerical glitch, but if this is not put trough round()
+again, we run into floating point limitations and the check for intersect()
+later on might fail. This makes sense, since now both elements are put
+through the round() function. If only one of them is, originally equal
+entries might differ in one Bit (this can be checked via hexadecimal
+representation, num2hex()). Generate length of Pi breakpoints from the
+longest vector / largest Pi found in all arrays in the cell array.
+%}
+Pi_min = min(cellfun(@min, Pi_c_arr));
+Pi_max = max(cellfun(@max, Pi_c_arr));
+%{
+The values found for Pi_min and Pi_max might not fit into the scheme
+governed by the resolution. If they are uneven values, they might get
+rounded down or up by forcing the resolution on them, and this might give
+unexpected results. Therefore, do this manually to be certain. Round
+max. value UP (ceiling), min. value DOWN (floor it).
+%}
+Pi_max = ceil(Pi_max / res) * res;
+Pi_min = floor(Pi_min / res) * res;
+
+Pi_bpdata = round(Pi_min:res:Pi_max, decimalres);
+%{
+Use NaN for Initialization this time in order to use fillmissing(), which
+does not register Zeros or Ones as 'missing'.
+%}
+LUTdata = NaN(length(n), length(Pi_bpdata));
+%{
+Loop over Scenarios (still not able to vectorize (?)). Intersect() finds
+all values the two inputs have in common and then outputs them as well as
+their indices in both arrays. Create a new table with data for the input
+quantity's cell array that is as large as the breakpoint vector. At the new
+indices, insert the computed values for it. This will likely leave NaN
+entries inbetween. These are interpolated across later on.
+%}
+for kScenario = 1:length(n)
+    [~, ind.a, ind.b] = intersect(Pi_bpdata, rounded{kScenario});
+    assert(length(ind.b) == length(rounded{kScenario}),...
+        ['The rounded pressure ratios of scenario %d are not ',...
+        'fully included in the breakpoint set for Pi. ',...
+        'This can happen if floating point limitations occur, so that',...
+        ' two equal values are off by one bit.'], kScenario)
+    LUTdata(kScenario, ind.a) = Your_c_arr{kScenario};
+end
+%{
+Interpolate; using linear seems too simple, since the functions are always
+curved and *strictly* non-linear. Specifying '2' makes fillmissing() work
+row-by-row, across columns. 'none' for 'EndValues' leaves all trailing or
+initial entries (which could only be extrapolated, which would be
+*absolutely* wrong) at their original. This step is very important. It
+could leave NaN at the beginning of the arrays, which are cropped off.
+%}
+LUTdata = fillmissing(LUTdata, 'spline', 2, 'EndValues', 'none');
+
+LUTdata = truncarr(LUTdata, 1, 0);
+Pi_bpdata = truncarr(Pi_bpdata, 1, 0);
+
+    Pi_bp = Simulink.Breakpoint;
+        Pi_bp.Breakpoints.Value = Pi_bpdata;
+        Pi_bp.Breakpoints.Unit = '1';
+        Pi_bp.Breakpoints.Min = 1;
+        Pi_bp.Breakpoints.Max = Pi_bpdata(end);
+        Pi_bp.Breakpoints.Description = ['Range of (static!) pressure ',...
+            'ratios tested in simulation.'];
+        Pi_bp.Breakpoints.FieldName = 'Pi';
+        Pi_bp.StructTypeInfo.Name = 'Pi';
+        
+    n_bp = Simulink.Breakpoint;
+        n_bp.Breakpoints.Value = n;
+        n_bp.Breakpoints.Min = n(1);
+        n_bp.Breakpoints.Max = n(end);
+        n_bp.Breakpoints.Description = 'All rot. speeds tested.'; 
+        n_bp.Breakpoints.FieldName = 'n';
+        n_bp.StructTypeInfo.Name = 'n';
+    
+    LUTobj = Simulink.LookupTable;
+        LUTobj.Table.Value = LUTdata;
+        LUTobj.Breakpoints(1) = n_bp.Breakpoints;
+        LUTobj.Breakpoints(2) = Pi_bp.Breakpoints;
+end
+
+function add_to_DD(name_dd, name_entry, Entry)
+% Takes in a Data Dictionary's name and the name of the Entry intended for
+% it. Also takes in the object to be created in the entry. This could be a
+% LUT Object.
+dObj = Simulink.data.dictionary.open(which(name_dd));
+dSectObj = getSection(dObj,'Design Data');
+try
+    addEntry(dSectObj, name_entry, Entry);
+catch ME
+    switch ME.identifier
+        case 'SLDD:sldd:EntryAlreadyExists'
+            warning(['An entry ''%s'' already existed in the ',...
+                'Data Dictionary ''%s''. It was not reassigned. ',...
+                'Delete it and run this function again. ',...
+                'Check its creation time property for reference.'],...
+                name_entry, name_dd);
+        otherwise
+            rethrow(ME)
+    end
+end
+end
+\end{lstlisting}

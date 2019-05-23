@@ -1,0 +1,1217 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Typography and Misc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{showframe}% Toggle for debugging
+\usepackage{scrhack}% Fixes for packages incompatible with KOMA features
+\usepackage{shellesc}% https://tex.stackexchange.com/a/365784/120853
+
+\usepackage{amsmath}% Needs to be loaded before unicode-math
+\usepackage{mathtools}% Tweaks and improvements for amsmath
+	\newtagform{brackets}{[}{]}
+	\usetagform{brackets}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{unicode-math}% Builds onto fontspec
+
+\defaultfontfeatures{Path=fonts/, Extension=.otf}%all fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% By explicitly including the actual font files in the project and also
+%%%%%%%%%%%%%% calling them explicitly, we ensure tight compatibility across machines and
+%%%%%%%%%%%%%% time (as opposed to relying on them being installed as system fonts).
+%%%%%%%%%%%%%% The configuration has been confirmed to work with Miktex and Texlive on
+%%%%%%%%%%%%%% Windows as well as Texlive on Linux (Debian).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Source: https://ctan.org/texarchive/fonts/tex-gyre/opentype
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setmainfont[%
+	Numbers=OldStyle,% Hanging numbers
+	UprightFont=*-regular,%
+	BoldFont=*-bold,%
+	ItalicFont=*-italic,%
+	BoldItalicFont=*-bolditalic%
+]{texgyrepagella}%[Color=B3EB83]% Toggle color(s) for debugging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Source: https://fonts.google.com/specimen/Inconsolata 
+%%%%%%%%%%%%%% (Consolas is considered better but is not free (?))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setmonofont[%
+	Extension=.ttf,%
+	Scale=MatchLowercase,% Prettier when using inline-code
+	UprightFont=*-Regular,%
+	BoldFont=*-Bold%
+]{Inconsolata}%[Color=FFCE5B]% Toggle color(s) for debugging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Source: https://www.exljbris.com/fontinsans.html
+%%%%%%%%%%%%%% Viable alternative: https://fonts.google.com/specimen/Fira+Sans
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setsansfont[%
+	UprightFont=*_R_45b,%
+	BoldFont=*_B_45b,%
+	ItalicFont=*_I_45b,%
+	BoldItalicFont=*_BI_45b,%
+	SmallCapsFont=*_SC_45b%
+]{Fontin_Sans}%[Color=E85748]% Toggle color(s) for debugging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Source: https://ctan.org/texarchive/fonts/tex-gyre-math/opentype
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setmathfont[%
+	mathrm=sym,% Set math-font-commands to new versions
+	mathit=sym,%
+	mathsf=sym,%
+	mathbf=sym,%
+	mathtt=sym,%
+	NFSSFamily=tgpl%tex gyre pagella lining. This 'NFSS' style is required for \fontfamily{nfss-code}\selectfont to work, e.g. in chemformula
+]{texgyrepagella-math.otf}%[Color=BC7DFF]% Toggle color(s) for debugging
+
+\newfontfamily\unitnumberfont{texgyrepagella-math.otf}%[Color=00FF00]%https://tex.stackexchange.com/a/468031/120853
+
+\usepackage{fontawesome}% High-quality Unicode vector web symbols
+
+\newcommand*{\iecfeg}[1]{\textit{#1}}% Wrapper for "i.e.", "e.g.", "c.f.", "etc.", etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% System Information Banner
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{hologo}
+% Using fontspec, this document is incompatible with anything but XeLaTeX/LuaLaTeX.
+% LuaLaTeX can grab additional memory as needed, therefore no issues with tikz and
+% no need to tikzexternalize.
+% Further, contour-package and XeLaTeX are strictly incompatible (LuaLaTeX works).
+% Therefore, only ever use LuaLaTeX anyway.
+\usepackage{xstring}
+% Print only what occurs after 'This is ' and store in macro.
+% luatexbanner is provided by luatex engine.
+% https://tex.stackexchange.com/a/394043/120853
+\StrBehind*{\luatexbanner}{This is }[\shortbanner]
+% Take input and substitute strings, in this case make plain LuaTeX string into pretty logo.
+% StrSubstitue has no starred variant, therefore dekotenize.
+% https://tex.stackexchange.com/a/350583/120853
+\StrSubstitute{\shortbanner}{\detokenize{LuaTeX}}{\hologo{LuaTeX}}[\prettybanner]
+
+% Get contents of files
+\usepackage{catchfile}
+% Store textfile data in macro.
+% If required, e.g. if the build process does not involve replacing the defaults
+% with current values, set defaults in that file.
+\CatchFileDef{\gitmetafile}{gitmeta.txt}{}
+% Store result in new expandable macro, since xstring cmds are unexpandable.
+% https://tex.stackexchange.com/a/476839/120853
+\StrBetween[1,1]{\gitmetafile}{version=}{;}[\GitVersion]
+\StrBetween[1,2]{\gitmetafile}{shorthash=}{;}[\GitShorthash]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% KOMA Layout, Sectioning etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\addtokomafont{disposition}{\sffamily}% 'disposition' is what KOMA uses to refer to titles etc.
+
+\addtokomafont{chapterprefix}{\raggedleft}%
+
+\renewcommand*{\chapterformat}{%
+\color{g3}
+\chapappifchapterprefix{~}% chapappifchapterprefix{addtext} checks if 'chapterprefix=true' is active and then prints 'Chapter' or 'Appendix' in front of number, followed by additional text 'addtext'
+\scalebox{4.5}{\thechapter}
+}% Autodot automates the generation of a dot. Leave out for no dot
+
+\usepackage{appendix}%
+	\renewcommand*{\appendixname}{Appendices}
+	\renewcommand*{\appendixtocname}{Appendices}
+
+\usepackage{import}% subimport etc.
+
+% For example in code environments, to be able to copy from the PDF
+% (despite that not being a good idea), we want the line numbers to not be part of the
+% selection. This command prints them, but makes the actual copied content empty.
+\usepackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
+	\newcommand*{\emptyaccsupp}[1]{\BeginAccSupp{ActualText={}}#1\EndAccSupp{}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Typesetting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{hyphenat}% For hyphenation of words that already contain a hyphen
+\usepackage{microtype}% Advanced typesetting for kerning etc.
+\usepackage{lipsum}% Dummy text
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Censor
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{censor}
+	\newif\ifpublished% Censor toggle
+	\StopCensoring% Default is to not censor. Use toggle to enable.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Language Support
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{polyglossia}% Language rules. Replacement for babel in lualatex
+	\setmainlanguage[variant=british]{english}
+
+\usepackage[style=british]{csquotes}
+
+\usepackage[inline]{enumitem}
+	\setlist{noitemsep}% No vertical spacing in lists
+	\setlist[1]{labelindent=\parindent}% Indent lists by paragraph indent
+	% Refer to unimath_symbols.pdf for source of \smblksquare etc.:
+	% https://ctan.org/texarchive/macros/latex/contrib/unicode-math
+	\setlist[itemize,1]{label=\smblksquare}% 
+	\setlist[enumerate]{font=\sffamily\bfseries}
+
+\usepackage{todonotes}
+	\setuptodonotes{fancyline}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Floats
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{floatrow}% Does \centering automatically
+
+\floatsetup{footposition=bottom}% For all floats
+
+\floatsetup[longtable]{LTcapwidth=table}% https://tex.stackexchange.com/a/345772/120853
+
+\floatsetup[table]%
+{%
+	style=plaintop,%always above
+	footnoterule=none,%
+	footskip=.35\skip\footins,%
+}%
+
+\DeclareFloatVCode{emptyspace}{\vspace{4pt}}% Empty space after (no rule etc)
+
+\floatsetup[figure]%
+{%
+	capbesideposition=right,%
+	capbesidesep=quad,%
+}%
+
+\floatsetup[subfigure]{style=plain}%plain style, so no rules
+
+\usepackage{wrapfig}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Float Captions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{caption}
+
+\DeclareCaptionLabelSeparator{slash}{\ /\ }%
+\DeclareCaptionFont{ftfont}{\scriptsize\color{g3}\hypersetup{hidelinks}\sffamily\raggedleft}
+
+\captionsetup{% All captions
+	format=plain,%
+	textformat=period,% Always print period at end (don't do it manually and don't include a newline!)
+	font=small,% All fonts
+	labelfont={sf,bf},%
+	labelsep=slash,%
+	labelformat=simple,% Just Name/Number, no period or similar
+	indention=1em,%
+}%
+
+\captionsetup[floatfoot]{%
+	footfont=ftfont,% https://tex.stackexchange.com/q/9547/120853
+}%
+
+\captionsetup[subfigure]{%
+	labelformat=simple,% 'parens' uses parantheses, 'brace' just the right one
+	labelsep=slash,%
+	labelfont={sf,bf},%
+	list=off,% list=off removes subfigures from LoF
+}%
+
+\captionsetup[subtable]{%
+	labelformat=simple,% 'parens' uses parantheses, 'brace' just the right one
+	labelsep=slash,%
+	labelfont={sf,bf},%
+	list=off,% list=off removes subfigures from LoF
+}%
+
+\captionsetup[lstlisting]{%
+	width={\dimexpr1\linewidth-0.24\linewidth},% Manual, a bit hacky
+}%
+
+\renewcommand*{\theContinuedFloat}{\alph{ContinuedFloat}}%change counter
+
+\newlength{\floatfootruleindent}
+\makeatletter
+	\setlength{\floatfootruleindent}{\caption@indent}
+\makeatother
+\renewcommand*{\floatfootskip}{2pt\hspace{\floatfootruleindent}\hrulefill}%hacky
+
+\usepackage{subcaption}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Verbatim Code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{matlab-prettifier}% https://tex.stackexchange.com/a/158816/120853
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Placeholder for escaped LaTeX in codes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\phstring}[1]{\color{cRed}{\mlplaceholder{#1}}}%
+\newcommand*{\phnum}[1]{\color{mBlue}{\mlplaceholder{#1}}}%
+\newcommand*{\phother}[1]{\color{mGreen}{\mlplaceholder{#1}}}%
+\newcommand*{\phnote}[1]{\bfseries \color{cOrange} \hypersetup{allcolors=cOrange} {\mlplaceholder{#1}}}%
+
+\usepackage{lstautogobble}%
+
+\lstset{%
+	style=Matlab-Pyglike,% Alternatives: 'Matlab-editor', 'Matlab-bw', 'Matlab-Pyglike'
+	basicstyle=\scriptsize\ttfamily,%font size so that c. 140 characters fit into one line
+	escapechar=`,%
+	mlplaceholderstyle=\rmfamily\itshape,%
+	mlshowsectionrules=true,%show rules done by %%
+	numbers=left,%
+	numberstyle=\ttfamily\color{g3}\tiny\emptyaccsupp,%
+	firstnumber=1,%https://stackoverflow.com/q/2178301
+	stepnumber=5,%step between printed line numbers
+	numberfirstline=true,%count first line as well
+	numbersep=2pt,%hor. sep. between line numbers and code
+	frame=lines,%top and bottom lines with 'lines'
+	framerule=1pt,%
+	autogobble=true,%remove leading empty spaces/indentation automatically
+	xleftmargin=0.15\linewidth,%
+	xrightmargin=0.1\linewidth,%
+	tabsize=3,%default is 8, which indents a lot
+	backgroundcolor=\color{g6},%
+	columns=flexible,%characters printed at natural width, more readable
+	keepspaces=true,%dont drop spaces and convert tab to spaces
+}%
+
+\lstdefinestyle{betweenpar}{%between paragraphs, i.e. not a huge, independent chunk
+	numbers=none,%
+	basicstyle=\small\ttfamily,%
+	xleftmargin=0.15\linewidth,%
+	xrightmargin=0.05\linewidth,%
+	frame=leftline,%
+	framerule=2pt,%default 0.4pt
+	rulecolor=\color{g3},%
+	backgroundcolor=\color{white},%
+}%
+
+\renewcommand*{\lstlistingname}{Code}%https://tex.stackexchange.com/q/249505/120853
+\renewcommand*{\lstlistlistingname}{List of \lstlistingname}%
+
+\lstMakeShortInline[style=Matlab-Pyglike]§% Allows commands like §break§
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[%
+	style=alphabetic,%
+	backend=biber,%
+	sorting=nyt,%
+	sortcites=true,%Sortcites sorts multiple \cite-entries the way the sorting-key dictates.
+%	refsegment=chapter,%automatic sub-bib for each chapter
+	backref,%https://tex.stackexchange.com/a/211631/120853 %do not use hyperref for this
+	url=false,%still prints URL for @online
+	doi=false,%
+	isbn=false,%
+	]{biblatex}%
+
+\addbibresource{thesis.bib}% *.bib file goes here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Special Treatment for anything in \nocite{*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defbibheading{notcited}{\section*{Further Reading}}
+
+\defbibnote{further}{%
+	\itshape These references were used for this thesis but not cited in the main body; they are provided here as-is.
+}%
+\DeclareBibliographyCategory{cited}%https://tex.stackexchange.com/a/280545/120853
+\AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
+
+\defbibheading{subbibliography}{\section*{\Cref{refsegment:\therefsection\therefsegment}}}%
+
+\defbibenvironment{bibnonum}%https://tex.stackexchange.com/a/477525/120853
+	{\list
+	{}
+	{\setlength{\leftmargin}{\bibhang}%
+	\setlength{\itemindent}{-\leftmargin}%
+	\setlength{\itemsep}{\bibitemsep}%
+	\setlength{\parsep}{\bibparsep}}}%
+	{\endlist}
+	{\item}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Zotero exports Website as misc. Convert it to @online
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareStyleSourcemap{%https://tex.stackexchange.com/a/429112/120853
+	\maps[datatype=bibtex, overwrite=true]{%
+		\map{%
+		 \step[fieldsource=url, final]
+		 \step[typesource=misc, typetarget=online]
+		}%
+	}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% High penalties for URL out of margin. Allow break at num, lc, UC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{biburlnumpenalty}{6000}
+\setcounter{biburllcpenalty}{6000}
+\setcounter{biburlucpenalty}{6000}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Arrays / Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{array}
+	\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}%Vert.+Hor. centering
+
+\usepackage{multirow}
+
+\usepackage{booktabs}%
+
+\renewcommand*{\arraystretch}{1.3}%more vertical stretch
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Other
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[british]{datetime2}%replaces datetime
+
+\usepackage{ifthen}%
+\usepackage{xifthen}%addon for ifthen for \isempty
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Index
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[makeindex]{splitidx}%
+
+\newindex[Terms]{terms}%
+\newindex[Names]{people}%
+\newcommand*{\name}[2]{\textsc{#1}\sindex[people]{\textsc{#1};\ #2}}
+\newcommand*{\term}[1]{\sindex[terms]{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% tocbasic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dynamic width of number column in LoF/LoT etc (numsep + width of longest entry).
+% 'tocline' is the (dynamic) default style.
+\DeclareTOCStyleEntry[dynnumwidth=true]{tocline}{figure}
+\DeclareTOCStyleEntry[dynnumwidth=true]{tocline}{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% SCRlayer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[automark]{scrlayer-scrpage}%automatically mark
+
+\clearscrheadfoot%reset defaults
+
+\newcommand*{\headerrule}{\rule[-1.5ex]{0.1em}{5ex}}%
+\lehead{\llap{\pagemark\enskip\headerrule}\enskip\headmark}%
+\rohead{\headmark\enskip\rlap{\headerrule\enskip\pagemark}}%
+
+\renewcommand*{\chaptermarkformat}{\thechapter\enskip}%https://tex.stackexchange.com/q/299125/120853
+
+\addtokomafont{pagehead}{\sffamily\itshape\footnotesize}
+\addtokomafont{pagenumber}{\sffamily\bfseries\footnotesize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Deliberately blank pages with message
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\blankpage}{%https://tex.stackexchange.com/a/205536/120853
+\par\vspace*{\fill}%
+{\centering\color{g3}Rest of this page intentionally left blank.\par}
+}%
+
+\DeclareNewLayer[%create new layer
+foreground,
+textarea,
+contents=\blankpage
+]{blankpage.fg}
+
+\DeclarePageStyleByLayers{blank}{blankpage.fg}%make created layer available as pagestyle
+\KOMAoptions{cleardoublepage = blank}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% For plot viewing: deliberately blank pages with message
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\blankpageplots}{%https://tex.stackexchange.com/a/205536/120853
+\par\vspace*{\fill}%
+{\centering\color{g3}Rest of this page intentionally left blank, so that related plots may be viewed side-by-side in the print version.\par}
+}%
+
+\DeclareNewLayer[%create new layer
+foreground,
+textarea,
+contents=\blankpageplots
+]{blankpageplots.fg}
+
+\DeclarePageStyleByLayers{blankplots}{blankpageplots.fg}%make created layer available as pagestyle
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Visuals, Graphics, Drawing etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{setspace}%line spacing
+
+\usepackage[super]{nth}%1st, 2nd, 3rd etc. as superscript
+
+\usepackage{rotating}%sidewaystable
+
+\usepackage{pdflscape}%landscape pages in pdf
+
+\usepackage[outline]{contour}%not comptatible with xelatex
+	\contourlength{0.12em}
+	\newcommand*{\ctrw}[1]{\hypersetup{hidelinks}\contour{white}{\textcolor{black}{#1}}}
+	\newcommand*{\ctrb}[1]{\hypersetup{hidelinks}\contour{black}{\textcolor{white}{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Colour
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+
+\definecolor{mBlue}{HTML}{0072BD}%Matlab
+\definecolor{mOrange}{HTML}{D95319}
+\definecolor{mYellow}{HTML}{EDB120}
+\definecolor{mPurple}{HTML}{7E2F8E}
+\definecolor{mGreen}{HTML}{77AC30}
+\definecolor{mSky}{HTML}{4DBEEE}
+\definecolor{mRed}{HTML}{A2142F}
+
+\definecolor{lmBlue}{HTML}{80B9DE}%50percent faded Matlab
+\definecolor{lmOrange}{HTML}{ECA88C}
+\definecolor{lmYellow}{HTML}{F6D890}
+\definecolor{lmPurple}{HTML}{C897C7}
+\definecolor{lmGreen}{HTML}{BBD698}
+\definecolor{lmSky}{HTML}{A6DFF7}
+\definecolor{lmRed}{HTML}{D18A97}
+
+\colorlet{g1}{black!70}%shades of grey, but we don't need 50
+\colorlet{g2}{black!55}
+\colorlet{g3}{black!40}
+\colorlet{g4}{black!20}
+\colorlet{g5}{black!10}
+\colorlet{g6}{black!05}
+
+\definecolor{darklink}{HTML}{282368}%dark blue link color
+\definecolor{tuhh}{HTML}{2DC6D6}%tuhh teal
+
+\definecolor{cRed}{RGB}{209,0,86}%code annotations
+\definecolor{cBlue}{RGB}{0, 130, 185}%
+\definecolor{cGreen}{RGB}{0, 128, 63}%
+\definecolor{cOrange}{RGB}{244, 131, 66}%
+
+\definecolor{rdylbu1}{RGB}{215, 48, 39}%red; from colorbrewer RdYlBu
+\definecolor{rdylbu2}{RGB}{252, 141, 89}%
+\definecolor{rdylbu3}{RGB}{254, 224, 144}%
+\definecolor{rdylbu4}{RGB}{224, 243, 248}%
+\definecolor{rdylbu5}{RGB}{145, 191, 219}%
+\definecolor{rdylbu6}{RGB}{69, 117, 180}%blue
+
+\colorlet{acc1}{rdylbu5}%accent colors
+\colorlet{acc2}{rdylbu2}%
+\colorlet{acc3}{g2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Custom Symbols
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{scalerel}%scale stuff relative
+
+\newcommand*{\scaletox}[1]{\scalerel*{\includegraphics{./logos/#1.pdf}}{X}}%logos to Xheight
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%Auxiliary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\dotred}{\scaletox{dot_red}}
+\newcommand*{\dotgreen}{\scaletox{dot_green}}
+\newcommand*{\blackdiamond}{\scaletox{black_diamond}}
+\newcommand*{\blackcircle}{\scaletox{black_circle}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% MATLAB Simulink
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\logoletter}[2]{\scaletox{#1}\,\textit{#2}}%for terms
+\newcommand*{\logolettervar}[2]{\scaletox{#1}\,\texttt{#2}}%for variables
+%%%%%%%%%%%%%%%%%
+%%Inputs:
+%%%%%%%%%%%%%%%%%
+\newcommand*{\SimulinkStep}{\logoletter{simulink_step_block}{Step-Function}}
+\newcommand*{\SimulinkSteps}{\logoletter{simulink_step_block}{Step-Functions}}
+%%%%%%%%%%%%%%%%%
+%%Data Dictionary:
+%%%%%%%%%%%%%%%%%
+\newcommand*{\SimulinkDD}{\logoletter{simulink_data_dictionary}{Data Dictionary}}
+\newcommand*{\SimulinkDDs}{\logoletter{simulink_data_dictionary}{Data Dictionaries}}
+%%%%%%%%%%%%%%%%%
+%%Workspaces:
+%%%%%%%%%%%%%%%%%
+\newcommand*{\SimulinkBaseWS}{\logoletter{simulink_base_workspace}{Base Workspace}}
+\newcommand*{\SimulinkModelWS}{\logoletter{simulink_model_workspace}{Model Workspace}}
+\newcommand*{\SimulinkModelWSs}{\logoletter{simulink_model_workspace}{Model Workspaces}}
+%%%%%%%%%%%%%%%%%
+%%Models:
+%%%%%%%%%%%%%%%%%
+\newcommand*{\SimulinkModel}{\logoletter{simulink_model}{Model}}
+\newcommand*{\SimulinkModels}{\logoletter{simulink_model}{Models}}
+\newcommand*{\SimulinkRefM}{\logoletter{simulink_referenced_model}{Referenced Model}}
+\newcommand*{\SimulinkRefMs}{\logoletter{simulink_referenced_model}{Referenced Models}}
+\newcommand*{\SimulinkLibM}{\logoletter{simulink_library_model}{Library Model}}
+\newcommand*{\SimulinkLibMs}{\logoletter{simulink_library_model}{Library Models}}
+\newcommand*{\SimulinkLibrary}{\logoletter{simulink_library}{Library}}
+\newcommand*{\SimulinkLibraries}{\logoletter{simulink_library}{Libraries}}
+%%%%%%%%%%%%%%%%%
+%%Data Processing:
+%%%%%%%%%%%%%%%%%
+\newcommand*{\SimulinkLogData}{\logoletter{simulink_log_data}{Data Logging}}
+%%%%%%%%%%%%%%%%%
+%%Look-Up Tables
+%%%%%%%%%%%%%%%%%
+\newcommand*{\SimulinkLUT}{\logoletter{simulink_lut}{Look-Up Table}}
+\newcommand*{\SimulinkLUTs}{\logoletter{simulink_lut}{Look-Up Tables}}
+%%%%%%%%%%%%%%%%%
+%%Simulation Settings:
+%%%%%%%%%%%%%%%%%
+\newcommand*{\SimulinkConfiguration}{\logoletter{simulink_configuration}{Configuration}}
+%%%%%%%%%%%%%%%%%
+%%MATLAB variables etc.
+%%%%%%%%%%%%%%%%%
+\newcommand*{\MatlabVariable}[1]{\logolettervar{simulink_base_workspace}{#1}}
+\newcommand*{\MatlabStruct}{\logoletter{matlab_struct}{Struct}}
+\newcommand*{\MatlabStructs}{\logoletter{matlab_struct}{Structs}}
+\newcommand*{\MatlabTable}{\logoletter{matlab_table}{Table}}
+\newcommand*{\MatlabTables}{\logoletter{matlab_table}{Tables}}
+\newcommand*{\MatlabStructVar}[1]{\logolettervar{matlab_struct}{#1}}
+\newcommand*{\MatlabObjectBox}[1]{\logolettervar{matlab_object_box}{#1}}
+\newcommand*{\SimulinkBus}{\logoletter{matlab_object_box}{Bus}}
+\newcommand*{\SimulinkBuses}{\logoletter{matlab_object_box}{Buses}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%Graphics + Path
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+	\graphicspath{{images/}}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Tikz + Plots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pgfplots}
+
+\usetikzlibrary{%
+	positioning,%
+	tikzmark,%
+	math,%
+	trees,%
+	arrows,%
+	calc,%
+	shapes,%
+	backgrounds,%
+	decorations,%
+	fit,%
+	shadows,%
+	spy,%
+}%
+\usepgfplotslibrary{%
+	colorbrewer,%,
+	groupplots,%
+	colormaps,%
+	units,%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzset{%
+	basic/.style  = {draw, rectangle,text width=8em},%
+	root/.style   = {basic, rounded corners=2pt, thin, align=center,fill=lmRed},%
+	level 2/.style = {basic, rounded corners=6pt, thin,align=center, fill=lmRed!60,text width=6em},%
+	level 3/.style = {basic, thin, align=left, fill=lmRed!30, text width=8em}%
+}%
+\newcommand*{\circnum}[1]{%a circled (preferably) number
+	\tikzset{external/export=false}%never externalize this
+	\tikz[baseline=(X.base)]% 
+	\node (X) [draw, shape=circle, inner sep=0pt, fill=white] {\strut \textbf{#1}};%
+}%
+\newcommand*{\circlet}[1]{%a circled letter
+	\tikzset{external/export=false}%never externalize
+	\tikz[baseline=(char.base)]{%
+	\node [shape=circle,draw,inner sep=2pt,fill=g6] (char) {\textbf{#1}};}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% New Shape; Node with hor. rules
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter%http://www.texample.net/tikz/examples/data-flow-diagram/
+\pgfdeclareshape{horbars}{%
+	\inheritsavedanchors[from=rectangle]
+	\inheritanchorborder[from=rectangle]
+	\inheritanchor[from=rectangle]{center}
+	\inheritanchor[from=rectangle]{base}
+	\inheritanchor[from=rectangle]{north}
+	\inheritanchor[from=rectangle]{north east}
+	\inheritanchor[from=rectangle]{east}
+	\inheritanchor[from=rectangle]{south east}
+	\inheritanchor[from=rectangle]{south}
+	\inheritanchor[from=rectangle]{south west}
+	\inheritanchor[from=rectangle]{west}
+	\inheritanchor[from=rectangle]{north west}
+	\backgroundpath{%
+%	store lower right in xa/ya and upper right in xb/yb
+	\southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+	\northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+	\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+	\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+	\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+	\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+	}%
+}%
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Globally unified plot sizes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength\figureheight
+\newlength\figurewidth
+\setlength{\figureheight}{0.2\textheight}
+\setlength{\figurewidth}{0.9\linewidth}
+
+\newlength{\plotwidth}
+\newlength{\plotheight}
+\setlength{\plotwidth}{0.5\linewidth}
+\setlength{\plotheight}{0.35\textheight}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Colour Cycle for plots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotscreateplotcyclelist{matlabcycle}{%imitate matlab colors in a custom cycle
+	{mBlue},
+	{mOrange},
+	{mYellow},
+	{mPurple},
+	{mGreen},
+	{mSky},
+	{mRed}%no comma here
+}%
+\pgfplotscreateplotcyclelist{mod RdYlBu2}{%modify existing colorbrewer
+	{rdylbu2},
+	{rdylbu5}%no comma here
+}%
+\pgfplotscreateplotcyclelist{mod RdYlBu3}{%modify existing colorbrewer
+	{rdylbu2},
+	{black!50},
+	{rdylbu5}%no comma here
+}%
+\pgfplotscreateplotcyclelist{mod mark list}{%modify predefined to start without mark
+every mark/.append style={solid,fill=\pgfplotsmarklistfill}\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=*\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=square*\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=triangle*\\
+every mark/.append style={solid},mark=star\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=diamond*\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill!40},mark=otimes*\\
+every mark/.append style={solid},mark=|\\
+every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=pentagon*\\
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Global plot settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotstableset{col sep=comma}%if ALL files are comma-sep
+\pgfplotsset{%
+compat = newest,%
+label style={font=\small},%https://tex.stackexchange.com/a/300673/120853
+tick label style={font=\small, /pgf/number format/1000 sep={\,}},% Small space instead of comma
+cycle multi list = {%
+	mod mark list\nextlist%just in case; likely never reached
+	linestyles*\nextlist
+	mod RdYlBu3%iterate through this first; if at end, start anew using next in parent
+},%
+colormap/viridis,%for 3d/surf plots
+legend style={at={(0.5,1.05)},%center hor. (0.5), slightly out of drawing(>1 vert.)
+	anchor=south,%
+	legend columns=-1,%
+	font=\footnotesize,%
+	draw = none,%do not draw box
+	fill = none,%no white fill. Important for gray backgrounds
+	},%
+%
+unit code/.code 2 args={\si{#1#2}},% Use siunitx for units library
+unit markings = {slash space},% The proper way... apparently?
+x SI prefix/micro/.style={/pgfplots/axis base prefix={axis x base 6 prefix \micro}},% https://tex.stackexchange.com/a/224574/120853
+y SI prefix/micro/.style={/pgfplots/axis base prefix={axis y base 6 prefix \micro}},
+z SI prefix/micro/.style={/pgfplots/axis base prefix={axis z base 6 prefix \micro}},
+%
+group style = {%
+	xticklabels at = edge bottom,
+	xlabels at = edge bottom,
+	vertical sep = 3ex,
+	group size = 1 by 2,
+},%
+%
+plotstyleNarrow/.style={%
+	ultra thick,
+	axis line style = thick,
+	width=1\plotwidth,
+	height=1\plotheight,
+	ymajorgrids=true,
+	xmajorgrids=true,
+	grid style=dashed,
+	axis lines=left,
+%	scale only axis,%if off, labels etc will be taken into account for size calculations
+	ytick align=outside,%puts ticks outside the plot itself
+	xtick align=outside,%
+	enlarge x limits=0.05,%won't work if enlarge limits are invoked before 'axis lines left'
+	enlarge y limits=0.05,%
+},%
+tuftelike/.style={%https://tex.stackexchange.com/a/155210/120853
+	axis line shift=10pt,% Also shifts label
+	try min ticks=3,% https://tex.stackexchange.com/a/95753/120853
+	max space between ticks=50,% High number so ticks are far apart
+},%
+minimalistic/.style={%
+	tuftelike,
+	axis lines=left,
+	thick,
+	axis line style = {semithick, -},
+	tick style = {semithick, black},%
+	width=1\plotwidth,
+	height=1\plotheight,
+	ytick align=inside,% Puts ticks inside the plot itself
+	xtick align=inside,%
+%	title style = {font=\footnotesize},
+	xtick={% Always set min, max and middle ticks; if more desired, use 'extra x ticks={}'
+		\pgfkeysvalueof{/pgfplots/xmin},
+		\pgfkeysvalueof{/pgfplots/xmax},
+		(\pgfkeysvalueof{/pgfplots/xmax}+\pgfkeysvalueof{/pgfplots/xmin})/2
+	},
+	ytick={% Same as x
+		\pgfkeysvalueof{/pgfplots/ymin},
+		\pgfkeysvalueof{/pgfplots/ymax},
+		(\pgfkeysvalueof{/pgfplots/ymax}+\pgfkeysvalueof{/pgfplots/ymin})/2
+	},
+	clip = false,% https://tex.stackexchange.com/a/311194/120853
+}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Functions for plotting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzset{%
+declare function=
+	{% https://tex.stackexchange.com/a/279234/120853
+	cpm(\x)= (\x<=500) * (0.781*(28.98641+1.853978*((\x+273.15)/1000)-9.647459*((\x+273.15)/1000)^2+16.63537*((\x+273.15)/1000)^3+0.000117/(((\x+273.15)/1000)^2))+0.2093*(31.32234-20.23531*((\x+273.15)/1000)+57.86644*((\x+273.15)/1000)^2-36.50624*((\x+273.15)/1000)^3-0.007374/((\x+273.15)/1000)^2)  +0.0093*(20.78600+2.825911e-7*((\x+273.15)/1000)-1.464191e-7*((\x+273.15)/1000)^2+1.092131e-8*((\x+273.15)/1000)^3-3.661371e-8/((\x+273.15)/1000)^2)+0.0004*(24.99735+55.18696*((\x+273.15)/1000)-33.69137*((\x+273.15)/1000)^2+7.948387*((\x+273.15)/1000)^3-0.136638/((\x+273.15)/1000)^2)) +
+	(\x>500) * (0.781*(19.50583+19.88705*((\x+273.15)/1000)-8.598535*((\x+273.15)/1000)^2+1.369784*((\x+273.15)/1000)^3+0.527691/(((\x+273.15)/1000)^2))+0.2093*(31.32234-20.23531*((\x+273.15)/1000)+57.86644*((\x+273.15)/1000)^2-36.50624*((\x+273.15)/1000)^3-0.007374/((\x+273.15)/1000)^2)+0.0093*(20.78600+2.825911e-7*((\x+273.15)/1000)-1.464191e-7*((\x+273.15)/1000)^2+1.092131e-8*((\x+273.15)/1000)^3-3.661371e-8/((\x+273.15)/1000)^2)+0.0004*(24.99735+55.18696*((\x+273.15)/1000)-33.69137*((\x+273.15)/1000)^2+7.948387*((\x+273.15)/1000)^3-0.136638/((\x+273.15)/1000)^2)); % SHOMATE equation for air w/ N2/O2/Ar/CO2
+	},%
+}%
+
+%\usepackage{etoolbox}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Scientifics Typesetting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{chemformula}%\ch{}, \chcpd[]{compound} etc
+	\setchemformula{font-family={tgpl}}
+
+\usepackage{cancel}%
+
+\usepackage{physics}%
+
+\usepackage{siunitx}%
+	\DeclareSIUnit\atmosphere{atm}
+	\DeclareSIUnit\krpm{krpm}
+	\DeclareSIUnit\rpm{rpm}
+	\AtBeginDocument{\DeclareSIUnit{\kWh}{kWh}}
+	\sisetup{%
+		detect-all,%
+		number-text-rm=\unitnumberfont,%https://tex.stackexchange.com/a/468031/120853
+	}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Hyperref and PDFs appearance
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[pdfusetitle]{hyperref}%loads url-package internally
+\hypersetup{%
+colorlinks=true,%no ugly frames, but still colored
+allcolors=helvoirt,%
+hidelinks,%toggle here
+plainpages=false,%
+pdfcreator={LaTeX with hyperref, glossaries-extra/bib2gls, biber and splitidx, compiled with latexmk},
+bookmarksnumbered=true,% 
+pdfpagelayout=TwoPageRight,%
+unicode,%https://tex.stackexchange.com/a/66771/120853
+pdfencoding=auto,
+pdfsubject = {{Thesis (Field of Study)}},%
+pdfkeywords = {Your Keywords Here},%
+pdfdisplaydoctitle,%https://tex.stackexchange.com/a/435434/120853
+}%
+
+\usepackage{bookmark}%control bookmark appearance in PDF
+\bookmarksetup{%
+open,%
+openlevel=1,%open first two levels and hide all subsections etc. Levels start at 0
+addtohook={%
+	\ifnum\bookmarkget{level}=0%only print top-level (0) bookmarks bold
+	\bookmarksetup{bold}%
+	\fi%
+	},%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% References
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[capitalise,nameinlink,noabbrev]{cleveref}%
+	\crefname{listing}{\mtlb{}-Code}{\mtlb-Codes}
+	\Crefname{listing}{\mtlb{}-Code}{\mtlb{}-Codes}
+	\creflabelformat{equation}{#2#1#3} % no (1), but 1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Glossaries
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[abbreviations, symbols, record, nomain]{glossaries-extra}
+% Record for bib2gls to work.
+% Nomain, aka no default glossary
+% Also see https://tex.stackexchange.com/q/477658/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% New Glossary 'types'. Load data into them from *.bib-files, then run bib2gls
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Using Abbreviations/Symbols package options creates these glossaries already.
+% Create the rest manually.
+\newglossary*{subsuper}{Sub- and Superscripts}%
+
+\GlsXtrLoadResources[%
+	src={./glossaries/abbreviations},%
+	selection = {all},%select all files in bib. Not a good approach, but bib2gls seems to have problems with subimport stuff
+]%
+\GlsXtrLoadResources[%
+	src={./glossaries/symbols},%
+	selection = {all},% grab all from bib-file. Using subimport currently does not work
+	sort-field={group},%sort by this field first (Greek/Roman)
+	sort-suffix={name},%append this field as suffix to sort-field (actual symbol names)
+	symbol-sort-fallback={description},% fall back to description if absolutely required
+]%
+\GlsXtrLoadResources[%
+	src={./glossaries/subsuper},%
+	type=subsuper,%
+	category = subsuper,
+	selection = {all},% grab all from bib-file. Using subimport currently does not work
+	sort-field={group},%sort by this field first
+	sort-suffix={name},%append this field as suffix to sort-field
+	symbol-sort-fallback={description},% fall back to description if absolutely required
+]%
+
+% indexonlyfirst can also be a package option.
+% Index only on first use for certain categories, as set manually above.
+% https://tex.stackexchange.com/a/318886/120853
+% Symbols has type=symbols but category=symbol (singular)
+\glssetcategoryattribute{symbol}{indexonlyfirst}{true}
+\glssetcategoryattribute{subsuper}{indexonlyfirst}{true}
+
+% Each bib-entry has a group-field.
+% bib2gls is smart and would take grouptitles from there, but those are just variables.
+% Give proper names for all groups here.
+\glsxtrsetgrouptitle{sub}{Subscripts}
+\glsxtrsetgrouptitle{super}{Superscripts}
+\glsxtrsetgrouptitle{greek}{Greek}
+\glsxtrsetgrouptitle{roman}{Roman}
+
+% One down in rprt/book
+\setglossarysection{section}
+
+% More Width
+\setglossarypreamble[subsuper]{\glssetwidest{MMM}}%
+
+% Remove from ToC (doing this manually).
+% Default is true.
+\glstocfalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% New Styles as longtables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{glossary-mcols}%multi-column styles
+\usepackage{glossary-longextra}
+
+\newcommand*{\glshdrfont}[1]{\sffamily\large\textbf{#1}}% font for gls table heads
+\makeatletter
+\newcommand*{\mltcolspan}[2]{\multicolumn{\numexpr\LT@cols}{#1}{#2}} % multicolumn spanning all columns automatically. https://tex.stackexchange.com/a/168358/120853
+\makeatother
+
+\newglossarystyle{symbunitlong}{%https://tex.stackexchange.com/a/269571/120853
+	\setglossarystyle{long-name-desc}% base new style on existing one
+
+	\renewcommand*{\glsgroupheading}[1]{%
+		\glshdrfont{\glsgetgrouptitle{##1}} & \glshdrfont{\descriptionname} & \glshdrfont{\nth{1} Use} & \glshdrfont{Unit}\tabularnewline
+	}%
+
+	\renewenvironment{theglossary}{% Change the table type
+	\begin{longtable}{rp{0.8\glsdescwidth}rl}}%
+	{\end{longtable}}
+
+	\renewcommand*{\glossaryheader}{%
+		%empty first header
+		\endfirsthead
+		\mltcolspan{c}{\textit{(\expandafter\MakeUppercase\currentglossary{} continued)}}\\
+		\endhead
+	}%
+	\renewcommand*{\glossentry}[2]{%
+		\glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+		\glossentrydesc{##1}\glspostdescription & ##2 & \glsentryuseri{##1}\tabularnewline
+	}%use glsentryuseri to access entry, not glsuseri https://tex.stackexchange.com/a/281772/120853
+}
+
+\newglossarystyle{myacr}{%https://tex.stackexchange.com/a/269571/120853
+	\setglossarystyle{long3col}% base this style on the list style
+	\renewenvironment{theglossary}{% Change the table type
+	\begin{longtable}{lp{0.9\glsdescwidth}p{10em}}}%
+	{\end{longtable}}
+	\renewcommand*{\glossaryheader}{%  Change the table header
+		\glshdrfont{Short} & \glshdrfont{\descriptionname} & \glshdrfont{Pages}\\
+		\endfirsthead
+		\mltcolspan{c}{\textit{(\expandafter\MakeUppercase\currentglossary{} continued)}}\\
+		\glshdrfont{Short} & \glshdrfont{\descriptionname} & \glshdrfont{Pages}\\
+		\endhead%
+	}%
+	\renewcommand*{\glossentry}[2]{%
+		\glstarget{##1}{\glossentryname{##1}}%
+		& \glossentrydesc{##1}\glspostdescription & ##2 \tabularnewline
+	}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Color Boxes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tcolorbox}%put after tikz
+\tcbuselibrary{many,listings}%breaking, skins(for enhanced)
+\tcbset{%
+highlight math style = {colframe=white, colback=g6},%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Custom Boxes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtcbox{\tb}{colback=white,colframe=black,size=title}%tb short for tree box
+\newtcbox{\tbb}{colback=white,colframe=black,size=normal,boxrule=1mm}%tb big
+
+\newtcbox{greytext}{colback=white,colframe=g3,sharp corners}%
+
+\newtcbox{\descbox}[1][g3]{%
+	before = \tikzexternaldisable,%
+	after = \tikzexternaldisable,%
+	enhanced,%
+	sharp corners,%
+	colback=white,%
+	colframe=#1,%
+	boxsep=0pt,%
+	boxrule=2pt,%
+	drop shadow,%wont work without enhanced skin
+}%
+
+\newtcolorbox[%
+auto counter,%
+number within=chapter,%
+crefname={Illustration}{Illustrations},%https://tex.stackexchange.com/a/126023/120853
+list inside = illustrations,%
+]
+{illustration}%name of environment
+[2]%amount of arguments
+[]%default of optional argument, which is the first one. Use it for label
+{%
+	beforeafter skip = 18pt plus 4pt minus 4pt,%
+	before pre= \tikzexternaldisable, %using 'enhanced' from the 'skins' library (loaded by issuing 'many'), we hand drawing to tikz. However, tikz crashes if it tries to externalize box.
+	after app= \tikzexternaldisable,
+	width=0.95\linewidth,%
+	enlarge left by=0.025\linewidth,%https://tex.stackexchange.com/a/273111/120853
+	title=Illustration\ \thetcbcounter: #2,%
+	fonttitle=\sffamily\bfseries,%
+	leftrule=1mm,%
+	arc is angular,%
+	parbox,%allows regular paragraph breaks
+	breakable,%breaks across pages
+	enhanced,%hands drawing to tikz
+	rightrule=0mm,%
+	bottomrule=0mm,%
+	list text=#2,%setting what ends up in 'list of' so that 'Illustration:' is not shown
+	#1,%
+	colback=g6,%
+	colframe=g1,%g1,%
+%	float,
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Chemistry Environment
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcounter{chemreac}%
+\newenvironment{chemreac}%
+{%
+	\ignorespaces
+	\addtocounter{equation}{-1}%eq counter should not be stepped
+	\refstepcounter{chemreac}
+	\renewcommand*{\theequation}{\textbf{R}\,\thechapter.\thechemreac}
+	\medmuskip = 2\medmuskip%https://tex.stackexchange.com/a/83747/120853
+	\thickmuskip = 2\thickmuskip
+	\begin{equation}%
+}%
+{%
+	\end{equation}%	
+	\ignorespacesafterend%get rid of spacing and indentation
+}%
+
+\crefformat{chemreac}{#2Reaction~#1#3}%#1 is counter, #2/#3 start/end of hyperlink respectively
+\Crefformat{chemreac}{#2Reaction~#1#3}%
+\crefrangeformat{chemreac}{Reactions~#3#1#4 to~#5#2#6}%
+\Crefrangeformat{chemreac}{Reactions~#3#1#4 to~#5#2#6}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% ABBREVIATIONS, TERMS, NAMES etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\eqend}{\,.}%command \eqdot reserved by unicode-math
+\newcommand*{\eqcomma}{\,,}
+
+\newcommand*{\mr}[1]{_{\mathrm{#1}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Programs/Languages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\smlnk}{%https://tex.stackexchange.com/a/471263/120853
+	Simulink%
+	\nobreak
+	\textsuperscript{\textregistered}%
+	\term{MATLAB\textsuperscript{\textregistered}!Simulink\textsuperscript{\textregistered}}%
+}%
+\newcommand*{\mtlb}{%
+	MATLAB%
+	\nobreak
+	\textsuperscript{\textregistered}%
+	\term{MATLAB\textsuperscript{\textregistered}}%
+}%
+\newcommand*{\mtlbsymb}{%
+	Symbolic Math Toolbox%
+	\nobreak
+	\textsuperscript{\texttrademark}%
+	\term{MATLAB\textsuperscript{\textregistered}!Symbolic Math Toolbox\textsuperscript{\texttrademark}}%
+}%
+\newcommand*{\mtlbsmlnk}{%
+	\mtlb % MATLAB
+	\kern-0.25em % move the slash back
+	\slash % allow a break after the slash
+	\nobreak % the next space is not allowed for a break
+	\hspace{0pt}% allow the next word to be hyphenated
+	\smlnk
+}%
+\newcommand*{\smscp}{%
+	Simscape%
+	\nobreak%
+	\textsuperscript{\texttrademark}%
+	\term{MATLAB\textsuperscript{\textregistered}!Simulink\textsuperscript{\textregistered}!Simscape\textsuperscript{\texttrademark}}%
+}%
+\newcommand*{\fortran}{%
+FORTRAN\term{FORTRAN}%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Vectors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\vect}[2]{\ensuremath{\vec{\symbf{#1}}_{\mathrm{#2}}}}%vector
+\newcommand*{\vectcomp}[3]{\ensuremath{\symbf{#1}_{\mathrm{#2#3}}}}%vector component
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Angles
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\angstanitz}[1]{\ensuremath{\gls{angabs}_{#1}^{\ast}}}%Stanitz shifted by 90deg
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Other
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\enthalpy}[2]{%
+	\ifthenelse{\isempty{#1}\or\isempty{#2}} %check if ONE OF THE TWO arguments is empty
+	{\ensuremath{\gls{specenthalpy}\mr{#1#2}}} %just print second argument if *either* argument is empty
+	{\ensuremath{\gls{specenthalpy}\mr{#1,#2}}} %print both with comma separation if BOTH are present
+}%
+\newcommand*{\rothalpy}[1]{\ensuremath{\gls{rothalpy}\mr{#1}}}
+
+\newcommand*{\Machnumber}{\name{Mach}{Ernst} number} %https://tex.stackexchange.com/a/106619/120853
+\newcommand*{\Reynoldsnumber}{\name{Reynolds}{Osborne} number}
+%
+\newcommand*{\const}{const.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% SI Unit additions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareSIQualifier{\ai}{\gls{air}}
+\DeclareSIQualifier{\dr}{\gls{air},\gls{dry}}
+\DeclareSIQualifier{\fu}{\gls{fuel}}
+\DeclareSIQualifier{\com}{\gls{component}}
+\DeclareSIQualifier{\wat}{\chcpd{H2O}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Custom hyphenation rules
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\hyphenation{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% CUSTOM COMMNANDS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\adaptedfrom}{Adapted from}%for references
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Regular white box for all types of content
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\whitebox}[1]{\setlength{\fboxsep}{3pt}\colorbox{white}{#1}} %https://tex.stackexchange.com/a/23682/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Big center dot for dot product. Unicode 2219
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\bigcdot}{\vysmblkcircle{}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Dotted square as provided by font/unicode-math. Very neat-looking placeholder
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\square}{\ensuremath{\dottedsquare{}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% sans-serif T for vector transpose. Unicode 1D5B3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\transpose}{^{\msansT}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Colored Underbracket
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\undercolored}[2]{%https://tex.stackexchange.com/a/261317/120853
+\begingroup%
+	\color{g2}%
+	\underbracket{\normalcolor #1}_{\color{g2}\text{#2}}%https://tex.stackexchange.com/a/468907/120853
+\endgroup%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Equal sign overset with tiny equation reference
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\refequal}[1]{%
+\ensuremath{\overset{\text{\tiny\crefname{equation}{Eq.}{Eqs.}\cref{#1}}}{=}}} %https://tex.stackexchange.com/a/22101/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Mean/Average: horizontal bar. Better than \bar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\mean}[1]{\ensuremath{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Student immatriculation number
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter%https://stackoverflow.com/a/2833982
+	\newcommand\immnumber[1]{\renewcommand\@immnumber{#1}}
+	\newcommand\@immnumber{\@latex@error{No \noexpand\immnumber given}\@ehc}
+
+	\newcommand\thesis[1]{\renewcommand\@thesis{#1}}
+	\newcommand\@thesis{\@latex@error{No \noexpand\thesis given}\@ehc}
+\makeatother
