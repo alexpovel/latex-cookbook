@@ -716,20 +716,20 @@ contents=\blankpage
 	units,%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\tikzset{%
-	basic/.style  = {draw, rectangle,text width=8em},%
-	root/.style   = {basic, rounded corners=2pt, thin, align=center,fill=lmRed},%
-	level 2/.style = {basic, rounded corners=6pt, thin,align=center, fill=lmRed!60,text width=6em},%
-	level 3/.style = {basic, thin, align=left, fill=lmRed!30, text width=8em}%
-}%
-\newcommand*{\circnum}[1]{% A circled (preferably) number
-	\tikz[baseline=(X.base)]% 
-	\node (X) [draw, shape=circle, inner sep=0pt, fill=white] {\strut \textbf{#1}};%
-}%
-\newcommand*{\circlet}[1]{% A circled letter
-	\tikz[baseline=(char.base)]{%
-	\node [shape=circle,draw,inner sep=2pt,fill=g6] (char) {\textbf{#1}};}%
-}%
+%\tikzset{%
+%	basic/.style  = {draw, rectangle,text width=8em},%
+%	root/.style   = {basic, rounded corners=2pt, thin, align=center,fill=lmRed},%
+%	level 2/.style = {basic, rounded corners=6pt, thin,align=center, fill=lmRed!60,text width=6em},%
+%	level 3/.style = {basic, thin, align=left, fill=lmRed!30, text width=8em}%
+%}%
+%\newcommand*{\circnum}[1]{% A circled (preferably) number
+%	\tikz[baseline=(X.base)]% 
+%	\node (X) [draw, shape=circle, inner sep=0pt, fill=white] {\strut \textbf{#1}};%
+%}%
+%\newcommand*{\circlet}[1]{% A circled letter
+%	\tikz[baseline=(char.base)]{%
+%	\node [shape=circle,draw,inner sep=2pt,fill=g6] (char) {\textbf{#1}};}%
+%}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Globally unified plot sizes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -880,7 +880,7 @@ declare function=
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{chemformula}%\ch{}, \chcpd[]{compound} etc
 	\setchemformula{font-family={tgpl}}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{cancel}% Cancel out stuff with large rule
 
 \usepackage{physics}% Has several issues, but also practical for swift stuff
@@ -998,7 +998,6 @@ addtohook={%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% New Styles as longtables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \usepackage{glossary-mcols}% Multi-column styles
 \usepackage{glossary-longextra}
 
@@ -1111,32 +1110,23 @@ list inside = illustrations,%
 %	float,
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Chemistry Environment
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Chemistry Environment (loaded after cleveref)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcounter{chemreac}%
 \newenvironment{chemreac}%
 {%
 	\ignorespaces
-	\addtocounter{equation}{-1}%eq counter should not be stepped
+	\addtocounter{equation}{-1}% eq counter should not be stepped
 	\refstepcounter{chemreac}
 	\renewcommand*{\theequation}{\textbf{R}\,\thechapter.\thechemreac}
-	\medmuskip = 2\medmuskip%https://tex.stackexchange.com/a/83747/120853
+	\medmuskip = 2\medmuskip% https://tex.stackexchange.com/a/83747/120853
 	\thickmuskip = 2\thickmuskip
 	\begin{equation}%
 }%
 {%
-	\end{equation}%	
-	\ignorespacesafterend%get rid of spacing and indentation
+	\end{equation}%
+	\ignorespacesafterend% Get rid of spacing and indentation
 }%
-
-\crefformat{chemreac}{#2Reaction~#1#3}%#1 is counter, #2/#3 start/end of hyperlink respectively
-\Crefformat{chemreac}{#2Reaction~#1#3}%
-\crefrangeformat{chemreac}{Reactions~#3#1#4 to~#5#2#6}%
-\Crefrangeformat{chemreac}{Reactions~#3#1#4 to~#5#2#6}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1144,7 +1134,7 @@ list inside = illustrations,%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\eqend}{\,.}%command \eqdot reserved by unicode-math
+\newcommand*{\eqend}{\,.}% Command \eqdot reserved by unicode-math
 \newcommand*{\eqcomma}{\,,}
 
 \newcommand*{\mr}[1]{_{\mathrm{#1}}}

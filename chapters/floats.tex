@@ -1,7 +1,7 @@
-\section{Float Features: Figures, Tables etc.}
+\chapter{Float Features}
 In \cref{fig:censorbox,tab:font_examples}, we have already seen examples for floats.
-These are handled by packages \texttt{caption} and \texttt{floatrow}.
-Notable features are the capability to have captions the same width as the float they are attached to.
+These are handled by packages \package{caption} and \package{floatrow}.
+A notable feature is the capability for captions the same width as the float they are attached to.
 This tends to look much prettier, \iecfeg{cf.} \cref{fig:wide_caption,fig:tighter_caption}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}
@@ -20,7 +20,7 @@ This tends to look much prettier, \iecfeg{cf.} \cref{fig:wide_caption,fig:tighte
 }%
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Multiple floats}
+\section{Multiple floats}
 Other possibilities are rather arbitrary arrangements of sub-figures and -captions.
 For this, see \cref{fig:impeller_throat}, which contains two sub-figures \cref{fig:impeller_throat_iso,fig:impeller_throat_flat}.
 Multiple sub-tables are also possible, see \cref{tab:works_on_turbocharging}.
@@ -199,7 +199,7 @@ Multiple sub-tables are also possible, see \cref{tab:works_on_turbocharging}.
 	}%
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Side Captions}
+\section{Side-Captions}
 Lastly, on occasion figures and their captions might look disproportionate in combination.
 In these cases, placing a side-caption might relieve the situation, as shown in \cref{fig:sidecap}.
 \begin{figure}
@@ -213,27 +213,24 @@ In these cases, placing a side-caption might relieve the situation, as shown in 
 }%
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Caption Position}
-Note that the caption of \cref{tab:font_examples} occurs \textit{above} the table no matter the \texttt{caption} command's position.
+\section{Caption Positioning}
+Note that the caption of \cref{tab:font_examples} occurs \textit{above} the table no matter the \package{caption} command's position.
 Per convention, figure captions should appear below, table captions above their bodies.
-This is also handled by \texttt{floatrow}.
-Also note that there is neither a fullstop nor \textit{any} character (no space, no empty line) behind the last caption line in the source code, since dots are managed globally by the \texttt{caption} package.
+This is also handled by \package{floatrow}.
+Also note that there is neither a fullstop nor \textit{any} character (no space, no empty line) behind the last caption line in the source code, since dots are managed globally by the \package{caption} package.
 \paragraph{Float Footer}
 We also have a \verb|\floatfoot| command for all floats.
 This is used to place additional info underneath the caption, primarily used for references.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Tikz and pgfplots}
-Packages \texttt{tikz} and \texttt{pgfplots} offer an absolutely scary plethora of features.
-A select few are presented here%
-\footnote{%
-	By the way, footnotes look like this.%
-}.
+\section{Tikz and pgfplots}
+Packages \package{tikz} and \package{pgfplots} offer an absolutely scary plethora of features.
+A select few are presented here.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Drawing over Bitmaps}
+\subsection{Drawing over Bitmaps}
 When having to rely on bitmaps, once might still want to add additional info.
 This can be done directly in \LaTeX{}, profiting from all the usual features.
-In the example here, this is of course the retaining of the text font, but also usage of the wonderful \texttt{contour} package to draw legible black-on-white (or vice-versa) text.
+In the example here, this is of course the retaining of the text font, but also usage of the wonderful \package{contour} package to draw legible black-on-white (or vice-versa) text.
 An example is shown in \cref{fig:mtu_turbo}.
 \begin{figure}
 \ffigbox[\FBwidth]
@@ -280,7 +277,7 @@ An example is shown in \cref{fig:mtu_turbo}.
 }
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Direct plotting}
+\subsection{Direct plotting}
 If you rely on tools like \texttt{matlab2tikz}, maybe this is for you.
 We can plot \textit{directly} into \LaTeX, without having to import outside data in the form of \texttt{*.csv}-files or automatically generated Tikz-pictures.
 Still, anything more than polynomials is probably still too much.
@@ -325,7 +322,10 @@ This is demonstrated in \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte}
 \begin{figure}\ContinuedFloat
 \fcapside[\FBwidth]
 {%
-	\caption{Same as \cref{fig:plotting_in_latex} in hip and \enquote{\textit{Tufte}-like}}
+	\caption{
+		Same as \cref{fig:plotting_in_latex} in hip and \enquote{\textit{Tufte}-like}.
+		Note how this is a \emph{continued} float%
+	}
 	\label{fig:plotting_in_latex_tufte}
 }%
 {%
@@ -360,7 +360,7 @@ This is demonstrated in \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte}
 }%
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{From a file}
+\subsection{Plotting from files}
 As discussed, often we'd want to plot data from files.
 The better behaved the CSV file is (meaningful headers, no junk rows), the easier that is.
 In \cref{fig:diffuser}, we only have to specify \iecfeg{e.g.} \verb|y=M| and the column corresponding to that header is automatically chosen, with no confusion about indices/numbers.
@@ -413,8 +413,8 @@ In \cref{fig:diffuser}, we only have to specify \iecfeg{e.g.} \verb|y=M| and the
 }
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Tikz and Text}
-We can also draw tikz content into text content using \texttt{tikzmark}.
+\subsection{Tikz and Text}
+We can also draw tikz content into text content using \verb|\tikzmark|.
 This, and also how to use \verb|\foreach| in tikz, is illustrated in \cref{eq:tikz_in_text}.
 There, usage of chemical compounds as \verb|\chcpd| is also shown.
 
@@ -454,28 +454,30 @@ There, usage of chemical compounds as \verb|\chcpd| is also shown.
 \end{minipage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{Regular Tikz pictures}
+\subsection{Regular Tikz pictures}
 Tikz really is \textit{not} meant for drawing.
 The more free-form images shown here were created in InkScape.
 Still, \enquote{quoting} in Tikz is much preferred and nicer when the images are somewhat programmatic, aka there's a lot of \SI{90}{\degree} corners, equal distances, and everything is a bit \enquote{block-like}.
 Then, your chances of success using Tikz are much improved, for it is suited well then.
 For example, a small file structure diagram:
 
+\begin{center}
 \begin{tikzpicture}[%http://www.texample.net/tikz/examples/filesystem-tree/
-grow via three points={one child at (0.5,-0.7) and
-	two children at (0.5,-0.7) and (0.5,-1.4)},
-edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)},
-every node/.style={draw=black,thick,anchor=west,fill=g5},
-font=\ttfamily,%
-]%
-\node {\faFileO{} parent.py}
-child { node {\faFileO{} constants.py}}
-child { node {\faFileO{} parameters.py}}
-child { node {\faFileO{} handling.py}}
-child { node {\faFileO{} performance\_maps.py}};
+	grow via three points={one child at (0.5,-0.7) and
+		two children at (0.5,-0.7) and (0.5,-1.4)},
+	edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)},
+	every node/.style={draw=black,thick,anchor=west,fill=g5},
+	font=\ttfamily,%
+	]%
+	\node {\faFileO{} parent.py}
+	child { node {\faFileO{} constants.py}}
+	child { node {\faFileO{} parameters.py}}
+	child { node {\faFileO{} handling.py}}
+	child { node {\faFileO{} performance\_maps.py}};
 \end{tikzpicture}
+\end{center}
 
-Note how \texttt{tikzpicture} environments don't have to be contained in floats.
+Note how \verb|tikzpicture| environments don't have to be contained in floats.
 A second example is shown in \cref{fig:tikz_diagram}.
 
 \begin{figure}
@@ -570,3 +572,79 @@ A second example is shown in \cref{fig:tikz_diagram}.
 	\label{fig:tikz_diagram}%
 }%
 \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{InkScape}
+Having seen what Tikz is good for, \cref{fig:inkscape_example1,fig:inkscape_example2} are good examples for when InkScape might be the better choice: 3D drawings with curves.
+While InkScape is really awkward to use at times, and severely lacking behind its commercial competitors (which is fine), it has 3D perspective tools that can also handle these cases.
+That being said, Tikz is always the preferred method if so feasible.
+
+InkScape will let you create freely scalable vector graphics (\texttt{*.svg}).
+They may then be exported as \texttt{*.pdf}; now, that is only half the story.
+The vector graphic's text part is exported to a plain text (\iecfeg{i.e.}\ \TeX) file, as \verb|*.pdf_tex|.
+On the latter, we then call \verb|\input| within \LaTeX{}, and that file in turn embeds the previously created \texttt{*.pdf} file.
+
+If you aim to reuse just the \texttt{*.pdf}, without the text, outside of \LaTeX{}, perhaps on your website, then you will want it to really only contain \emph{one} page.
+However, InkScape may create multi-page files.
+Selecting all text elements in the \texttt{*.svg} file and moving them to the top-most layer (press \texttt{POS1}) will ensure that the generated \texttt{*.pdf} will have just one page containing the entire image.
+\begin{figure}\ContinuedFloat*
+\ffigbox[\FBwidth]%
+{%
+	\caption{InkScape is likely a better choice for images like this one}%
+	\label{fig:inkscape_example1}%
+	\floatfoot{\adaptedfrom{} \autocite[47]{stanitz_one-dimensional_1952}}%
+}%
+{%
+	\small
+	\def\svgwidth{0.6\figurewidth}
+	\input{./images/diffuser_force_balance.pdf_tex}
+}%
+\end{figure}%
+\begin{figure}\ContinuedFloat
+	\fcapside[\FBwidth]%
+	{%
+		\caption{Another example for InkScape usage}%
+		\label{fig:inkscape_example2}%
+		\floatfoot{\autocite[30]{guzzella_introduction_2010}}%
+	}%
+	{%
+		\small
+		\def\svgwidth{0.6\figurewidth}
+		\input{./images/gas_volume.pdf_tex}
+	}%
+\end{figure}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Illustrations}
+As a special gimmick, there is an environment for illustrations.
+It may be useless now, but you can alter it to suit your needs; the skeleton is there for you.
+It mainly behaves like the other floats: it\dots floats\dots and also has its own list.
+\begin{illustration}{I am a useless box}
+	There can be pretty much any content in here.
+	Math works, as we can see
+	\begin{equation}
+	1 = 1!
+	\end{equation}
+	still holds true after all these years.
+	Inserting other floats in here will cause \LaTeX{} to have a massive fit.
+	We circumvent this by setting the \verb|[H]| flag, saying \enquote{Oh hell yeah, we do want this float right here}.
+	\textbf{In any other context, setting any such flag is considered poor style.}
+	Well, by me at least.
+	You \textbf{will} be setting these flags prematurely and then run into countless issues of placement and \textbf{very poor} spacing.
+	For the love of God, let \LaTeX{} do its job in placing the floats.
+	Truth be told, they will on occasion not be placed where you need or want them.
+	Keep working.
+	At the very end, when all is done, go ahead and change the few misplaced floats manually, by shoving them about in the source code (still not using \verb|htb!| flags).
+	Then, you're done, with minimal pain and maximum usage of \LaTeX{} spacing/placing capabilities.
+	Here is such a float within a float:
+	\begin{figure}[H]
+		\fcapside[\FBwidth]
+		{%
+			\caption{Side-captions are still possible. So are labels}
+			\label{fig:inside_float}
+		}%
+		{%
+			\includegraphics[width=0.6\linewidth]{example_image}
+		}
+	\end{figure}
+	This box even breaks across pages if so required.
+	Should this turn out ugly, some manual action is certainly required.
+\end{illustration}

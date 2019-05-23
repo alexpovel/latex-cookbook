@@ -79,6 +79,14 @@ Note how the symbols in \cref{eq:click_me} are hyperlinks (leading to their defi
 In a very unintrusive yet also not ambivalent way, we can highlight important results, as is done in \cref{eq:highlighted}.
 This feature is a natural part of \package{tcolorbox}, a very powerful package for anything color and boxes!
 
+\subsubsection{Chemical Reactions}
+
+Closely related to purely mathematical equations are chemical ones, as shown in \cref{reac:meaningless}.
+\begin{chemreac}\label{reac:meaningless}
+	\ch{C + O2 -> CO2}
+\end{chemreac}
+This functionality is still very basic and probably poorly executed in parts.
+
 \subsection{Sans-Serif}
 Having taken care of the main/roman font, we turn to the others.
 \href{https://www.exljbris.com/fontinsans.html}{Fontin} is a decent sans-serif font.
@@ -250,47 +258,10 @@ def value_cleanup(raw_in) -> float:
 
 Inline code goes like so: §y = [file_patterns[x] for x in ["send", "help"]]§.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Illustrations}
-As a special gimmick, there is an environment for illustrations.
-It may be useless now, but you can alter it to suit your needs; the skeleton is there for you.
-It mainly behaves like the other floats: it\dots floats\dots and also has its own list.
-\begin{illustration}{I am a useless box}
-	There can be pretty much any content in here.
-	Math works, as we can see
-	\begin{equation}
-		1 = 1!
-	\end{equation}
-	still holds true after all these years.
-	Inserting other floats in here will cause \LaTeX{} to have a massive fit.
-	We circumvent this by setting the \verb|[H]| flag, saying \enquote{Oh hell yeah, we do want this float right here}.
-	\textbf{In any other context, setting any such flag is considered poor style.}
-	Well, by me at least.
-	You \textbf{will} be setting these flags prematurely and then run into countless issues of placement and \textbf{very poor} spacing.
-	For the love of God, let \LaTeX{} do its job in placing the floats.
-	Truth be told, they will on occasion not be placed where you need or want them.
-	Keep working.
-	At the very end, when all is done, go ahead and change the few misplaced floats manually, by shoving them about in the source code (still not using \verb|htb!| flags).
-	Then, you're done, with minimal pain and maximum usage of \LaTeX{} spacing/placing capabilities.
-	Here is such a float within a float:
-	\begin{figure}[H]
-		\fcapside[\FBwidth]
-		{%
-			\caption{Side-captions are still possible. So are labels}
-			\label{fig:inside_float}
-		}%
-		{%
-		\includegraphics[width=0.6\linewidth]{example_image}
-		}
-	\end{figure}
-	This box even breaks across pages if so required.
-\end{illustration}
+\begin{landscape}
+\section{Landscape}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{landscape}
-%\section{Landscape}
-%
-%Pages in landscape format are rather straightforward to implement.
-%Note that not only are these in landscape orientation; they are also recognized as such by supporting PDF viewers, rotating the page for you and keeping it legible.
-%\end{landscape}
+Pages in landscape format are rather straightforward to implement.
+Note that not only are these in landscape orientation; they are also recognized as such by supporting PDF viewers, rotating the page for you and keeping it legible.
+\end{landscape}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
