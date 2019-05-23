@@ -64,7 +64,7 @@ Some more examples follow.
 \begin{gather}
 	\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{temperature}\label{eq:click_me}\\
 	e^{i\pi} + 1 = 0\\
-	\lim\limits_{x \to \infty} \frac{\pi(x)}{x / \ln(x)} = 1\\
+	\tcbhighmath{\lim\limits_{x \to \infty} \frac{\pi(x)}{x / \ln(x)} = 1}\label{eq:highlighted}\\
 	\sum_{k = 0}^{n} %
 	\begin{pmatrix}%
 		n \\ k
@@ -76,13 +76,16 @@ Some more examples follow.
 
 Note how the symbols in \cref{eq:click_me} are hyperlinks (leading to their definition in the glossary), courtesy of packages \package{hyperref} and the wonderful \package{glossaries-extra} working together.
 
+In a very unintrusive yet also not ambivalent way, we can highlight important results, as is done in \cref{eq:highlighted}.
+This feature is a natural part of \package{tcolorbox}, a very powerful package for anything color and boxes!
+
 \subsection{Sans-Serif}
 Having taken care of the main/roman font, we turn to the others.
 \href{https://www.exljbris.com/fontinsans.html}{Fontin} is a decent sans-serif font.
 Quite importantly, and in contrast to almost all other free sans-serif fonts, it comes with all the bells and whistles required for stunts, see \cref{tab:sans_font_examples}.
 This even includes small-capitals support.
 
-\subsection{Mono-Spaced}
+\subsection{Mono-Spaced}\label{ch:mono-spaced}
 Wanting to display any sort of code in the document will have you looking for a mono-spaced aka typewriter font.
 \href{https://fonts.google.com/specimen/Inconsolata }{Inconsolata}, provided by Google, will be our pick here:
 \begin{lstlisting}[style=betweenpar]
@@ -203,6 +206,86 @@ You can also censor float contents, as illustrated in \cref{fig:censorbox}.
 		}%
 	}
 \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Code}
+As previously seen in \cref{ch:mono-spaced}, we have a special code-block environment for code between paragraphs (\iecfeg{i.e.}, not a float).
+Its big brother Floaty McFloatface is illustrated in \cref{code:bigbrother}.
+Notice how you can very easily select and copy\footnote{steal} said code without having to worry about line numbers.
+The line numbers can even be referenced, \iecfeg{e.g.}\ we find a §return§ statement on \cref{codeline:empty_list}.
+This requires escaping the \verb|\label| with the previously specified special command, back-ticks: \verb|`escaped LaTeX`|.
+
+\begin{lstlisting}[
+float,
+caption={[Short code caption description possible]
+This is an example for a floating code environment with some interesting \LaTeX{} stuff.
+The actual code is likely crap, you be the judge
+},
+label={code:bigbrother}
+]
+def value_cleanup(raw_in) -> float:
+	"""Turn dirtied string(s) (e.g. ",233 kg") to float(s)."""
+	if isinstance(raw_in, (int, float, datetime)) or raw_in is None:
+		return raw_in `\phnote{A useless note: \(x^2 \neq x\)}``\label{codeline:empty_list}`
+	elif isinstance(raw_in, list):
+		clean_list = []
+		for substr in raw_in:
+			clean_list.append(value_cleanup(substr))  # Recursion
+		return clean_list
+	elif not isinstance(raw_in, str):
+		raise TypeError(f"Expected type 'str', got '{type(raw_in).__name__}'.")
+	else:
+		dotted = raw_in.replace(",", ".")  # Decimal representation
+		cleaned = dotted.strip()  # Remove surrounding whitespace
+		numeric = '0123456789-.'  # Include negatives/decimal sep. in search
+		position = None  # Initialize to throw error just in case
+		# Append space for search to work
+		for position, char in enumerate(cleaned + " "):
+			if char not in numeric:
+			if position == 0:  # Didn't even start with numerical char
+				return None `\phstring{\textsc{\textbf{This is interesting}}}`
+			break
+		# Up to just before found nun-numeric char
+		return float(cleaned[:position]) `\phnum{\num{-1.5e-2} is also a float}`
+\end{lstlisting}
+
+Inline code goes like so: §y = [file_patterns[x] for x in ["send", "help"]]§.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Illustrations}
+As a special gimmick, there is an environment for illustrations.
+It may be useless now, but you can alter it to suit your needs; the skeleton is there for you.
+It mainly behaves like the other floats: it\dots floats\dots and also has its own list.
+\begin{illustration}{I am a useless box}
+	There can be pretty much any content in here.
+	Math works, as we can see
+	\begin{equation}
+		1 = 1!
+	\end{equation}
+	still holds true after all these years.
+	Inserting other floats in here will cause \LaTeX{} to have a massive fit.
+	We circumvent this by setting the \verb|[H]| flag, saying \enquote{Oh hell yeah, we do want this float right here}.
+	\textbf{In any other context, setting any such flag is considered poor style.}
+	Well, by me at least.
+	You \textbf{will} be setting these flags prematurely and then run into countless issues of placement and \textbf{very poor} spacing.
+	For the love of God, let \LaTeX{} do its job in placing the floats.
+	Truth be told, they will on occasion not be placed where you need or want them.
+	Keep working.
+	At the very end, when all is done, go ahead and change the few misplaced floats manually, by shoving them about in the source code (still not using \verb|htb!| flags).
+	Then, you're done, with minimal pain and maximum usage of \LaTeX{} spacing/placing capabilities.
+	Here is such a float within a float:
+	\begin{figure}[H]
+		\fcapside[\FBwidth]
+		{%
+			\caption{Side-captions are still possible. So are labels}
+			\label{fig:inside_float}
+		}%
+		{%
+		\includegraphics[width=0.6\linewidth]{example_image}
+		}
+	\end{figure}
+	This box even breaks across pages if so required.
+\end{illustration}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\begin{landscape}
 %\section{Landscape}

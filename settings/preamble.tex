@@ -256,16 +256,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{listings}% For Matlab: https://tex.stackexchange.com/a/158816/120853
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Placeholder for escaped LaTeX in codes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\phstring}[1]{\color{cRed}{\mlplaceholder{#1}}}%
-\newcommand*{\phnum}[1]{\color{mBlue}{\mlplaceholder{#1}}}%
-\newcommand*{\phother}[1]{\color{mGreen}{\mlplaceholder{#1}}}%
+\newcommand*{\phstring}[1]{\color{cRed}{#1}}%
+\newcommand*{\phnum}[1]{\color{mBlue}{#1}}%
+\newcommand*{\phother}[1]{\color{mGreen}{#1}}%
 \newcommand*{\phnote}[1]{%
 	\bfseries\color{cOrange}%
-	\hypersetup{allcolors=cOrange}{\mlplaceholder{#1}}%
+	\hypersetup{allcolors=cOrange}{#1}%
 	}%
 
 \usepackage{lstautogobble}%
@@ -278,7 +277,7 @@
 	showtabs=true,
 	tab=,
 	tabsize=2,
-	basicstyle=\ttfamily\footnotesize,%\setstretch{.5},
+	basicstyle=\ttfamily,%\footnotesize,%\setstretch{.5},
 	stringstyle=\color{stringcolour},
 	showstringspaces=false,
 	alsoletter={1234567890},
@@ -379,7 +378,7 @@
 \renewcommand*{\lstlistingname}{Code}% https://tex.stackexchange.com/q/249505/120853
 \renewcommand*{\lstlistlistingname}{List of \lstlistingname}%
 
-%\lstMakeShortInline[style=Matlab-Pyglike]§% Allows commands like §break§
+\lstMakeShortInline[style=olivierverdierpython]§%allows commands like §break§
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -930,8 +929,8 @@ addtohook={%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[capitalise,nameinlink,noabbrev]{cleveref}%
-	\crefname{listing}{\mtlb{}-Code}{\mtlb-Codes}
-	\Crefname{listing}{\mtlb{}-Code}{\mtlb{}-Codes}
+	\crefname{listing}{algorithm}{algorithms}
+	\Crefname{listing}{Algorithm}{Algorithms}
 	\creflabelformat{equation}{#2#1#3} % No (1), but 1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
