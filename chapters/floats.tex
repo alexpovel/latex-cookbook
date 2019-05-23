@@ -1,95 +1,4 @@
-\chapter{Thesis Features}
-
-This template is the result of a Master thesis in \textbf{mechanical engineering}.
-Keeping that in mind, it is probably still absolutely suitable for countless other disciplines.
-Adapt and use this template as you wish; giving credit to the original repository at
-\begin{center}
-	\url{https://github.com/alexpovel/thesis_template}
-\end{center}
-would be appreciated, so that collaborators can be attracted.
-
-\section{Text Features}
-Between any section commands (from \verb|\part| down), there always has to be some content.
-I would normally not know what to put between \textbf{Text Features} and \textbf{Fonts}, but really putting \textit{anything} I consider necessary.
-Anything else looks off.
-At least, tell the reader what the following hierarchical level contains for them.
-\subsection{Fonts}
-Using high-quality fonts is one goal.
-This includes the fantastic \href{https://ctan.org/texarchive/fonts/tex-gyre/opentype}{\TeX Gyre fonts}, of which the \textit{Palatino} (by Hermann Zapf) clone \textit{Pagella} was chosen for this template.
-It comes with an accompanying \href{https://ctan.org/texarchive/fonts/tex-gyre-math/opentype}{math font} of the same name.
-As such, achieving a better match of text and maths fonts is nigh impossible.
-Not only do the fonts look fantastic on their own, they (just as important) also feature an immensely broad support for symbols and characters, as well as font shapes and weights and combinations thereof.
-The latter is demonstrated in \cref{tab:font_examples}.
-Note that using the package \texttt{cleveref}, we only ever issue \verb|\cref| commands.
-The package does the heavy lifting and puts the float type in front, also with correct plural forms if required.
-Doing it any other way is just way too laborious.
-%
-\newcommand*{\sampletext}{The quick brown Fox jumps over the lazy Dog 13 times!}
-\begin{table}
-\ttabbox{%
-	\caption[\TeX Gyre Pagella Examples]% Brackets hold entry that will go into List of Tables
-	{%
-		Examples for font features offered by \TeX Gyre Pagella%
-	}%
-	\label{tab:font_examples}% Use a string like 'tab:' to help with organization and auto-complete when reffing
-}%
-{%
-	\begin{tabular}{@{}ll@{}}% Use @{} to remove white space from sides (since braces are empty)
-		\toprule
-			Feature & Sample Text\\
-		\midrule
-			Regular & \sampletext\\
-			\textbf{Bold} & \textbf{\sampletext}\\
-			\textit{Italics} & \textit{\sampletext}\\
-			\textbf{\textit{Bold Italics}} & \textbf{\textit{\sampletext}}\\
-		\addlinespace% Some ininconspicuous vertical separation; more visually pleasing than a full rule
-			\textsc{Small Capitals} & \textsc{\sampletext}\\
-			\textbf{\textsc{Bold SC}} & \textbf{\textsc{\sampletext}}\\
-			\textit{\textsc{Italics SC}} & \textit{\textsc{\sampletext}}\\
-		\bottomrule
-	\end{tabular}
-}%
-\end{table}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Lists}
-In technical publications, using lists (either bullet points or enumerations) is highly encouraged.
-They should \textbf{always} be preferred over doing the same thing in a block of text.
-Just consider this example list:
-\begin{itemize}
-	\item the presented approach is more complex than the previous one:
-	\begin{enumerate}
-		\item more time was spent doing computation,
-		\item less time was spent effing about,
-		\item features were added.
-	\end{enumerate}
-	\item at the same time, the following simplifications were made:
-	\begin{enumerate}
-		\item went from continuous- to discrete-time simulations,
-		\item threw out some superfluous stuff.
-	\end{enumerate}
-\end{itemize}
-Processing the very same information from a text paragraph is much less accessible.
-Note the block-like \texttt{itemize} symbol, and the fact that enumerate numbers are part of the sans-serif family and bold.
-This was specified and may be changed in the \texttt{enumitem} package options.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Censoring}
-Let me tell you a huge secret: \todo{I am a TODO note} \censor{today is \today}.
-You can also censor float contents, as illustrated in \cref{fig:censorbox}.
-\begin{figure}
-	\ffigbox[\FBwidth]
-	{%
-		\caption{Example for a censoring box}%
-		\label{fig:censorbox}%
-	}%
-	{%
-		\censorbox{%
-		\includegraphics[width=0.5\textwidth]{example_image}% Having issued \graphicspath globally, we do not have to specify the full path here. Not even the file extension is strictly necessary.
-		}%
-	}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Floats: Figures, Tables etc.}
+\section{Float Features: Figures, Tables etc.}
 In \cref{fig:censorbox,tab:font_examples}, we have already seen examples for floats.
 These are handled by packages \texttt{caption} and \texttt{floatrow}.
 Notable features are the capability to have captions the same width as the float they are attached to.
@@ -313,7 +222,8 @@ Also note that there is neither a fullstop nor \textit{any} character (no space,
 We also have a \verb|\floatfoot| command for all floats.
 This is used to place additional info underneath the caption, primarily used for references.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Tikz}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Tikz and pgfplots}
 Packages \texttt{tikz} and \texttt{pgfplots} offer an absolutely scary plethora of features.
 A select few are presented here%
 \footnote{%
@@ -457,7 +367,7 @@ In \cref{fig:diffuser}, we only have to specify \iecfeg{e.g.} \verb|y=M| and the
 \begin{figure}
 \ffigbox[\FBwidth]
 {
-	\caption{Some CSV data for a diffuser}
+	\caption{A plot from CSV data for a diffuser}
 	\label{fig:diffuser}
 }%
 {%
@@ -543,4 +453,120 @@ There, usage of chemical compounds as \verb|\chcpd| is also shown.
 \vspace{11ex}% We need to use 'overlay', but this also means we lose the bounding box. Eye-ball it here, sadly.
 \end{minipage}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Regular Tikz pictures}
+Tikz really is \textit{not} meant for drawing.
+The more free-form images shown here were created in InkScape.
+Still, \enquote{quoting} in Tikz is much preferred and nicer when the images are somewhat programmatic, aka there's a lot of \SI{90}{\degree} corners, equal distances, and everything is a bit \enquote{block-like}.
+Then, your chances of success using Tikz are much improved, for it is suited well then.
+For example, a small file structure diagram:
 
+\begin{tikzpicture}[%http://www.texample.net/tikz/examples/filesystem-tree/
+grow via three points={one child at (0.5,-0.7) and
+	two children at (0.5,-0.7) and (0.5,-1.4)},
+edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)},
+every node/.style={draw=black,thick,anchor=west,fill=g5},
+font=\ttfamily,%
+]%
+\node {\faFileO{} parent.py}
+child { node {\faFileO{} constants.py}}
+child { node {\faFileO{} parameters.py}}
+child { node {\faFileO{} handling.py}}
+child { node {\faFileO{} performance\_maps.py}};
+\end{tikzpicture}
+
+Note how \texttt{tikzpicture} environments don't have to be contained in floats.
+A second example is shown in \cref{fig:tikz_diagram}.
+
+\begin{figure}
+\ffigbox[0.95\linewidth]
+{%
+	\begin{tikzpicture}%https://tex.stackexchange.com/a/166254/120853
+	[%
+	every path/.style={thick},%https://tex.stackexchange.com/a/302931/120853
+	]%
+	
+	% Row of Model Blocks
+	\node[simblock, minimum height = 5ex] (outlet) {Outlet};
+	\node[simblock, minimum height = 5ex, right = of outlet] (turbine) {Turbine};
+	\node[simblock, minimum height = 5ex, right = of turbine] (compressor) {Compressor};
+	\node[simblock, minimum height = 5ex, right = of compressor] (inlet) {Inlet};
+	\draw[->] (outlet) -- (turbine) node [midway, above, font = \footnotesize] {feeds};
+	\draw[->] (turbine) -- (compressor) node [midway, above, font = \footnotesize, align = center] (shaft) {via\\shaft};
+	\draw[->] (compressor) -- (inlet) node [midway, above, font = \footnotesize] {feeds};
+	
+	% Division Block underneath Engine
+	\node[below = 12ex of inlet.south, draw= none] (div) {};
+	\node[below = 4ex of div, draw = none] (mult) {};
+	\node[simblock, fit = (mult) (div), minimum height = 8ex] (multdiv) {};
+	\node at (div) {\(\div\)};
+	\node at (mult) {\(\ast\)};
+	
+	% Connect Inlet and Division part
+	\draw[->] (inlet.east) -- ++ (+1, 0)  node [pos=1, above] {\(p\mr{\gls{inlet}}(\tau)\)} |- ($(multdiv.east)!0.5!(multdiv.north east)$);
+	
+	% p min block next to multiplication
+	\draw[<-] ($(multdiv.east)!0.5!(multdiv.south east)$) -- ++ (1, 0) node[simblock] {\(p\mr{\gls{air},\gls{ratedeng}}\)};
+	
+	\node [circle, fill, inner sep = 0.3ex, left = 0.7em of multdiv] (split1) {};
+	\draw (multdiv) -- (split1);
+	
+	% Bias and inverted Bias blocks
+	\node[simblock, left = of div] (biasinv) {\(1 - u\)};
+	\node[simblock, left = of mult] (bias) {\(u - 1\)};
+	\draw[->] (split1) |- (bias);
+	\draw[->] (split1) |- (biasinv);
+	
+	% Split again
+	\node [circle, fill, inner sep = 0.3ex, left = 1em of biasinv] (split2) {};
+	\draw (biasinv) -- (split2);
+	
+	\node[simblock, left = 1em of split2, triangle, shape border rotate = 90] (gainint) {\small\(I\)};
+	\draw[->] (split2) -- (gainint);
+	
+	\node[simblock, above = of gainint, triangle, shape border rotate = 90] (gainp) {\small\(P\)};
+	\draw[->] (split2) |- (gainp);
+	
+	% Intersection between Integer Gain and Multi/Div block as helper
+	\coordinate (help1) at (gainint|-multdiv);
+	
+	% Integer Text, but don't draw
+	\node[draw = none, left = 4em of help1, minimum height = 8ex] (int) {\(\frac{KTs}{z - 1}\)};
+	
+	% Falling Edge Sign with Arrow
+	\draw ($(int.east)!0.5!(int.south east)$) -- ++ (0.5em, 0) -- ++ (0, -0.7em) -- ++ (0.5em, 0) coordinate (intsign_end);
+	\draw[thin, ->] ($(int.east)!0.5!(int.south east)$) -- ++ (0.5em, 0) -- ++ (0, -0.5em);
+	
+	% Move fitting to background so it does not overwrite the nodes it fits to
+	\begin{pgfonlayer}{background}
+	\node[simblock, fit = (int.north west) (intsign_end)] (int_block) {};
+	\end{pgfonlayer}
+	
+	\draw[->] (bias) -- (int_block.east|-mult) node [midway, below, align = center, font = \footnotesize] {falling edge\\reset};
+	\draw[->] (gainint) -- (int_block.east|-div);
+	
+	\node [simblock, circle, left = of int_block] (sum) {};
+	\draw[->] (gainp) -| (sum) node [pos = 0.9, right] {\(+\)};
+	\draw[->] (int_block) -- (sum) node [pos = 0.8, below] {\(+\)};
+	
+	\node[simblock, left = of sum] (biasinvout) {\(1- u\)};
+	\draw[->] (sum) -- (biasinvout);
+	
+	\node[simblock, left = of outlet] (times) {\(\times\)};
+	\draw[->] (times) -- (outlet) node [midway, above, font = \footnotesize] {\(\dot{m}_{\gls{turbine}}\)};
+	
+	\node[simblock, below = of times] (sat) {\(\num{0.1} \leq u \leq \num{1}\)};
+	\draw[->] (biasinvout) -| (sat);
+	\draw[->] (sat) -- (times) node [midway, left] {\(\mathbf{\gls{wastegate_position}(\tau)}\)};
+	
+	\node[simblock, above = of outlet, minimum height = 5ex] (eng) {Engine};
+	
+	\draw[->] (inlet) |- (eng) node [pos = 0.8, above, font = \footnotesize] {feeds};
+	\draw[->] (eng) -| (times) node [pos = 0.7, left, font = \footnotesize] {\(\dot{m}_{\gls{exhaust}}\)};
+	\end{tikzpicture}
+}%
+{%
+	\caption{Wastegate implementation in a feedback-loop in \smlnk{} as an example for a Tikz diagram}%
+	\label{fig:tikz_diagram}%
+}%
+\end{figure}

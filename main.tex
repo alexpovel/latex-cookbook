@@ -24,7 +24,8 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \includeonly{%
 %	frontmatter,%
-	intro,%
+	text,%
+	floats,%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,6 +59,15 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 \begin{document}
 \subincludefrom{chapters/}{frontmatter}%
 %
-\subincludefrom{chapters/}{intro}%
+This template emerged from a Master thesis in \textbf{mechanical engineering}.
+Keeping that in mind, it is probably still absolutely suitable for countless other disciplines.
+Adapt and use this template as you wish; giving credit to the original repository at
+\begin{center}
+	\url{https://github.com/alexpovel/thesis_template}
+\end{center}
+would be appreciated, so that interested collaborators can join.
 %
+\subincludefrom{chapters/}{text}%
+%
+\subincludefrom{chapters/}{floats}%
 \end{document}

@@ -11,7 +11,7 @@
 
 \usepackage{amsmath}% Needs to be loaded before unicode-math
 \usepackage{mathtools}% Tweaks and improvements for amsmath
-	\newtagform{brackets}{[}{]}
+	\newtagform{brackets}{[}{]}% We want to be cool, so standard parantheses don't cut it
 	\usetagform{brackets}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,7 +70,8 @@
 	NFSSFamily=tgpl%tex gyre pagella lining. This 'NFSS' style is required for \fontfamily{nfss-code}\selectfont to work, e.g. in chemformula
 ]{texgyrepagella-math.otf}%[Color=BC7DFF]% Toggle color(s) for debugging
 
-\newfontfamily\unitnumberfont{texgyrepagella-math.otf}%[Color=00FF00]%https://tex.stackexchange.com/a/468031/120853
+% https://tex.stackexchange.com/a/468031/120853:
+\newfontfamily\unitnumberfont{texgyrepagella-math.otf}%[Color=00FF00]
 
 \usepackage{fontawesome}% High-quality Unicode vector web symbols
 
@@ -89,7 +90,7 @@
 % luatexbanner is provided by luatex engine.
 % https://tex.stackexchange.com/a/394043/120853
 \StrBehind*{\luatexbanner}{This is }[\shortbanner]
-% Take input and substitute strings, in this case make plain LuaTeX string into pretty logo.
+% Take input and substitute strings; here: make plain LuaTeX string into pretty logo.
 % StrSubstitue has no starred variant, therefore dekotenize.
 % https://tex.stackexchange.com/a/350583/120853
 \StrSubstitute{\shortbanner}{\detokenize{LuaTeX}}{\hologo{LuaTeX}}[\prettybanner]
@@ -109,13 +110,15 @@
 %%%%%%%%%%%%%% KOMA Layout, Sectioning etc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\addtokomafont{disposition}{\sffamily}% 'disposition' is what KOMA uses to refer to titles etc.
+\addtokomafont{disposition}{\sffamily}% 'disposition' are titles etc. in KOMA
 
 \addtokomafont{chapterprefix}{\raggedleft}%
 
 \renewcommand*{\chapterformat}{%
 \color{g3}
-\chapappifchapterprefix{~}% chapappifchapterprefix{addtext} checks if 'chapterprefix=true' is active and then prints 'Chapter' or 'Appendix' in front of number, followed by additional text 'addtext'
+% chapappifchapterprefix{addtext} checks if 'chapterprefix=true' is active,
+% then prints 'Chapter' or 'Appendix' in front of number, followed by more text 'addtext'
+\chapappifchapterprefix{~}% 
 \scalebox{4.5}{\thechapter}
 }% Autodot automates the generation of a dot. Leave out for no dot
 
@@ -175,12 +178,10 @@
 
 \floatsetup[table]%
 {%
-	style=plaintop,%always above
+	style=plaintop,% Always above, no matter where \caption is called
 	footnoterule=none,%
 	footskip=.35\skip\footins,%
 }%
-
-\DeclareFloatVCode{emptyspace}{\vspace{4pt}}% Empty space after (no rule etc)
 
 \floatsetup[figure]%
 {%
@@ -188,20 +189,24 @@
 	capbesidesep=quad,%
 }%
 
-\floatsetup[subfigure]{style=plain}%plain style, so no rules
+\floatsetup[subfigure]{style=plain}% Plain style, so no rules
 
-\usepackage{wrapfig}
+\usepackage{wrapfig}% For figures within text; discouraged, often looks poor
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Float Captions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{caption}
 
 \DeclareCaptionLabelSeparator{slash}{\ /\ }%
-\DeclareCaptionFont{ftfont}{\scriptsize\color{g3}\hypersetup{hidelinks}\sffamily\raggedleft}
+\DeclareCaptionFont{ftfont}{%
+	\scriptsize\color{g3}%
+	\hypersetup{hidelinks}%
+	\sffamily\raggedleft%
+	}%
 
 \captionsetup{% All captions
 	format=plain,%
-	textformat=period,% Always print period at end (don't do it manually and don't include a newline!)
+	textformat=period,% Always print period at end
 	font=small,% All fonts
 	labelfont={sf,bf},%
 	labelsep=slash,%
@@ -231,15 +236,18 @@
 	width={\dimexpr1\linewidth-0.24\linewidth},% Manual, a bit hacky
 }%
 
-\renewcommand*{\theContinuedFloat}{\alph{ContinuedFloat}}%change counter
+\renewcommand*{\theContinuedFloat}{\alph{ContinuedFloat}}% Change counter to letter
 
+% Make this new length and indent, same length as regular caption indent
 \newlength{\floatfootruleindent}
 \makeatletter
 	\setlength{\floatfootruleindent}{\caption@indent}
 \makeatother
-\renewcommand*{\floatfootskip}{2pt\hspace{\floatfootruleindent}\hrulefill}%hacky
 
-\usepackage{subcaption}%
+% A bit hacky; introduce a rule underneath caption of \floatfoot is called:
+\renewcommand*{\floatfootskip}{2pt\hspace{\floatfootruleindent}\hrulefill}%
+
+\usepackage{subcaption}% For subfloats
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -255,31 +263,34 @@
 \newcommand*{\phstring}[1]{\color{cRed}{\mlplaceholder{#1}}}%
 \newcommand*{\phnum}[1]{\color{mBlue}{\mlplaceholder{#1}}}%
 \newcommand*{\phother}[1]{\color{mGreen}{\mlplaceholder{#1}}}%
-\newcommand*{\phnote}[1]{\bfseries \color{cOrange} \hypersetup{allcolors=cOrange} {\mlplaceholder{#1}}}%
+\newcommand*{\phnote}[1]{%
+	\bfseries\color{cOrange}%
+	\hypersetup{allcolors=cOrange}{\mlplaceholder{#1}}%
+	}%
 
 \usepackage{lstautogobble}%
 
 \lstset{%
 	style=Matlab-Pyglike,% Alternatives: 'Matlab-editor', 'Matlab-bw', 'Matlab-Pyglike'
-	basicstyle=\scriptsize\ttfamily,%font size so that c. 140 characters fit into one line
+	basicstyle=\scriptsize\ttfamily,% Font size so that c. 140 chars fit into one line
 	escapechar=`,%
 	mlplaceholderstyle=\rmfamily\itshape,%
-	mlshowsectionrules=true,%show rules done by %%
+	mlshowsectionrules=true,% Show rules done by %%
 	numbers=left,%
 	numberstyle=\ttfamily\color{g3}\tiny\emptyaccsupp,%
-	firstnumber=1,%https://stackoverflow.com/q/2178301
-	stepnumber=5,%step between printed line numbers
-	numberfirstline=true,%count first line as well
-	numbersep=2pt,%hor. sep. between line numbers and code
-	frame=lines,%top and bottom lines with 'lines'
+	firstnumber=1,% https://stackoverflow.com/q/2178301
+	stepnumber=5,% Step between printed line numbers
+	numberfirstline=true,% Count first line as well
+	numbersep=2pt,% Hor. sep. between line numbers and code
+	frame=lines,% Top and bottom lines with 'lines'
 	framerule=1pt,%
-	autogobble=true,%remove leading empty spaces/indentation automatically
+	autogobble=true,% Remove leading empty spaces/indentation automatically
 	xleftmargin=0.15\linewidth,%
 	xrightmargin=0.1\linewidth,%
-	tabsize=3,%default is 8, which indents a lot
+	tabsize=3,% Default is 8, which indents a lot
 	backgroundcolor=\color{g6},%
-	columns=flexible,%characters printed at natural width, more readable
-	keepspaces=true,%dont drop spaces and convert tab to spaces
+	columns=flexible,% Characters printed at natural width, more readable
+	keepspaces=true,% Don't drop spaces and convert tab to spaces
 }%
 
 \lstdefinestyle{betweenpar}{%between paragraphs, i.e. not a huge, independent chunk
@@ -293,7 +304,7 @@
 	backgroundcolor=\color{white},%
 }%
 
-\renewcommand*{\lstlistingname}{Code}%https://tex.stackexchange.com/q/249505/120853
+\renewcommand*{\lstlistingname}{Code}% https://tex.stackexchange.com/q/249505/120853
 \renewcommand*{\lstlistlistingname}{List of \lstlistingname}%
 
 \lstMakeShortInline[style=Matlab-Pyglike]§% Allows commands like §break§
@@ -304,33 +315,32 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[%
+\usepackage[% Default back-end: biber
 	style=alphabetic,%
-	backend=biber,%
 	sorting=nyt,%
-	sortcites=true,%Sortcites sorts multiple \cite-entries the way the sorting-key dictates.
+	sortcites=true,% Apply what is specified in sorting=
 %	refsegment=chapter,%automatic sub-bib for each chapter
-	backref,%https://tex.stackexchange.com/a/211631/120853 %do not use hyperref for this
-	url=false,%still prints URL for @online
+	backref,% https://tex.stackexchange.com/a/211631/120853 %do not use hyperref for this
+	url=false,% Still prints URL for @online, but nowhere else
 	doi=false,%
 	isbn=false,%
 	]{biblatex}%
 
-\addbibresource{thesis.bib}% *.bib file goes here
+\addbibresource{main.bib}% *.bib file goes here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Special Treatment for anything in \nocite{*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \defbibheading{notcited}{\section*{Further Reading}}
 
 \defbibnote{further}{%
-	\itshape These references were used for this thesis but not cited in the main body; they are provided here as-is.
+\textit{These references were used for this thesis but not cited in the main body; they are provided here as-is.}
 }%
-\DeclareBibliographyCategory{cited}%https://tex.stackexchange.com/a/280545/120853
+\DeclareBibliographyCategory{cited}% https://tex.stackexchange.com/a/280545/120853
 \AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
 
 \defbibheading{subbibliography}{\section*{\Cref{refsegment:\therefsection\therefsegment}}}%
 
-\defbibenvironment{bibnonum}%https://tex.stackexchange.com/a/477525/120853
+\defbibenvironment{bibnonum}% https://tex.stackexchange.com/a/477525/120853
 	{\list
 	{}
 	{\setlength{\leftmargin}{\bibhang}%
@@ -364,22 +374,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{array}
-	\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}%Vert.+Hor. centering
+	\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}% Vert.+Hor. centered cells
 
-\usepackage{multirow}
+\usepackage{multirow}% Cells spanning multiple rows (like multicolumn)
 
-\usepackage{booktabs}%
+\usepackage{booktabs}% Pretty tables; an absolute must
 
-\renewcommand*{\arraystretch}{1.3}%more vertical stretch
+\renewcommand*{\arraystretch}{1.3}% More vertical stretch for more relaxed visuals
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Other
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[british]{datetime2}%replaces datetime
+\usepackage[british]{datetime2}% Replaces datetime
 
 \usepackage{ifthen}%
-\usepackage{xifthen}%addon for ifthen for \isempty
+\usepackage{xifthen}% Addon for ifthen for \isempty
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -392,7 +402,7 @@
 \newindex[Terms]{terms}%
 \newindex[Names]{people}%
 \newcommand*{\name}[2]{\textsc{#1}\sindex[people]{\textsc{#1};\ #2}}
-\newcommand*{\term}[1]{\sindex[terms]{#1}}
+\newcommand*{\term}[1]{\sindex[terms]{#1}}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -411,18 +421,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[automark]{scrlayer-scrpage}%automatically mark
+\usepackage[automark]{scrlayer-scrpage}% Automatically mark
 
-\clearscrheadfoot%reset defaults
+\clearscrheadfoot% Reset defaults
 
 \newcommand*{\headerrule}{\rule[-1.5ex]{0.1em}{5ex}}%
+%
 \lehead{\llap{\pagemark\enskip\headerrule}\enskip\headmark}%
 \rohead{\headmark\enskip\rlap{\headerrule\enskip\pagemark}}%
 
-\renewcommand*{\chaptermarkformat}{\thechapter\enskip}%https://tex.stackexchange.com/q/299125/120853
+% https://tex.stackexchange.com/q/299125/120853:
+\renewcommand*{\chaptermarkformat}{\thechapter\enskip}%
 
-\addtokomafont{pagehead}{\sffamily\itshape\footnotesize}
-\addtokomafont{pagenumber}{\sffamily\bfseries\footnotesize}
+\addtokomafont{pagehead}{\sffamily\itshape\footnotesize}%
+\addtokomafont{pagenumber}{\sffamily\bfseries\footnotesize}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Deliberately blank pages with message
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -431,32 +443,14 @@
 {\centering\color{g3}Rest of this page intentionally left blank.\par}
 }%
 
-\DeclareNewLayer[%create new layer
+\DeclareNewLayer[% Create new layer under some name
 foreground,
 textarea,
 contents=\blankpage
 ]{blankpage.fg}
 
-\DeclarePageStyleByLayers{blank}{blankpage.fg}%make created layer available as pagestyle
+\DeclarePageStyleByLayers{blank}{blankpage.fg}% Make created layer available as pagestyle
 \KOMAoptions{cleardoublepage = blank}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% For plot viewing: deliberately blank pages with message
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\blankpageplots}{%https://tex.stackexchange.com/a/205536/120853
-\par\vspace*{\fill}%
-{\centering\color{g3}Rest of this page intentionally left blank, so that related plots may be viewed side-by-side in the print version.\par}
-}%
-
-\DeclareNewLayer[%create new layer
-foreground,
-textarea,
-contents=\blankpageplots
-]{blankpageplots.fg}
-
-\DeclarePageStyleByLayers{blankplots}{blankpageplots.fg}%make created layer available as pagestyle
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -464,15 +458,17 @@ contents=\blankpageplots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{setspace}%line spacing
+\usepackage{setspace}% Line spacing, important for title page
 
-\usepackage[super]{nth}%1st, 2nd, 3rd etc. as superscript
+\usepackage[super]{nth}% 1st, 2nd, 3rd etc. as superscript automatically
 
-\usepackage{rotating}%sidewaystable
+\usepackage{rotating}% sidewaystable
 
-\usepackage{pdflscape}%landscape pages in pdf
+\usepackage{pdflscape}% landscape pages in pdf
 
-\usepackage[outline]{contour}%not comptatible with xelatex
+% Print a contour around letters, e.g. black text with a white border on some
+% noisy background, so that text remains legible.
+\usepackage[outline]{contour}% Not comptatible with xelatex
 	\contourlength{0.12em}
 	\newcommand*{\ctrw}[1]{\hypersetup{hidelinks}\contour{white}{\textcolor{black}{#1}}}
 	\newcommand*{\ctrb}[1]{\hypersetup{hidelinks}\contour{black}{\textcolor{white}{#1}}}
@@ -481,7 +477,8 @@ contents=\blankpageplots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{xcolor}
 
-\definecolor{mBlue}{HTML}{0072BD}%Matlab
+% Matlab colours:
+\definecolor{mBlue}{HTML}{0072BD}
 \definecolor{mOrange}{HTML}{D95319}
 \definecolor{mYellow}{HTML}{EDB120}
 \definecolor{mPurple}{HTML}{7E2F8E}
@@ -489,7 +486,8 @@ contents=\blankpageplots
 \definecolor{mSky}{HTML}{4DBEEE}
 \definecolor{mRed}{HTML}{A2142F}
 
-\definecolor{lmBlue}{HTML}{80B9DE}%50percent faded Matlab
+% 50percent faded Matlab colours:
+\definecolor{lmBlue}{HTML}{80B9DE}
 \definecolor{lmOrange}{HTML}{ECA88C}
 \definecolor{lmYellow}{HTML}{F6D890}
 \definecolor{lmPurple}{HTML}{C897C7}
@@ -497,29 +495,34 @@ contents=\blankpageplots
 \definecolor{lmSky}{HTML}{A6DFF7}
 \definecolor{lmRed}{HTML}{D18A97}
 
-\colorlet{g1}{black!70}%shades of grey, but we don't need 50
+% Shades of grey, but we don't need 50.
+% This is important to have consistent color shading.
+\colorlet{g1}{black!70}
 \colorlet{g2}{black!55}
 \colorlet{g3}{black!40}
 \colorlet{g4}{black!20}
 \colorlet{g5}{black!10}
 \colorlet{g6}{black!05}
 
-\definecolor{darklink}{HTML}{282368}%dark blue link color
-\definecolor{tuhh}{HTML}{2DC6D6}%tuhh teal
+% Dark blue link color:
+\definecolor{darklink}{HTML}{282368}%
 
-\definecolor{cRed}{RGB}{209,0,86}%code annotations
+% Code annotations:
+\definecolor{cRed}{RGB}{209,0,86}%
 \definecolor{cBlue}{RGB}{0, 130, 185}%
 \definecolor{cGreen}{RGB}{0, 128, 63}%
 \definecolor{cOrange}{RGB}{244, 131, 66}%
 
-\definecolor{rdylbu1}{RGB}{215, 48, 39}%red; from colorbrewer RdYlBu
+% From colorbrewer's RdYlBu: from red (1) to blue (6)
+\definecolor{rdylbu1}{RGB}{215, 48, 39}%
 \definecolor{rdylbu2}{RGB}{252, 141, 89}%
 \definecolor{rdylbu3}{RGB}{254, 224, 144}%
 \definecolor{rdylbu4}{RGB}{224, 243, 248}%
 \definecolor{rdylbu5}{RGB}{145, 191, 219}%
-\definecolor{rdylbu6}{RGB}{69, 117, 180}%blue
+\definecolor{rdylbu6}{RGB}{69, 117, 180}%
 
-\colorlet{acc1}{rdylbu5}%accent colors
+% Accent colors:
+\colorlet{acc1}{rdylbu5}%
 \colorlet{acc2}{rdylbu2}%
 \colorlet{acc3}{g2}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -527,11 +530,11 @@ contents=\blankpageplots
 %%%%%%%%%%%%%% Custom Symbols
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{scalerel}%scale stuff relative
+\usepackage{scalerel}% Scale stuff relative
 
-\newcommand*{\scaletox}[1]{\scalerel*{\includegraphics{./logos/#1.pdf}}{X}}%logos to Xheight
+\newcommand*{\scaletox}[1]{\scalerel*{\includegraphics{./logos/#1.pdf}}{X}}% to Xheight
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%Auxiliary
+%%%%%%%%%%%%%% Auxiliary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand*{\dotred}{\scaletox{dot_red}}
 \newcommand*{\dotgreen}{\scaletox{dot_green}}
@@ -542,8 +545,8 @@ contents=\blankpageplots
 %%%%%%%%%%%%%% MATLAB Simulink
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\logoletter}[2]{\scaletox{#1}\,\textit{#2}}%for terms
-\newcommand*{\logolettervar}[2]{\scaletox{#1}\,\texttt{#2}}%for variables
+\newcommand*{\logoletter}[2]{\scaletox{#1}\,\textit{#2}}% For terms
+\newcommand*{\logolettervar}[2]{\scaletox{#1}\,\texttt{#2}}% For variables
 %%%%%%%%%%%%%%%%%
 %%Inputs:
 %%%%%%%%%%%%%%%%%
@@ -598,11 +601,11 @@ contents=\blankpageplots
 \newcommand*{\SimulinkBuses}{\logoletter{matlab_object_box}{Buses}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%Graphics + Path
+%%%%%%%%%%%%%% Graphics + Path
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{graphicx}
-	\graphicspath{{images/}}%
+	\graphicspath{{images/}}% Global standard path, so don't ourselves
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Tikz + Plots
@@ -613,21 +616,21 @@ contents=\blankpageplots
 \usetikzlibrary{%
 	positioning,%
 	tikzmark,%
-	math,%
+%	math,%
 	trees,%
-	arrows,%
+%	arrows,%
 	calc,%
 	shapes,%
 	backgrounds,%
-	decorations,%
+%	decorations,%
 	fit,%
-	shadows,%
-	spy,%
+%	shadows,%
+%	spy,%
 }%
 \usepgfplotslibrary{%
 	colorbrewer,%,
-	groupplots,%
-	colormaps,%
+%	groupplots,%
+%	colormaps,%
 	units,%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -637,44 +640,14 @@ contents=\blankpageplots
 	level 2/.style = {basic, rounded corners=6pt, thin,align=center, fill=lmRed!60,text width=6em},%
 	level 3/.style = {basic, thin, align=left, fill=lmRed!30, text width=8em}%
 }%
-\newcommand*{\circnum}[1]{%a circled (preferably) number
-	\tikzset{external/export=false}%never externalize this
+\newcommand*{\circnum}[1]{% A circled (preferably) number
 	\tikz[baseline=(X.base)]% 
 	\node (X) [draw, shape=circle, inner sep=0pt, fill=white] {\strut \textbf{#1}};%
 }%
-\newcommand*{\circlet}[1]{%a circled letter
-	\tikzset{external/export=false}%never externalize
+\newcommand*{\circlet}[1]{% A circled letter
 	\tikz[baseline=(char.base)]{%
 	\node [shape=circle,draw,inner sep=2pt,fill=g6] (char) {\textbf{#1}};}%
 }%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% New Shape; Node with hor. rules
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\makeatletter%http://www.texample.net/tikz/examples/data-flow-diagram/
-\pgfdeclareshape{horbars}{%
-	\inheritsavedanchors[from=rectangle]
-	\inheritanchorborder[from=rectangle]
-	\inheritanchor[from=rectangle]{center}
-	\inheritanchor[from=rectangle]{base}
-	\inheritanchor[from=rectangle]{north}
-	\inheritanchor[from=rectangle]{north east}
-	\inheritanchor[from=rectangle]{east}
-	\inheritanchor[from=rectangle]{south east}
-	\inheritanchor[from=rectangle]{south}
-	\inheritanchor[from=rectangle]{south west}
-	\inheritanchor[from=rectangle]{west}
-	\inheritanchor[from=rectangle]{north west}
-	\backgroundpath{%
-%	store lower right in xa/ya and upper right in xb/yb
-	\southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
-	\northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
-	\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
-	\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
-	\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
-	\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
-	}%
-}%
-\makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Globally unified plot sizes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -690,25 +663,25 @@ contents=\blankpageplots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Colour Cycle for plots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pgfplotscreateplotcyclelist{matlabcycle}{%imitate matlab colors in a custom cycle
+\pgfplotscreateplotcyclelist{matlabcycle}{% Imitate matlab colors in a custom cycle
 	{mBlue},
 	{mOrange},
 	{mYellow},
 	{mPurple},
 	{mGreen},
 	{mSky},
-	{mRed}%no comma here
+	{mRed}% No comma here!
 }%
-\pgfplotscreateplotcyclelist{mod RdYlBu2}{%modify existing colorbrewer
+\pgfplotscreateplotcyclelist{mod RdYlBu2}{% Modify existing colorbrewer
 	{rdylbu2},
-	{rdylbu5}%no comma here
+	{rdylbu5}% No comma here!
 }%
-\pgfplotscreateplotcyclelist{mod RdYlBu3}{%modify existing colorbrewer
+\pgfplotscreateplotcyclelist{mod RdYlBu3}{% Modify existing colorbrewer
 	{rdylbu2},
 	{black!50},
-	{rdylbu5}%no comma here
+	{rdylbu5}% No comma here!
 }%
-\pgfplotscreateplotcyclelist{mod mark list}{%modify predefined to start without mark
+\pgfplotscreateplotcyclelist{mod mark list}{% Modify predefined to start without mark
 every mark/.append style={solid,fill=\pgfplotsmarklistfill}\\
 every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=*\\
 every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=square*\\
@@ -722,37 +695,31 @@ every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=pentagon*\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Global plot settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pgfplotstableset{col sep=comma}%if ALL files are comma-sep
+\pgfplotstableset{col sep=comma}% If ALL files are comma-sep
 \pgfplotsset{%
 compat = newest,%
 label style={font=\small},%https://tex.stackexchange.com/a/300673/120853
 tick label style={font=\small, /pgf/number format/1000 sep={\,}},% Small space instead of comma
 cycle multi list = {%
-	mod mark list\nextlist%just in case; likely never reached
+	mod mark list\nextlist% Just in case; likely never reached
 	linestyles*\nextlist
-	mod RdYlBu3%iterate through this first; if at end, start anew using next in parent
+	mod RdYlBu3% Iterate through this first; if at end, start anew using next in parent
 },%
-colormap/viridis,%for 3d/surf plots
-legend style={at={(0.5,1.05)},%center hor. (0.5), slightly out of drawing(>1 vert.)
+colormap/viridis,% For 3D/surf plots
+legend style={at={(0.5,1.05)},% Center hor. (0.5), slightly out of drawing(>1 vert.)
 	anchor=south,%
 	legend columns=-1,%
 	font=\footnotesize,%
-	draw = none,%do not draw box
-	fill = none,%no white fill. Important for gray backgrounds
+	draw = none,% Do not draw box
+	fill = none,% No white fill. Important for gray backgrounds
 	},%
 %
 unit code/.code 2 args={\si{#1#2}},% Use siunitx for units library
 unit markings = {slash space},% The proper way... apparently?
-x SI prefix/micro/.style={/pgfplots/axis base prefix={axis x base 6 prefix \micro}},% https://tex.stackexchange.com/a/224574/120853
+% https://tex.stackexchange.com/a/224574/120853:
+x SI prefix/micro/.style={/pgfplots/axis base prefix={axis x base 6 prefix \micro}},
 y SI prefix/micro/.style={/pgfplots/axis base prefix={axis y base 6 prefix \micro}},
 z SI prefix/micro/.style={/pgfplots/axis base prefix={axis z base 6 prefix \micro}},
-%
-group style = {%
-	xticklabels at = edge bottom,
-	xlabels at = edge bottom,
-	vertical sep = 3ex,
-	group size = 1 by 2,
-},%
 %
 plotstyleNarrow/.style={%
 	ultra thick,
@@ -763,14 +730,14 @@ plotstyleNarrow/.style={%
 	xmajorgrids=true,
 	grid style=dashed,
 	axis lines=left,
-%	scale only axis,%if off, labels etc will be taken into account for size calculations
-	ytick align=outside,%puts ticks outside the plot itself
+%	scale only axis,% If off, labels etc will be taken into account for size calculations
+	ytick align=outside,% Puts ticks outside the plot itself
 	xtick align=outside,%
-	enlarge x limits=0.05,%won't work if enlarge limits are invoked before 'axis lines left'
+	enlarge x limits=0.05,% Won't work if enlarge limits are invoked before 'axis lines left'
 	enlarge y limits=0.05,%
 },%
-tuftelike/.style={%https://tex.stackexchange.com/a/155210/120853
-	axis line shift=10pt,% Also shifts label
+tuftelike/.style={% https://tex.stackexchange.com/a/155210/120853
+	axis line shift=10pt,% Also shifts label automatically
 	try min ticks=3,% https://tex.stackexchange.com/a/95753/120853
 	max space between ticks=50,% High number so ticks are far apart
 },%
@@ -778,13 +745,12 @@ minimalistic/.style={%
 	tuftelike,
 	axis lines=left,
 	thick,
-	axis line style = {semithick, -},
+	axis line style = {semithick, -},% '-' suppresses arrow
 	tick style = {semithick, black},%
 	width=1\plotwidth,
 	height=1\plotheight,
 	ytick align=inside,% Puts ticks inside the plot itself
 	xtick align=inside,%
-%	title style = {font=\footnotesize},
 	xtick={% Always set min, max and middle ticks; if more desired, use 'extra x ticks={}'
 		\pgfkeysvalueof{/pgfplots/xmin},
 		\pgfkeysvalueof{/pgfplots/xmax},
@@ -796,8 +762,23 @@ minimalistic/.style={%
 		(\pgfkeysvalueof{/pgfplots/ymax}+\pgfkeysvalueof{/pgfplots/ymin})/2
 	},
 	clip = false,% https://tex.stackexchange.com/a/311194/120853
-}%
+},%
 }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzstyle{simblock} = [%
+draw,%
+line width=1.5pt,%
+minimum size = 1.5em,%
+rounded corners,%
+fill = white,%
+]%
+\tikzstyle{triangle} = [% https://tex.stackexchange.com/a/183092/120853
+regular polygon,%
+regular polygon sides=3,%
+%minimum size = 0pt,
+inner sep = 0.2ex,% Fit tightly
+outer sep = 0pt,
+]%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Functions for plotting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -808,8 +789,6 @@ declare function=
 	(\x>500) * (0.781*(19.50583+19.88705*((\x+273.15)/1000)-8.598535*((\x+273.15)/1000)^2+1.369784*((\x+273.15)/1000)^3+0.527691/(((\x+273.15)/1000)^2))+0.2093*(31.32234-20.23531*((\x+273.15)/1000)+57.86644*((\x+273.15)/1000)^2-36.50624*((\x+273.15)/1000)^3-0.007374/((\x+273.15)/1000)^2)+0.0093*(20.78600+2.825911e-7*((\x+273.15)/1000)-1.464191e-7*((\x+273.15)/1000)^2+1.092131e-8*((\x+273.15)/1000)^3-3.661371e-8/((\x+273.15)/1000)^2)+0.0004*(24.99735+55.18696*((\x+273.15)/1000)-33.69137*((\x+273.15)/1000)^2+7.948387*((\x+273.15)/1000)^3-0.136638/((\x+273.15)/1000)^2)); % SHOMATE equation for air w/ N2/O2/Ar/CO2
 	},%
 }%
-
-%\usepackage{etoolbox}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -820,18 +799,14 @@ declare function=
 \usepackage{chemformula}%\ch{}, \chcpd[]{compound} etc
 	\setchemformula{font-family={tgpl}}
 
-\usepackage{cancel}%
+\usepackage{cancel}% Cancel out stuff with large rule
 
-\usepackage{physics}%
+\usepackage{physics}% Has several issues, but also practical for swift stuff
 
 \usepackage{siunitx}%
-	\DeclareSIUnit\atmosphere{atm}
-	\DeclareSIUnit\krpm{krpm}
-	\DeclareSIUnit\rpm{rpm}
-	\AtBeginDocument{\DeclareSIUnit{\kWh}{kWh}}
 	\sisetup{%
-		detect-all,%
-		number-text-rm=\unitnumberfont,%https://tex.stackexchange.com/a/468031/120853
+		detect-all,% Detect surrounding font's weight
+		number-text-rm=\unitnumberfont,% https://tex.stackexchange.com/a/468031/120853
 	}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -840,28 +815,28 @@ declare function=
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[pdfusetitle]{hyperref}%loads url-package internally
+\usepackage[pdfusetitle]{hyperref}% Loads url-package internally
 \hypersetup{%
-colorlinks=true,%no ugly frames, but still colored
-allcolors=helvoirt,%
-hidelinks,%toggle here
+colorlinks=true,% No ugly frames, but still colored
+allcolors=darklink,%
+hidelinks,% Toggle here!
 plainpages=false,%
 pdfcreator={LaTeX with hyperref, glossaries-extra/bib2gls, biber and splitidx, compiled with latexmk},
-bookmarksnumbered=true,% 
-pdfpagelayout=TwoPageRight,%
+bookmarksnumbered=true,%
+pdfpagelayout=TwoPageRight,% Default opening of the document in supported PDF viewers
 unicode,%https://tex.stackexchange.com/a/66771/120853
 pdfencoding=auto,
 pdfsubject = {{Thesis (Field of Study)}},%
 pdfkeywords = {Your Keywords Here},%
-pdfdisplaydoctitle,%https://tex.stackexchange.com/a/435434/120853
+pdfdisplaydoctitle,% https://tex.stackexchange.com/a/435434/120853
 }%
 
-\usepackage{bookmark}%control bookmark appearance in PDF
+\usepackage{bookmark}% Control bookmark appearance in PDF
 \bookmarksetup{%
 open,%
-openlevel=1,%open first two levels and hide all subsections etc. Levels start at 0
+openlevel=1,% Open first two levels and hide all subsections etc. Levels start at 0
 addtohook={%
-	\ifnum\bookmarkget{level}=0%only print top-level (0) bookmarks bold
+	\ifnum\bookmarkget{level}=0% Only print top-level (0) bookmarks bold
 	\bookmarksetup{bold}%
 	\fi%
 	},%
@@ -874,7 +849,7 @@ addtohook={%
 \usepackage[capitalise,nameinlink,noabbrev]{cleveref}%
 	\crefname{listing}{\mtlb{}-Code}{\mtlb-Codes}
 	\Crefname{listing}{\mtlb{}-Code}{\mtlb{}-Codes}
-	\creflabelformat{equation}{#2#1#3} % no (1), but 1
+	\creflabelformat{equation}{#2#1#3} % No (1), but 1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -895,23 +870,24 @@ addtohook={%
 
 \GlsXtrLoadResources[%
 	src={./glossaries/abbreviations},%
-	selection = {all},%select all files in bib. Not a good approach, but bib2gls seems to have problems with subimport stuff
+	% Select all files in bib. Not great, but bib2gls seems to have problems with subimport:
+	selection = {all},%
 ]%
 \GlsXtrLoadResources[%
 	src={./glossaries/symbols},%
-	selection = {all},% grab all from bib-file. Using subimport currently does not work
-	sort-field={group},%sort by this field first (Greek/Roman)
-	sort-suffix={name},%append this field as suffix to sort-field (actual symbol names)
-	symbol-sort-fallback={description},% fall back to description if absolutely required
+	selection = {all},% Grab all from bib-file. Using subimport currently does not work
+	sort-field={group},% Sort by this field first (Greek/Roman)
+	sort-suffix={name},% Append this field as suffix to sort-field (actual symbol names)
+	symbol-sort-fallback={description},% Fall back to description if absolutely required
 ]%
 \GlsXtrLoadResources[%
 	src={./glossaries/subsuper},%
 	type=subsuper,%
 	category = subsuper,
-	selection = {all},% grab all from bib-file. Using subimport currently does not work
-	sort-field={group},%sort by this field first
-	sort-suffix={name},%append this field as suffix to sort-field
-	symbol-sort-fallback={description},% fall back to description if absolutely required
+	selection = {all},% Grab all from bib-file. Using subimport currently does not work
+	sort-field={group},% Sort by this field first
+	sort-suffix={name},% Append this field as suffix to sort-field
+	symbol-sort-fallback={description},% Fall back to description if absolutely required
 ]%
 
 % indexonlyfirst can also be a package option.
@@ -935,23 +911,25 @@ addtohook={%
 % More Width
 \setglossarypreamble[subsuper]{\glssetwidest{MMM}}%
 
-% Remove from ToC (doing this manually).
-% Default is true.
+% Remove from ToC (we are doing this manually); default is true
 \glstocfalse
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% New Styles as longtables
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{glossary-mcols}%multi-column styles
+\usepackage{glossary-mcols}% Multi-column styles
 \usepackage{glossary-longextra}
 
-\newcommand*{\glshdrfont}[1]{\sffamily\large\textbf{#1}}% font for gls table heads
+\newcommand*{\glshdrfont}[1]{\sffamily\large\textbf{#1}}% Font for gls table heads
+
+% multicolumn spanning all columns automatically
+% https://tex.stackexchange.com/a/168358/120853
 \makeatletter
-\newcommand*{\mltcolspan}[2]{\multicolumn{\numexpr\LT@cols}{#1}{#2}} % multicolumn spanning all columns automatically. https://tex.stackexchange.com/a/168358/120853
+	\newcommand*{\mltcolspan}[2]{\multicolumn{\numexpr\LT@cols}{#1}{#2}}
 \makeatother
 
-\newglossarystyle{symbunitlong}{%https://tex.stackexchange.com/a/269571/120853
-	\setglossarystyle{long-name-desc}% base new style on existing one
+\newglossarystyle{symbunitlong}{% https://tex.stackexchange.com/a/269571/120853
+	\setglossarystyle{long-name-desc}% Base new style on existing one
 
 	\renewcommand*{\glsgroupheading}[1]{%
 		\glshdrfont{\glsgetgrouptitle{##1}} & \glshdrfont{\descriptionname} & \glshdrfont{\nth{1} Use} & \glshdrfont{Unit}\tabularnewline
@@ -970,7 +948,7 @@ addtohook={%
 	\renewcommand*{\glossentry}[2]{%
 		\glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
 		\glossentrydesc{##1}\glspostdescription & ##2 & \glsentryuseri{##1}\tabularnewline
-	}%use glsentryuseri to access entry, not glsuseri https://tex.stackexchange.com/a/281772/120853
+	}% Use glsentryuseri to access entry, not glsuseri https://tex.stackexchange.com/a/281772/120853
 }
 
 \newglossarystyle{myacr}{%https://tex.stackexchange.com/a/269571/120853
@@ -997,29 +975,27 @@ addtohook={%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{tcolorbox}%put after tikz
-\tcbuselibrary{many,listings}%breaking, skins(for enhanced)
+\usepackage{tcolorbox}% Put after tikz
+\tcbuselibrary{many,listings}% Breaking, skins(for enhanced)
 \tcbset{%
 highlight math style = {colframe=white, colback=g6},%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Custom Boxes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newtcbox{\tb}{colback=white,colframe=black,size=title}%tb short for tree box
-\newtcbox{\tbb}{colback=white,colframe=black,size=normal,boxrule=1mm}%tb big
+%\newtcbox{\tb}{colback=white,colframe=black,size=title}%tb short for tree box
+%\newtcbox{\tbb}{colback=white,colframe=black,size=normal,boxrule=1mm}%tb big
 
-\newtcbox{greytext}{colback=white,colframe=g3,sharp corners}%
+%\newtcbox{greytext}{colback=white,colframe=g3,sharp corners}%
 
 \newtcbox{\descbox}[1][g3]{%
-	before = \tikzexternaldisable,%
-	after = \tikzexternaldisable,%
 	enhanced,%
 	sharp corners,%
 	colback=white,%
 	colframe=#1,%
 	boxsep=0pt,%
 	boxrule=2pt,%
-	drop shadow,%wont work without enhanced skin
+	drop shadow,% Won't work without enhanced skin
 }%
 
 \newtcolorbox[%
