@@ -1,23 +1,25 @@
-\chapter{Font Features}
+\chapter{Text Features}
+Let us first go through some of the textual features offered by \LaTeX{} and used in this template.
 
-
-
-
+\section{Fonts}
 Using high-quality fonts is one goal.
-This includes the fantastic \href{https://ctan.org/texarchive/fonts/tex-gyre/opentype}{\TeX Gyre fonts}, of which the \textit{Palatino} (by Hermann Zapf) clone \textit{Pagella} was chosen for this template.
+This includes the fantastic \href{https://ctan.org/texarchive/fonts/tex-gyre/opentype}{\TeX Gyre fonts}, of which the \textit{\href{https://en.wikipedia.org/wiki/Palatino}{Palatino}} (by Hermann Zapf) clone \textit{\href{https://ctan.org/pkg/tex-gyre-pagella}{Pagella}} was chosen for this template.
 It comes with an accompanying \href{https://ctan.org/texarchive/fonts/tex-gyre-math/opentype}{math font} of the same name.
-As such, achieving a better match of text and maths fonts is nigh impossible.
-Not only do the fonts look fantastic on their own, they (just as important) also feature an immensely broad support for symbols and characters, as well as font shapes and weights and combinations thereof.
-The latter is demonstrated in \cref{tab:font_examples}.
+Using both font types in conjunction is made possible through the \package{unicode-math} package.
+As such, achieving a better match of text and math fonts is nigh impossible.
+Both fonts are vector fonts; if \LaTeX{} yields any warnings about font size substitutions, that is bogus.
+
+Not only do the fonts look fantastic on their own and together, they (just as important) also feature an immensely broad support for symbols and characters, as well as font shapes and weights and combinations thereof.
+The latter is demonstrated in \cref{tab:main_font_examples}.
 %
 \newcommand*{\sampletext}{The quick brown Fox jumps over the lazy Dog 13 times!}
 \begin{table}
 \ttabbox{%
-	\caption[\TeX Gyre Pagella Examples]% Brackets hold entry that will go into List of Tables
+	\caption[Main/Roman Font Examples]% Brackets hold entry that will go into List of Tables
 	{%
-		Examples for font features offered by \TeX Gyre Pagella%
+		Examples for font features offered by the main roman font%
 	}%
-	\label{tab:font_examples}% Use a string like 'tab:' to help with organization and auto-complete when reffing
+	\label{tab:main_font_examples}% Use a string like 'tab:' to help with organization and auto-complete when reffing
 }%
 {%
 	\begin{tabular}{@{}ll@{}}% Use @{} to remove white space from sides (since braces are empty)
@@ -37,56 +39,157 @@ The latter is demonstrated in \cref{tab:font_examples}.
 }%
 \end{table}
 
-Combine all that with \texttt{microtype}, and we have absolutely gorgeous typesetting.
-As Jeremy Clarkson would say, \enquote{Behoooold the magnificence of this creation}:
+Combine all that with \package{microtype}, and we have absolutely gorgeous typesetting.
+As Jeremy Clarkson would say, \enquote{Behoooold the magnificence}:
 
-\lipsum
+\vspace{1\baselineskip}
+\parbox{0.9\linewidth}{%
+\textcolor{g1}{\kant[1]}
+}
+\vspace{1\baselineskip}
 
-\textbf{If you don't care for \textit{any} of this}, don't worry.
-The features of \LaTeX{} and this template will do their work silently in the background.
+\noindent Notice the balanced line endings?
+How it was incredibly easy on the eyes, therefore easy to read?
+Nothing gets in the way; there is nothing to stumble over, disturbing the flow: letters and words are spaced out nicely horizontally, as are lines vertically.
+There is a minimal number of hyphens.
+That is how it is meant to be.
+
+\subsection{Math}
+What often does not occur at first glance is that many documents use text and math fonts that are very different from one another.
+As far as I know, Microsoft's Word has usable math typesetting and sensible default fonts for that.
+Yet, it cannot do what dedicated, fully-fleshed text and math fonts --- different fonts, but meant for one another --- can achieve.
+They provide a seamless transition, especially when using actual text in the math environment or vice versa, like when we go for \(x \to \infty\) and then also do \(\int_{1}^{2} y^2 \dd{y}\) or maybe \(a^2 + b^2 = c^2\) (the stuff you learn at university huh), all looking rather natural.
+Toggle the colors in the preamble, highlighting each different font family, to see all the differences.
+Some more examples follow.
+\begin{gather}
+	\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{temperature}\label{eq:click_me}\\
+	e^{i\pi} + 1 = 0\\
+	\lim\limits_{x \to \infty} \frac{\pi(x)}{x / \ln(x)} = 1\\
+	\sum_{k = 0}^{n} %
+	\begin{pmatrix}%
+		n \\ k
+	\end{pmatrix}%
+	= 2^{n}\\
+	\qty[M \pdv{}{M} + \beta(g) \pdv{}{g} + n\gamma] G^{n} \qty(x_{1}, x_{2}, \dots, x_{n}; M, g) = 0\\
+	\Delta h_{\text{change}} = \nicefrac{1}{2}\qty(c^2_{\text{exit}} - c^2_{\text{entry}})
+\end{gather}
+
+Note how the symbols in \cref{eq:click_me} are hyperlinks (leading to their definition in the glossary), courtesy of packages \package{hyperref} and the wonderful \package{glossaries-extra} working together.
+
+\subsection{Sans-Serif}
+Having taken care of the main/roman font, we turn to the others.
+\href{https://www.exljbris.com/fontinsans.html}{Fontin} is a decent sans-serif font.
+Quite importantly, and in contrast to almost all other free sans-serif fonts, it comes with all the bells and whistles required for stunts, see \cref{tab:sans_font_examples}.
+This even includes small-capitals support.
+
+\subsection{Mono-Spaced}
+Wanting to display any sort of code in the document will have you looking for a mono-spaced aka typewriter font.
+\href{https://fonts.google.com/specimen/Inconsolata }{Inconsolata}, provided by Google, will be our pick here:
+\begin{lstlisting}[style=betweenpar]
+@something
+def get_metadata(table, data_start: int) -> dict:
+	"""Get some metadata"""
+	metadata = {}  # metadata found in file header
+
+	for i, row in enumerate(table):
+		if i >= data_start:
+			break
+		lrow = row.lower()
+
+	return junk
+\end{lstlisting}
+with Python syntax highlighting taken from this \href{https://github.com/olivierverdier/python-latex-highlighting}{GitHub repository}.
+Note that comments are really meant to be \textit{italics} shape (or slanted), but Inconsolata does not deliver that.
+If you don't care, Inconsolata will be good enough.
+Still, Consolas is much preferred: it has \emph{true} italics and bold italics.
+As far as I know, it is shipped with Windows but not free; I cannot share it here, but you will be able to get your hands on it rather easily.
+
+\subsection*{So what}
+\textbf{If you don't care for \textit{any} of this}, don't quit just yet.
+The features of \LaTeX{} will do their work silently in the background for you.
+You won't have to worry about any of this ever again, but can rest assured it is taken care of.
+\textbf{Focus on your content and impress others that way (while still bedazzling them with your sexy documents).}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{References}
-Note that using the package \texttt{cleveref}, we only ever issue \verb|\cref| commands.
-The package does the heavy lifting and puts the float type in front, also with correct plural forms if required.
+\section{References}
+Note that using the package \package{cleveref}, we only ever issue \verb|\cref{label}| commands.
+The package does the heavy lifting and puts the float type in front, also with correct plural forms if required (see \cref{tab:font_examples,fig:tikz_diagram,fig:impeller_throat}).
 Doing it any other way is just way too laborious.
 
-The second most likely need for references are actual references for sources used in the work.
-Examples are spread throughout this document.
-At their basis, they rely on \texttt{biblatex} and its back-end \texttt{biber}.
-Forget about \texttt{natbib} and similar tools.
-Using \verb|\autocite{bibid}|, we can reliably cite sources and have a whole range of features delivered for free.
-We do not have to worry about the specific citation style (in parentheses, as a superscript, \dots) --- \verb|\autocite{bibid}| takes care of that, we can then manage its behaviour globally.
+For added convenience, add some info on the type you are attaching the label to, \iecfeg{e.g.}\ \verb|\label{fig:hello}|.
+This helps for auto-completion in your \gls{int_dev_env}%
+\footnote{%
+	Here, \texttt{gls} was used to print this abbreviation from the glossary.
+	\textit{Never, ever \textbf{don't}} do that: when there is an abbreviation, put it into the glossary system and have it handle that.
+	You will regret not doing it and end up scratching together all wild, spread-out, manually typed abbreviations.}
+of choice.
 
-Note the usage of --- in the previous sentence.
-Use \verb|---| in the source code to have an em-dash---perhaps even without surrounding spaces?
-That is probably up to your choice.
-What is not, because it is largely agreed on, is to use \verb|--| -- an en-dash -- instead.
-It is reserved for number ranges.
-Lastly, a single hy-phen is reserved for just that --- hyphenation.
+\subsection{Bibliography}
+The second most likely need for references are the bibliographical ones.
+Examples are spread throughout this document.
+At their basis, they rely on \package{biblatex} and its back-end \package{biber}.
+Forget about \package{natbib} and similar.
+Using \verb|\autocite{bibid}|, we can reliably cite sources and have a whole range of features delivered for free.
+We do not have to worry about the specific citation style (in parentheses, as a superscript, \dots) --- \verb|\autocite{bibid}| takes care of that, we can then manage its behavior globally.
+
+As such, we can have citations that look like this: \autocites[23]{dixon_fluid_2014}[29\psqq]{aungier_centrifugal_2000}[2-9]{japikse_assessment_1985}[89\psq]{kurzke_correlations_2011}{pampreen_jet-wake_1982}.
+We can add a note to each; if this note is an integer number, it is automatically taken to be the page number.
+If a following page is to be included in the citation, append \verb|\psq|.
+Otherwise, \verb|\psqq| for \enquote{this page and the following ones}.
+Using \verb|\autocites{}|, we can then chain together as many as we want.
+
+Taking a look at the bibliography in the back matter of this document reveals the feature \verb|backref|: the pages where a reference was cited occur after its entry.
+This is helpful in print, but amazing in digital format, for these page numbers are also links.
+Your readers will thank you tenfold for allowing them to very swiftly navigate and jump within your document.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Lists}
+\begin{table}
+	\ttabbox{%
+		\caption[Sans-Serif Examples]% Brackets hold entry that will go into List of Tables
+		{%
+			Examples for font features offered by the sans-serif font%
+		}%
+		\label{tab:sans_font_examples}% Use a string like 'tab:' to help with organization and auto-complete when reffing
+	}%
+	{%
+		\sffamily
+		\begin{tabular}{@{}ll@{}}% Use @{} to remove white space from sides (since braces are empty)
+		\toprule
+			Feature & Sample Text\\
+		\midrule
+			Regular & \sampletext\\
+			\textbf{Bold} & \textbf{\sampletext}\\
+			\textit{Italics} & \textit{\sampletext}\\
+			\textbf{\textit{Bold Italics}} & \textbf{\textit{\sampletext}}\\
+			\textsc{Small Capitals} & \textsc{\sampletext}\\
+		\bottomrule
+		\end{tabular}
+	}%
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Lists}
 In technical publications, using lists (either bullet points or enumerations) is highly encouraged.
-They should \textbf{always} be preferred over doing the same thing in a block of text.
+They should \emph{always} be preferred over doing the same thing in a block of text.
 Just consider this example list:
 \begin{itemize}
-	\item the presented approach is more complex than the previous one:
+	\item The presented approach is more complex than the previous one:
 	\begin{enumerate}
-		\item more time was spent doing computation,
-		\item less time was spent effing about,
+		\item more time was spent doing computations,
+		\item less was spent effing about,
 		\item features were added.
 	\end{enumerate}
-	\item at the same time, the following simplifications were made:
+	\item At the same time, the following simplifications were made:
 	\begin{enumerate}
 		\item went from continuous- to discrete-time simulations,
 		\item threw out some superfluous stuff.
 	\end{enumerate}
 \end{itemize}
-Processing the very same information from a text paragraph is much less accessible.
-Note the block-like \texttt{itemize} symbol, and the fact that enumerate numbers are part of the sans-serif family and bold.
-This was specified and may be changed in the \texttt{enumitem} package options.
+
+Processing the very same information from a text paragraph is suddenly much less accessible.
+Note the block-like \texttt{itemize} symbol (\smblksquare{}), and the fact that enumerate numbers are part of the {\sffamily sans-serif family} and \textbf{bold}.
+That is totally cool and stuff, because it's\dots{} different?
+This was specified and may be changed in the \package{enumitem} package options.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Censoring}
-Let me tell you a huge secret: \todo{I am a TODO note} \censor{today is \today}.
+\section{Censoring}
+Let me tell you a huge secret: \todo{I am a TODO note from \package{todonotes}. I am also specially highlighted in many editors.} \censor{today is \today}.
 You can also censor float contents, as illustrated in \cref{fig:censorbox}.
 \begin{figure}
 	\ffigbox[\FBwidth]
@@ -101,4 +204,10 @@ You can also censor float contents, as illustrated in \cref{fig:censorbox}.
 	}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{landscape}
+%\section{Landscape}
+%
+%Pages in landscape format are rather straightforward to implement.
+%Note that not only are these in landscape orientation; they are also recognized as such by supporting PDF viewers, rotating the page for you and keeping it legible.
+%\end{landscape}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
