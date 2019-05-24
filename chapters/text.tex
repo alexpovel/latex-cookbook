@@ -62,6 +62,9 @@ They provide a seamless transition, especially when using actual text in the mat
 Toggle the colors in the preamble, highlighting each different font family, to see all the differences.
 Some more examples follow.
 \begin{gather}
+% Allow this environment to break across pages.
+% While it makes sense to disallow that, not doing so can produce awful spacing issues.
+\allowdisplaybreaks
 	\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{abs_temperature}\label{eq:click_me}\\
 	e^{i\pi} + 1 = 0\\
 	\tcbhighmath{\lim\limits_{x \to \infty} \frac{\pi(x)}{x / \ln(x)} = 1}\label{eq:highlighted}\\
@@ -96,7 +99,7 @@ Closely related to purely mathematical equations are chemical ones, as shown in 
 This functionality is still very basic and probably poorly executed in parts.
 We can also use chemical compounds invoking \verb|\chcpd|, as demonstrated in \cref{eq:boie}.
 \begin{equation}\label{eq:boie}
-\tcbhighmath{\frac{\gls{heatingvalue}\mr{\gls{inferior}}}{\num{1e6}} = \num{35}\gls{massfr}_{\chcpd{C}} + \num{94.3} \gls{massfr}_{\chcpd{H}} + \num{10.4} \gls{massfr}_{\chcpd{S}} + \num{6.3} \gls{massfr}_{\chcpd{N}} - \num{10.8} \gls{massfr}_{\chcpd{O}} - \num{2.44} \gls{massfr}_{\mathrm{w}}}
+\tcbhighmath{\frac{\gls{heatingvalue}_{\gls{inferior}}}{\num{1e6}} = \num{35}\gls{massfr}_{\chcpd{C}} + \num{94.3} \gls{massfr}_{\chcpd{H}} + \num{10.4} \gls{massfr}_{\chcpd{S}} + \num{6.3} \gls{massfr}_{\chcpd{N}} - \num{10.8} \gls{massfr}_{\chcpd{O}} - \num{2.44} \gls{massfr}_{w}}
 \end{equation}
 
 \subsection{Sans-Serif}
@@ -314,13 +317,30 @@ def value_cleanup(raw_in) -> float:
 		for position, char in enumerate(cleaned + " "):
 			if char not in numeric:
 			if position == 0:  # Didn't even start with numerical char
-				return None `\phstring{\textsc{\textbf{This is interesting}}}`
+				return None `\phstring{\textbf{This is interesting}}`
 			break
 		# Up to just before found nun-numeric char
 		return float(cleaned[:position]) `\phnum{\num{-1.5e-2} is also a float}`
 \end{lstlisting}
 
 Inline code goes like so: §y = [file_patterns[x] for x in ["send", "help"]]§.
+
+\subsection{Matlab/Simulink}
+The basis for this template was laid by a thesis concerned with \mtlbsmlnk{}.
+As such, we have nice commands like \mtlb{}, \smlnk{}, \mtlbsmlnk{} and \mtlbsymb{} to print, in a consistent manner, all the different names and also add them to the index.
+Further, there are funny little vector symbols available, referencing various things \mtlbsmlnk{} has to offer:
+\begin{description}
+	\item Inputs: \SimulinkStep{} \quad \SimulinkSteps{}
+	\item Data Dictionaries: \SimulinkDD{} \quad \SimulinkDDs{}
+	\item Workspaces: \SimulinkBaseWS{} \quad \SimulinkModelWS{} \quad \SimulinkModelWSs{}
+	\item Models: \SimulinkModel{} \quad \SimulinkModels{} \quad \SimulinkRefM{} \quad \SimulinkRefMs{} \quad \SimulinkLibM{} \quad \SimulinkLibMs{} \quad \SimulinkLibrary{} \quad \SimulinkLibraries{}
+	\item Data processing: \SimulinkLogData{}
+	\item Look-Up Tables: \SimulinkLUT{} \quad \SimulinkLUTs{}
+	\item Settings: \SimulinkConfiguration{}
+	\item Variables: \MatlabVariable{YourVar} \quad \MatlabStruct{} \quad \MatlabStructs{} \quad \MatlabTable{} \quad \MatlabTables{} \quad \MatlabStructVar{YourStruct} \quad \MatlabObjectBox{YourObj} \quad \SimulinkBus{} \quad \SimulinkBuses{}
+\end{description}
+These can probably be improved by handling plural cases/commands automatically.
+Since plural forms and all that jazz are often not as straightforward as appending an \enquote{s}, and regarding the countless exceptions one would have to take into account, automating \LaTeX{} macros that deal with language is a much harder task than what it might seem at first.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{landscape}
 \section{Landscape}

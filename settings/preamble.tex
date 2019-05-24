@@ -277,7 +277,7 @@
 	showtabs=true,
 	tab=,
 	tabsize=2,
-	basicstyle=\ttfamily,%\footnotesize,%\setstretch{.5},
+	basicstyle=\ttfamily,
 	stringstyle=\color{stringcolour},
 	showstringspaces=false,
 	alsoletter={1234567890},
@@ -305,8 +305,6 @@
 	emphstyle=[6]\color{keywordcolour}\bfseries,
 	emph={[7]range},
 	emphstyle={[7]\color{keywordcolour}\bfseries},
-	% emph={[7]self},
-	% emphstyle=[7]\bfseries,
 	literate=*%
 	{:}{{\literatecolour:}}{1}%
 	{=}{{\literatecolour=}}{1}%
@@ -317,25 +315,14 @@
 	{/}{{\literatecolour/}}{1}%
 	{//}{{\literatecolour{//}}}2%
 	{!}{{\literatecolour!}}{1}%
-	%{(}{{\literatecolour(}}{1}%
-	%{)}{{\literatecolour)}}{1}%
 	{[}{{\literatecolour[}}{1}%
 	{]}{{\literatecolour]}}{1}%
 	{<}{{\literatecolour<}}{1}%
 	{>}{{\literatecolour>}}{1}%
 	{>>>}{\pythonprompt}{3}%
 	,%
-	%aboveskip=.5ex,
 	frame=trbl,
-	%frameround=tttt,
-	%framesep=.3ex,
 	rulecolor=\color{black!40},
-	%framexleftmargin=\framemargin,
-	%framextopmargin=.1ex,
-	%framexbottommargin=.1ex,
-	%framexrightmargin=\framemargin,
-	%framexleftmargin=1mm, framextopmargin=1mm, frame=shadowbox, rulesepcolor=\color{blue},#1
-	%frame=tb,
 	backgroundcolor=\color{white},
 	breakindent=.5\textwidth,frame=single,breaklines=true%
 	%}
@@ -390,7 +377,6 @@
 	style=alphabetic,%
 	sorting=nyt,%
 	sortcites=true,% Apply what is specified in sorting=
-%	refsegment=chapter,%automatic sub-bib for each chapter
 	backref,% https://tex.stackexchange.com/a/211631/120853 %do not use hyperref for this
 	url=false,% Still prints URL for @online, but nowhere else
 	doi=false,%
@@ -614,7 +600,7 @@ contents=\blankpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{scalerel}% Scale stuff relative
 
-\newcommand*{\scaletox}[1]{\scalerel*{\includegraphics{./logos/#1.pdf}}{X}}% to Xheight
+\newcommand*{\scaletox}[1]{\scalerel*{\includegraphics{./logos/matlabsimulink/#1.pdf}}{X}}% to Xheight
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Auxiliary
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -696,40 +682,18 @@ contents=\blankpage
 \usepackage{pgfplots}
 
 \usetikzlibrary{%
-	positioning,%
-	tikzmark,%
-%	math,%
+	positioning,% Relative positioning etc.
+	tikzmark,% Arbitrary marks/labels
 	trees,%
-%	arrows,%
-	calc,%
+	calc,% Calculate distances, coordinates etc.
 	shapes,%
-	backgrounds,%
-%	decorations,%
-	fit,%
-%	shadows,%
-%	spy,%
+	backgrounds,% Draw on background layer
+	fit,% Fit new node around existing coordinates
 }%
 \usepgfplotslibrary{%
-	colorbrewer,%,
-%	groupplots,%
-%	colormaps,%
+	colorbrewer,%
 	units,%
 }%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\tikzset{%
-%	basic/.style  = {draw, rectangle,text width=8em},%
-%	root/.style   = {basic, rounded corners=2pt, thin, align=center,fill=lmRed},%
-%	level 2/.style = {basic, rounded corners=6pt, thin,align=center, fill=lmRed!60,text width=6em},%
-%	level 3/.style = {basic, thin, align=left, fill=lmRed!30, text width=8em}%
-%}%
-%\newcommand*{\circnum}[1]{% A circled (preferably) number
-%	\tikz[baseline=(X.base)]% 
-%	\node (X) [draw, shape=circle, inner sep=0pt, fill=white] {\strut \textbf{#1}};%
-%}%
-%\newcommand*{\circlet}[1]{% A circled letter
-%	\tikz[baseline=(char.base)]{%
-%	\node [shape=circle,draw,inner sep=2pt,fill=g6] (char) {\textbf{#1}};}%
-%}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Globally unified plot sizes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -857,7 +821,6 @@ fill = white,%
 \tikzstyle{triangle} = [% https://tex.stackexchange.com/a/183092/120853
 regular polygon,%
 regular polygon sides=3,%
-%minimum size = 0pt,
 inner sep = 0.2ex,% Fit tightly
 outer sep = 0pt,
 ]%
@@ -908,7 +871,7 @@ bookmarksnumbered=true,%
 pdfpagelayout=TwoPageRight,% Default opening of the document in supported PDF viewers
 unicode,%https://tex.stackexchange.com/a/66771/120853
 pdfencoding=auto,
-pdfsubject = {{Thesis (Field of Study)}},%
+pdfsubject = {Your Thesis},%
 pdfkeywords = {Your Keywords Here},%
 pdfdisplaydoctitle,% https://tex.stackexchange.com/a/435434/120853
 }%
@@ -1021,7 +984,7 @@ addtohook={%
 	{\end{longtable}}
 
 	\renewcommand*{\glossaryheader}{%
-		%empty first header
+		% Empty first header
 		\endfirsthead
 		\mltcolspan{c}{\textit{(\expandafter\MakeUppercase\currentglossary{} continued)}}\\
 		\endhead
@@ -1029,11 +992,11 @@ addtohook={%
 	\renewcommand*{\glossentry}[2]{%
 		\glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
 		\glossentrydesc{##1}\glspostdescription & ##2 & \glsentryuseri{##1}\tabularnewline
-	}% Use glsentryuseri to access entry, not glsuseri https://tex.stackexchange.com/a/281772/120853
+	}% Use glsentryuseri to access entry, not glsuseri: https://tex.stackexchange.com/a/281772/120853
 }
 
-\newglossarystyle{myacr}{%https://tex.stackexchange.com/a/269571/120853
-	\setglossarystyle{long3col}% base this style on the list style
+\newglossarystyle{myacr}{% https://tex.stackexchange.com/a/269571/120853
+	\setglossarystyle{long3col}% Base new style on this existing list style
 	\renewenvironment{theglossary}{% Change the table type
 	\begin{longtable}{lp{0.9\glsdescwidth}p{10em}}}%
 	{\end{longtable}}
@@ -1064,11 +1027,6 @@ highlight math style = {colframe=white, colback=g6},%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Custom Boxes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\newtcbox{\tb}{colback=white,colframe=black,size=title}%tb short for tree box
-%\newtcbox{\tbb}{colback=white,colframe=black,size=normal,boxrule=1mm}%tb big
-
-%\newtcbox{greytext}{colback=white,colframe=g3,sharp corners}%
-
 \newtcbox{\descbox}[1][g3]{%
 	enhanced,%
 	sharp corners,%
@@ -1082,35 +1040,36 @@ highlight math style = {colframe=white, colback=g6},%
 \newtcolorbox[%
 auto counter,%
 number within=chapter,%
-crefname={Illustration}{Illustrations},%https://tex.stackexchange.com/a/126023/120853
+crefname={Illustration}{Illustrations},% https://tex.stackexchange.com/a/126023/120853
 list inside = illustrations,%
 ]
-{illustration}%name of environment
-[2]%amount of arguments
-[]%default of optional argument, which is the first one. Use it for label
+{illustration}% Name of environment
+[2]% Amount of arguments
+[]% Default of optional argument, which is the first one. Use it for label
 {%
 	beforeafter skip = 18pt plus 4pt minus 4pt,%
-	before pre= \tikzexternaldisable, %using 'enhanced' from the 'skins' library (loaded by issuing 'many'), we hand drawing to tikz. However, tikz crashes if it tries to externalize box.
+	before pre= \tikzexternaldisable, % Using 'enhanced' from the 'skins' library (loaded by issuing 'many'), we hand drawing to tikz. However, tikz crashes if it tries to externalize box. We do not use tikzexternalize, but leave this in just in case.
 	after app= \tikzexternaldisable,
 	width=0.95\linewidth,%
-	enlarge left by=0.025\linewidth,%https://tex.stackexchange.com/a/273111/120853
+	enlarge left by=0.025\linewidth,% https://tex.stackexchange.com/a/273111/120853
 	title=Illustration\ \thetcbcounter: #2,%
 	fonttitle=\sffamily\bfseries,%
 	leftrule=1mm,%
 	arc is angular,%
-	parbox,%allows regular paragraph breaks
-	breakable,%breaks across pages
-	enhanced,%hands drawing to tikz
+	parbox,% Allows regular paragraph breaks
+	breakable,% Breaks across pages
+	enhanced,% Hands drawing to tikz
 	rightrule=0mm,%
 	bottomrule=0mm,%
-	list text=#2,%setting what ends up in 'list of' so that 'Illustration:' is not shown
+	list text=#2,% Setting what ends up in 'list of' so that 'Illustration:' is not shown
 	#1,%
 	colback=g6,%
-	colframe=g1,%g1,%
+	colframe=g1,%
 %	float,
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Chemistry Environment (loaded after cleveref)
+%%%%%%%%%%%%%% Probably in need of an overhaul
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcounter{chemreac}%
 \newenvironment{chemreac}%
@@ -1136,8 +1095,6 @@ list inside = illustrations,%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand*{\eqend}{\,.}% Command \eqdot reserved by unicode-math
 \newcommand*{\eqcomma}{\,,}
-
-\newcommand*{\mr}[1]{_{\mathrm{#1}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Programs/Languages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1179,34 +1136,16 @@ FORTRAN\term{FORTRAN}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Vectors
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\vect}[2]{\ensuremath{\vec{\symbf{#1}}_{\mathrm{#2}}}}%vector
-\newcommand*{\vectcomp}[3]{\ensuremath{\symbf{#1}_{\mathrm{#2#3}}}}%vector component
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Angles
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\angstanitz}[1]{\ensuremath{\gls{angabs}_{#1}^{\ast}}}%Stanitz shifted by 90deg
+\newcommand*{\vect}[2]{\ensuremath{\vec{\symbf{#1}}_{\mathrm{#2}}}}% Vector
+\newcommand*{\vectcomp}[3]{\ensuremath{\symbf{#1}_{\mathrm{#2#3}}}}% Vector component
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Other
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\enthalpy}[2]{%
-	\ifthenelse{\isempty{#1}\or\isempty{#2}} %check if ONE OF THE TWO arguments is empty
-	{\ensuremath{\gls{specenthalpy}\mr{#1#2}}} %just print second argument if *either* argument is empty
-	{\ensuremath{\gls{specenthalpy}\mr{#1,#2}}} %print both with comma separation if BOTH are present
-}%
-\newcommand*{\rothalpy}[1]{\ensuremath{\gls{rothalpy}\mr{#1}}}
-
-\newcommand*{\Machnumber}{\name{Mach}{Ernst} number} %https://tex.stackexchange.com/a/106619/120853
-\newcommand*{\Reynoldsnumber}{\name{Reynolds}{Osborne} number}
-%
 \newcommand*{\const}{const.}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% SI Unit additions
+%%%%%%%%%%%%%% SI Unit additions. Use as \SI{123}{\kg\air}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\DeclareSIQualifier{\ai}{\gls{air}}
-\DeclareSIQualifier{\dr}{\gls{air},\gls{dry}}
-\DeclareSIQualifier{\fu}{\gls{fuel}}
-\DeclareSIQualifier{\com}{\gls{component}}
-\DeclareSIQualifier{\wat}{\chcpd{H2O}}
+\DeclareSIQualifier{\air}{\gls{air}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Custom hyphenation rules
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1218,7 +1157,7 @@ FORTRAN\term{FORTRAN}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand*{\adaptedfrom}{Adapted from}%for references
+\newcommand*{\adaptedfrom}{Adapted from}% For references
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Regular white box for all types of content
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

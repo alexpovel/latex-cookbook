@@ -47,7 +47,15 @@ I recommend TeXLive: in its full installation, it ships with all the required to
 
 Then invoking \textbf{\texttt{latexmk yourfile}} will run the entire pipeline, giving you the fully-done end product.
 
-\subsection{Continuous Integration}
+\subsection{Version Control}
+\LaTeX{} is well suited for a version control system, specifically Git.
+Using GitHub or GitLab, you can also have your document built automatically, on servers specified (and perhaps paid for) by you.
+You could be editing \LaTeX{} source code on your phone, push it to the remote repository, and download the compiled document.
+
+If using Git, each text line should also be on its own line of code.
+Should you bunch multiple text sentences into one line of code, diffing will be harder.
+
+\subsubsection{Continuous Integration}
 
 If you are on GitLab, you can configure your runner with the YAML file found in the project root (the runner will expect it there anyway).
 The runner you need to provide yourself; perhaps, your university has one.
@@ -62,13 +70,20 @@ Its \texttt{Dockerfile} does \texttt{apt-get update -y texlive-full} and as such
 That is still worth it and nice to have, so we do not have to specify packages manually ourselves.
 The file's second important part is of course Java for \package{bib2gls}.
 
-\section{Version Control}
-\LaTeX{} is well suited for a version control system, specifically Git.
-Using GitHub or GitLab, you can also have your document built automatically, on servers specified (and perhaps paid for) by you.
-You could be editing \LaTeX{} source code on your phone, push it to the remote repository, and download the compiled document.
+\paragraph{Metadata}
+In the project root, you will notice a file \texttt{gitmeta.txt}.
+This is my pathetic approach of breathing some dynamic metadata printing into the produced document.
+You can see the result of that on \cpageref{metadata} of this document, right after the title page.
+\LaTeX{} is made to read the contents of that \texttt{gitmeta.txt} file and implements it.
+The text file's default contents are printed if we do not involve it in our building process.
 
-If using Git, each text line should also be on its own line of code.
-Should you bunch multiple text sentences into one line of code, diffing will be harder.
+We could change the \texttt{*.tex} contents directly using the \texttt{sed} commands from the \texttt{.gitlab-ci.yml} file, but I reckoned going for an external file would make the \texttt{*.tex} file more robust and stand-alone.
+
+You can will the file out manually (highly discouraged and besides the point) or have it, as is configured for GitLab in \texttt{.gitlab-ci.yml}, done by the building process on your runner.
+
+That way, you will never lose track of your finished versions either.
+Usually, you won't be able to tell what commit or tag a generated PDF belongs to once it is in circulation.
+But hard-printing that, we can always go back to the very specific commit it belongs to.
 
 \section{Random Thoughts}
 

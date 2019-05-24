@@ -505,10 +505,10 @@ A second example is shown in \cref{fig:tikz_diagram}.
 	\node at (mult) {\(\ast\)};
 	
 	% Connect Inlet and Division part
-	\draw[->] (inlet.east) -- ++ (+1, 0)  node [pos=1, above] {\(p\mr{\gls{inlet}}(\tau)\)} |- ($(multdiv.east)!0.5!(multdiv.north east)$);
+	\draw[->] (inlet.east) -- ++ (+1, 0)  node [pos=1, above] {\(p_{\gls{inlet}}(\tau)\)} |- ($(multdiv.east)!0.5!(multdiv.north east)$);
 	
 	% p min block next to multiplication
-	\draw[<-] ($(multdiv.east)!0.5!(multdiv.south east)$) -- ++ (1, 0) node[simblock] {\(p\mr{\gls{air},\gls{ratedeng}}\)};
+	\draw[<-] ($(multdiv.east)!0.5!(multdiv.south east)$) -- ++ (1, 0) node[simblock] {\(p_{\gls{air},\gls{ratedeng}}\)};
 	
 	\node [circle, fill, inner sep = 0.3ex, left = 0.7em of multdiv] (split1) {};
 	\draw (multdiv) -- (split1);
