@@ -78,7 +78,14 @@ This thesis has neither been submitted to a second examination authority nor bee
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % addchap is KOMA equivalent for \chapter*, but also creates ToC entry. https://tex.stackexchange.com/a/116085/120853
 \addchap{Nomenclature}
-\textit{The most commonly used symbols are listed here, alongside their location of first occurrence. Symbols used but not listed here are clarified in their respective contexts.}
+\textit{The most commonly used symbols are listed here, alongside their location of first occurrence. Symbols used but not listed here are clarified in their respective contexts.
+
+\textbf{Buggy:} You will notice that the majority of symbols do not have info on the location of their first use.
+These are all the symbols which first occurred in \textbf{floats}.
+The way this document was set up, most symbols are affected.
+Referencing floats is a tricky business and it is apparently still faulty at the moment.
+In an actual document, it is extremely likely you will be introducing symbols in text or math mode, not in floats.
+}
 \printunsrtglossary[type = symbols, style = symbunitlong]
 \printunsrtglossary[type = subsuper, style = mcolalttreegroup, nonumberlist]
 \printunsrtglossary[type = abbreviations, style = myacr]

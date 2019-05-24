@@ -1,0 +1,10 @@
+%%%%%%
+%\endrefsegment%anything after not in any segment -> not printed by bibbysegment
+\nocite{*}%
+%\renewcommand*{\bibfont}{\small}%https://tex.stackexchange.com/a/343/120853
+\printbibliography[category = cited]
+\printbibliography[notcategory=cited, heading=notcited, env=bibnonum, prenote=further]
+%%%%%%
+\twocolumn[\addchap*{Indices}]%set the title onecol, anything afterwards 2-col
+\extendtheindex{}{}{}{\newpage}%append newpage to each index. in twocol, breaks to next col
+\printsubindex*%star cycles through all subs

@@ -1,4 +1,4 @@
-%% Creator: Inkscape inkscape 0.92.3, www.inkscape.org
+%% Creator: Inkscape inkscape 0.92.4, www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
 %% Accompanies image file 'gas_volume.pdf' (pdf, eps, ps)
 %%
@@ -54,8 +54,8 @@
     \lineheight{1}%
     \setlength\tabcolsep{0pt}%
     \put(0,0){\includegraphics[width=\unitlength,page=1]{gas_volume.pdf}}%
-    \put(0.43525595,0.1897639){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\shortstack{\ctrw{\(p, T\)}\\\ctrw{\(m, U\)}}\end{tabular}}}}%
-    \put(0.14346134,0.22491065){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\ctrw{\(\dot{H}_{\gls{inlet}}\)}\end{tabular}}}}%
-    \put(0.77190419,0.22339395){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\ctrw{\(\dot{H}_{\gls{outlet}}\)}\end{tabular}}}}%
+    \put(0.43525595,0.1897639){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\shortstack{\ctrw{\gls{pressure}, \gls{abs_temperature}}\\\ctrw{\gls{mass}, \gls{internalenergy}}}\end{tabular}}}}%
+    \put(0.14346134,0.22491065){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\ctrw{\(\dot{\gls{enthalpy}}_{\gls{inlet}}\)}\end{tabular}}}}%
+    \put(0.77190419,0.22339395){\color[rgb]{0,0,0}\makebox(0,0)[t]{\lineheight{1.25}\smash{\begin{tabular}[t]{c}\ctrw{\(\dot{\gls{enthalpy}}_{\gls{outlet}}\)}\end{tabular}}}}%
   \end{picture}%
 \endgroup%

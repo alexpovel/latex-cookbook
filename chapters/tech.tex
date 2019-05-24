@@ -1,9 +1,81 @@
-wow
+\chapter{Technical Aspects}
+\TeX{} being \TeX{}, there are countless of technical aspects to pay attention to.
+The most important one are collected here, in a random fashion.
 
-newcommand*
+\section{Building the document}
+The most important part!
+In \cref{ch:text}, we looked into why we are using \hologo{LuaLaTeX}.
+Reasons are:
+\begin{enumerate}
+	\item \package{unicode-math} aka \package{fontspec}
+	\item \package{contour} works (it does not with \hologo{XeLaTeX})
+	\item it allocates as much memory as it happens to need.
+	The ancient limitations of \TeX{} are easily reached with \package{tikz} and \package{pgfplots} functionalities.
+	Circumventing that either feels hacky or actually is hacky.
+	\texttt{tikzexternalize} is a decent module, but has a long list of caveats.
+	Using \hologo{LuaLaTeX}, we do not have to worry about any of that: hit compile, wait, done (the waiting part might be a bit longer than what you might be used to from \hologo{pdfLaTeX}).
+\end{enumerate}
 
-newlines for git
+With that out of the way, the building process --- starting from scratch --- looks roughly like this:
+\begin{enumerate}
+	\item \textbf{\hologo{LuaLaTeX}} --- build first version, generating the auxiliary files.
+	At this point, references or anything else will not yet be correct.
+	\item \textbf{biber} --- it will take the specified \texttt{*.bib} file and build the bibliography auxiliary files.
+	\item \textbf{splitindex} --- invoke it as \texttt{splitindex NAME}, where NAME is your main file's name, such that all the auxiliary files bear names like \texttt{name.aux} \iecfeg{etc.}
+	\item \textbf{bib2gls} --- also invoked as  \texttt{bib2gls NAME},
+	\item \textbf{\hologo{LuaLaTeX}},
+	\item \textbf{\hologo{LuaLaTeX}}.
+\end{enumerate}
+This list is no guarantee however.
+If anything files, try running it again in different orders, or run \hologo{LuaLaTeX} again.
+You can also look into deleting auxiliary files (they can always be regenerated freely) if you are seeing really cryptic error messages.
 
-im a glossary noob but USE IT
+\subsection{latexmk}
+A much more user-friendly tool is \texttt{latexmk}, also provided in most \TeX{} distributions.
+Therefore, you should already have it available and on your PATH.
 
-always use braces around subscript or superscript even if it's just one char, so to not break anything down the road
+The tool knows about all the different auxiliary files and will run your compiler of choice as many times as needed.
+It will know when to stop by checking the auxiliary files: if they do not change anymore between runs, we must have hit a \enquote{steady state} and the produced document will be ready.
+
+Since it does not natively do well with either \package{glossaries-extra} or \package{splitidx}, this project contains a file \texttt{latexmkrc} in its root.
+It is a configuration file written in Perl, letting \texttt{latexmk} know about the auxiliary files of those two packages and what to do with them.
+The tool will look for its configuration file in the project root and find it there.
+
+Now, you can start from absolute scratch, with no auxiliary files generated yet at all.
+All you need is a \TeX{} distribution and Java (for \package{bib2gls})!
+I recommend TeXLive: in its full installation, it ships with all the required tools.
+
+Then invoking \textbf{\texttt{latexmk yourfile}} will run the entire pipeline, giving you the fully-done end product.
+
+\subsection{Continuous Integration}
+
+If you are on GitLab, you can configure your runner with the YAML file found in the project root (the runner will expect it there anyway).
+The runner you need to provide yourself; perhaps, your university has one.
+I do not yet have an analogous Travis-\glsxtrshort{cont_int} configuration for GitHub.
+
+\paragraph{Docker}
+The \gls{cont_int} configuration for GitLab relies on a docker image found here:
+\begin{center}
+	\url{https://cloud.docker.com/u/alexpovel/repository/docker/alexpovel/javalatex}
+\end{center}
+Its \texttt{Dockerfile} does \texttt{apt-get update -y texlive-full} and as such, will download a \emph{massive}, full TeXLive distribution.
+That is still worth it and nice to have, so we do not have to specify packages manually ourselves.
+The file's second important part is of course Java for \package{bib2gls}.
+
+\section{Version Control}
+\LaTeX{} is well suited for a version control system, specifically Git.
+Using GitHub or GitLab, you can also have your document built automatically, on servers specified (and perhaps paid for) by you.
+You could be editing \LaTeX{} source code on your phone, push it to the remote repository, and download the compiled document.
+
+If using Git, each text line should also be on its own line of code.
+Should you bunch multiple text sentences into one line of code, diffing will be harder.
+
+\section{Random Thoughts}
+
+\begin{itemize}
+	\item If you don't intend to allow \verb|\par| in your custom macros, use the starred variant of \verb|\newcommand|.
+	\item Put \verb|{braces}| around anything where it is applicable.
+	That includes sub- and superscripts that consist of only one character.
+	\verb|x^2| will work, but \verb|x^{2}| will ensure nothing breaks down the line, \iecfeg{e.g.}\ when automatically replacing stuff.
+	Superfluous braces don't hurt, but their lack can bite you.
+\end{itemize}

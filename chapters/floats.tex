@@ -1,5 +1,5 @@
 \chapter{Float Features}
-In \cref{fig:censorbox,tab:font_examples}, we have already seen examples for floats.
+In \cref{fig:censorbox,tab:main_font_examples}, we have already seen examples for floats.
 These are handled by packages \package{caption} and \package{floatrow}.
 A notable feature is the capability for captions the same width as the float they are attached to.
 This tends to look much prettier, \iecfeg{cf.} \cref{fig:wide_caption,fig:tighter_caption}.
@@ -143,7 +143,6 @@ Multiple sub-tables are also possible, see \cref{tab:works_on_turbocharging}.
 					\textcite{pixberg_modellbildung_2013} & \textbf{Reservoirs; Nozzles} (p.\ 42)\\
 					\textcite{sakellaridis_development_2015} & ---\\
 					\textcite{schiffmann_design_2010} & ---\\
-					\textcite{schlador_erstellung_2008} & \fortran{}, \textbf{Reservoirs; Models}\\
 					\textcite{schur_transient_2013} & \smlnk{}\\
 					\textcite{serrano_model_2008} & \textbf{Reservoirs; Nozzles}\\
 					\textcite{shaaban_experimental_2004} & Diabatic; Extrapolation\\
@@ -151,7 +150,6 @@ Multiple sub-tables are also possible, see \cref{tab:works_on_turbocharging}.
 					\textcite{taburri_model-based_2012} & \textbf{Reservoirs; Nozzles}\\
 					\textcite{uchida_transient_2006} & ---\\
 					\textcite{whitfield_preliminary_1990} & Preliminary Design\\
-					\textcite{wirz_berechnungsmethode_2017} & \textbf{Reservoirs; Models}\\
 					\textcite{xu_empirical_2012} & ---\\
 					\textcite{zahn_arbeitsspielaufgeloste_2012} & ---\\
 					\textcite{zhuge_development_2009} & ---\\
@@ -214,13 +212,13 @@ In these cases, placing a side-caption might relieve the situation, as shown in 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Caption Positioning}
-Note that the caption of \cref{tab:font_examples} occurs \textit{above} the table no matter the \package{caption} command's position.
+Note that the caption of \cref{tab:main_font_examples} occurs \textit{above} the table no matter the \package{caption} command's position.
 Per convention, figure captions should appear below, table captions above their bodies.
 This is also handled by \package{floatrow}.
 Also note that there is neither a fullstop nor \textit{any} character (no space, no empty line) behind the last caption line in the source code, since dots are managed globally by the \package{caption} package.
 \paragraph{Float Footer}
 We also have a \verb|\floatfoot| command for all floats.
-This is used to place additional info underneath the caption, primarily used for references.
+This is used to place additional info underneath the caption, primarily used for references, \iecfeg{cf.}\ \cref{fig:impeller_throat}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Tikz and pgfplots}
@@ -322,8 +320,10 @@ This is demonstrated in \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte}
 \begin{figure}\ContinuedFloat
 \fcapside[\FBwidth]
 {%
-	\caption{
+	\caption[Tufte-like plot]{
 		Same as \cref{fig:plotting_in_latex} in hip and \enquote{\textit{Tufte}-like}.
+		I think it looks gorgeous.
+		For more info, refer to its namesake, \name{Tufte}{Edward}.
 		Note how this is a \emph{continued} float%
 	}
 	\label{fig:plotting_in_latex_tufte}
@@ -334,7 +334,7 @@ This is demonstrated in \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte}
 	minimalistic,%
 	ylabel={\gls{specheatcappres}},
 	y unit = {\joule\per\kilogram\per\kelvin},
-	xlabel={\gls{temperature}},%
+	xlabel={\gls{abs_temperature}},%
 	x unit = {\kelvin},
 	domain=300:700,
 	ymin = 1000,
@@ -379,7 +379,7 @@ In \cref{fig:diffuser}, we only have to specify \iecfeg{e.g.} \verb|y=M| and the
 	axis y line*=left,%
 	xlabel={\(\gls{radius}/\gls{radius}_{2}\)},%
 	x unit = {-},
-	ylabel={\gls{mach}, \(\gls{pressure}/\gls{pressure}_{2}\), \(\gls{temperature}/\gls{temperature}_{2}\), \(\gls{density}/\gls{density}_{2}\)},%
+	ylabel={\gls{mach}, \(\gls{pressure}/\gls{pressure}_{2}\), \(\gls{abs_temperature}/\gls{abs_temperature}_{2}\), \(\gls{density}/\gls{density}_{2}\)},%
 	y unit = {-},
 	table/x={R_pres},%
 	ymin=0.4,
@@ -391,7 +391,7 @@ In \cref{fig:diffuser}, we only have to specify \iecfeg{e.g.} \verb|y=M| and the
 		% Do this manually, node macro expansion in foreach/invokeforeach is weird
 		\addplot+ table [y=M] {\diffusertable} node [pos=0.2, fill=white] {\gls{mach}};
 		\addplot+ table [y=Pi] {\diffusertable} node [pos=0.9, fill=white] {\(\gls{pressure}/\gls{pressure}_{2}\)};
-		\addplot+ table [y=Theta] {\diffusertable} node [pos=0.7, fill=white] {\(\gls{temperature}/\gls{temperature}_{2}\)};
+		\addplot+ table [y=Theta] {\diffusertable} node [pos=0.7, fill=white] {\(\gls{abs_temperature}/\gls{abs_temperature}_{2}\)};
 		\addplot+ table [y=Rho] {\diffusertable} node [pos=0.8, fill=white] {\(\gls{density}/\gls{density}_{2}\)};
 	\end{axis}%
 	\begin{axis}%
@@ -457,7 +457,7 @@ There, usage of chemical compounds as \verb|\chcpd| is also shown.
 \subsection{Regular Tikz pictures}
 Tikz really is \textit{not} meant for drawing.
 The more free-form images shown here were created in InkScape.
-Still, \enquote{quoting} in Tikz is much preferred and nicer when the images are somewhat programmatic, aka there's a lot of \SI{90}{\degree} corners, equal distances, and everything is a bit \enquote{block-like}.
+Still, \enquote{drawing} in Tikz is much preferred and nicer when the images are somewhat programmatic, aka there's a lot of \SI{90}{\degree} corners, equal distances, and everything is a bit \enquote{block-like}, repetitive.
 Then, your chances of success using Tikz are much improved, for it is suited well then.
 For example, a small file structure diagram:
 
@@ -568,13 +568,14 @@ A second example is shown in \cref{fig:tikz_diagram}.
 	\end{tikzpicture}
 }%
 {%
-	\caption{Wastegate implementation in a feedback-loop in \smlnk{} as an example for a Tikz diagram}%
+	\caption[A Tikz diagram]{Wastegate implementation in a feedback-loop in \smlnk{} as an example for a Tikz diagram}%
 	\label{fig:tikz_diagram}%
 }%
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{InkScape}
 Having seen what Tikz is good for, \cref{fig:inkscape_example1,fig:inkscape_example2} are good examples for when InkScape might be the better choice: 3D drawings with curves.
+\Cref{fig:impeller_throat_iso} is a bitmap turned vector; InkScape can detect edges/contrasts in bitmaps and replicate those lines in a vector graphic.
 While InkScape is really awkward to use at times, and severely lacking behind its commercial competitors (which is fine), it has 3D perspective tools that can also handle these cases.
 That being said, Tikz is always the preferred method if so feasible.
 
@@ -583,6 +584,7 @@ They may then be exported as \texttt{*.pdf}; now, that is only half the story.
 The vector graphic's text part is exported to a plain text (\iecfeg{i.e.}\ \TeX) file, as \verb|*.pdf_tex|.
 On the latter, we then call \verb|\input| within \LaTeX{}, and that file in turn embeds the previously created \texttt{*.pdf} file.
 
+\paragraph{Single-Page PDFs}
 If you aim to reuse just the \texttt{*.pdf}, without the text, outside of \LaTeX{}, perhaps on your website, then you will want it to really only contain \emph{one} page.
 However, InkScape may create multi-page files.
 Selecting all text elements in the \texttt{*.svg} file and moving them to the top-most layer (press \texttt{POS1}) will ensure that the generated \texttt{*.pdf} will have just one page containing the entire image.
@@ -616,8 +618,10 @@ Selecting all text elements in the \texttt{*.svg} file and moving them to the to
 \section{Illustrations}
 As a special gimmick, there is an environment for illustrations.
 It may be useless now, but you can alter it to suit your needs; the skeleton is there for you.
-It mainly behaves like the other floats: it\dots floats\dots and also has its own list.
-\begin{illustration}{I am a useless box}
+It mainly behaves like the other floats: it\dots floats (if you allow it to) and also has its own list.
+For an example, see \cref{ill:example}.
+
+\begin{illustration}{I am a useless box}\label{ill:example}
 	There can be pretty much any content in here.
 	Math works, as we can see
 	\begin{equation}

@@ -1,0 +1,37 @@
+# Srcs and references for LaTeX/GitLabCI:
+# https://github.com/aufenthaltsraum/stuff/wiki/Using-GitLab-CI-for-Building-LaTeX
+# https://gitlab.com/JaMeZ-B/LaTeX-WWU/blob/master/README.md
+# https://sayantangkhan.github.io/latex-gitlab-ci.html
+# https://insights.tuhh.de/de/blog/tutorials/2018/10/04/gitlab-als-cms-einsetzen/
+
+# 'latexmk' is configured using 'latexmkrc' in the project root.
+
+# Image from dockerhub.
+image: alexpovel/javalatex
+
+# Define some stages so to get rid of 'Test' as default.
+stages:
+    - build
+compile_pdf:
+    script:
+        # Debugging: List all available variables and contents:
+        # - export
+        # Replace the defaults to current values.
+        # Double-Quotes to enable variables usage
+        - sed -i "s/v0.00/$CI_COMMIT_REF_NAME/g" gitmeta.txt
+        - sed -i "s/12345678/$CI_COMMIT_SHORT_SHA/g" gitmeta.txt
+        # Show file contents for debugging:
+        # - cat gitmeta.txt
+        # No *.tex-file given to latexmk: run on all *.tex-files found in root.
+        - latexmk
+    stage:
+        build
+    artifacts:
+        # artifacts.zip is renamed to current tag/branch.
+        name: "$CI_COMMIT_REF_NAME"
+        paths:
+        # Return all found *.pdf-files using wildcard.
+            - "*.pdf"
+    # Run job 'only' if it fulfills certain criteria.
+    only:
+        - tags

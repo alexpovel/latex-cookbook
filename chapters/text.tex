@@ -1,4 +1,4 @@
-\chapter{Text Features}
+\chapter{Text Features}\label{ch:text}
 Let us first go through some of the textual features offered by \LaTeX{} and used in this template.
 
 \section{Fonts}
@@ -12,12 +12,12 @@ Both fonts are vector fonts; if \LaTeX{} yields any warnings about font size sub
 Not only do the fonts look fantastic on their own and together, they (just as important) also feature an immensely broad support for symbols and characters, as well as font shapes and weights and combinations thereof.
 The latter is demonstrated in \cref{tab:main_font_examples}.
 %
-\newcommand*{\sampletext}{The quick brown Fox jumps over the lazy Dog 13 times!}
 \begin{table}
 \ttabbox{%
 	\caption[Main/Roman Font Examples]% Brackets hold entry that will go into List of Tables
 	{%
-		Examples for font features offered by the main roman font%
+		Examples for font features offered by the main roman font.
+		Notice the small vertical white space after the fourth row, nicely separating content that is slightly dissimilar%
 	}%
 	\label{tab:main_font_examples}% Use a string like 'tab:' to help with organization and auto-complete when reffing
 }%
@@ -62,7 +62,7 @@ They provide a seamless transition, especially when using actual text in the mat
 Toggle the colors in the preamble, highlighting each different font family, to see all the differences.
 Some more examples follow.
 \begin{gather}
-	\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{temperature}\label{eq:click_me}\\
+	\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{abs_temperature}\label{eq:click_me}\\
 	e^{i\pi} + 1 = 0\\
 	\tcbhighmath{\lim\limits_{x \to \infty} \frac{\pi(x)}{x / \ln(x)} = 1}\label{eq:highlighted}\\
 	\sum_{k = 0}^{n} %
@@ -74,8 +74,16 @@ Some more examples follow.
 	\Delta h_{\text{change}} = \nicefrac{1}{2}\qty(c^2_{\text{exit}} - c^2_{\text{entry}})
 \end{gather}
 
+\paragraph{Symbols}
 Note how the symbols in \cref{eq:click_me} are hyperlinks (leading to their definition in the glossary), courtesy of packages \package{hyperref} and the wonderful \package{glossaries-extra} working together.
+Having not specified anything else, they take hyper-link color.
+That is of course a bit unfortunate.
+In the final document, all links should be hidden, aka black.
+This is a given for print output, but I also encourage it for digital output.
+The visual noise introduced by colored links is quite immense.
+Their only point is to let users know there is something clickable --- they likely figure that out themselves quickly.
 
+\paragraph{Math highlighting}
 In a very unintrusive yet also not ambivalent way, we can highlight important results, as is done in \cref{eq:highlighted}.
 This feature is a natural part of \package{tcolorbox}, a very powerful package for anything color and boxes!
 
@@ -86,6 +94,10 @@ Closely related to purely mathematical equations are chemical ones, as shown in 
 	\ch{C + O2 -> CO2}
 \end{chemreac}
 This functionality is still very basic and probably poorly executed in parts.
+We can also use chemical compounds invoking \verb|\chcpd|, as demonstrated in \cref{eq:boie}.
+\begin{equation}\label{eq:boie}
+\tcbhighmath{\frac{\gls{heatingvalue}\mr{\gls{inferior}}}{\num{1e6}} = \num{35}\gls{massfr}_{\chcpd{C}} + \num{94.3} \gls{massfr}_{\chcpd{H}} + \num{10.4} \gls{massfr}_{\chcpd{S}} + \num{6.3} \gls{massfr}_{\chcpd{N}} - \num{10.8} \gls{massfr}_{\chcpd{O}} - \num{2.44} \gls{massfr}_{\mathrm{w}}}
+\end{equation}
 
 \subsection{Sans-Serif}
 Having taken care of the main/roman font, we turn to the others.
@@ -110,28 +122,29 @@ def get_metadata(table, data_start: int) -> dict:
 	return junk
 \end{lstlisting}
 with Python syntax highlighting taken from this \href{https://github.com/olivierverdier/python-latex-highlighting}{GitHub repository}.
-Note that comments are really meant to be \textit{italics} shape (or slanted), but Inconsolata does not deliver that.
+Note that comments are really meant to be \textit{italics} shape (or \textsl{slanted}), but Inconsolata does not deliver that.
 If you don't care, Inconsolata will be good enough.
 Still, Consolas is much preferred: it has \emph{true} italics and bold italics.
 As far as I know, it is shipped with Windows but not free; I cannot share it here, but you will be able to get your hands on it rather easily.
 
-\subsection*{So what}
+\subsection*{So what?}
 \textbf{If you don't care for \textit{any} of this}, don't quit just yet.
 The features of \LaTeX{} will do their work silently in the background for you.
 You won't have to worry about any of this ever again, but can rest assured it is taken care of.
-\textbf{Focus on your content and impress others that way (while still bedazzling them with your sexy documents).}
+\textbf{Focus on your content and impress others that way (yet still bedazzling them with your sexy-ass documents).}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{References}
 Note that using the package \package{cleveref}, we only ever issue \verb|\cref{label}| commands.
-The package does the heavy lifting and puts the float type in front, also with correct plural forms if required (see \cref{tab:font_examples,fig:tikz_diagram,fig:impeller_throat}).
-Doing it any other way is just way too laborious.
+The package does the heavy lifting and puts the float type in front, also with correct plural forms if required (see \cref{tab:main_font_examples,fig:tikz_diagram,fig:impeller_throat} \textleftarrow{} all of that was done automagically).
+Doing it any other way is just way too laborious and error-prone.
 
 For added convenience, add some info on the type you are attaching the label to, \iecfeg{e.g.}\ \verb|\label{fig:hello}|.
 This helps for auto-completion in your \gls{int_dev_env}%
 \footnote{%
 	Here, \texttt{gls} was used to print this abbreviation from the glossary.
 	\textit{Never, ever \textbf{don't}} do that: when there is an abbreviation, put it into the glossary system and have it handle that.
-	You will regret not doing it and end up scratching together all wild, spread-out, manually typed abbreviations.}
+	You will regret not doing it and end up scratching together all wild, spread-out, manually typed abbreviations.
+	Your document might suffer from inconsistencies.}
 of choice.
 
 \subsection{Bibliography}
@@ -151,6 +164,15 @@ Using \verb|\autocites{}|, we can then chain together as many as we want.
 Taking a look at the bibliography in the back matter of this document reveals the feature \verb|backref|: the pages where a reference was cited occur after its entry.
 This is helpful in print, but amazing in digital format, for these page numbers are also links.
 Your readers will thank you tenfold for allowing them to very swiftly navigate and jump within your document.
+
+Try it out by clicking this reference: \autocite{braunling_flugzeugtriebwerke:_2015}, leading you to the bibliography.
+\label{backref_example}
+It will say this page's number (\cpageref{backref_example}) at the end of its entry, done by \package{biblatex}.
+Clicking it will land you back here exactly.
+
+\paragraph{Manager}
+To generate the \texttt{*.bib} file, from which \LaTeX{} pulls the info, in the first place, a citation manager is a good tool.
+Zotero is a decent pick, but it ultimately does not matter much.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}
 	\ttabbox{%
@@ -194,8 +216,17 @@ Just consider this example list:
 	\end{enumerate}
 \end{itemize}
 
-Processing the very same information from a text paragraph is suddenly much less accessible.
-Note the block-like \texttt{itemize} symbol (\smblksquare{}), and the fact that enumerate numbers are part of the {\sffamily sans-serif family} and \textbf{bold}.
+Processing the very same information from a text block would suddenly be much more challenging.
+Note the block-like \texttt{itemize} symbol (\smblksquare{})%
+\footnote{%
+	This is also a regular Unicode character.
+	When copy-pasting old or outdated \LaTeX{} documents, ever noticed all the funny business going on?
+	A good example is copying German \enquote{Umlauts} like Ä, Ö, Ü.
+	They might turn into \enquote{\(\ddot{\phantom{A}}\text{A}\)}, since \LaTeX{} only ever put two random dots over the regular ASCII letter A.
+	With \package{unicode-math} (building onto \package{fontspec}) and \hologo{LuaLaTeX}, we are fully Unicode!
+	Copy-paste anything correctly: \(\delta \sigma \int_{1}^{2} y\).
+}
+, and the fact that enumerate numbers are part of the {\sffamily sans-serif family} and \textbf{bold}.
 That is totally cool and stuff, because it's\dots{} different?
 This was specified and may be changed in the \package{enumitem} package options.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -214,6 +245,39 @@ You can also censor float contents, as illustrated in \cref{fig:censorbox}.
 		}%
 	}
 \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Glossaries}
+The package \package{glossaries-extra} is an absolute beast.
+For this document, it is used with its back-end \package{bib2gls}.
+This (Java) tool comes with installations of TeXLive and Miktex.
+You should already have it.
+
+In a format similar to normal bibliographies, we now manage all abbreviations, symbols \iecfeg{etc.}\ using \texttt{*.bib} files.
+You can see them in a sub-folder for this project as well.
+Each entry is processed by \package{bib2gls} and put into an auxiliary file.
+From it, it reads and inserts all contents when we use \verb|\gls| and its many siblings to insert glossary data.
+The framework for all of that, also printing of the glossary/nomenclature, was already done for this project.
+
+Using \package{glossaries-extra} and its many features also for symbols is a fabulous tool.
+It is absolutely counter-intuitive, for now we have to write \verb|\gls{temperature}| instead of just \verb|T|.
+This makes the source code obfuscated and hurts legibility.
+The advantages are probably worth it: never worry about consistency again.
+You have one central repository for all data, and any changes there are immediately forwarded to the entire document (provided you are persistent in using \verb|\gls| \iecfeg{etc.}).
+We can then also go ahead and add a billion other features, like cross-referencing, hyperlinking, additional explanations and much more.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Indices}
+For the index at the end, we currently use \package{splitidx}.
+It splits the single index \LaTeX{} expects, allowing for multiple indices.
+In the future, all of this should be replaced by \package{glossaries-extra}.
+For now, we can add people like \name{Einstein}{Albert} and \name{Feynman}{Richard} to the index.
+Terms, like machine learning \term{machine learning} and artificial intelligence \term{artificial intelligence} (so hip), may be added as well.
+We can also nest entries with \verb|\term{parent!child}| \term{parent!child}.
+
+These are implemented as a custom commands and are vastly inferior to using \package{glossaries-extra}.
+For example, these are simple links with no descriptive texts \iecfeg{etc.}
+
+Lastly, we will have to run the tool \texttt{splitidx} on our main \texttt{*.tex} file/its \texttt{*.aux} file.
+This is another step in the process that could be circumvented using \package{glossaries-extra}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Code}
 As previously seen in \cref{ch:mono-spaced}, we have a special code-block environment for code between paragraphs (\iecfeg{i.e.}, not a float).

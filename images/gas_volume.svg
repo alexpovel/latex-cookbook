@@ -15,7 +15,7 @@
    viewBox="0 0 1583.928 760.28455"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="gas_volume.svg">
   <sodipodi:namedview
      inkscape:snap-global="false"
@@ -30,18 +30,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.22627417"
-     inkscape:cx="3684.0268"
-     inkscape:cy="1754.925"
+     inkscape:zoom="0.64"
+     inkscape:cx="3631.3569"
+     inkscape:cy="1553.6972"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="2560"
-     inkscape:window-height="1417"
-     inkscape:window-x="2552"
-     inkscape:window-y="-8"
+     inkscape:window-width="4480"
+     inkscape:window-height="2480"
+     inkscape:window-x="4468"
+     inkscape:window-y="-12"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -211,7 +211,7 @@
          id="tspan2560"
          x="19279.205"
          y="-16428.592"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.69444466px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332">\shortstack{\ctrw{\(p, T\)}\\\ctrw{\(m, U\)}}</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.69444466px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.26458332">\shortstack{\ctrw{\gls{pressure}, \gls{abs_temperature}}\\\ctrw{\gls{mass}, \gls{internalenergy}}}</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:1.60040641px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2000508"
@@ -222,7 +222,7 @@
          id="tspan2564"
          x="18817.023"
          y="-16484.262"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.67344284px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.2000508">\ctrw{\(\dot{H}_{\gls{inlet}}\)}</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.67344284px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:0.2000508">\ctrw{\(\dot{\gls{enthalpy}}_{\gls{inlet}}\)}</tspan></text>
     <text
        id="text2570"
        y="-16481.859"
@@ -233,6 +233,6 @@
          y="-16481.859"
          x="19812.432"
          id="tspan2568"
-         sodipodi:role="line">\ctrw{\(\dot{H}_{\gls{outlet}}\)}</tspan></text>
+         sodipodi:role="line">\ctrw{\(\dot{\gls{enthalpy}}_{\gls{outlet}}\)}</tspan></text>
   </g>
 </svg>

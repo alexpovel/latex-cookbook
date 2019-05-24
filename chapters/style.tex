@@ -1,19 +1,208 @@
-\section{Text Features}
-Between any section commands (from \verb|\part| down), there always has to be some content.
-I would normally not know what to put between \textbf{Text Features} and \textbf{Fonts}, but really putting \textit{anything} I consider necessary.
-Anything else looks off.
+\chapter{Style}
+
+These are just random thoughts on style and design of documents, primarily technical publications of all kinds.
+They are a collection of experience, but also aspects taken from various literature on the topic.
+The available literature is positively exhausting, so there is no point digging into that here.
+Take to it if you are truly interested; the content presented here is on a beginner level.
+
+Of course, anything is subjective here.
+When one speaks of \enquote{rules} in style and design, of course what they are really saying is \enquote{\SI{99}{\percent} of people agree on this}.
+Many people make an effort to be the other \SI{1}{\percent} (guilty!).
+Chances are, it will not come out looking right and you'll be back to the drawing board anyway.
+
+\section{Conventions}
+Less is more: hack and alter as little as possible.
+Armies of professionals have arrived at today's conventions over centuries.
+One example that breaks with what is usually found in documents are the page headers of this document.
+The header height is increased beyond its standard (using the fabulous \package{koma-script}) and a vertical rule was inserted.
+I like it: a touch different and modern, yet not in the way of anything.
+If you don't, feel free to tear it down in the preamble.
+
+Less is more: use the least ink possible to get your point across.
+Any more is only noise.
+For this, compare \cref{tab:main_font_examples} with its not-so-blessed twin, \cref{tab:main_font_examples_ugly}.
+Another observation there: \textbf{if in doubt, left-align}.
+If you don't have an \emph{actual reason} to center or right-align, just don't.
+
+\begin{table}
+	\ttabbox{%
+		\caption%
+		{%
+			Awful version of \cref{tab:main_font_examples}%
+		}%
+		\label{tab:main_font_examples_ugly}%
+	}%
+	{%
+		\begin{tabular}{|c||c|}% Use @{} to remove white space from sides (since braces are empty)
+		\hline
+			\textit{Feature} & \textit{Sample Text}\\
+		\hline
+		\hline
+			Regular & \sampletext\\
+		\hline
+			\textbf{Bold} & \textbf{\sampletext}\\
+		\hline
+			\textit{Italics} & \textit{\sampletext}\\
+		\hline
+			\textbf{\textit{Bold Italics}} & \textbf{\textit{\sampletext}}\\
+		\hline
+			\textsc{Small Capitals} & \textsc{\sampletext}\\
+		\hline
+			\textbf{\textsc{Bold SC}} & \textbf{\textsc{\sampletext}}\\
+		\hline
+			\textit{\textsc{Italics SC}} & \textit{\textsc{\sampletext}}\\
+		\hline
+		\end{tabular}
+	}%
+\end{table}
+
+An example for a larger table is shown in \cref{tab:fuel_composition}.
+One key aspect there: column-types provided by \package{siunitx}.
+These automatically apply \verb|\num| to each entry, which in turn allows easy printing of things like \enquote{\num{-3.23e-5}}.
+Use \verb|*x{y}| to print column-type \verb|y| (\iecfeg{i.e.}\ \verb|c|) \verb|x| times.
+No need for tedious repetition.
+Decimal places are accounted for and aligned by.
+
+\begin{landscape}
+\begin{table}
+	\crefname{equation}{eq.}{eqs.}% Keep this change scoped to the environment
+	\Crefname{equation}{Eq.}{Eqs.}%
+	\footnotesize%
+	\ttabbox%
+	{%
+		\caption[Fuel compositions]
+		{%
+			Compositions and properties of fuels, as used in \Cref{eq:tikz_in_text}%
+		}%
+		\label{tab:fuel_composition}%
+	}%
+	{%
+		\begin{tabular}{@{}p{5em}*7{S[table-format=1.4]}S[table-format=4.0]S[table-format=2.1]@{}}
+			\toprule
+			Name & \multicolumn{7}{c}{{Mass fraction \(\gls{massfr}\)}} & {\(\gls{density}\)} & {\(\gls{heatingvalue}_{\gls{inferior}}\)} \\
+			& \multicolumn{7}{c}{{[--]}} & \(\qty[\si{\kilogram\per\meter\cubed}]\) & \(\qty[\si{\mega\joule\per\kilogram}]\) \\
+			\cmidrule(lr){2-8}
+			& \chcpd{C} & \chcpd{H} & \chcpd{S} & \chcpd{O} & \chcpd{N} & \chcpd{H2O} & {Ash} & & \\
+			\midrule
+			Diesel\mpfootnotemark[1] & 0.8600 & 0.1320 & 0.0060 & \multicolumn{2}{c}{\num{0.0020}\mpfootnotemark[2]} & {n.a.} & {n.a.} & 840 & 42.7 \\
+			Oil EL\mpfootnotemark[1] & 0.8570 & 0.1310 & 0.0100 & \multicolumn{2}{c}{\num{0.0020}\mpfootnotemark[2]} & {n.a.} & {n.a.} & 840 & 42.7 \\
+			Oil H\mpfootnotemark[1] & 0.8490 & 0.1060 & 0.0350 & \multicolumn{2}{c}{\num{0.0100}\mpfootnotemark[2]} & {n.a.} & {n.a.} & 980 & 40.0 \\
+			\Gls{marine_diesel_oil}\mpfootnotemark[3] & {n.a.} & {n.a.} & 0.0150 & {n.a.} & {n.a.} & 0.0030\mpfootnotemark[4] & 0.0001 & 900 & {n.a.} \\
+			\Gls{heavy_fuel_oil}\mpfootnotemark[5] & {n.a.} & {n.a.} & 0.0350\mpfootnotemark[6]& {n.a.} & {n.a.} & 0.0050\mpfootnotemark[4] & 0.0015 & 1010 & {n.a.} \\
+			\addlinespace
+			Light\mpfootnotemark[7] & 0.8600 & 0.1320 & 0.0060 & 0.0010 & 0.0010 & 0 & 0 & 840 & {\Cref{eq:boie}} \\
+			Medium\mpfootnotemark[7]& 0.8530 & 0.1269 & 0.0150 & 0.0010 & 0.0010 & 0.0030 & 0.0001 & 900 & {\Cref{eq:boie}} \\
+			Heavy\mpfootnotemark[7] & 0.8460 & 0.1025 & 0.0350 & 0.0050 & 0.0050 & 0.0050 & 0.0015 & 1010 & {\Cref{eq:boie}} \\
+			\bottomrule
+		\end{tabular}%
+		\footnotetext[1]{{\autocite[634]{baehr_thermodynamik:_2016}; see also \autocite[L70]{dubbel_taschenbuch_2007} and \autocite[97]{mollenhauer_handbuch_2007}.}}%
+		\footnotetext[2]{{Given as a sum \(\gls{massfr}_{\chcpd{O}}+\gls{massfr}_{\chcpd{N}}\).}}%
+		\footnotetext[3]{{\Gls{marine_diesel_oil}, max. values of specification \emph{DMB}, \autocite{international_organization_for_standardization_iso_2017}.}}%
+		\footnotetext[4]{{Given as a volume fraction, assumed equal to mass fraction.}}%
+		\footnotetext[5]{{\Gls{heavy_fuel_oil}, max. values of specification \emph{RMK}, \autocite{international_organization_for_standardization_iso_2017}.}}%
+		\footnotetext[6]{{\Gls{int_mar_org} level prior to \num{2020}.}}%
+		\footnotetext[7]{{Derived, \emph{virtual} fuels for simulation.}}%
+	}%
+\end{table}%
+\end{landscape}
+
+\section{Sectioning}\label{ch:sectioning}
+% There has to be content here
+\subsection{Explanation}\label{ch:sectioning_explanation}
+Between any two sectional commands (from \verb|\part| down), there always has to be \emph{some} content.
+Anything else looks off, \iecfeg{cf.}\ \cref{ch:sectioning,ch:sectioning_explanation}.
 At least, tell the reader what the following hierarchical level contains for them.
 
-small spaces \ 
+Further, three numbered levels of hierarchy are enough.
+In \package{koma-script} reports (\verb|scrreprt|), these are chapters, sections and subsections.
 
-Note the usage of --- in the previous sentence.
-Use \verb|---| in the source code to have an em-dash---perhaps even without surrounding spaces?
-That is probably up to your choice.
-What is not, because it is largely agreed on, is to use \verb|--| -- an en-dash -- instead.
-It is reserved for number ranges.
-Lastly, a single hy-phen is reserved for just that --- hyphenation.
+\subsubsection{Deeper!}
+Deeper sectioning is fine, but it should not be numbered or occur in the table of contents.
+Notice how, without specifying anything, \package{koma-script} abides by that automatically.
+This is despite using \verb|\subsubsection{Deeper!}| as opposed to \verb|\subsubsection*|, its explicitly unnumbered counterpart.
 
-ALWAYS write what you *mean*, not what also gives the correct output
+Also notice how between \verb|\section{Sectioning}|, which produced \cref{ch:sectioning}, and \verb|\subsubsection{Deeper!}|, there was no sub-section.
+Usually, you would want a clean cascade with no jump in the hierarchy levels.
+If you catch yourself jumping, it is also a sign there is something off with your actual content structure and thought process.
+That being said, I sometimes still do it because of reasons.
+Your call, just be aware.
 
+Amazingly, \LaTeX{} has many ways where it does not let you do something easily, or where commands look off.
+\textbf{Never fight \LaTeX{}} in that; you will lose, it will win.
+When something is awkward to do or requires a lot of manual labor, you are probably doing it wrong and there will be an easier way.
+Most often, that comes in the form of packages.
+Being a fully-fleshed programming language under the hood, \emph{any} repetition in \LaTeX{} should make you stop for a second and wonder about another way.
+That may lead to you discovering sub-optimal approaches and code.
+Just as often, it won't lead anywhere and trying to force minimal code and maximum optimization will not be economical.
 
-three levels! in subsubsection / report not numbered
+\paragraph{Paragraphs}
+They are a nice touch, introducing a new, distinct paragraph/idea/thought without being too loud about it.
+
+That being said, leave a blank line in the source code for regular paragraphs.
+Use either vertical spacing between paragraphs or indentation (like here).
+Do not use both.
+
+\noindent Each new train of thought should go into its own paragraph.
+This paragraph is not indented, as was intended by manually calling \verb|\noindent|.
+In regular text and documents, there are very few reasons that should ever occur.
+Again, let \LaTeX{} do its thing.
+Again, if you find yourself typing \verb|\noindent| all the time, there will be something wrong.
+
+\section{Other stuff}\label{ch:other_stuff}
+This \textcolor{mRed}{\lcnamecref{ch:other_stuff}} is about auxiliary stuff.
+Notice \color{mRed} \verb|\lcnamecref| \color{black} in the previous sentence: it references (in \textit{l}ower-\textit{c}ase) the name of the thing you are passing it.
+If this \lcnamecref{ch:other_stuff} ever changes to something else (chapter, \dots), it is updated automatically.
+
+Now for the stuff:
+\begin{itemize}
+	\item Small spaces are produced by the usual back-slash, followed by an actual space: \verb|\ |.
+	Much like physical quantities produced by \package{siunitx} (\SI{30.2e2}{\newton}) and its small spaces, they are nice to have.
+	When \LaTeX{} sees any dot \verb|.| with a space behind it, it sees that as the end of the sentence.
+	When it isn't, like for Prof.\ Very Important, we use an explicit small space instead.
+	
+	A second important application would be abbreviations, \iecfeg{i.e.}\ \textleftarrow{} these little things.
+	
+	\textbf{In the name of all that is holy, never type units, numbers or quantities out by yourself, manually.}
+	Use \package{siunitx} for that.
+	It will insert a small space between the number and the unit.
+	No spaces or full spaces are wrong and painful to read.
+	Lastly, even numbers should always go into \verb|\num|.
+	Compare 47 sheep versus \num{47} sheep.
+	Different fonts are used: the regular text font, for which we specified \verb|OldStyle|, \iecfeg{i.e.}\ hanging numbers, the the math font.
+	Other features are global control over decimal and group/thousands separators, how to handle scientific notation (\num{1e1}) and \emph{much} more.
+	As always, the manual will be your reference and friend.
+	\item Use \verb|---| in the source code to have an em-dash---perhaps even without surrounding spaces?
+	That is probably up to your choice.
+	What is not, because it is largely agreed on, is to use \verb|--| -- an en-dash -- instead.
+	It is reserved for number ranges.
+	Lastly, a single hy-phen is reserved for just that --- hyphenation.
+	\item A generally important concept in \LaTeX{}:
+	\textbf{write what you \emph{mean}, not what produces the desired output}.
+	Do \emph{emphasized} text and \textit{emphasized}, but in italics, text look the same?
+	They certainly do, usually.
+	
+	Yet, what did we \emph{mean} to be doing?
+	We \emph{mean} to \emph{emphasize}; italic text is just what it happens to look like now, but it is not the \emph{meaning}.
+	For example, we could later decide to redefine emphasized text to bold.
+	If you previously did not differentiate strictly enough between \verb|\emph| and \verb|\textit|, you are in for a bad time.
+	\item Indices are upright!
+	They are text.
+	If text occurs in math mode, that is actual text, too.
+	Consider
+	\begin{equation*}
+		MEAN_{sample} \neq 2\eqcomma{}
+	\end{equation*}
+	which looks stupid.
+	We can \verb|\DeclareMathOperator{\examplemean}{MEAN}|, then use \verb|\text| for the subscript:
+	\begin{equation}\label{eq:eqend}
+		\examplemean_{\text{sample}} \neq 2 \eqend{}
+	\end{equation}
+	\item In \cref{eq:eqend}, and anywhere else, the equation is part of the sentence.
+	It is just another language, which can and will be read as a natural part of the surrounding text.
+	As such, it should contain punctuation marks.
+	So that now, having considered that we have the amazing result of
+	\begin{equation}
+		1 \neq 2 \eqcomma{}
+	\end{equation}
+	we have achieved better overall reading flow.
+\end{itemize}
