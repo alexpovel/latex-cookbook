@@ -3,8 +3,8 @@
 Jesus Christ, who needs that many templates?
 Aren't there enough by now?
 
-This template is different than almost all others.
-It has one primary, fragile advantage: it is currently (2019) right on the edge of state-of-the-art LaTeX typesetting.
+This template is different to most others.
+It has a fragile advantage: it is currently (2019) right on the edge of state-of-the-art LaTeX typesetting.
 
 TeX is moving slowly, and as such, best practices, packages and methods from over 10 years ago are still actively used today.
 Sometimes, packages will be from the previous century.
@@ -41,10 +41,11 @@ We now ...
   That is nothing new at all, but still dangerously underrated in my opinion.
   It offers a great set of sensible default values, so we essentially won't have to do anything and still get correct margins etc.
 
-  Its built-in packages are especially noteworthy:
+  Some of its built-in packages are especially noteworthy:
   - `tocbasic` for a gateway into managing content lists (Table of Contents etc.)
-  - `scrlayer-scrpage` blows `fancyhdr` out of the water, offering page styles.
+  - `scrlayer-scrpage`, offering page styles.
   These are used to set headers and footers.
+  We do not use `fancyhdr`.
 - compile using `lualatex` for full Unicode support.
 No fiddling with `inputenc` or `fontenc` packages anymore. Forget about those, it is high time to move on.
 
@@ -53,9 +54,11 @@ No fiddling with `inputenc` or `fontenc` packages anymore. Forget about those, i
   AFAIK, `xelatex` is not as versatile, yet is much more prevalent (double the number of hits on Google).
   All issues I ever had with `xelatex` (see above) were banished switching to `lualatex`.
 
-- use `glossaries-extra`, the latest, most capable glossary/nomenclature/indexing package. With `bib2gls` (a Java tool) to draw  entries from respective `*.bib`-files. This is also used for symbols, allowing for a highly cross-referenced document with absolutely consistent symbol typesetting and global management of them.
+- use `glossaries-extra`, the latest, most capable glossary/nomenclature/indexing package.
+It is used with `bib2gls` as its backend (a Java tool) to draw entries from respective `*.bib`-files.
+This is also used for symbols, allowing for a highly cross-referenced document with absolutely consistent symbol typesetting and global management of them.
 
-  You can have your abbreviations/symbols/sub-superscripts in `*.bib` files now, with the familiar syntax for the entries.
+  You can have your abbreviations/symbols/sub-superscripts in `*.bib` files now, with the familiar syntax (reminiscent of JSON) for the entries.
   Their order does not matter, they will be sorted by the `bib2gls` tool.
   The sorting can be customized to a dizzying degree --- or left out entirely, if you don't want it sorted.
 
@@ -80,17 +83,20 @@ We could probably use something more modern here.
 I am a *huge* fan.
 [Many people ask why the default margins are so damn large](https://tex.stackexchange.com/questions/71172/why-are-default-latex-margins-so-big) (by the way, in that question, they mention the package `geometry`; we have KOMA-script for that, don't touch `geometry`).
 The margins aren't too large: the (default A4) paper is.
-Only real bookworms can process lines in excess of approx. 80 characters. All others get headaches and find texts like that hard to read. KOMA knows about that and the many other 'rules' aka conventions, producing the margins you see.And in fact, they might look a bit off.
+Only real bookworms can process lines in excess of approx. 80 characters.
+All others get headaches and find texts like that hard to read.
+KOMA knows about that and the many other 'rules' aka conventions, producing the margins you see.
 
-  There is a very good reason books usually *don't* come in A4 or letter format.
-  It is much closer to A5, which suddenly *makes sense*: margins are small, the text fits nicely.
+  There is very good reason books don't usually come in A4 or letter format.
+  It is often much closer to A5, which suddenly *makes sense*: margins are small, the text fits nicely.
   It is nice to read and hold.
   If your document is an actual thesis of many dozens of pages, consider using A5.
 
-  To see it in effect, uncomment the options `a5paper` and `10pt` (we decrease the font size by 1pt) in [the base file](main.tex) when calling the `documentclass`.
+  To see it in effect, uncomment the options `a5paper` and `10pt` (we decrease the font size by 1pt, down from the default of `11pt`) in [the base file](main.tex) when calling the `documentclass`.
   At this point, there is a reward for careful typesetting: specifying lengths etc. in absolute units will break the document.
   Having done all that jazz in relation to `linewidth`, `textwidth` and their siblings will scale everything accordingly.
-  Not all things will come out right and require manual attention.
+  Nevertheless, not all things will come out right.
+  These will require manual attention.
 
   It is probably telling that a document of *X* pages in `a4paper` and `11pt` (the KOMA default) will come out to very close to *X* pages again in `a5paper` and `10pt`: we mainly cut out on wasted white-space and made better use of available space, without suddely requiring *2X* pages (since we halved the page size).
 
@@ -99,12 +105,16 @@ Only real bookworms can process lines in excess of approx. 80 characters. All ot
 All this is quickly built using `latexmk` with a custom [`latexmkrc`](latexmkrc) file.
 It contains some Perl commands to make it work with `bib2gls` and `splitidx` and their generated auxiliary files.
 `latexmk` is maintained by John Collins, who contributed the `splitidx` routine.
+The entire thing should be OS agnostic.
 
 A single call
-```
+
+```bash
 latexmk main
 ```
+
 on our core TeX file [`main`](main.tex) will process the entire chain, containing
+
 - `lualatex`,
 - `bib2gls`,
 - `splitindex`,
