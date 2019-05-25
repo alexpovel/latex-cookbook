@@ -10,6 +10,10 @@
 \usepackage{shellesc}% https://tex.stackexchange.com/a/365784/120853
 
 \usepackage{amsmath}% Needs to be loaded before unicode-math
+	% Allow multi-line environments to break across pages.
+	% While it makes sense to disallow that, not doing so can produce spacing issues.
+	% Usually, any such environment will require your manual attention
+	\allowdisplaybreaks
 \usepackage{mathtools}% Tweaks and improvements for amsmath
 	\newtagform{brackets}{[}{]}% We want to be cool, so standard parantheses don't cut it
 	\usetagform{brackets}

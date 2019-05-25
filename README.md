@@ -14,6 +14,12 @@ Outdated, no longer maintained packages are avoided if possible.
 
 ## Features
 
+At the core of it all is [the preamble](./settings/preamble.tex).
+At some point, this could be turned into a class file `*.cls`.
+It works for now.
+
+The [compiled output](main.pdf) is also part of the repository.
+
 ### Toolbox
 
 This template is also a toolbox:
@@ -59,7 +65,7 @@ No fiddling with `inputenc` or `fontenc` packages anymore. Forget about those, i
 - a custom title-page.
 
   It is nothing fancy, but I had a very good run with it over the years.
-  It is right there in plain sight for you, easy to modify.
+  [It is right there in plain sight for you](./chapters/frontmatter/titlepage.tex), easy to modify.
 - `biblatex` with `biber`, the currently most powerful bibliography tool.
 
   Its manual is over 300 pages long and will exhaust your every desire.
@@ -69,6 +75,24 @@ No fiddling with `inputenc` or `fontenc` packages anymore. Forget about those, i
 - have a lot of control over figure and caption configurations combining `floatrow` and `caption`.
 `floatrow` is actually a bit old and awkward to use.
 We could probably use something more modern here.
+
+- are free to use A5 paper.
+I am a *huge* fan.
+[Many people ask why the default margins are so damn large](https://tex.stackexchange.com/questions/71172/why-are-default-latex-margins-so-big) (by the way, in that question, they mention the package `geometry`; we have KOMA-script for that, don't touch `geometry`).
+The margins aren't too large: the (default A4) paper is.
+Only real bookworms can process lines in excess of approx. 80 characters. All others get headaches and find texts like that hard to read. KOMA knows about that and the many other 'rules' aka conventions, producing the margins you see.And in fact, they might look a bit off.
+
+  There is a very good reason books usually *don't* come in A4 or letter format.
+  It is much closer to A5, which suddenly *makes sense*: margins are small, the text fits nicely.
+  It is nice to read and hold.
+  If your document is an actual thesis of many dozens of pages, consider using A5.
+
+  To see it in effect, uncomment the options `a5paper` and `10pt` (we decrease the font size by 1pt) in [the base file](main.tex) when calling the `documentclass`.
+  At this point, there is a reward for careful typesetting: specifying lengths etc. in absolute units will break the document.
+  Having done all that jazz in relation to `linewidth`, `textwidth` and their siblings will scale everything accordingly.
+  Not all things will come out right and require manual attention.
+
+  It is probably telling that a document of *X* pages in `a4paper` and `11pt` (the KOMA default) will come out to very close to *X* pages again in `a5paper` and `10pt`: we mainly cut out on wasted white-space and made better use of available space, without suddely requiring *2X* pages (since we halved the page size).
 
 ## Build
 
