@@ -187,15 +187,15 @@ Now for the stuff:
 	If you previously did not differentiate strictly enough between \verb|\emph| and \verb|\textit|, you are in for a bad time.
 	\item Indices are upright!
 	They are text.
-	If text occurs in math mode, that is actual text, too.
+	If text occurs in math mode, that is also actual text, too.
 	Consider
 	\begin{equation}\label{eq:stupid}
 		MEAN_{sample} \neq 2\eqcomma{}
 	\end{equation}
 	which looks stupid.
 	What \cref{eq:stupid} really says is \enquote{\(M \cdot E \cdot A \cdot N\)}: slanted characters are variables, and not specifying any operator implies multiplication.
-	This example might be pedantic, but it is easy to image such an issue evolving into real ambiguity, which would be a serious error.
-	Since multiplication is implied by doing nothing, leaving out \verb|*| aka \verb|\cdot| entirely often looks best.
+	This example might be pedantic, but it is easy to imagine such an issue evolving into real ambiguity, which would be a serious error.
+	Since multiplication is implied by doing nothing, leaving out \verb|*| aka \verb|\cdot| altogether often looks best.
 	
 	We can \verb|\DeclareMathOperator{\examplemean}{MEAN}|, then use \verb|\text| for the subscript:
 	\begin{equation}\label{eq:eqend}
@@ -209,4 +209,5 @@ Now for the stuff:
 		1 \neq 2 \eqcomma{}
 	\end{equation}
 	we have achieved better overall reading flow.
+	Notice the small spaces \verb|\,| before the commas and dots in equations.
 \end{itemize}

@@ -51,7 +51,7 @@ Multiple sub-tables are also possible, see \cref{tab:works_on_turbocharging}.
 {%
 	\caption[Impeller Throat]%
 	{%
-		Inducer throat created by geometric constraints%
+		Inducer throat created by geometric constraints as an example for sub-figures%
 	}%
 	\label{fig:impeller_throat}%
 	\floatfoot{\adaptedfrom{} \autocites{shakal_centrifugal_2015}[99]{whitfield_design_1990}[535]{hayami_flow_1985}}%
@@ -267,8 +267,10 @@ An example is shown in \cref{fig:mtu_turbo}.
 {%
 	\caption[Turbocharger Rendering]%
 	{
-		Digital rendering of a \emph{Rolls-Royce Power Systems/MTU} turbocharger unit.
-		Note the two-stage (arrangement in series) setup%
+		Digital renders have to be implemented as bitmaps.
+		You can actually vectorize images like this one, too, with decent success.
+		However, the resulting file will contain an absurd number of paths and can be multiple megabytes in size.
+		We can draw onto bitmaps using Tikz%
 	}
 	\label{fig:mtu_turbo}
 	\floatfoot{\adaptedfrom{} \autocite{rolls-royce_power_systems_ag_mtu_2011}}
@@ -286,7 +288,7 @@ This is demonstrated in \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte}
 {%
 \caption{
 	Caloric parameters of air.
-	Avoid legends and put info where it belongs, improving legibility (less back-and-forth for the eye)%
+	\textbf{Avoid legends} and put info where it belongs, improving legibility (less back-and-forth for the eye)%
 	}%
 \label{fig:plotting_in_latex}%
 \floatfoot{See \autocite[15]{dixon_fluid_2014}}%
