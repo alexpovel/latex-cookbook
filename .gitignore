@@ -277,7 +277,3 @@ TSWLatexianTemp*
 
 # windows thumbnail cache:
 Thumbs.db
-
-# do not include actual generated pdf, not suited for git.
-# Only ignore root-level PDF since InkScape PDFs are needed.
-/*.pdf

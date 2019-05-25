@@ -34,7 +34,7 @@ sub splitindex {
    return $ret1 || $ret2;
 }
 
-# ACP: Grabbed from latexmk CTAN distribution:
+# Grabbed from latexmk CTAN distribution:
 # Implementing glossary with bib2gls and glossaries-extra, with the
 #  log file (.glg) analyzed to get dependence on a .bib file.
 # !!! ONLY WORKS WITH VERSION 4.54 or higher of latexmk

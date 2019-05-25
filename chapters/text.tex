@@ -63,7 +63,7 @@ Toggle the colors in the preamble, highlighting each different font family, to s
 Some more examples follow.
 \begin{gather}
 % Allow this environment to break across pages.
-% While it makes sense to disallow that, not doing so can produce awful spacing issues.
+% While it makes sense to disallow that, not doing so can produce spacing issues.
 \allowdisplaybreaks
 	\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{abs_temperature}\label{eq:click_me}\\
 	e^{i\pi} + 1 = 0\\
@@ -176,6 +176,7 @@ Clicking it will land you back here exactly.
 \paragraph{Manager}
 To generate the \texttt{*.bib} file, from which \LaTeX{} pulls the info, in the first place, a citation manager is a good tool.
 Zotero is a decent pick, but it ultimately does not matter much.
+Just use \emph{some} manager to keep your actual documents/\glspl{port_doc_for} and the automatically derived \texttt{*.bib} files in one place, named and structured consistently.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}
 	\ttabbox{%
@@ -325,7 +326,12 @@ def value_cleanup(raw_in) -> float:
 
 Inline code goes like so: §y = [file_patterns[x] for x in ["send", "help"]]§.
 
-\subsection{Matlab/Simulink}
+% Don't ever use macros in sectional commands etc.
+% They will be written to auxiliary files, where Unicode and macro expansions might come to haunt you.
+% Further, they will form the PDF bookmarks, which only accept a very basic character set.
+% The first problem will always be an issue, but might work in your case.
+% The second one could be solved using \texorpdfstring
+\subsection{Matlab/Simulink}% 
 The basis for this template was laid by a thesis concerned with \mtlbsmlnk{}.
 As such, we have nice commands like \mtlb{}, \smlnk{}, \mtlbsmlnk{} and \mtlbsymb{} to print, in a consistent manner, all the different names and also add them to the index.
 Further, there are funny little vector symbols available, referencing various things \mtlbsmlnk{} has to offer:
