@@ -120,7 +120,12 @@ on our core TeX file [`main`](main.tex) will process the entire chain, containin
 - `splitindex`,
 - `biber`.
 
+On Windows, such a call can be made by right-clicking into the Explorer Window (but not on a file or directory) while holding down *Shift* , then *Open PowerShell Window here*.
+Linux users will know what they are doing, I won't be able to help.
+
 The produced PDF will be processed fully, with all contained cross-references, citations etc. in place.
+Once you get used to what all the individual steps do, you won't need `latexmk` each time.
+For quick building and debugging, when you don't care for anything else, running `lualatex` once will likely suffice.
 
 ### CI
 
