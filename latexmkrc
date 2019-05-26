@@ -55,10 +55,10 @@ add_cus_dep('aux', 'glstex', 0, 'run_bib2gls');
 # File from author from here: https://tex.stackexchange.com/a/401979/120853
 sub run_bib2gls {
     if ( $silent ) {
-	#	my $ret = system "bib2gls --silent --group '$_[0]'"; # Original version
+	#	my $ret = system "bib2gls --silent --group '$_[0]'"; # Original version, probably for Linux
         my $ret = system "bib2gls --silent --group $_[0]"; # Runs in PowerShell
     } else {
-		my $ret = system "bib2gls --group '$_[0]'"; # Original version
+	#	my $ret = system "bib2gls --group '$_[0]'"; # Original version, probably for Linux
         my $ret = system "bib2gls --group $_[0]"; # Runs in PowerShell
     };
     
