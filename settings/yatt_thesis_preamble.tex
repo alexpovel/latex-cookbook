@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Yet Another Thesis Template
 % LuaLaTeX Template
 %
@@ -35,7 +35,6 @@
 % This template requires LuaLaTeX.
 % The following 'magic comment' is recognized by editors and will ensure lualatex engine use:
 %!TEX TS-program = lualatex
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -62,7 +61,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{unicode-math}% Builds onto fontspec
 
-\defaultfontfeatures{Path=fonts/, Extension=.otf}%all fonts
+\defaultfontfeatures{Path=fonts/thesis/, Extension=.otf}% All fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% By explicitly including the actual font files in the project and also
 %%%%%%%%%%%%%% calling them explicitly, we ensure tight compatibility across machines and
@@ -425,7 +424,7 @@
 	isbn=false,%
 	]{biblatex}%
 
-\addbibresource{main.bib}% *.bib file goes here
+\addbibresource{yatt.bib}% *.bib file goes here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Special Treatment for anything in \nocite{*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -892,7 +891,7 @@ declare function=
 
 \usepackage{siunitx}%
 	\sisetup{%
-		detect-all,% Detect surrounding font's weight
+		detect-all,% Detect surrounding font's weight etc.
 		number-text-rm=\unitnumberfont,% https://tex.stackexchange.com/a/468031/120853
 	}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

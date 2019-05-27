@@ -1,23 +1,241 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Yet Another Thesis Template
+% LuaLaTeX Template
+%
+% Source:
+% https://github.com/alexpovel/thesis_template
+%
+% Original author:
+% Alex Povel -- tex(at)alexpovel.de
+%
+% License and Copyright:
+% MIT License
+%
+% Copyright (c) 2019 Alex Povel
+%
+% Permission is hereby granted, free of charge, to any person obtaining a copy
+% of this software and associated documentation files (the "Software"), to deal
+% in the Software without restriction, including without limitation the rights
+% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+% copies of the Software, and to permit persons to whom the Software is
+% furnished to do so, subject to the following conditions:
+%
+% The above copyright notice and this permission notice shall be included in all
+% copies or substantial portions of the Software.
+%
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+% SOFTWARE.
+%
+% Magic Comment:
+% This template requires LuaLaTeX.
+% The following 'magic comment' is recognized by editors and will ensure lualatex engine use:
+%!TEX TS-program = lualatex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% The presentation preamble shares a lot of content with the regular thesis
+%%%%%%%%%%%%%% preamble. However, joining both and creating a 'shared preamble' was found
+%%%%%%%%%%%%%% to be pretty error-prone.
+%%%%%%%%%%%%%% Using overlapping but distinct preamble files allows for two stand-alone
+%%%%%%%%%%%%%% documents.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Document-specific settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Typography and Misc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\usepackage{showframe}%
+%\usepackage{showframe}% Debugging
+\usepackage{kantlipsum}% Debugging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}% Required before fontspec/unicode-math
+\usepackage{mathtools}% AMSmath extension; coloneqq etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Language etc.
+%%%%%%%%%%%%%% Theme: https://github.com/matze/mtheme
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{polyglossia}%
+\usetheme[%
+sectionpage=none,%
+titleformat frame=smallcaps,%
+]{metropolis}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Presentation aka beamer-specific settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Global default overlay specification for enumerate/itemize/actionenv etc.:
+\beamerdefaultoverlayspecification{<+->}%
+\setbeamercovered{highly dynamic}% Make uncovering very dynamic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{appendixnumberbeamer}% Fix totalframenumber so that appendix doesn't count
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Outer theme sets navigational elements/header/footer/sidebar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\useoutertheme[subsection=false]{miniframes}
+\setbeamercolor{section in head/foot}{fg=normal text.bg, bg=structure.fg}% Outer theme colors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Numbers and indentation in ToC
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{section in toc}[sections numbered]%
+\setbeamertemplate{subsection in toc}%
+{\leavevmode\leftskip=3.2em\rlap{\hskip-2em\inserttocsectionnumber.\inserttocsubsectionnumber}\inserttocsubsection\par}% https://tex.stackexchange.com/a/371613/120853
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Commands to exclude certain frames from *.nav-file/navigation bar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% https://tex.stackexchange.com/a/45038/120853
+\makeatletter
+\let\beamer@writeslidentry@miniframeson=\beamer@writeslidentry
+\def\beamer@writeslidentry@miniframesoff{%
+	\expandafter\beamer@ifempty\expandafter{\beamer@framestartpage}{}% does not happen normally
+	{%else
+		% removed \addtocontents commands
+		\clearpage\beamer@notesactions%
+	}
+}
+\newcommand*{\miniframeson}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframeson}
+\newcommand*{\miniframesoff}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframesoff}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Print an overview with current subsection highlighted at each subsection start
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSubsection[]{% Empty brackets: do nothing for \subsection*
+	{%
+		\setbeamertemplate{footline}{}% Hide footer/pagenumber; can't use plain style because we want to keep headline
+		\miniframesoff
+		\begin{frame}<handout:0>[noframenumbering]{Agenda}
+			\tableofcontents[%
+			currentsection,% Highlight this
+			currentsubsection,% Highlight this
+			subsectionstyle=show/shaded/hide,%https://tex.stackexchange.com/a/193981/120853
+			]%
+		\end{frame}%
+		\miniframeson
+	}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\AtBeginSection[]{% Empty brackets: do nothing for \section*
+	{%
+		\setbeamertemplate{footline}{}% Hide footer/pagenumber; can't use plain style because we want to keep headline
+		\miniframesoff
+		\begin{frame}<handout:0>[noframenumbering]{Agenda}
+			\tableofcontents[%
+			currentsection,% Highlight this
+			%currentsubsection,% Highlight this
+			subsectionstyle=show/shaded/hide,%https://tex.stackexchange.com/a/193981/120853
+			]%
+		\end{frame}%
+		\miniframeson
+	}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Other settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Put a square as the item, immitating what we did in the thesis.
+% We can't use unicode-math symbols, so just put a small rectangle (a \rule)
+% Beamer+enumitem together are problematic: https://tex.stackexchange.com/a/24491/120853
+\setbeamertemplate{itemize items}{\raisebox{0.35ex}{\rule{0.55ex}{0.55ex}}}%[square]% All three levels; beamer-default [square] is too large
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Typography and Misc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Thoughts on fonts:
+%%%%%%%%%%%%%% metropolis theme has issues with math font (https://github.com/matze/mtheme/issues/263)
+%%%%%%%%%%%%%% The current default/best solution is to use Computer Modern; doesn't look good
+%%%%%%%%%%%%%% Solution: use high-quality math font. Available as FiraMath, which is in beta.
+%%%%%%%%%%%%%% It works rather well, but has bugs (e.g. with \dot not centered hor., subscripts too low)
+%%%%%%%%%%%%%% Alternative: use packages of matching non-Fira fonts for math (https://tex.stackexchange.com/q/403734/120853)
+%%%%%%%%%%%%%% 1. 'arevmath' looks too bold. Setting the text-fonts bolder seems unacceptable, they look very nice in the original metropolis theme and should remain unchanged
+%%%%%%%%%%%%%% 2. 'eulervm' is also bugged with \dot (https://tex.stackexchange.com/q/50273/120853)
+%%%%%%%%%%%%%% 3. newtxsf seems okay for now (https://tex.stackexchange.com/questions/422415/fira-sans-math-companion#comment1056174_422415)
+%%%%%%%%%%%%%% Author of newtxsf package recommends it to go along with FiraSans, see their doc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Uncomment this block for unicode-math font specs.
+%%%%%%%%%%%%%% Currently not used because of beta-status of Fira Math.
+%%%%%%%%%%%%%% We don't set a roman/main font because that should never be used in presentations.
+%\usefonttheme{professionalfonts}% Prevent Beamer from overriding if high-quality fonts are used
+%\usepackage{unicode-math}% Requires Unicode font input
+%%%%%%%%%%%%%% Be specific with font specifications so that it's clear what happens.
+%%%%%%%%%%%%%% No funny business, full control, high guarantee of compatibility across machines and time.
+%\defaultfontfeatures{Path=fonts/, Extension=.otf}% All fonts
+%\setsansfont[% https://tex.stackexchange.com/a/62605/120853
+%	Ligatures=TeX,%
+%	Path=fonts/Fira/Sans/Normal/,
+%	UprightFont={*-Light},% Put Light weight as actual font
+%	ItalicFont={*-LightItalic},%
+%	BoldFont={*-Regular},%
+%	BoldItalicFont={*-Italic}]%
+%	{FiraSans}%[Color=B3EB83]% Toggle color for debugging
+%\setmonofont[%
+%	Path=fonts/Fira/Mono/,%
+%	UprightFont={*-Regular},%
+%	BoldFont={*-Medium},% Mono has weight: Regular/Medium/Bold
+%	]%
+%	{FiraMono}%[Color=FFCE5B]% Toggle color for debugging
+%\setmathfont[%
+%	Path=fonts/Fira/Math/,%
+%	mathrm=sym,%set math-font-commands to new versions
+%	mathit=sym,%
+%	mathsf=sym,%
+%	mathbf=sym,%
+%	mathtt=sym]%
+%	{FiraMath-Light}%[Color=E85748]% Toggle color for debugging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{newtxsf}% For math, matches Fira Sans text font
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% System Information Banner
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{hologo}
+% Using fontspec, this document is incompatible with anything but XeLaTeX/LuaLaTeX.
+% LuaLaTeX can grab additional memory as needed, therefore no issues with tikz and
+% no need to tikzexternalize.
+% Further, contour-package and XeLaTeX are strictly incompatible (LuaLaTeX works).
+% Therefore, only ever use LuaLaTeX anyway.
+\usepackage{xstring}
+% Print only what occurs after 'This is ' and store in macro.
+% luatexbanner is provided by luatex engine.
+% https://tex.stackexchange.com/a/394043/120853
+\StrBehind*{\luatexbanner}{This is }[\shortbanner]
+% Take input and substitute strings, in this case make plain LuaTeX string into pretty logo.
+% StrSubstitue has no starred variant, therefore dekotenize.
+% https://tex.stackexchange.com/a/350583/120853
+\StrSubstitute{\shortbanner}{\detokenize{LuaTeX}}{\hologo{LuaTeX}}[\prettybanner]
+
+% Get contents of files
+\usepackage{catchfile}
+% Store textfile data in macro.
+% If required, e.g. if the build process does not involve replacing the defaults
+% with current values, set defaults in that file.
+\CatchFileDef{\gitmetafile}{gitmeta.txt}{}
+% Store result in new expandable macro, since xstring cmds are unexpandable.
+% https://tex.stackexchange.com/a/476839/120853
+\StrBetween[1,1]{\gitmetafile}{version=}{;}[\GitVersion]
+\StrBetween[1,2]{\gitmetafile}{shorthash=}{;}[\GitShorthash]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Language
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{polyglossia}% Language rules. Replacement for babel in lualatex
 	\setmainlanguage[variant=uk]{english}
+
 \usepackage[style=british]{csquotes}
-\usepackage[useregional]{datetime2}%
-\usepackage{microtype}
+
+\usepackage[useregional]{datetime2}% Replaces 'datetime'
+
+\usepackage{microtype}% Advanced typesetting
+
 \usepackage{ragged2e}% For \justifying in the Abstract
-\usepackage{booktabs}
+
+\usepackage{booktabs}% For beautiful tables; absolute must
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Auxiliary
@@ -36,24 +254,24 @@
 	\contourlength{0.15em}% default width is not 'strong' enough
 	\newcommand*{\ctrw}[1]{\hypersetup{hidelinks}\contour{bg}{#1}}% bg colour
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{hyperref}%loads url-package internally
+\usepackage{hyperref}% Loads URL-package internally
 \hypersetup{%
-pdfpagelayout=SinglePage,%
+pdfpagelayout=SinglePage,% Presentations aren't TwoPage etc.
 unicode,%https://tex.stackexchange.com/a/66771/120853
-pdfsubject = {{Master Thesis Presentation (MSc Energy Systems)}},%
-pdfkeywords = {TUHH : TECHNICAL UNIVERSITY HAMBURG - TECHNISCHE UNIVERSITÄT HAMBURG; ASM : ARBEITSGRUPPE SCHIFFSMASCHINENBAU - DME : DEPARTMENT OF MARINE ENGINEERING; TURBOCHARGER ONE-DIMENSIONAL MODELLING WITH LOSSES RESERVOIR APPROACH},%
+pdfsubject = {Your Subject},%
+pdfkeywords = {Your Keywords},%
 }%
 \usepackage[% biber is default backend
 	style=numeric-comp,% Compress numeric into ranges
 	autocite=superscript,% Behaviour of all \autocite commands
-	sorting=none,% None: process in order of citation
+	sorting=none,% None: process in order of citation, so that we have counting up from 1
 	sortcites=true,% Sortcites sorts multiple \cite-entries the way the sorting-key dictates
 %	backref=slide,%https://tex.stackexchange.com/a/211631/120853. Do not use hyperref for this!
 	url=false,% Still prints URL for @online
 	doi=false,%
 	isbn=false,%
 	]{biblatex}%
-\addbibresource{Master_Thesis.bib}% *.bib file w/ file-suffix goes here
+\addbibresource{yatt.bib}% *.bib file w/ file-suffix goes here
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Color citations; previously: https://tex.stackexchange.com/a/165016/120853
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -66,11 +284,13 @@ pdfkeywords = {TUHH : TECHNICAL UNIVERSITY HAMBURG - TECHNISCHE UNIVERSITÄT HAM
 \usepackage{chemformula}
 \usepackage{siunitx}
 	\sisetup{%
-		detect-weight,%
-		per-mode=symbol,
-		unit-mode=text,% always print in text-font (so no italics)
+		detect-weight,% Detect surrounding font's weight
+		per-mode=symbol,% symbol: kg/(s), as opposed to kgs^-1 (so we take up less space)
+		unit-mode=text,% Always print in text-font (so no italics)
 	}%
-%\usepackage{physics}
+
+%\usepackage{physics}% If you can, don't use it: https://tex.stackexchange.com/q/471532/120853
+
 \DeclareMathOperator{\Mach}{M}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Visuals and Graphics
@@ -78,14 +298,15 @@ pdfkeywords = {TUHH : TECHNICAL UNIVERSITY HAMBURG - TECHNISCHE UNIVERSITÄT HAM
 \usepackage{graphicx}
 	\graphicspath{{images/}}%
 \usepackage{xcolor}
-	\definecolor{rdylbu1}{RGB}{215, 48, 39}%red; from colorbrewer RdYlBu
+	% colorbrewer modified RdYlBu:
+	\definecolor{rdylbu1}{RGB}{215, 48, 39}% Red
 	\definecolor{rdylbu2}{RGB}{252, 141, 89}%
 	\definecolor{rdylbu3}{RGB}{254, 224, 144}%
 	\definecolor{rdylbu4}{RGB}{224, 243, 248}%
 	\definecolor{rdylbu5}{RGB}{145, 191, 219}%
-	\definecolor{rdylbu6}{RGB}{69, 117, 180}%blue
+	\definecolor{rdylbu6}{RGB}{69, 117, 180}% Blue
 
-	\definecolor{mBlue}{RGB}{124, 196, 240}% Stronger blue than in thesis to match stronger orange of metropolis theme
+	\definecolor{mBlue}{RGB}{124, 196, 240}% Stronger blue than in thesis to match stronger orange of metropolis theme; bit hacky
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Tikz + Plots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,118 +540,3 @@ mucoo(\x) = 15e-6 * (300 + 240)/(\x + 240) * (\x / 300)^(3/2);%viscosity carbon 
 \newcommand*{\fortran}{%
 FORTRAN\term{FORTRAN}%
 }%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Metadata
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Extension and Optimization of a Calculation Method for the Prediction of the Dynamic Behaviour of Turbochargers}
-\date{\DTMdate{2019-04-30}}
-\author{Alex Povel}
-\institute{University of Technology Hamburg --- Department of Marine Engineering}
-%\subtitle{Master Thesis Defense}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% System Information Banner
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{hologo}
-% Using fontspec, this document is incompatible with anything but XeLaTeX/LuaLaTeX.
-% LuaLaTeX can grab additional memory as needed, therefore no issues with tikz and
-% no need to tikzexternalize.
-% Further, contour-package and XeLaTeX are strictly incompatible (LuaLaTeX works).
-% Therefore, only ever use LuaLaTeX anyway.
-\usepackage{xstring}
-% Print only what occurs after 'This is ' and store in macro.
-% luatexbanner is provided by luatex engine.
-% https://tex.stackexchange.com/a/394043/120853
-\StrBehind*{\luatexbanner}{This is }[\shortbanner]
-% Take input and substitute strings, in this case make plain LuaTeX string into pretty logo.
-% StrSubstitue has no starred variant, therefore dekotenize.
-% https://tex.stackexchange.com/a/350583/120853
-\StrSubstitute{\shortbanner}{\detokenize{LuaTeX}}{\hologo{LuaTeX}}[\prettybanner]
-
-% Get contents of files
-\usepackage{catchfile}
-% Store textfile data in macro.
-% If required, e.g. if the build process does not involve replacing the defaults
-% with current values, set defaults in that file.
-\CatchFileDef{\gitmetafile}{gitmeta.txt}{}
-% Store result in new expandable macro, since xstring cmds are unexpandable.
-% https://tex.stackexchange.com/a/476839/120853
-\StrBetween[1,1]{\gitmetafile}{version=}{;}[\GitVersion]
-\StrBetween[1,2]{\gitmetafile}{shorthash=}{;}[\GitShorthash]
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Beamer-specific settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{appendixnumberbeamer}% Fix totalframenumber so that appendix doesn't count
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Outer theme sets navigational elements/header/footer/sidebar
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\useoutertheme[subsection=false]{miniframes}
-\setbeamercolor{section in head/foot}{fg=normal text.bg, bg=structure.fg}% Outer theme colors
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Numbers and indentation in ToC
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{section in toc}[sections numbered]%
-\setbeamertemplate{subsection in toc}%
-{\leavevmode\leftskip=3.2em\rlap{\hskip-2em\inserttocsectionnumber.\inserttocsubsectionnumber}\inserttocsubsection\par}% https://tex.stackexchange.com/a/371613/120853
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Dynamic uncovering
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamercovered{highly dynamic}%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Commands to exclude certain frames from *.nav-file/navigation bar
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% https://tex.stackexchange.com/a/45038/120853
-\makeatletter
-\let\beamer@writeslidentry@miniframeson=\beamer@writeslidentry
-\def\beamer@writeslidentry@miniframesoff{%
-	\expandafter\beamer@ifempty\expandafter{\beamer@framestartpage}{}% does not happen normally
-	{%else
-		% removed \addtocontents commands
-		\clearpage\beamer@notesactions%
-	}
-}
-\newcommand*{\miniframeson}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframeson}
-\newcommand*{\miniframesoff}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframesoff}
-\makeatother
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Print an overview with current subsection highlighted at each subsection start
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\AtBeginSubsection[]{% Empty brackets: do nothing for \subsection*
-{%
-\setbeamertemplate{footline}{}% Hide footer/pagenumber; can't use plain style because we want to keep headline
-\miniframesoff
-\begin{frame}<handout:0>[noframenumbering]{Agenda}
-\tableofcontents[%
-currentsection,% Highlight this
-currentsubsection,% Highlight this
-subsectionstyle=show/shaded/hide,%https://tex.stackexchange.com/a/193981/120853
-]%
-\end{frame}%
-\miniframeson
-}%
-}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\AtBeginSection[]{% Empty brackets: do nothing for \section*
-{%
-\setbeamertemplate{footline}{}% Hide footer/pagenumber; can't use plain style because we want to keep headline
-\miniframesoff
-\begin{frame}<handout:0>[noframenumbering]{Agenda}
-\tableofcontents[%
-currentsection,% Highlight this
-%currentsubsection,% Highlight this
-subsectionstyle=show/shaded/hide,%https://tex.stackexchange.com/a/193981/120853
-]%
-\end{frame}%
-\miniframeson
-}%
-}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% Other settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Beamer+enumitem together are problematic: https://tex.stackexchange.com/a/24491/120853
-\setbeamertemplate{itemize items}{\raisebox{0.35ex}{\rule{0.55ex}{0.55ex}}}%[square]% All three levels; beamer-default [square] is too large

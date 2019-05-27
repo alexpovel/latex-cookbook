@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Yet Another Thesis Template
 % LuaLaTeX Template
 %
@@ -35,7 +35,7 @@
 % This template requires LuaLaTeX.
 % The following 'magic comment' is recognized by editors and will ensure lualatex engine use:
 %!TEX TS-program = lualatex
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[%
 %a5paper,% Default is A4
 %10pt,% If using A5 paper; default is 11pt
@@ -49,7 +49,7 @@ headlines=2.1,% Increase headheight, equiv. to 2.1 lines of text
 numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 ]{scrreprt}
 
-\input{./settings/preamble.tex}
+\input{./settings/yatt_thesis_preamble.tex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \publishedtrue % Toggle here. 'Published' means 'publicly available', aka you would want info redacted
@@ -99,6 +99,8 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 	\hfill%
 	\includegraphics[width=0.35\linewidth]{./images/logos/university_logo.pdf}%
 }% Institutions, university, etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \subincludefrom{chapters/}{frontmatter}%
 %
@@ -112,3 +114,5 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 %
 \subincludefrom{chapters/}{backmatter}%
 \end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
