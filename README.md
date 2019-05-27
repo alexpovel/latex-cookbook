@@ -3,8 +3,10 @@
 Jesus Christ, who needs that many templates?
 Aren't there enough by now?
 
-This template is different to most others.
-It has a fragile advantage: it is currently (2019) right on the edge of state-of-the-art LaTeX typesetting.
+Well, this template has one fragile advantage.
+Currently (2019), it is one of the most modern approaches.
+Most of its core aspects are actively maintained and/or are relatively new in themselves.
+At the time of writing, the core packages ([unicode-math](https://github.com/wspr/unicode-math), [glossaries-extra](https://ctan.org/pkg/glossaries-extra), [luatex](http://www.luatex.org/index.html) itself, ...) saw updates within the last few weeks.
 
 TeX is moving slowly, and as such, best practices, packages and methods from over 10 years ago are still actively used today.
 Sometimes, packages will be from the previous century.
@@ -101,6 +103,9 @@ KOMA knows about that and the many other 'rules' aka conventions, producing the 
   It is probably telling that a document of *X* pages in `a4paper` and `11pt` (the KOMA default) will come out to very close to *X* pages again in `a5paper` and `10pt`: we mainly cut out on wasted white-space and made better use of available space, without suddely requiring *2X* pages (since we halved the page size).
 
 ## Build
+
+If you don't have a distribution already, I recommend [TeX Live](https://www.tug.org/texlive/) as a full installation.
+It comes with everything this template needs (save for Java for `bib2gls`).
 
 All this is quickly built using `latexmk` with a custom [`latexmkrc`](latexmkrc) file.
 It contains some Perl commands to make it work with `bib2gls` and `splitidx` and their generated auxiliary files.
