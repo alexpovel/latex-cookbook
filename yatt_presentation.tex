@@ -92,7 +92,7 @@ A brief teaser to get attention!
 \section{Core}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}<handout:1>[label=approach]{Reservoirs Approach}
- Using minipages; using 'columns' messed with overlay uncovering; using tabular messed with alignment
+% Using minipages; using 'columns' messed with overlay uncovering; using tabular messed with alignment
 \begin{minipage}[c]{0.45\textwidth}
 \begin{figure}
 	\def\svgwidth{1\linewidth}
@@ -117,7 +117,7 @@ A brief teaser to get attention!
 \end{equation*}
 \item \textbf{Ideal gas}
 \begin{equation*}
-\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{temperature}
+\gls{pressure}\gls{specvolume} = \gls{specgascons}\gls{abs_temperature}
 \end{equation*}
 \end{enumerate}
 \end{minipage}
@@ -125,7 +125,7 @@ A brief teaser to get attention!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Operating Conditions and Boundaries}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}<handout:0>[label=operating-conditions]{Operating Conditions\autocites[43]{guzzella_introduction_2010}[72]{grieb_projektierung_2004}[32]{van_den_braembussche_design_2018}[1104\psq]{braunling_flugzeugtriebwerke:_2015}[25\psq]{grieb_verdichter_2009}[313]{bohl_technische_2014}[66]{herwig_stromungsmechanik:_2016}}
+\begin{frame}<handout:0>[label=operating-conditions]{Operating Conditions\autocites[43]{guzzella_introduction_2010}[72]{grieb_projektierung_2004}[32]{van_den_braembussche_design_2018}[1104\psq]{braunling_flugzeugtriebwerke:_2015}[25\psq]{grieb_verdichter_2009}[313]{bohl_technische_2014}[66]{herwig_stromungsmechanik:_2016}}% These postnotes are ignored for "autocite=superscript" and not displayed; a warning is given. They are still included here for reference
 \centering
 \begin{tikzpicture}[overlay, remember picture]%
 \node at (0,1.8) (map) {%
@@ -143,8 +143,8 @@ A brief teaser to get attention!
 \draw[-stealth] (mach) to[out=45,in=180] (mach-mer);
 \draw[-stealth] (mach) to[out=315,in=180] (mach-tan);
 \pause
-\node [right = 1em of mach-mer] (mcor) {\(\dot{\gls{mass}}_{\gls{corrected}} \coloneqq \dot{\gls{mass}} \sqrt{\frac{\gls{temperature}_{\gls{total}}}{\gls{temperature}_{\gls{refstate}}}} \frac{\gls{pressure}_{\gls{refstate}}}{\gls{pressure}_{\gls{total}}}\)};
-\node [right = 1em of mach-tan] (ncor) {\(\gls{rotspeed}_{\gls{corrected}} \coloneqq \gls{rotspeed}\sqrt{\frac{\gls{temperature}_{\gls{refstate}}}{\gls{temperature}_{\gls{total}}}}\)};
+\node [right = 1em of mach-mer] (mcor) {\(\dot{\gls{mass}}_{\gls{corrected}} \coloneqq \dot{\gls{mass}} \sqrt{\frac{\gls{abs_temperature}_{\gls{total}}}{\gls{abs_temperature}_{\gls{refstate}}}} \frac{\gls{pressure}_{\gls{refstate}}}{\gls{pressure}_{\gls{total}}}\)};
+\node [right = 1em of mach-tan] (ncor) {\(\gls{rotspeed}_{\gls{corrected}} \coloneqq \gls{rotspeed}\sqrt{\frac{\gls{abs_temperature}_{\gls{refstate}}}{\gls{abs_temperature}_{\gls{total}}}}\)};
 \draw[-stealth] (mach-mer) -- (mcor);
 \draw[-stealth] (mach-tan) -- (ncor);
 \end{tikzpicture}
@@ -172,7 +172,7 @@ A brief teaser to get attention!
 \begin{figure}
 % When you're doing InkScape and not Tikz, you  might be forced to do uncovering of figures
 % in ugly ways, as below.
-% I don't know of a better approach!
+% I don't know of a better approach (without using Tikz)!
 \def\svgwidth{0.8\textwidth}%
 \only<+>{\input{./images/stage_dimensions_compressor_pres.pdf_tex}}%
 \only<+>{\input{./images/stage_dimensions_compressor_pres_smallsep.pdf_tex}}%
@@ -229,7 +229,7 @@ A brief teaser to get attention!
 \end{figure}
 \pause
 \centering
-\textrightarrow{} two coupled \glsxtrshortpl{ode}
+\textrightarrow{} two coupled \glsxtrshortpl{ord_diff_eq}
 \end{minipage}%
 \hspace{\fill}%
 \begin{minipage}{0.45\textwidth}
@@ -252,7 +252,7 @@ Assumptions:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}<handout:0>[label=diffuser-plot]{Diffuser Plot}
 \begin{figure}
-\pgfplotstableread{./data/stanitz_diffuser.csv}{\stanitzdiffusertable}%
+\pgfplotstableread{./data/diffuser.csv}{\diffusertable}%
 \begin{tikzpicture}
 \begin{axis}%
 [%
@@ -262,7 +262,7 @@ height=0.8\textheight,
 axis y line*=left,%
 xlabel={\(\gls{radius}/\gls{radius}_{2}\)},%
 x unit = {-},
-ylabel={\(\Mach\), \(\gls{pressure}/\gls{pressure}_{2}\), \(\gls{temperature}/\gls{temperature}_{2}\), \(\gls{density}/\gls{density}_{2}\)},%
+ylabel={\(\Mach\), \(\gls{pressure}/\gls{pressure}_{2}\), \(\gls{abs_temperature}/\gls{abs_temperature}_{2}\), \(\gls{density}/\gls{density}_{2}\)},%
 y unit = {-},
 table/x={R_pres},%
 ymin=0.4,
@@ -273,10 +273,10 @@ xmax=1.6,
 title={Index \(2\): Diffuser Inlet},
 ]%
 % Do this manually, node macro expansion in foreach/invokeforeach is weird
-\addplot+ table [y=M] {\stanitzdiffusertable} node [pos = 0.2,fill=bg] {\(\Mach\)};
-\addplot+ table [y=Pi] {\stanitzdiffusertable} node [pos = 0.9,fill=bg] {\(\gls{pressure}/\gls{pressure}_{2}\)};
-\addplot+ table [y=Theta] {\stanitzdiffusertable} node [pos = 0.7,fill=bg] {\(\gls{temperature}/\gls{temperature}_{2}\)};
-\addplot+ table [y=Rho] {\stanitzdiffusertable} node [pos = 0.8,fill=bg] {\(\gls{density}/\gls{density}_{2}\)};
+\addplot+ table [y=M] {\diffusertable} node [pos = 0.2,fill=bg] {\(\Mach\)};
+\addplot+ table [y=Pi] {\diffusertable} node [pos = 0.9,fill=bg] {\(\gls{pressure}/\gls{pressure}_{2}\)};
+\addplot+ table [y=Theta] {\diffusertable} node [pos = 0.7,fill=bg] {\(\gls{abs_temperature}/\gls{abs_temperature}_{2}\)};
+\addplot+ table [y=Rho] {\diffusertable} node [pos = 0.8,fill=bg] {\(\gls{density}/\gls{density}_{2}\)};
 \end{axis}%
 \pause
 \begin{axis}%
@@ -294,7 +294,7 @@ ymax=15,
 xmin=1,
 xmax=1.6,
 ]%
-\addplot+ table [x=R_pres, y=alpha] {\stanitzdiffusertable} node [pos = 0.6,fill=bg] {\gls{angabs}};%
+\addplot+ table [x=R_pres, y=alpha] {\diffusertable} node [pos = 0.6,fill=bg] {\gls{angabs}};%
 \end{axis}%
 \end{tikzpicture}
 \end{figure}
@@ -308,9 +308,9 @@ xmax=1.6,
 \begin{tikzpicture}
 \begin{axis}[%
 minimalistic,%
-ylabel={\(c_{p,\text{air}}\)},
+ylabel={\(c_{p,\text{air}}\)},% This is a poor hack, required for the subscript
 y unit = {\joule\per\kilogram\per\kelvin},
-xlabel={\gls{temperature}},%
+xlabel={\gls{abs_temperature}},%
 x unit = {\kelvin},
 domain=300:700,
 ymin = 1000,
@@ -343,7 +343,7 @@ minimalistic,
 ylabel={\(\gls{dynvisc}_{\text{air}}\)},
 y unit = {\pascal\second},
 y SI prefix = {micro},
-xlabel={\gls{temperature}},
+xlabel={\gls{abs_temperature}},
 x unit = {\kelvin},
 ymin = 10,
 ymax = 50,
@@ -360,7 +360,7 @@ title={Viscosity},
 minimalistic,%
 ylabel={\(\gls{pressure}^{\ast}_{\chcpd{H2O}}\)},%
 y unit = {\bar},
-xlabel={\gls{temperature}},%
+xlabel={\gls{abs_temperature}},%
 x unit = {\kelvin},
 domain=273:373,
 ymin = 0,
@@ -382,7 +382,7 @@ title={Phase change},
 	\input{./images/gas_volume.pdf_tex}
 \end{figure}
 \pause
-\textrightarrow{} two coupled \glsxtrshortpl{ode} for \(\gls{pressure}(\gls{time})\) and \(\gls{temperature}(\gls{time})\)
+\textrightarrow{} two coupled \glsxtrshortpl{ord_diff_eq} for \(\gls{pressure}(\gls{time})\) and \(\gls{abs_temperature}(\gls{time})\)
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Third Section}
@@ -490,7 +490,7 @@ every node/.style = {draw, circle},%
 \pause
 % Bottom part:
 \node [below = of composition] (molmass) {\alert<6->{\gls{molarmass}}};
-\node [below left = of molmass, align = center] (cpm) {\alert<6->{\(c_{p,\text{m}}(\gls{temperature})\)}};
+\node [below left = of molmass, align = center] (cpm) {\alert<6->{\(c_{p,\text{m}}(\gls{abs_temperature})\)}};
 \draw[-stealth] (composition) to (molmass);
 \draw[-stealth] [out=270] (composition) to [in=90] node [midway,sloped,fill=bg] {\color{gray}\scriptsize\name{Shomate}\autocite{shomate_method_1954}} (cpm);
 \pause
@@ -498,11 +498,11 @@ every node/.style = {draw, circle},%
 \node [right = of molmass] (gascons) {\gls{specgascons}};
 \draw[-stealth] (molmass) -- (gascons) node [pos = 0.5, above] {\(R_{\text{m}}\)};
 \pause
-\node [below = of gascons] (cp) {\(\gls{specheatcappres}(\gls{temperature})\)};
+\node [below = of gascons] (cp) {\(\gls{specheatcappres}(\gls{abs_temperature})\)};
 \draw[-stealth] (cpm) -- (cp);
 \draw[-stealth] [out=270] (molmass) to [in=180] (cp);
 \pause
-\node [right = 5em of $(gascons)!0.5!(cp)$] (result) {\(\gls{specheatcapvol}(\gls{temperature})\) and \(\gls{adexp}(\gls{temperature})\)};
+\node [right = 5em of $(gascons)!0.5!(cp)$] (result) {\(\gls{specheatcapvol}(\gls{abs_temperature})\) and \(\gls{adexp}(\gls{abs_temperature})\)};
 \draw[-stealth] [out=0] (gascons) to [in=180] (result);
 \draw[-stealth] [out=0] (cp) to [in=180] (result);
 \end{tikzpicture}

@@ -22,11 +22,42 @@
 	group = {roman},
 	user1 = {\si{\joule\per\kilogram\per\kelvin}},
 }
+@symbol{diffusionfactor,
+	name = {\ensuremath{D}},
+	description = {diffusion factor},
+	group = {roman},
+	user1 = {--},
+}
 @symbol{enthalpy,
 	name = {\ensuremath{H}},
 	description = {enthalpy},
 	group = {roman},
 	user1 = {\si{\joule}},
+}
+@symbol{sonic,
+	name = {\ensuremath{a}},
+	description = {speed of sound},
+	group = {roman},
+	user1 = {\si{\meter\per\second}},
+}
+@symbol{molarmass,
+	name = {\ensuremath{M}},
+	description = {molar mass},
+	group = {roman},
+	user1 = {\si{\kilogram\per\mole}},
+}
+@symbol{dynvisc,
+	name = {\ensuremath{\mu}},
+	description = {dynamic viscosity},
+	plural = {dynamic viscosities},
+	group = {greek},
+	user1 = {\si{\pascal\second}},
+}
+@symbol{time,
+	name = {\ensuremath{t}},
+	description = {time},
+	group = {roman},
+	user1 = {\si{\second}},
 }
 @symbol{mass,
 	name = {\ensuremath{m}},
@@ -34,11 +65,41 @@
 	group = {roman},
 	user1 = {\si{\kilogram}},
 }
+@symbol{specenthalpy,
+	name = {\ensuremath{h}},
+	description = {specific enthalpy},
+	group = {roman},
+	user1 = {\si{\joule\per\kilogram}},
+}
 @symbol{specvolume,
 	name = {\ensuremath{v}},
 	description = {specific volume},
 	group = {roman},
 	user1 = {\si{\meter\cubed\per\kilogram}},
+}
+@symbol{angfr,
+	name = {\ensuremath{\omega}},
+	description = {angular frequency},
+	group = {greek},
+	user1 = {\si{\per\radian}},
+}
+@symbol{velr,
+	name = {\ensuremath{\symbf{w}}},
+	description = {relative velocity (magnitude)},
+	group = {roman},
+	user1 = {\si{\meter\per\second}},
+}
+@symbol{velc,
+	name = {\ensuremath{\symbf{u}}},
+	description = {circumferential/tangential/blade velocity (magnitude)},
+	group = {roman},
+	user1 = {\si{\meter\per\second}},
+}
+@symbol{velg,
+	name = {\ensuremath{\symbf{v}}},
+	description = {generalized velocity (magnitude)},
+	group = {roman},
+	user1 = {\si{\meter\per\second}},
 }
 @symbol{internalenergy,
 	name = {\ensuremath{U}},
@@ -65,6 +126,18 @@
 	group = {roman},
 	user1 = {\si{\joule\per\kilogram\per\kelvin}},
 }
+@symbol{specheatcapvol,
+	name = {\ensuremath{c_v}},
+	description = {specific heat capacity at constant specific volume},
+	group = {roman},
+	user1 = {\si{\joule\per\kilogram\per\kelvin}},
+}
+@symbol{massperfuel,
+	name = {\ensuremath{\mu}},
+	description = {mass of component per unit mass of fuel},
+	group = {greek},
+	user1 = {--},
+}
 @symbol{radiusratio,
 	name = {\ensuremath{\mathrm{R}}},
 	description = {radius ratio},
@@ -83,8 +156,12 @@
 	group = {roman},
 	user1 = {\si{\meter}},
 }
-
-
+@symbol{rotspeed,
+	name = {\ensuremath{n}},
+	description = {rotational speed},
+	group = {roman},
+	user1 = {\si{\per\second}},
+}
 @symbol{mach,
 	name = {\ensuremath{\mathrm{M}}},
 	description = {\textsc{Mach} number},
@@ -112,9 +189,33 @@
 	group = {greek},
 	user1 = {--},
 }
+@symbol{fuelairratio,
+	name = {\ensuremath{\lambda}},
+	description = {air-fuel equivalence ratio},
+	group = {greek},
+	user1 = {--},
+}
+@symbol{solidity,
+	name = {\ensuremath{\sigma}},
+	description = {solidity},
+	group = {greek},
+	user1 = {--},
+}
+@symbol{volfr,
+	name = {\ensuremath{\varphi}},
+	description = {volume fraction},
+	group = {greek},
+	user1 = {--},
+}
 @symbol{massfr,
 	name = {\ensuremath{\gamma}},
 	description = {mass fraction},
+	group = {greek},
+	user1 = {--},
+}
+@symbol{massfrair,
+	name = {\ensuremath{\chi}},
+	description = {mass fraction of component in dry air},
 	group = {greek},
 	user1 = {--},
 }
@@ -141,4 +242,10 @@
 	description = {shear stress},
 	group = {greek},
 	user1 = {\si{\newton\per\meter\squared}},
+}
+@symbol{efficiency,
+	name = {\ensuremath{\eta}},
+	description = {efficiency},
+	group = {greek},
+	user1 = {--},
 }
