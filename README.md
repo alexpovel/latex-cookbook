@@ -32,6 +32,7 @@ This document does that, and as such can also serve as a quick reference tool to
 
 **As such, this template is more about features, and less about design.**
 Design is a slippery slope, and for every one beautiful way, there are ninety-nine lackluster ones.
+Of those ninety-nine, the majority will be plain eyesores.
 It is better left to pros, which is why this template does not do much in the way of design.
 
 **Contributions to add more features/examples or nice design tweaks are very welcome.**
@@ -120,7 +121,7 @@ It uses the same ...
 - [`*.bib` files](glossaries) for `glossaries-extra`: all the exact same abbreviations, symbols etc.,
 - [CSV files](data) for plotting,
 - [bibliography file](yatt.bib),
-- [abstract](abstract.tex).
+- [abstract](/chapters/frontmatter/abstract.tex).
 
 The presentation uses [different fonts](fonts/presentation).
 They are currently not used (with `unicode-math`), for reasons mentioned in the presentation preamble.
@@ -159,7 +160,7 @@ latexmk
 
 without any arguments will process all `*.tex` files found in the directory.
 
-On Windows, such calls can be made by right-clicking into the Explorer Window (but not on a file or directory) while holding down *Shift* , then *Open PowerShell Window here*.
+On Windows, such calls can be made by right-clicking into the Explorer Window (but not on a file or directory) while holding down *Shift* , then *Open PowerShell window here*.
 Linux users will know what they are doing, I won't be able to help.
 
 The produced PDF will be processed fully, with all contained cross-references, citations etc. in place.
@@ -169,8 +170,9 @@ For quick building and debugging, when you don't care for anything else, running
 ### CI
 
 The entire thing can also be used in Continuous Integration.
-A script for GitLab, alongside a Docker image, is found in [the config file](.gitlab-ci.yml).
+A script for GitLab, alongside a [Docker image](https://github.com/alexpovel/latex-java-docker), is found in [the config file](.gitlab-ci.yml).
 I do not yet have an equivalent GitHub/Travis config.
 
 During the build process, you can use [the metadata text file](gitmeta.txt) to `sed` the relevant entries.
 These are grabbed by TeX to print the metadata directly into the generated PDF.
+Suggestions on improving that pipeline are welcome!
