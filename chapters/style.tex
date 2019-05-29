@@ -133,7 +133,7 @@ When something is awkward to do or requires a lot of manual labor, you are proba
 Most often, that comes in the form of packages.
 Being a fully-fleshed programming language under the hood, \emph{any} repetition in \LaTeX{} should make you stop for a second and wonder about another way.
 That may lead to you discovering sub-optimal approaches and code.
-Just as often, it won't lead anywhere and trying to force minimal code and maximum optimization will not be economical.
+Just as often, it won't lead anywhere and trying to force minimum code and maximum optimization will not be economical.
 
 \paragraph{Paragraphs}
 They are a nice touch, introducing a new, distinct paragraph/idea/thought without being too loud about it.
@@ -187,7 +187,7 @@ Now for the stuff:
 	If you previously did not differentiate strictly enough between \verb|\emph| and \verb|\textit|, you are in for a bad time.
 	\item Indices are upright!
 	They are text.
-	If text occurs in math mode, that is also actual text, too.
+	If text occurs in math mode, that is also actual text.
 	Consider
 	\begin{equation}\label{eq:stupid}
 		MEAN_{sample} \neq 2\eqcomma{}
@@ -210,4 +210,8 @@ Now for the stuff:
 	\end{equation}
 	we have achieved better overall reading flow.
 	Notice the small spaces \verb|\,| before the commas and dots in equations.
+	
+	Implementing these as \verb|\eqcomma| and \verb|\eqend| ensures consistency.
+	Note that \verb|\eqend| was previously \verb|\eqdot|, but that is reserved by \package{unicode-math}.
+	Other than consistency, the punctuation can then also be switched off globally if your requirements demand so.
 \end{itemize}

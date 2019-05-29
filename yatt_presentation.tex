@@ -392,7 +392,7 @@ title={Phase change},
 	More content...
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\miniframesoff
+\miniframesoff% Do not count the following in the section overview in the header
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% New empty section; neither in ToC nor navigation.
 %% Anything after is not highlighted in the navigation
@@ -413,8 +413,21 @@ Thank you.
 %%%%%%%%%%%%%%% No idea how to access \againframe<last frame>, therefore manual adjusting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setcounter{framenumber}{0}% Reset to zero, so it starts from 1
+
+% No idea why the 99 is required/works, but here we are.
+% https://tex.stackexchange.com/q/2543/120853
 %\againframe[standout,plain,noframenumbering]{attention-getter}%
-\againframe<3|handout:0>{upshot}%
+\againframe<99|handout:0>{upshot}%
+\againframe<99|handout:0>{approach}%
+\againframe<99|handout:0>{operating-conditions}%
+\againframe<99|handout:0>{instability-limit}%
+\againframe<99|handout:0>{diffusion-factor}%
+\againframe<99|handout:0>{choking}%
+\againframe<99|handout:0>{diffuser}%
+\againframe<99|handout:0>{diffuser-plot}%
+\againframe<99|handout:0>{gas-properties}%
+\againframe<99|handout:0>{gas-volumes}%
+\againframe<99|handout:0>{outro}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%% Appendix with plain style etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

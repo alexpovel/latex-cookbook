@@ -161,6 +161,15 @@ If a following page is to be included in the citation, append \verb|\psq|.
 Otherwise, \verb|\psqq| for \enquote{this page and the following ones}.
 Using \verb|\autocites{}|, we can then chain together as many as we want.
 
+\textcite{dixon_fluid_2014}[1] do not claim anything, this is just an example for a \verb|\textcite|, used to implement a citation to be a readable part of the sentence.
+There is also a plural form available.
+
+\paragraph{Language}
+All of this is incredibly convenient, for there is minimal manual work and a lot of elevation.
+Importantly, this is language-agnostic, and \package{biblatex} will make use of \package{polyglossia} (the \hologo{LuaLaTeX} replacement for \package{babel}) and \package{csquotes}.
+Therefore, through changing the desired document language for just these packages, all others including \package{biblatex} will quickly adjust automatically.
+
+\paragraph{backref}
 Taking a look at the bibliography in the back matter of this document reveals the feature \verb|backref|: the pages where a reference was cited occur after its entry.
 This is helpful in print, but amazing in digital format, for these page numbers are also links.
 Your readers will thank you tenfold for allowing them to very swiftly navigate and jump within your document.
