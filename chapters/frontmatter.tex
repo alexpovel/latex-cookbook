@@ -15,20 +15,33 @@
 % \urlstyle takes rm, tt etc.
 \DeclareUrlCommand\EscWrapper{\urlstyle{tt}}% https://tex.stackexchange.com/a/20891/120853
 {%
+%
 \thispagestyle{empty}
+%
 \begin{minipage}{0.5\linewidth}
 \label{metadata}
+
+\hypersetup{hidelinks}
 \color{g2}
+
 \footnotesize
 \raggedright
-\noindent\texttt{\bfseries\jobname{}
-% Expand Argument first, then wrap into special command to escape chars
-\expandafter\EscWrapper\expandafter{\GitVersion}
-(\expandafter\EscWrapper\expandafter{\GitShorthash})}\\[\baselineskip]
+
+\noindent\texttt{%
+	\bfseries\jobname{}
+	% Expand Argument first, then wrap into special command to escape chars
+	\expandafter\EscWrapper\expandafter{\GitVersion}
+	(\expandafter\EscWrapper\expandafter{\GitShorthash})
+	\censornotice{}
+}%
+\\[\baselineskip]
 
 \noindent\prettybanner{}.
 \hologo{\fmtname} (\fmtversion) with \texttt{glossaries-extra} (\texttt{bib2gls}) and \hologo{biber}, using \texttt{latexmk} with a \texttt{splitidx} subroutine by J.\ \textsc{Collins}.
+
+Produced using the \href{https://github.com/alexpovel/thesis_template}{YATT} class, employing \KOMAScriptVersion{}.
 \end{minipage}
+%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoubleoddpage% For correct printing on even sides in two-side docs
@@ -36,7 +49,7 @@
 \pagenumbering{roman}% Also resets page numbering, no need to do that manually in KOMA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subimport{frontmatter/}{task}% 
+\subimport{frontmatter/}{task}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Put page onto its own recto page.
@@ -50,7 +63,7 @@
 \subsection*{Declaration of Authorship}
 {%
 \makeatletter
-I, \@author{} [\@immnumber], hereby declare to be the sole, independent author of the \@subject{} submitted here.
+I, \@author{} [\@immnumber], hereby declare to be the sole, independent author of the \@thesis{} submitted here.
 No other than the cited references have been used.
 Any content directly or indirectly obtained from external sources has been marked up as such.
 This thesis has neither been submitted to a second examination authority nor been published.\\[\baselineskip]
@@ -67,10 +80,7 @@ This thesis has neither been submitted to a second examination authority nor bee
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter*{Abstract}
-\ifpublished
-\paragraph{This is the public version with some redacted information}\hrulefill\\
-\fi
+\chapter*{\abstractname}% Use built-in macro for internationalization
 \subimport{frontmatter/}{abstract}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,7 +88,8 @@ This thesis has neither been submitted to a second examination authority nor bee
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % addchap is KOMA equivalent for \chapter*, but also creates ToC entry. https://tex.stackexchange.com/a/116085/120853
-\addchap{Nomenclature}
+\addchap{\glossaryname}% Use built-in macro for internationalization
+
 \textit{The most commonly used symbols are listed here, alongside their location of first occurrence. Symbols used but not listed here are clarified in their respective contexts.}
 
 \textit{\textbf{Buggy:} You will notice that the majority of symbols do not have info on the location of their first use.

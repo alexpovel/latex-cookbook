@@ -28,68 +28,88 @@
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Magic Comment:
 % This template requires LuaLaTeX.
 % The following 'magic comment' is recognized by editors and will ensure lualatex engine use:
 %!TEX TS-program = lualatex
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Languages with full support: english
+% Languages with partial support: all others
 \documentclass[%
-english,% Global language, passed down to packages and base class
+language=german,% Global language, passed down to packages and base class. Uncomment to use default (english)
 BCOR=5mm,% Binding Correction. Cannot be known a priori, only guesstimated
-a5,% Uncomment to get a5paper and 10pt font size (default: a4paper with 11pt)
-%censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a public version)
+a5,% Uncomment to get a5-paper and 10pt font size (default: a4-paper with 11pt)
+censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a public version)
 ]{yatt}% Load our custom class file (*.cls)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %\usepackage{showframe}% Uncomment for debugging (show frames)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Included/imported only compiles parts listed here.
 %%%%%%%%%%%%%% Auxiliary files are kept, retaining references, page numbers etc., but
 %%%%%%%%%%%%%% compilation speeds are accelerated by only including small document parts.
 %%%%%%%%%%%%%% Toggle here for that to happen and specify parts to be imported below.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \includeonly{%
-%	frontmatter,%
+	frontmatter,%
 %	text,%
 %	floats,%
 %	style,%
 %	tech,%
 %	backmatter,%
 }%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Titlepage and document metadata content:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\author{Your Name}%
-%
-\date{\today}
-%
-\title{The title of your very nice and highly important, never before seen scientific work of stellar excellence}
-%
+
+\author{Alex Povel}%
+
+\date{\today}%
+
+\title{Presentation and Example Usage of Yet Another Thesis Template}
+
 \subtitle{% Examiners or other, rather arbitrary content
 	\begin{tabular}{@{}l@{\ }ll@{}}
-		\nth{1} & Examiner & Prof.\ Alfreb Einstime\\
-		\nth{2} & Examiner & Prof.\ Rufols Diebels\\
+		\nth{1} & Examiner & Prof.\ Jane Doe\\
+		\nth{2} & Examiner & Prof.\ Foo Bar\\
 		\multicolumn{2}{@{}l}{Supervisor} & John Doe, M.Sc.%
 	\end{tabular}
 }%
-%
-\thesis{Your Thesis}% Thesis Type
-%
+
+\thesis{Example Document}% Thesis Type
+
 \immnumber{666}% Student Registration Number
-%
+
 \publishers{%
 	\hspace{2em}% use 'em' for anything where relative WIDTH is relevant, 'ex' where height is relevant
 	\includegraphics[width=0.35\linewidth]{./images/logos/university_logo.pdf}% \linewidth uses the current line width (e.g. within narrower minipages etc.), as opposed to the global constant \textwidth
 	\hfill%
 	\includegraphics[width=0.35\linewidth]{./images/logos/university_logo.pdf}%
 }% Institutions, university, etc.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 Do I work?
 
+\begin{equation}\label{eq:test}
+wow
+\end{equation}
+
+Siehe \cref{eq:test}
+
 \censor{test me}
+
+\chapter{new}
 \subincludefrom{chapters/}{frontmatter}%
 %
 \subincludefrom{chapters/}{text}%
@@ -103,5 +123,5 @@ Do I work?
 \subincludefrom{chapters/}{backmatter}%
 Why not?
 \end{document}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

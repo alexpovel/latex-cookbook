@@ -6,7 +6,9 @@ Aren't there enough by now?
 Well, this template has one fragile aspect setting it apart.
 Currently (2019), it is one of the most modern approaches.
 Most of its core aspects are actively maintained and/or are relatively new in themselves.
-At the time of writing, the core packages ([unicode-math](https://github.com/wspr/unicode-math), [glossaries-extra](https://ctan.org/pkg/glossaries-extra), [luatex](http://www.luatex.org/index.html) itself, ...) saw updates within the last few weeks.
+At the time of writing, the core packages
+([unicode-math](https://github.com/wspr/unicode-math), [glossaries-extra](https://ctan.org/pkg/glossaries-extra), [polyglossia](https://github.com/reutenauer/polyglossia/), [luatex](http://www.luatex.org/index.html) itself, ...)
+saw updates within the last few weeks.
 
 TeX is moving slowly, and as such, best practices, packages and methods from over 10 years ago are still actively used today.
 Templates are handed down the generations, catching serious dust in parts that haven't been touched in ages.
