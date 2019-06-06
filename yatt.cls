@@ -355,9 +355,8 @@ warnings-off={mathtools-colon, mathtools-overbracket}% Unicode overwrites colon-
 
 % Make this new length and indent, same length as regular caption indent
 \newlength{\floatfootruleindent}
-%\makeatletter
-	\setlength{\floatfootruleindent}{\caption@indent}
-%\makeatother
+
+\setlength{\floatfootruleindent}{\caption@indent}
 
 % A bit hacky; introduce a rule underneath caption of \floatfoot is called:
 \renewcommand*{\floatfootskip}{2pt\hspace{\floatfootruleindent}\hrulefill}%
@@ -1149,9 +1148,8 @@ addtohook={%
 
 % multicolumn spanning all columns automatically
 % https://tex.stackexchange.com/a/168358/120853
-%\makeatletter
-	\newcommand*{\mltcolspan}[2]{\multicolumn{\numexpr\LT@cols}{#1}{#2}}
-%\makeatother
+\newcommand*{\mltcolspan}[2]{\multicolumn{\numexpr\LT@cols}{#1}{#2}}
+
 
 \newglossarystyle{symbunitlong}{% https://tex.stackexchange.com/a/269571/120853
 	\setglossarystyle{long-name-desc}% Base new style on existing one
@@ -1394,13 +1392,12 @@ FORTRAN\term{FORTRAN}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Student immatriculation number and other
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\makeatletter%https://stackoverflow.com/a/2833982
-	\newcommand\immnumber[1]{\renewcommand\@immnumber{#1}}
-	\newcommand\@immnumber{\@latex@error{No \noexpand\immnumber given}\@ehc}
+%https://stackoverflow.com/a/2833982
+\newcommand\immnumber[1]{\renewcommand\@immnumber{#1}}
+\newcommand\@immnumber{\@latex@error{No \noexpand\immnumber given}\@ehc}
 
-	\newcommand\thesis[1]{\renewcommand\@thesis{#1}}
-	\newcommand\@thesis{\@latex@error{No \noexpand\thesis given}\@ehc}
-%\makeatother
+\newcommand\thesis[1]{\renewcommand\@thesis{#1}}
+\newcommand\@thesis{\@latex@error{No \noexpand\thesis given}\@ehc}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% For explaining this template
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

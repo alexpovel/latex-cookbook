@@ -37,7 +37,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[%
-language=german,% Global language, passed down to packages and base class. Uncomment to use default (english)
+%language=german,% Global language, passed down to packages and base class. Uncomment to use default (english)
 BCOR=5mm,% Binding Correction. Cannot be known a priori, only guesstimated
 %a5,% Uncomment to get a5-paper and 10pt font size (default: a4-paper with 11pt)
 censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a public version)
@@ -51,7 +51,7 @@ censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a publi
 %%%%%%%%%%%%%% Included/imported only compiles parts listed here.
 %%%%%%%%%%%%%% Auxiliary files are kept, retaining references, page numbers etc., but
 %%%%%%%%%%%%%% compilation speeds are accelerated by only including small document parts.
-%%%%%%%%%%%%%% Toggle here for that to happen and specify parts to be imported below.
+%%%%%%%%%%%%%% Toggle here for that to happen and specify the parts to be imported below.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \includeonly{%
@@ -87,10 +87,13 @@ censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a publi
 
 \immnumber{666}% Student Registration Number
 
+% Use 'em' (roughly width of the current font's 'm') for anything where relative WIDTH is relevant;
+% 'ex' (height of current font's 'x') where height is relevant.
+% \linewidth uses the current line width (e.g. within narrower minipages etc.), as opposed to the global constant \textwidth
 \publishers{%
-	\hspace{2em}% use 'em' for anything where relative WIDTH is relevant, 'ex' where height is relevant
-	\includegraphics[width=0.35\linewidth]{./images/logos/university_logo.pdf}% \linewidth uses the current line width (e.g. within narrower minipages etc.), as opposed to the global constant \textwidth
-	\hfill%
+	\hspace{2em}%
+	\includegraphics[width=0.35\linewidth]{./images/logos/university_logo.pdf}%
+	\hfill% Fill remaining horizontal space
 	\includegraphics[width=0.35\linewidth]{./images/logos/university_logo.pdf}%
 }% Institutions, university, etc.
 

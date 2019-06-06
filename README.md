@@ -210,3 +210,25 @@ I do not yet have an equivalent GitHub/Travis config.
 During the build process, you can use [the metadata text file](gitmeta.txt) to `sed` the relevant entries.
 These are grabbed by TeX to print the metadata directly into the generated PDF.
 Suggestions on improving that pipeline are welcome!
+
+## Known Issues
+
+- `glossaries-extra`:
+
+  Using `\glssetcategoryattribute{<category>}{indexonlyfirst}{true}`.
+  For all items in `<category>`, it is meant to only add the very first reference to the printed glossary.
+  If this reference is within a float, this breaks, and nothing shows up in the '`##2`' column.
+
+  The way the document was set up, most symbols are currently affected.
+  However, in an actual document, it is highly unlikely you will be referencing/using (with `\gls{<symbol>}`) symbols the first time in floating objects.
+  Therefore, this problem is likely not a realistic issue.
+
+- `glossaries-extra`:
+
+  When using package `subimport`.
+  That package introduces a neat structure to have subdirectories and do nested imports of `*.tex` files.
+  But that might not be worth it, since it breaks many referencing functionalities in TeXStudio.
+
+  More importantly, it seems to cause `glossaries-extra` to no longer recognize which references have occurred.
+  We currently call `selection = all` in `\GlsXtrLoadResources` to load all stuff found in the respective `*.bib` file, regardless of whether it has actually been called at some point (using `\gls{}` *etc.*).
+  This is a bit like if `biblatex` did not recognize cite commands.
