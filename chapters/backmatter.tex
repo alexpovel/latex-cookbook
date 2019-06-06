@@ -1,8 +1,7 @@
 %%%%%%
-%\endrefsegment% Anything after not in any segment -> not printed by bibbysegment
-\nocite{*}%
-%\renewcommand*{\bibfont}{\small}%https://tex.stackexchange.com/a/343/120853
-\printbibliography[category = cited]
+\nocite{*}% Add everything that has not yet been cited
+
+\printbibliography[category = cited]% Print the 'real' bibliography of actually cited references
 
 \printbibliography[notcategory=cited, heading=notcited, env=bibnonum, prenote=further]
 %%%%%%

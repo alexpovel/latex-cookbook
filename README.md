@@ -54,21 +54,17 @@ Other packages that then employ the correct language settings are:
 - `biblatex`
 - perhaps more...
 
-Current languages with full support are:
+Currently, supported languages are:
 
 - **english**, german
 
-With **english** in bold as the language in mind when creating this template in the first place.
+With **english** in bold as the language in mind when this template was first created.
 It will remain the main language.
 
-Current languages with partial support are **all others**.
-Here, *partial support* simply means that **all features** offered by the above mentioned packages **will work**.
-For example, you can pass `language=french` in the `documentclass` options.
-All translations that are custom to this template will not work.
-
+All others languages require new translations to be added.
 You can add your own translations in [the respective file](yatt-translations.sty).
 
-There is currently no hope to also have 'variants' of languages (like british for english).
+There is currently no hope of also having 'variants' of languages (like british for english).
 `polyglossia` does not provide and interface for that, only for the main language (<https://tex.stackexchange.com/a/413592/120853>).
 
 ### Packages
@@ -231,4 +227,6 @@ Suggestions on improving that pipeline are welcome!
 
   More importantly, it seems to cause `glossaries-extra` to no longer recognize which references have occurred.
   We currently call `selection = all` in `\GlsXtrLoadResources` to load all stuff found in the respective `*.bib` file, regardless of whether it has actually been called at some point (using `\gls{}` *etc.*).
-  This is a bit like if `biblatex` did not recognize cite commands.
+  This is a bit like if `biblatex` did not recognize cite commands and we just pulled every single item in the bibliography file.
+  Some people use gigantic `*.bib` files, shared among their projects.
+  If suddenly every entry showed up in the printed document despite not being referenced (be it a glossary or a bibliography item), chaos would ensue.
