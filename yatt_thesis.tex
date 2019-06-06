@@ -1,17 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Yet Another Thesis Template
-% LuaLaTeX Template
+% LuaLaTeX Template based on KOMA
 %
-% Source:
+% Source and Development:
 % https://github.com/alexpovel/thesis_template
-%
-% Original author:
-% Alex Povel -- tex(at)alexpovel.de
 %
 % License and Copyright:
 % MIT License
 %
-% Copyright (c) 2019 Alex Povel
+% Original Author and Copyright (c) 2019 Alex Povel - tex(at)alexpovel.de
 %
 % Permission is hereby granted, free of charge, to any person obtaining a copy
 % of this software and associated documentation files (the "Software"), to deal
@@ -30,32 +27,20 @@
 % LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 % SOFTWARE.
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Magic Comment:
 % This template requires LuaLaTeX.
 % The following 'magic comment' is recognized by editors and will ensure lualatex engine use:
 %!TEX TS-program = lualatex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[%
-%a5paper,% Default is A4
-%10pt,% If using A5 paper; default is 11pt
-twoside,%
-english,% Global language, passed down to packages
-listof=leveldown,% List of XYZ gets pushed down one hierarchical level
-BCOR=5mm,% Binding Correction. Cannot be known in theory, only guesstimated.
-chapterprefix=true,% Print 'Chapter' etc. label in front of number
-open=right,%
-headlines=2.1,% Increase headheight, equiv. to 2.1 lines of text
-numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
-]{scrreprt}
-
-\input{./settings/yatt_thesis_preamble.tex}
+english,% Global language, passed down to packages and base class
+BCOR=5mm,% Binding Correction. Cannot be known a priori, only guesstimated
+a5,% Uncomment to get a5paper and 10pt font size (default: a4paper with 11pt)
+%censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a public version)
+]{yatt}% Load our custom class file (*.cls)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\publishedtrue % Toggle here. 'Published' means 'publicly available', aka you would want info redacted
-\ifpublished
-\RestartCensoring
-\fi
+%\usepackage{showframe}% Uncomment for debugging (show frames)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Included/imported only compiles parts listed here.
 %%%%%%%%%%%%%% Auxiliary files are kept, retaining references, page numbers etc., but
@@ -63,12 +48,12 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 %%%%%%%%%%%%%% Toggle here for that to happen and specify parts to be imported below.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \includeonly{%
-	frontmatter,%
-	text,%
-	floats,%
-	style,%
-	tech,%
-	backmatter,%
+%	frontmatter,%
+%	text,%
+%	floats,%
+%	style,%
+%	tech,%
+%	backmatter,%
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -85,7 +70,7 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 	\begin{tabular}{@{}l@{\ }ll@{}}
 		\nth{1} & Examiner & Prof.\ Alfreb Einstime\\
 		\nth{2} & Examiner & Prof.\ Rufols Diebels\\
-		\multicolumn{2}{@{}l}{Supervisor} & Unimportant Person, M.Sc.%
+		\multicolumn{2}{@{}l}{Supervisor} & John Doe, M.Sc.%
 	\end{tabular}
 }%
 %
@@ -102,6 +87,9 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
+Do I work?
+
+\censor{test me}
 \subincludefrom{chapters/}{frontmatter}%
 %
 \subincludefrom{chapters/}{text}%
@@ -113,6 +101,7 @@ numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
 \subincludefrom{chapters/}{tech}%
 %
 \subincludefrom{chapters/}{backmatter}%
+Why not?
 \end{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
