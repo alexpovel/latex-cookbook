@@ -36,14 +36,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Languages with full support: english, german
-% Languages with partial support: all others
-% Partial support means that all normal package features from polyglossia/cleveref/biblatex/datetime/... work correctly, just the custom template elements require attention.
-% For this, refer to yatt-translations.
-
-% There is currently no hope to also have 'variants' of languages (like british for english).
-% Polyglossia does not provide and interface for that, only for the main language:
-% https://tex.stackexchange.com/a/413592/120853
 \documentclass[%
 language=german,% Global language, passed down to packages and base class. Uncomment to use default (english)
 BCOR=5mm,% Binding Correction. Cannot be known a priori, only guesstimated
@@ -65,9 +57,9 @@ censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a publi
 \includeonly{%
 	frontmatter,%
 	text,%
-%	floats,%
-%	style,%
-%	tech,%
+	floats,%
+	style,%
+	tech,%
 	backmatter,%
 }%
 

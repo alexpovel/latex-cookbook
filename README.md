@@ -39,6 +39,38 @@ It is better left to pros, which is why this template does not do much in the wa
 
 **Contributions to add more features/examples or nice design tweaks are very welcome.**
 
+### Languages
+
+An effort is made to provide support for multiple languages.
+We can simply pass desired languages as (global) options to the `documentclass`.
+They will be picked up by all relevant packages, mainly of course `polyglossia`.
+Other packages that then employ the correct language settings are:
+
+- `KOMAScript` itself (*Chapter*, *Kapitel*, ...)
+- `cleveref` (*Equation 1.1*, *Gleichung 1.1*, ...)
+- `datetime2` (*June 6, 2019*, *6. Juni 2019*, ...)
+- `caption` (*Table*, *Tabelle*, ...)
+- `csquotes` (*'Quote'*, *,,Zitat''*, ...)
+- `biblatex`
+- perhaps more...
+
+Current languages with full support are:
+
+- **english**, german
+
+With **english** in bold as the language in mind when creating this template in the first place.
+It will remain the main language.
+
+Current languages with partial support are **all others**.
+Here, *partial support* simply means that **all features** offered by the above mentioned packages **will work**.
+For example, you can pass `language=french` in the `documentclass` options.
+All translations that are custom to this template will not work.
+
+You can add your own translations in [the respective file](yatt-translations.sty).
+
+There is currently no hope to also have 'variants' of languages (like british for english).
+`polyglossia` does not provide and interface for that, only for the main language (<https://tex.stackexchange.com/a/413592/120853>).
+
 ### Packages
 
 We now ...
