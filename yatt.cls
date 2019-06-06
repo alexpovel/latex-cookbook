@@ -63,13 +63,11 @@
 	\PassOptionsToClass{fontsize=10pt}{\@baseclass}%
 }%
 
-% Provide a command that prints a notice if the document is blackened (information is redacted for public release).
-% Initiate as empty so nothing is printed if no censoring is taking place.
-% This message is currently located in the colophon
-\providecommand*{\censornotice}{}%
+\newif\ifcensored% Initialize flag to see if censoring is on (initially false)
+
 \DeclareOption{censor}{%
 	\AtBeginDocument{\RestartCensoring}% Initiate censoring after having it turned off
-	\renewcommand*{\censornotice}{PUBLIC VERSION}% Renew the messgae from empty to this
+	\censoredtrue% Set flag so we can make decisions based off it later on
 }% Enable censoring if this option is given
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@baseclass}}% Forward all other options given to \documentclass[] to base class

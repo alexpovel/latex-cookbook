@@ -105,6 +105,10 @@ censor,% Uncomment to enable all \censor etc. commands (e.g. to generate a publi
 \begin{document}
 Do I work?
 
+\ifcensored
+HELLO
+\fi
+
 \begin{equation}\label{eq:test}
 wow
 \end{equation}

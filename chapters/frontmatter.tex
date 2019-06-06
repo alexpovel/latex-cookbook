@@ -26,7 +26,9 @@
 \footnotesize
 
 \begin{tabular}{rl}
-	Name & \texttt{\textbf{\jobname{} \censornotice{}}}\\% No need to translate 'Name' for now
+	Name & \texttt{\textbf{\jobname{} % Always print the job name
+			\ifcensored (\TransCensorNotice{}) \fi% Only print if censoring is on
+			}}\\% No need to translate 'Name' for now
 	\TransCompiledOn{} & \textbf{\DTMnow{}}\\% \TransCompiledOn from translations
 	\addlinespace
 	% Expand Argument first, then wrap into special command to escape chars (like underscores):
@@ -36,7 +38,7 @@
 	Engine & \prettybanner{}\\
 	\LaTeX{} Version & \hologo{\fmtname} (\fmtversion)\\
 	\glossaryname{} & \texttt{glossaries-extra} + \texttt{bib2gls}\\
-	\bibname{} & \hologo{biber}\\
+	\bibname{} & biblatex + \hologo{biber}\\
 	\TransGenerator{} & \texttt{latexmk} (\texttt{splitidx} subroutine: J.\ \textsc{Collins})\\
 	\TransLatexClass{} & \href{https://github.com/alexpovel/thesis_template}{YATT} (\KOMAScriptVersion{})
 \end{tabular}
@@ -57,24 +59,22 @@
 \cleardoubleoddpage
 \vspace*{\fill}
 %
-% No guarantee this formulation is valid in your case.
+% No guarantee this formulation is valid in your case!
 %
 \subsection*{\TransAuthorshipDeclTitle}
-{%
-\makeatletter
-I, \@author{} [\@immnumber], hereby declare to be the sole, independent author of the \@thesis{} submitted here.
-No other than the cited references have been used.
-Any content directly or indirectly obtained from external sources has been marked up as such.
-This thesis has neither been submitted to a second examination authority nor been published.\\[\baselineskip]
 
+\TransAuthorshipDeclText{}
+
+\makeatletter
+\vspace{1.5cm}% Leave space for signature
 \begin{center}
 	\begin{tabular}{M{12em}M{4em}M{12em}}
 		\cmidrule{1-1}\cmidrule{3-3}
-		{\itshape\@author} & & \textit{Place \& Date}\\
+		{\textit{\@author}} & & \textit{\TransPlaceDate{}}\\
 	\end{tabular}
 \end{center}
 \makeatother%
-}%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
