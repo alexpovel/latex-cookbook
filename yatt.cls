@@ -38,10 +38,14 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{yatt}[2019/06/06 v0.1 yatt class v0.1]
 
+
 \newcommand{\@baseclass}{scrreprt}% Name of class this one is based on
 
 % If option 'language' is not given at all, use initialization 'english' as a fallback.
 % If it is called without a value, use default (or throw error of no default given)
+% This method was chosen to have the language available in a macro, so it may be passed to polyglossia.
+% This approach messes with the forwarding of the language and raises a warning 'Unused global options';
+% we can probably ignore that for now (https://tex.stackexchange.com/a/278172/120853).
 \RequirePackage{kvoptions}
 	\DeclareStringOption[english]{language}%[default] % No default: option requires a value
 	\ProcessKeyvalOptions*
@@ -75,6 +79,10 @@
 \ProcessOptions\relax% Execute these options
 
 \LoadClass{\@baseclass}% Finally, load the base class
+
+% Put own files in root directory for now:
+% https://tex.stackexchange.com/a/124013/120853
+\RequirePackage{yatt-translations}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -238,7 +246,7 @@ warnings-off={mathtools-colon, mathtools-overbracket}% Unicode overwrites colon-
 
 \RequirePackage{microtype}% Advanced typesetting for kerning etc.
 
-\RequirePackage{kantlipsum}% Dummy text in readable English
+\RequirePackage{blindtext}% Dummy text in readable English (German/Latin also detected)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%% Censor
@@ -474,7 +482,7 @@ warnings-off={mathtools-colon, mathtools-overbracket}% Unicode overwrites colon-
 }%
 
 \renewcommand*{\lstlistingname}{Code}% https://tex.stackexchange.com/q/249505/120853
-\renewcommand*{\lstlistlistingname}{List of \lstlistingname}%
+\renewcommand*{\lstlistlistingname}{\TransListOfListings{}}%
 
 \lstMakeShortInline[style=olivierverdierpython]§%allows commands like §break§
 
@@ -502,11 +510,9 @@ warnings-off={mathtools-colon, mathtools-overbracket}% Unicode overwrites colon-
 %%%%%%%%%%%%%% Special Treatment for anything in \nocite{*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\defbibheading{notcited}{\section*{Further Reading}}
+\defbibheading{notcited}{\section*{\texorpdfstring{\TransFurtherReadingTitle{}}{Further Reading}}}
 
-\defbibnote{further}{%
-\textit{These references were used for this thesis but not cited in the main body; they are provided here as-is.}
-}%
+\defbibnote{further}{\textit{\TransFurtherReadingText{}}}%
 \DeclareBibliographyCategory{cited}% https://tex.stackexchange.com/a/280545/120853
 \AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
 
@@ -603,7 +609,7 @@ warnings-off={mathtools-colon, mathtools-overbracket}% Unicode overwrites colon-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%% SCRlayer
+%%%%%%%%%%%%%% SCRLayer
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -638,7 +644,7 @@ warnings-off={mathtools-colon, mathtools-overbracket}% Unicode overwrites colon-
 
 \newcommand*{\blankpage}{%https://tex.stackexchange.com/a/205536/120853
 \par\vspace*{\fill}%
-{\centering\color{g3}Rest of this page intentionally left blank.\par}
+{\centering\color{g3}\TransBlankPage{}\par}
 }%
 
 \DeclareNewLayer[% Create new layer under some name
@@ -1082,7 +1088,7 @@ addtohook={%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Using Abbreviations/Symbols package options creates these glossaries already.
 % Create the rest manually.
-\newglossary*{subsuper}{Sub- and Superscripts}%
+\newglossary*{subsuper}{\TransSubSuperTitle}%
 
 \GlsXtrLoadResources[%
 	src={./glossaries/abbreviations},%
@@ -1118,10 +1124,12 @@ addtohook={%
 % Each bib-entry has a group-field.
 % bib2gls is smart and would take grouptitles from there, but those are just variables.
 % Give proper names for all groups here.
-\glsxtrsetgrouptitle{sub}{Subscripts}
-\glsxtrsetgrouptitle{super}{Superscripts}
-\glsxtrsetgrouptitle{greek}{Greek}
-\glsxtrsetgrouptitle{roman}{Roman}
+\AtBeginDocument{% Do this after preamble, else errors out
+\glsxtrsetgrouptitle{sub}{\TransSubscripts}
+\glsxtrsetgrouptitle{super}{\TransSuperscripts}
+\glsxtrsetgrouptitle{greek}{\TransGreek}
+\glsxtrsetgrouptitle{roman}{\TransRoman}
+}
 
 % One down in rprt/book
 \setglossarysection{section}
@@ -1149,7 +1157,7 @@ addtohook={%
 	\setglossarystyle{long-name-desc}% Base new style on existing one
 
 	\renewcommand*{\glsgroupheading}[1]{%
-		\glshdrfont{\glsgetgrouptitle{##1}} & \glshdrfont{\descriptionname} & \glshdrfont{\nth{1} Use} & \glshdrfont{Unit}\tabularnewline
+		\glshdrfont{\glsgetgrouptitle{##1}} & \glshdrfont{\descriptionname} & \glshdrfont{\TransFirstUse{}} & \glshdrfont{\TransUnit{}}\tabularnewline
 	}%
 
 	\renewenvironment{theglossary}{% Change the table type
@@ -1159,7 +1167,7 @@ addtohook={%
 	\renewcommand*{\glossaryheader}{%
 		% Empty first header
 		\endfirsthead
-		\mltcolspan{c}{\textit{(\expandafter\MakeUppercase\currentglossary{} continued)}}\\
+		\mltcolspan{c}{\textit{\TransContinued{}\dots}}\\
 		\endhead
 	}%
 	\renewcommand*{\glossentry}[2]{%
@@ -1174,10 +1182,10 @@ addtohook={%
 	\begin{longtable}{lp{0.9\glsdescwidth}p{10em}}}%
 	{\end{longtable}}
 	\renewcommand*{\glossaryheader}{%  Change the table header
-		\glshdrfont{Short} & \glshdrfont{\descriptionname} & \glshdrfont{Pages}\\
+		\glshdrfont{\TransShort{}} & \glshdrfont{\descriptionname} & \glshdrfont{\pagename}\\
 		\endfirsthead
-		\mltcolspan{c}{\textit{(\expandafter\MakeUppercase\currentglossary{} continued)}}\\
-		\glshdrfont{Short} & \glshdrfont{\descriptionname} & \glshdrfont{Pages}\\
+		\mltcolspan{c}{\textit{\TransContinued{}\dots}}\\
+		\glshdrfont{\TransShort{}} & \glshdrfont{\descriptionname} & \glshdrfont{\pagename}\\
 		\endhead%
 	}%
 	\renewcommand*{\glossentry}[2]{%
@@ -1404,4 +1412,3 @@ FORTRAN\term{FORTRAN}%
 \newcommand*{\sampletext}{The quick brown Fox jumps over the lazy Dog 13 times!}
 \DeclareMathOperator{\examplemean}{MEAN}
 
-\RequirePackage{settings/yatt-translations}
