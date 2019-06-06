@@ -40,14 +40,14 @@
 
 \newcommand{\@baseclass}{scrreprt}% Name of class this one is based on
 
+% If option 'language' is not given at all, use initialization 'english' as a fallback.
+% If it is called without a value, use default (or throw error of no default given)
 \RequirePackage{kvoptions}
 	\DeclareStringOption[english]{language}%[default] % No default: option requires a value
 	\ProcessKeyvalOptions*
-	
-\AtBeginDocument{\@ifpackagewith{polyglossia}{german}{german}{not german}}
 
 \PassOptionsToClass{%
-	\yatt@language,
+	\yatt@language,% Scheme: \filename@keyoption
 	twoside,% For printing two-sided documents
 	listof=leveldown,% 'List of (Tables, Figures, ...)' gets pushed down one hierarchical level
 	chapterprefix=true,% Print 'Chapter' etc. label in front of number
@@ -1405,3 +1405,5 @@ FORTRAN\term{FORTRAN}%
 %
 \newcommand*{\sampletext}{The quick brown Fox jumps over the lazy Dog 13 times!}
 \DeclareMathOperator{\examplemean}{MEAN}
+
+\RequirePackage{settings/yatt-translations}

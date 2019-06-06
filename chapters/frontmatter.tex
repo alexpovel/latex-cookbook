@@ -18,29 +18,28 @@
 %
 \thispagestyle{empty}
 %
-\begin{minipage}{0.5\linewidth}
 \label{metadata}
 
 \hypersetup{hidelinks}
 \color{g2}
 
 \footnotesize
-\raggedright
 
-\noindent\texttt{%
-	\bfseries\jobname{}
-	% Expand Argument first, then wrap into special command to escape chars
-	\expandafter\EscWrapper\expandafter{\GitVersion}
-	(\expandafter\EscWrapper\expandafter{\GitShorthash})
-	\censornotice{}
-}%
-\\[\baselineskip]
-
-\noindent\prettybanner{}.
-\hologo{\fmtname} (\fmtversion) with \texttt{glossaries-extra} (\texttt{bib2gls}) and \hologo{biber}, using \texttt{latexmk} with a \texttt{splitidx} subroutine by J.\ \textsc{Collins}.
-
-Produced using the \href{https://github.com/alexpovel/thesis_template}{YATT} class, employing \KOMAScriptVersion{}.
-\end{minipage}
+\begin{tabular}{rl}
+	Name & \texttt{\textbf{\jobname{} \censornotice{}}}\\% No need to translate 'Name' for now
+	\TransCompiledOn{} & \textbf{\DTMnow{}}\\% \TransCompiledOn from translations
+	\addlinespace
+	% Expand Argument first, then wrap into special command to escape chars (like underscores):
+	Git Version & \texttt{\textbf{\expandafter\EscWrapper\expandafter{\GitVersion}}}\\
+	Git Hash & \texttt{\expandafter\EscWrapper\expandafter{\GitShorthash}}\\
+	\addlinespace
+	Engine & \prettybanner{}\\
+	\LaTeX{} Version & \hologo{\fmtname} (\fmtversion)\\
+	\glossaryname{} & \texttt{glossaries-extra} + \texttt{bib2gls}\\
+	\bibname{} & \hologo{biber}\\
+	\TransGenerator{} & \texttt{latexmk} (\texttt{splitidx} subroutine: J.\ \textsc{Collins})\\
+	\TransLatexClass{} & \href{https://github.com/alexpovel/thesis_template}{YATT} (\KOMAScriptVersion{})
+\end{tabular}
 %
 }%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -60,7 +59,7 @@ Produced using the \href{https://github.com/alexpovel/thesis_template}{YATT} cla
 %
 % No guarantee this formulation is valid in your case.
 %
-\subsection*{Declaration of Authorship}
+\subsection*{\TransAuthorshipDeclTitle}
 {%
 \makeatletter
 I, \@author{} [\@immnumber], hereby declare to be the sole, independent author of the \@thesis{} submitted here.
