@@ -19,9 +19,7 @@ Outdated, no longer maintained packages are avoided if possible.
 
 ## Features
 
-At the core of it all is the [thesis template preamble](./settings/yatt_thesis_preamble.tex) (as well as the [presentation preamble](./settings/yatt_presentation_preamble.tex)).
-At some point, these could be turned into class files `*.cls`.
-It works for now.
+At the core of it all is the [thesis template class file (`*.cls`)](yatt.cls) (as well as the [presentation preamble](./settings/yatt_presentation_preamble.tex)).
 
 The [compiled output](yatt_thesis.pdf) ([presentation](yatt_presentation.pdf)) is also part of the repository.
 
@@ -61,11 +59,11 @@ Currently, supported languages are:
 With **english** in bold as the language in mind when this template was first created.
 It will remain the main language.
 
-All others languages require new translations to be added.
+All other languages require new translations to be added.
 You can add your own translations in [the respective file](yatt-translations.sty).
 
 There is currently no hope of also having 'variants' of languages (like british for english).
-`polyglossia` does not provide and interface for that, only for the main language (<https://tex.stackexchange.com/a/413592/120853>).
+`polyglossia` does not provide an interface for that, only for the main language (<https://tex.stackexchange.com/a/413592/120853>).
 
 ### Packages
 
@@ -123,7 +121,7 @@ I am a huge fan!
 [Many people ask why the default margins are so damn large](https://tex.stackexchange.com/questions/71172/why-are-default-latex-margins-so-big) (also, in that question, they mention the package `geometry`; we have KOMA-script for that).
 The margins aren't too large: the (default A4) paper is.
 Only avid readers can process lines in excess of approx. 80 characters.
-All others get headaches and find texts like that hard to read.
+All others suffer headaches and find texts like that hard to read.
 KOMA knows about that and the many other 'rules' aka conventions, producing the margins you see.
 
   There is very good reason books don't usually come in A4 or letter format.
@@ -131,7 +129,7 @@ KOMA knows about that and the many other 'rules' aka conventions, producing the 
   It is nice to read and hold.
   If your document is an actual thesis of many dozens of pages, maybe look into using A5.
 
-  To see it in effect, uncomment the options `a5paper` and `10pt` (we decrease the font size by 1pt, down from the default of `11pt`) in [the base file](yatt_thesis.tex) when calling the `documentclass`.
+  To see it in effect, uncomment the `a5` option (we decrease the font size by 1pt, down from the default of `11pt`) in [the base file](yatt_thesis.tex) when calling the `documentclass`.
   At this point, there is a reward for careful typesetting: specifying lengths etc. in absolute units will likely break the document.
   Having done all that jazz in relation to `linewidth`, `textwidth` and their siblings will scale everything accordingly.
   Nevertheless, not all things will come out right.
