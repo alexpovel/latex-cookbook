@@ -15,7 +15,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="pdf-git-logo.svg">
+   sodipodi:docname="pdf-git-logo.svg"
+   inkscape:export-filename="C:\Users\alex\Documents\dev\repos\latex-git-cookbook\images\vectors\pdf-git-logo.png"
+   inkscape:export-xdpi="108.633"
+   inkscape:export-ydpi="108.633">
   <defs
      id="defs2">
     <marker
@@ -149,8 +152,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
-     inkscape:cx="346.06023"
-     inkscape:cy="104.74879"
+     inkscape:cx="298.98981"
+     inkscape:cy="128.08368"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -272,12 +275,6 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="sccssssss" />
     <path
-       style="fill:#b2b2b2;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-opacity:1"
-       d="m 839.66088,99.604279 h 15.85055 c 2.56514,0 4.63021,2.065071 4.63021,4.630211 v 9.20506 c 0,2.56513 -2.06507,4.63021 -4.63021,4.63021 l -21.50704,0.0709 1e-5,-4.63021 v -9.20506 c 0,-2.56514 3.09135,-4.701081 5.65648,-4.701081 z"
-       id="rect4539"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cssssccssc" />
-    <path
        sodipodi:nodetypes="ccccc"
        inkscape:connector-curvature="0"
        id="path4544"
@@ -289,25 +286,34 @@
        id="rect4525"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ssccs" />
-    <rect
-       style="fill:#d15353;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-opacity:1"
-       id="rect4537"
-       width="36.710938"
-       height="18.331844"
-       x="822.38171"
-       y="98.373497"
-       ry="4.6302085" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.11111069px;line-height:1.25;font-family:Rubik;-inkscape-font-specification:'Rubik, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="826.70874"
-       y="112.68295"
-       id="text4548"><tspan
-         sodipodi:role="line"
-         id="tspan4546"
-         x="826.70874"
+    <g
+       id="g1323">
+      <path
+         sodipodi:nodetypes="cssssccssc"
+         inkscape:connector-curvature="0"
+         id="rect4539"
+         d="m 839.66088,99.604279 h 15.85055 c 2.56514,0 4.63021,2.065071 4.63021,4.630211 v 9.20506 c 0,2.56513 -2.06507,4.63021 -4.63021,4.63021 l -21.50704,0.0709 1e-5,-4.63021 v -9.20506 c 0,-2.56514 3.09135,-4.701081 5.65648,-4.701081 z"
+         style="fill:#b2b2b2;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-opacity:1" />
+      <rect
+         ry="4.6302085"
+         y="98.373497"
+         x="822.38171"
+         height="18.331844"
+         width="36.710938"
+         id="rect4537"
+         style="fill:#d15353;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-opacity:1" />
+      <text
+         id="text4548"
          y="112.68295"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.11111069px;font-family:Rubik;-inkscape-font-specification:'Rubik, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke-width:0.26458332">PDF</tspan></text>
+         x="826.70874"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.11111069px;line-height:1.25;font-family:Rubik;-inkscape-font-specification:'Rubik, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.11111069px;font-family:Rubik;-inkscape-font-specification:'Rubik, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke-width:0.26458332"
+           y="112.68295"
+           x="826.70874"
+           id="tspan4546"
+           sodipodi:role="line">PDF</tspan></text>
+    </g>
     <path
        style="fill:#b2b2b2;fill-opacity:1;stroke:none;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 917.50499,138.39276 h 4.02053 c 0.61369,0 0.6188,0.002 0.6188,-0.61878 v -13.64525 c -0.0119,-0.61564 -0.0141,-0.61878 0.59942,-0.61878 h 7.02439 c 0.6085,0.0101 0.60913,0.004 0.60913,0.61878 v 13.64525 c 0.003,0.61878 -0.002,0.61878 0.61876,0.61878 h 4.02053 c 0.56185,0 0.55489,0 -8e-5,0.44234 -2.54682,1.82031 -5.09363,3.64065 -7.64045,5.46097 -1.09684,0.91689 -1.20712,0.73144 -2.23378,-0.002 -2.54609,-1.81979 -5.09218,-3.63959 -7.63826,-5.4594 -0.5518,-0.441 -0.55259,-0.44191 0.001,-0.44191 z"
@@ -320,17 +326,21 @@
        id="path4588"
        d="m 916.31539,137.4521 h 4.02053 c 0.61369,0 0.6188,0.002 0.6188,-0.61878 v -13.64525 c -0.0119,-0.61564 -0.0141,-0.61878 0.59942,-0.61878 h 7.02439 c 0.6085,0.0101 0.60913,0.004 0.60913,0.61878 v 13.64525 c 0.003,0.61878 -0.002,0.61878 0.61876,0.61878 h 4.02053 c 0.56185,0 0.55489,0 -8e-5,0.44234 -2.54682,1.82031 -5.09363,3.64065 -7.64045,5.46097 -1.09684,0.91689 -1.20712,0.73144 -2.23378,-0.002 -2.54609,-1.81979 -5.09218,-3.63959 -7.63826,-5.4594 -0.5518,-0.441 -0.55259,-0.44191 10e-4,-0.44191 z"
        style="fill:#d15353;fill-opacity:1;stroke:none;stroke-width:0.26499999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <path
-       sodipodi:nodetypes="cccc"
-       inkscape:connector-curvature="0"
-       d="m 850.07281,145.9233 18.50841,-17.74279 m 0,-15.9217 v 33.66449"
-       style="fill:none;stroke:#b2b2b2;stroke-width:1.52600002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker3865);marker-mid:url(#marker3920);marker-end:url(#marker3981)"
-       id="path3861" />
-    <path
-       id="path2214"
-       style="fill:none;stroke:#d15353;stroke-width:1.52600002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker2218);marker-mid:url(#marker2261);marker-end:url(#marker2310)"
-       d="m 849.10866,144.97318 18.50841,-17.74279 m 0,-15.9217 v 33.66449"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
+    <g
+       id="g1317"
+       style="stroke-width:1.8;stroke-miterlimit:4;stroke-dasharray:none">
+      <path
+         id="path3861"
+         style="fill:none;stroke:#b2b2b2;stroke-width:1.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker3865);marker-mid:url(#marker3920);marker-end:url(#marker3981)"
+         d="m 850.07281,145.9233 18.50841,-17.74279 m 0,-15.9217 v 33.66449"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccc" />
+      <path
+         sodipodi:nodetypes="cccc"
+         inkscape:connector-curvature="0"
+         d="m 849.10866,144.97318 18.50841,-17.74279 m 0,-15.9217 v 33.66449"
+         style="fill:none;stroke:#d15353;stroke-width:1.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker2218);marker-mid:url(#marker2261);marker-end:url(#marker2310)"
+         id="path2214" />
+    </g>
   </g>
 </svg>
