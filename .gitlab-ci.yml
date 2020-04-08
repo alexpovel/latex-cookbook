@@ -53,6 +53,10 @@ replace_git_metadata:
                 do
                     sed -i "s~\(newcommand\*{\\\\$k}\){.*}~\1{${GITINFO[$k]}}~" *.cls
                 done
+    # Hand the processed *.cls file(s) to the next stage:
+    artifacts:
+        paths:
+            - "*.cls"
 
 compile_latex:
     script:
