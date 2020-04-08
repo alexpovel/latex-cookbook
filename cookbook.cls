@@ -26,6 +26,7 @@
     %[default]{language} % If no default entered: option requires a value:
     \DeclareStringOption[english]{language}
     \DeclareStringOption{titlestyle}
+    \DeclareBoolOption{censoring}% Initially false by default
     \ProcessKeyvalOptions*
 
 \PassOptionsToClass{%
@@ -652,6 +653,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{censor}
+    \ifcookbook@censoring
+        % censor package censors by default; do nothing if censoring requested
+        % TeX doesn't have \ifnot or similar, see also
+        % https://tex.stackexchange.com/q/386093/120853
+    \else
+        % Turn off if document option given
+        \StopCensoring
+    \fi
 
 \RequirePackage{cancel}% Cancel out math in equations
 
