@@ -10,4 +10,51 @@
 \subimport{frontmatter/}{colophon}
 
 \frontmatter% In KOMAScript, resets pagenumber, uses Roman numerals etc.
+\subimport{frontmatter/}{task}
+\subimport{frontmatter/}{authorship_declaration}
 \subimport{frontmatter/}{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lists of Content
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% addchap is KOMA equivalent for \chapter*, but also creates ToC entry, see also
+% https://tex.stackexchange.com/a/116085/120853
+% Use built-in macro \glossaryname for proper internationalization.
+% It will contain \text<language>, so fall back to English string for the PDF/hyperref
+% output. It does not matter anyway since this is an unnumbered chapter.
+\addchap{\texorpdfstring{\glossaryname}{Glossary}}%
+
+% Print "unsorted" glossaries; these are in fact sorted, but externally using bib2gls.
+% These will throw 'Token not allowed in PDF, removing \text<language>' warning.
+% Specify title= manually if that gets too annoying.
+\printunsrtglossary[
+    type=symbols,
+    style=symbunitlong,
+]
+\printunsrtglossary[
+    type=numbers,
+    title={Konstanten},
+    style=numberlong,
+]
+\printunsrtglossary[
+    type=subscripts,
+    style=mcolalttree,
+    nonumberlist,
+]
+\printunsrtglossary[
+    type=abbreviations,
+    style=long3colheader,
+]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\listoffigures%
+
+\listoftables%
+
+\listofexamples%
+
+% \lstlistoflistings% Listings are code/algorithms

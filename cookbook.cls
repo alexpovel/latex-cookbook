@@ -341,9 +341,11 @@
 \DeclareTOCStyleEntry[dynnumwidth=true]{tocline}{figure}
 \DeclareTOCStyleEntry[dynnumwidth=true]{tocline}{table}
 
-% Declare a new list of contents, with the file suffix in brackets:
+% Declare a new list of contents, with the file suffix in brackets.
+% This will give access to \listof<name>s
 \DeclareNewTOC[%
-    type=example,
+    type=example,% This also creates types=example+s, that is by appending an s
+    % Listname is "List of <Type>s" by default, therefore translate:
     listname={\TransListOfExamples{}},
 ]{loe}
 
@@ -2296,6 +2298,7 @@
 
     \newcommand*{\glshdrfont}[1]{\textbf{#1}} % Font for gls table heads
 
+    % To print symbols:
     \newglossarystyle{symbunitlong}{% https://tex.stackexchange.com/a/269571/120853
         % Base new style on existing one. This is quite important, since it implements
         % all otherwise missing but maybe required commands,
@@ -2338,6 +2341,7 @@
         }
     }
 
+    % To print constants, as in physical constants with values and unit:
     \newglossarystyle{numberlong}{% https://tex.stackexchange.com/a/269571/120853
         % Base new style on existing one. This is quite important, since it implements
         % all otherwise missing but maybe required commands, like
@@ -2689,8 +2693,53 @@
 % Document metadata commands, like \author etc.
 % See also https://stackoverflow.com/a/2833982
 \newcommand*{\documenttype}[1]{%
-    \renewcommand\@documenttype{#1}%
+    \renewcommand*{\@documenttype}{#1}%
 }
+
+% \@ehc is generic error text, see also
+% https://tex.stackexchange.com/a/59952/120853.
+% A quick test showed that it prints:
+%
+%      Try typing <return> to proceed.If that doesn’t work, type X <return>
+%      to quit.
+%
+% It's a help message. Help messages are a required third argument for ClassErrors
+% and PackageErrors, but not Warnings.
+
 \newcommand*{\@documenttype}{%
-    \@latex@error{No \noexpand\documenttype given}\@ehc%
+    \ClassWarning{cookbook}{No \noexpand\documenttype given}%{\@ehc}%
+}
+
+% Student ID number
+\newcommand*{\idnumber}[1]{%
+    \renewcommand*{\@idnumber}{#1}%
+}
+\newcommand*{\@idnumber}{%
+    \ClassWarning{cookbook}{No \noexpand\idnumber given}%{\@ehc}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A signature field with places for the date and time
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\signaturefield}[1][\@author]{%
+    % This should only occur on pages with a lot of other pages behind it, to support
+    % writing on it here.
+    % If is occurs at the beginning of the document, put it recto. At the end, verso.
+    % Else, writing and stamping on here won't have much support.
+    \vspace*{1.5cm}% Leave room for signature
+    \begin{center}
+        \begin{tabular}{%
+            % Columns widths control signature line length
+            M{12em}
+            M{4em}% Empty middle
+            M{12em}
+        }
+            \cmidrule{1-1}\cmidrule{3-3}
+                \textit{#1} &
+                & % Empty column
+                \textit{\TransPlaceDate{}}
+                \\
+        \end{tabular}
+    \end{center}
 }
