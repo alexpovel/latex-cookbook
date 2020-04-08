@@ -148,6 +148,15 @@
     \definecolor{Set2G}{RGB}{229, 196, 148}%
     \definecolor{Set2H}{RGB}{179, 179, 179}%
 
+    % Matlab colours:
+    \definecolor{mBlue}{HTML}{0072BD}
+    \definecolor{mOrange}{HTML}{D95319}
+    \definecolor{mYellow}{HTML}{EDB120}
+    \definecolor{mPurple}{HTML}{7E2F8E}
+    \definecolor{mGreen}{HTML}{77AC30}
+    \definecolor{mSky}{HTML}{4DBEEE}
+    \definecolor{mRed}{HTML}{A2142F}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fonts
