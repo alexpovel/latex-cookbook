@@ -1983,7 +1983,12 @@
         allcolors=darklink,%
         hidelinks,% Toggle here!
         plainpages=false,%
-        pdfcreator={LaTeX with hyperref, glossaries-extra/bib2gls and biblatex/biber},
+        pdfcreator={
+            LaTeX with hyperref,
+            glossaries-extra/bib2gls
+            and biblatex/biber
+            [\GitVersion{}@\GitShortHash{}]
+        },
         bookmarksnumbered=true,%
         % Default opening of the document in supported PDF viewers:
         pdfpagelayout=TwoPageRight,
