@@ -63,7 +63,7 @@
 % compilation speeds are accelerated by only including small document parts.
 % Uncomment only the part work is currently done on, comment out all others.
 \includeonly{%
-    frontmatter,%
+    chapters/frontmatter,%
     text,%
     floats,%
     style,%
@@ -83,16 +83,16 @@
 
 \subtitle{% Examiners or other, rather arbitrary content
     \begin{tabular}[t]{% [t] sets tabular anchor to the top
-            @{}% Remove horizontal space left of tabular
-            l% If no really good reason to do otherwise, always left-align cell
-            @{\ }% '\ ' (backslash-space) is a small space, here a column separator
-            l
-            l
-            @{}% Remove horizontal space right of tabular
-        }
-            \nth{1} & Examiner & Prof.\ Jane Doe\\
-            \nth{2} & Examiner & Prof.\ Foo Bar\\
-            \multicolumn{2}{@{}l}{Supervisor} & John Doe, M.Sc.%
+        @{}% Remove horizontal space left of tabular
+        l% If no really good reason to do otherwise, always left-align cell
+        @{\ }% '\ ' (backslash-space) is a small space, here a column separator
+        l
+        l
+        @{}% Remove horizontal space right of tabular
+    }
+        \nth{1} & Examiner & Prof.\ Jane Doe\\
+        \nth{2} & Examiner & Prof.\ Foo Bar\\
+        \multicolumn{2}{@{}l}{Supervisor} & John Doe, M.Sc.%
     \end{tabular}
 }%
 
@@ -106,5 +106,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-    \maketitle
+    \subincludefrom{chapters/}{frontmatter}
+    \mainmatter
+    \backmatter
 \end{document}

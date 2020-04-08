@@ -1,0 +1,58 @@
+% No \cleardoubleoddpage shenanigans: the colophon page is supposed to be on the verso
+% behind the title.
+
+\thispagestyle{empty}
+\vspace*{\fill}
+
+% Use URL as wrapper to escape special chars in tags, mainly underscores like "Fix_It"
+% \urlstyle takes rm, tt etc.
+% https://tex.stackexchange.com/a/20891/120853
+\DeclareUrlCommand{\EscWrapper}{\urlstyle{tt}}
+
+\begingroup% Keep changes local to this group
+    \hypersetup{hidelinks}
+    \color{g2}
+    \footnotesize
+
+    \begin{tabular}{
+        r
+        l
+    }
+        % \TransXYZ commands are from translations file
+            Name &
+                \texttt{\textbf{%
+                    \jobname{}% Always print the job name
+                }}
+                    \makeatletter
+                        % Only print if censoring is on; command defined by kvoptions
+                        \ifcookbook@censoring%
+                            % This duplicate \textt\textbf is necessary.
+                            % This if construct cannot be inside the one font commands
+                            % for \jobname{}
+                            \texttt{\textbf{(\TransCensorNotice{})}}
+                        \fi
+                    \makeatother
+                \\
+            \TransCompiledOn{} & \textbf{\DTMnow{}}\\
+        \addlinespace
+            % Expand Argument first, else we print \GitVersion etc. literally.
+            % Then wrap into special command to escape chars (like underscores):
+            Git Version &
+                \texttt{\textbf{%
+                    \expandafter\EscWrapper\expandafter{\GitVersion}%
+                }}
+                \\
+            Git Hash &
+                \texttt{%
+                    \expandafter\EscWrapper\expandafter{\GitShortHash}%
+                }
+                \\
+        \addlinespace
+            Engine & \prettybanner{}\\
+            \LaTeX{} Version & \hologo{\fmtname} (\fmtversion)\\
+            \glossaryname{} & \texttt{glossaries-extra} + \texttt{bib2gls}\\
+            \bibname{} & biblatex + \hologo{biber}\\
+            \TransGenerator{} & \texttt{latexmk}\\
+            \TransLatexClass{} & \KOMAScriptVersion{}
+    \end{tabular}%
+\endgroup%

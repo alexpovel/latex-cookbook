@@ -1,0 +1,13 @@
+% Helper file that pulls subchapters together.
+% Note that \subincludefrom{}{} cannot be nested
+
+% Set initial pages to alpha, so that they do not collide with later Arabic numbering
+% in the generated PDF. This won't show in print because page numbers aren't displayed
+% until later. But you will be able to print the title page by printing page 'a', which
+% would otherwise overlap with page '1', aka the first actual text page.
+\pagenumbering{alph}
+\maketitle
+\subimport{frontmatter/}{colophon}
+
+\frontmatter% In KOMAScript, resets pagenumber, uses Roman numerals etc.
+\subimport{frontmatter/}{abstract}

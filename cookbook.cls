@@ -431,6 +431,8 @@
 
 \RequirePackage{pdflscape}% Pages in landscape format
 
+\RequirePackage{url}% Escaping special chars as URL
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Language Support
