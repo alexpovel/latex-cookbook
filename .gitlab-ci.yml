@@ -1,0 +1,86 @@
+# Image from dockerhub per default. Specify full path to use a different image.
+image: alexpovel/latex
+
+# Define some stages so to get rid of 'Test' as default:
+stages:
+    - preparation
+    - pdf_building
+
+get_pandoc_template:
+    stage: preparation
+    script:
+        # Get latest Eisvogel pandoc template release, required for pretty output from
+        # Markdown to PDF via Pandoc and LaTeX
+        - |
+            PANDOC_TEMPLATE_URL=$(\
+                curl -s https://api.github.com/repos/Wandmalfarbe/pandoc-latex-template/releases/latest | \
+                grep "browser_download_url.*\.tar\.gz" | \
+                cut -d \" -f 4
+            )
+        # Download archive
+        - wget $PANDOC_TEMPLATE_URL
+        # Unpack single file
+        - tar -xf Eisvogel*.tar.gz eisvogel.tex
+        # Change that file's suffix to .latex
+        - mv eisvogel.tex eisvogel.latex
+    # Save those artifacts for subsequent stages:
+    artifacts:
+        paths:
+            - eisvogel.latex
+
+replace_git_metadata:
+    stage: preparation
+    script:
+        # Declare associative (-A) array with predefined GitLab CI variables.
+        # The keys correspond to the command names found in the LaTeX code:
+        - |
+            declare -A GITINFO=(
+                [GitVersion]=$CI_COMMIT_REF_NAME
+                [GitShortHash]=$CI_COMMIT_SHORT_SHA
+            )
+
+        # Iterate over array and replace the LaTeX commands,
+        # e.g. \newcommand*{\GitVersion}{n.a.},
+        # with
+        # e.g. \newcommand*{\GitVersion}{v1.00}.
+        # Use double quotes to enable variable expansion.
+        # Employ and use capture group (\1) to replace current LaTeX command
+        # (given by key in array) by corresponding value for that key.
+        - |
+            for k in "${!GITINFO[@]}"
+                do
+                    sed -i "s!\($k}{\).*}!\1${GITINFO[$k]}}!g" gitlab_latex_presentation.tex
+                done
+
+compile_latex:
+    script:
+        # No *.tex-file given as argument to latexmk: run on all *.tex-files found in root.
+        # Configure latexmk tool using '.latexmkrc' in project root.
+        - latexmk
+    stage: pdf_building
+    artifacts:
+        # artifacts.zip is renamed to current tag/branch:
+        name: "$CI_COMMIT_REF_NAME"
+        paths:
+            # Return all found *.pdf-files using wildcard.
+            # For example, a thesis and the accompanying presentation.
+            - "*.pdf"
+    # Run job 'only' if it fulfills certain criteria:
+    # only:
+        # - tags
+    dependencies:
+        - replace_git_metadata
+
+compile_pandoc:
+    script:
+        # pandoc looks for template with .latex suffix in current dir
+        # Use lualatex for Unicode support
+        - pandoc README.md --template eisvogel --pdf-engine=lualatex --number-sections -o README.pdf
+    stage: pdf_building
+    artifacts:
+        name: "$CI_COMMIT_REF_NAME"
+        paths:
+            - "*.pdf"
+    # Get the artifacts from (only) these dependency-jobs:
+    dependencies:
+        - get_pandoc_template
