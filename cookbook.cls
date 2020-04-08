@@ -1,0 +1,2718 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LuaLaTeX based on KOMA-Script
+%
+% Author (2020): Alex Povel - tex(at)alexpovel.de
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Class Options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Refer to https://www.overleaf.com/learn/latex/Writing_your_own_class
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{cookbook}[2020/04/06 v1.0 cookbook class]
+
+\newcommand*{\@baseclass}{scrbook}% Name of class this one is based on
+
+% If option 'language' is not given at all, use initialization 'english' as a fallback.
+% If it is called without a value, use default (or throw error of no default given)
+% This method was chosen to have the language available in a macro, so it may be passed
+% to polyglossia.
+% This approach messes with the forwarding of the language and raises a warning
+% 'Unused global options'; we can probably ignore that for now 
+% (https://tex.stackexchange.com/a/278172/120853).
+\RequirePackage{kvoptions}
+    %[default]{language} % If no default entered: option requires a value:
+    \DeclareStringOption[english]{language}
+    \ProcessKeyvalOptions*
+
+\PassOptionsToClass{%
+    \cookbook@language,% Scheme: \filename@keyoption
+    twoside,% For printing two-sided documents
+    % 'List of (Tables, Figures, ...)' gets pushed down one hierarchical level:
+    % listof=leveldown,
+    listof=totoc,% All registered Lists of XYZ to Table of Contents
+    bibliography=totoc,
+    chapterprefix=true,% Print 'Chapter' etc. label in front of number
+    open=right,% Open new Chapters on recto pages
+    numbers=noenddot,% https://tex.stackexchange.com/a/102305/120853
+}{\@baseclass}
+
+% Bundle 'a5' to not only have a5paper but also decrease font size.
+% https://tex.stackexchange.com/a/418947/120853
+% https://tex.stackexchange.com/a/27149/120853
+\DeclareOption{a5}{%
+    % Not forwarded to typearea package if passed as class option: do it manually here:
+    \PassOptionsToPackage{paper=a5}{typearea}
+    \PassOptionsToClass{fontsize=10pt}{\@baseclass}%
+}%
+
+% Forward all other options given to \documentclass[] to base class:
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{\@baseclass}}
+
+\ProcessOptions\relax% Execute these options
+
+\LoadClass{\@baseclass}% Finally, load the base class
+
+\RequirePackage[\cookbook@language]{tracklang}% Language Tracking
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Typography and Misc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{cookbook-translations}
+
+\RequirePackage{scrhack}% Fixes for packages incompatible with KOMA features
+
+\RequirePackage{import}% Relative path imports
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Tweaks and improvements for amsmath; also loads amsmath.
+% Needs to be loaded before unicode-math!
+\RequirePackage{mathtools}
+    % We want to be cool, so standard parantheses don't cut it:
+    \newtagform{brackets}{[}{]}
+    \usetagform{brackets}
+
+    % Allow multi-line environments to break across pages.
+    % While it makes sense to disallow it, not doing so can produce big spacing issues.
+    % Usually, any such environment will require manual attention.
+    % Number from 1 to 4 as optional argument:
+    % [1]: allow pagebreaks, but avoid as much as possible.
+    % [4]: maximum permissiveness
+    \allowdisplaybreaks[2]
+
+    % Automatic macro for delimiters (parentheses, brackets, ...)
+    % Using the starred variant of the created command (like \parens*{<content>})
+    % also scales the delimiters automatically, using \left and \right.
+    \DeclarePairedDelimiter{\parens}{(}{)}
+    \DeclarePairedDelimiter{\brackets}{[}{]}
+    \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}% Absolute value
+
+% For a 'cases' environment that also supports equation numbering,
+% https://tex.stackexchange.com/a/180910/120853
+\RequirePackage{empheq}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colour
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Load this before unicode-math font specifications to make colors available there
+\RequirePackage[x11names]{xcolor}% x11names provides some usable default names
+    % Shades of grey (we don't need 50 though)
+    % This is nice to have consistent color shading.
+    \colorlet{g1}{black!70}
+    \colorlet{g2}{black!55}
+    \colorlet{g3}{black!40}
+    \colorlet{g4}{black!20}
+    \colorlet{g5}{black!10}
+    \colorlet{g6}{black!05}
+
+    % Different fluids/materials.
+    \definecolor{Glass}{RGB}{170, 238, 255}% Very light blue
+    \definecolor{Air}{RGB}{213, 246, 255}% Light blue
+    \definecolor{LightFluid}{RGB}{148, 224, 255}
+    \definecolor{MediumFluid}{RGB}{135, 178, 232}
+    \definecolor{DarkFluid}{RGB}{119, 151, 197}
+    \definecolor{HotFluid}{RGB}{255, 128, 128}% 255/128/128 is same as 'red!50'
+
+    % Dark blue link color:
+    \definecolor{darklink}{HTML}{282368}%
+
+    % From colorbrewer's RdYlBu: from red (1) to blue (6)
+    \definecolor{rdylbu1}{RGB}{215,  48,  39}%
+    \definecolor{rdylbu2}{RGB}{252, 141,  89}%
+    \definecolor{rdylbu3}{RGB}{254, 224, 144}%
+    \definecolor{rdylbu4}{RGB}{224, 243, 248}%
+    \definecolor{rdylbu5}{RGB}{145, 191, 219}%
+    \definecolor{rdylbu6}{RGB}{ 69, 117, 180}%
+
+    % From colorbrewer's Set2 for qualitative data/color discernibility
+    \definecolor{Set2A}{RGB}{102, 194, 165}%
+    \definecolor{Set2B}{RGB}{252, 141,  98}%
+    \definecolor{Set2C}{RGB}{141, 160, 203}%
+    \definecolor{Set2D}{RGB}{231, 138, 195}%
+    \definecolor{Set2E}{RGB}{166, 216,  84}%
+    \definecolor{Set2F}{RGB}{255, 217,  47}%
+    \definecolor{Set2G}{RGB}{229, 196, 148}%
+    \definecolor{Set2H}{RGB}{179, 179, 179}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[
+    warnings-off={
+        % Unicode overwrites colon-commands but uses over/underbracket from mathtools
+        % and warns us; suppress this:
+        mathtools-colon,%
+        mathtools-overbracket,%
+    }
+]{unicode-math}% Builds onto fontspec and loads it automatically
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% By explicitly including the actual font files in the project and also
+% calling them explicitly, we ensure tight compatibility across machines and
+% time (as opposed to relying on them being installed as system fonts for every user).
+% The configuration has been confirmed to work with MiKTeX and TeXLive on
+% Windows as well as TeXLive on Linux (Debian).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Source: https://ctan.org/texarchive/fonts/tex-gyre/opentype
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\defaultfontfeatures{% Options common for all fonts
+    Extension=.otf,
+}
+
+\setmainfont[%
+    Path=fonts/roman/,
+    Numbers=Lowercase,% Hanging/OldStyle numbers through Lowercase numbers
+    % Use asterisk-notation as a placeholder for what it says in brackets {} later:
+    UprightFont=*-regular,%
+    BoldFont=*-bold,%
+    ItalicFont=*-italic,%
+    BoldItalicFont=*-bolditalic,%
+    % Color=Orange2,% Toggle color for debugging (should be xcolor name)
+]{texgyrepagella}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Source: https://fonts.google.com/specimen/Inconsolata
+% (Consolas is considered better but is not free (?))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setmonofont[%
+    Path=fonts/mono/,
+    Extension=.ttf,%
+    Scale=MatchLowercase,% Prettier when using inline-code alongside our main font
+    UprightFont=*-regular,%
+    BoldFont=*-bold,%
+    % Color=DodgerBlue3,% Toggle color for debugging (should be xcolor name)
+]{inconsolata}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Source: https://www.exljbris.com/fontinsans.html
+% Viable alternative: https://fonts.google.com/specimen/Fira+Sans
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setsansfont[%
+    Path=fonts/sans/,
+    UprightFont=*_R_45b,%
+    BoldFont=*_B_45b,%
+    ItalicFont=*_I_45b,%
+    BoldItalicFont=*_BI_45b,%
+    SmallCapsFont=*_SC_45b,%
+    % Color=Red3,% Toggle color for debugging (should be xcolor name)
+]{Fontin_Sans}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Source: https://ctan.org/texarchive/fonts/tex-gyre-math/opentype
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setmathfont[%
+    Path=fonts/roman/math/,
+    %Set math-font-commands to new versions; use \symbf{} instead of \mathbf{} etc:
+    mathrm=sym,%
+    mathit=sym,%
+    mathsf=sym,%
+    mathbf=sym,%
+    mathtt=sym,%
+    % 'tpgl': 'TexGyrePagellaLining'.
+    % This 'NFSS' style is required for \fontfamily{nfss-code}\selectfont to work,
+    % e.g. in package chemformula
+    NFSSFamily=tgpl,%
+    % Color=Green4,% Toggle color for debugging (should be xcolor name)
+]{texgyrepagella-math}%
+
+% Provide a new font family for siunitx to work.
+% See: https://tex.stackexchange.com/a/468031/120853.
+% \newfontfamily is used similarly to \setmainfont etc,
+% see: https://tex.stackexchange.com/a/12568/120853
+\newfontfamily{\unitnumberfont}[
+    Path=fonts/roman/,
+    % New font family for typesetting units.
+    % Required since otherwise, numbers typeset with \SI/\num etc. from siunitx
+    % might be hanging if that feature is turned on in the main font (OldStyle numbers).
+    % To ensure these physical numbers are always upright, set Numbers:
+    Numbers=Uppercase,
+    UprightFont=*-regular,%
+    BoldFont=*-bold,%
+    ItalicFont=*-italic,%
+    BoldItalicFont=*-bolditalic,%
+    % Color=LightCyan4,% Toggle color for debugging (should be xcolor name)
+]{texgyrepagella}%
+
+% See https://tex.stackexchange.com/a/176322/120853
+% FontAwesome simply calls the FontAwesome font family, so provide a path to our
+% provided font file here.
+\defaultfontfeatures[FontAwesome]{%
+    Path=fonts/other/,
+}
+\RequirePackage{fontawesome}% High-quality Unicode vector web symbols
+
+% Wrapper for "i.e.", "e.g.", "c.f.", "etc.", etc.
+% Call this command as "The animals, \iecfeg{e.g.}\ an elephant, are..."
+% to get a small space after the ending period.
+% We do not define dedicated commands here (like \eg or \etc) to print that stuff
+% automatically, since there are way too many exceptions and caveats.
+% Such macros are not worth it because the requirements change too much from use to use
+%  (different languages, capitalisation, ending dot if abbreviation is at end of
+% sentence, ...).
+% It is left to the user to do the specifics.
+% This macro just makes sure it is all in italics.
+\newcommand*{\iecfeg}[1]{\textit{#1}}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% System Information Banner
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Provides \hologo and \Hologo to typeset various logos, like the LuaLaTeX logo.
+\RequirePackage{hologo}
+
+% Using fontspec, this document is incompatible with anything but XeLaTeX/LuaLaTeX.
+% LuaLaTeX can grab additional memory as needed, therefore no issues with tikz and no
+% need to tikzexternalize (!).
+% Further, contour-package and XeLaTeX are strictly incompatible (LuaLaTeX works).
+% Therefore, only ever use LuaLaTeX anyway.
+
+\RequirePackage{xstring}% String manipulation macros
+
+% Print only what occurs after 'This is ' and store in macro given in brackets at end.
+% luatexbanner is provided by luatex engine, but prints 'This is luatex XYX' usually.
+% https://tex.stackexchange.com/a/394043/120853
+\StrBehind*{\luatexbanner}{This is }[\shortbanner]
+
+% Take input and substitute strings; here: make plain LuaTeX string into pretty logo.
+% StrSubstitue has no starred variant, therefore dekotenize.
+% https://tex.stackexchange.com/a/350583/120853
+\StrSubstitute{\shortbanner}{\detokenize{LuaTeX}}{\hologo{LuaTeX}}[\prettybanner]
+
+% These are inserted into the PDF metadata.
+% In the build process, the defaults should be replaced by the respective,
+% current values (see gitlab-ci.yml / your CI script for this)
+\newcommand*{\GitVersion}{n.a.}
+\newcommand*{\GitShorthash}{n.a.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% KOMA Layout, Sectioning etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% label, e.g. 'Chapter', appearing before the chapter number:
+\addtokomafont{chapterprefix}{\raggedleft}
+
+\renewcommand*{\chapterformat}{%
+    \color{g3}% g3 is a shade of grey
+    %
+    % chapappifchapterprefix{addtext} checks if 'chapterprefix=true' is active,
+    % then prints 'Chapter' or 'Appendix' in front of number,
+    % followed by more text 'addtext':
+    \chapappifchapterprefix{~}% ~ is an unbreakable space character
+    %
+    % Autodot automates the generation of a dot/period, like \thechapter\autodot.
+    % Leave out for no dot.
+    \scalebox{4.5}{\thechapter}
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titlepage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% These exist already, overwrite:
+\setkomafont{title}{\sffamily\bfseries\Huge}
+\setkomafont{subtitle}{\itshape}
+\setkomafont{author}{\scshape\Large}
+\setkomafont{date}{\normalfont\normalsize\sffamily}
+\setkomafont{publishers}{\scshape}
+
+% New font types:
+% One same line as date, so should look the same; inherit style:
+\newkomafont{documenttype}{\usekomafont{date}}
+
+\renewcommand{\maketitle}{%
+    \begin{titlepage}
+        \hfill%
+        %
+        % 2nd optional argument is height, required for \vfill etc. to work
+        \begin{minipage}[b][1\textheight]{0.05\textwidth}%
+            \color{black}\rule{0.15em}{\textheight}% Vertical line
+            \hfill%
+        \end{minipage}% This comment char is important to suppress linebreak
+        %
+        \begin{minipage}[b][1\textheight]{0.75\textwidth}
+            \vspace{2\baselineskip}
+            {\usekomafont{author}
+                % Tabular enables \and and \\ syntax
+                \begin{tabular}[t]{@{}l@{}}%
+                    \@author
+                \end{tabular}
+            }\par
+            \vspace{1.5\baselineskip}
+            \begin{spacing}{1.1}% In case of multi-line titles, more relaxed spacing
+                \usekomafont{title}\raggedright\@title
+            \end{spacing}
+            \hrule
+            \vspace{0.8\baselineskip}
+            {\usekomafont{documenttype}\@subtitle}
+            \hfill
+            {\usekomafont{date}\@date}\par
+            \vfill
+            {\usekomafont{publishers}
+            \begin{tabular}[t]{@{}l@{}}%
+                \@publishers
+             \end{tabular}
+            }\par
+            \vspace{0.2ex}% Also required for \vfill as something to 'fill against'
+        \end{minipage}
+    \end{titlepage}
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% tocbasic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dynamic width of number column in LoF/LoT etc (numsep + width of longest entry).
+% 'tocline' is the (dynamic) default style.
+\DeclareTOCStyleEntry[dynnumwidth=true]{tocline}{figure}
+\DeclareTOCStyleEntry[dynnumwidth=true]{tocline}{table}
+
+% Declare a new list of contents, with the file suffix in brackets:
+\DeclareNewTOC[%
+    type=example,
+    listname={\TransListOfExamples{}},
+]{loe}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SCRLayer for page makeup (header/footer etc.)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[automark]{scrlayer-scrpage}% Automatically mark
+
+\clearscrheadfoot% Reset defaults
+
+% Declare new length (acting as a height) for the vertical bar in the header:
+\newlength{\headerrulelength}
+% Increase height of rule here; KOMA Script will complain, no idea how to fix
+\setlength{\headerrulelength}{3ex}
+
+% New command for the vertical rule, with height as specified by the new length above:
+\newcommand*{\headerrule}{%
+    \rule[-1ex]{0.1em}{\headerrulelength}%
+}%
+
+% Define headers:
+\lehead{% Left, even head
+    \llap{%
+        \pagemark\enskip\headerrule%
+    }%
+    \enskip\headmark%
+}%
+
+\rohead{% Right, odd head
+    \headmark\enskip%
+    \rlap{%
+        \headerrule\enskip\pagemark%
+    }%
+}%
+
+% https://tex.stackexchange.com/q/299125/120853:
+\renewcommand*{\chaptermarkformat}{\thechapter\enskip}%
+
+\addtokomafont{pagehead}{\sffamily\itshape\footnotesize}%
+\addtokomafont{pagenumber}{\sffamily\bfseries\footnotesize}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Deliberately blank pages with message
+% Occurs if new chapter starts (opens right) but previous chapter ended on
+% a recto (right) page itself.
+% The intermediate left page will be blank; leave a message that this is intentional.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand*{\blankpage}{% https://tex.stackexchange.com/a/205536/120853
+    \par\vspace*{\fill}%
+    \begin{center}
+        \textcolor{g2}{%
+            \TransBlankPage{}% See translations file
+        }%
+    \end{center}
+}%
+
+\DeclareNewLayer[% Create new layer under some name
+    foreground,%
+    textarea,%
+    contents=\blankpage,%
+]{blankpage.fg}
+
+\DeclarePageStyleByLayers{blank}{blankpage.fg}% Make layer available as pagestyle
+\KOMAoptions{cleardoublepage=blank}% Use pagestyle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Typesetting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Using 'shortcuts' package option, do e.g. 'fast\-/paced' to get a breakable
+% 'fast-pace' word in print.
+% Otherwise, LaTeX does not hyphenate/linebreak words that already come with a hyphen,
+% since that could be ambiguous
+\RequirePackage[shortcuts]{extdash}
+
+\RequirePackage{microtype}% Advanced typesetting for kerning etc.
+
+% Dummy text in readable English (Other languages are also detected)
+% Provides a more realistic preview than Lorem Ipsum
+\RequirePackage{blindtext}
+
+\RequirePackage{pdflscape}% Pages in landscape format
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Language Support
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{polyglossia}% Language rules. Replacement for babel in lualatex
+    \setdefaultlanguage{\cookbook@language}
+
+% Proper quotation support, mainly through \enquote
+\RequirePackage{csquotes}
+    % Add itshape to beginning (beg) of display quote environments:
+    \renewcommand*{\mkbegdispquote}[2]{\itshape}
+
+\RequirePackage[inline]{enumitem}% Custom list environments
+    \setlist{noitemsep}% No vertical spacing in lists
+    \setlist[1]{labelindent=\parindent}% Indent lists by paragraph indent
+    % Refer to unimath_symbols.pdf for source of \smblksquare etc.:
+    % https://ctan.org/texarchive/macros/latex/contrib/unicode-math
+    \setlist[itemize,1]{label=\smblksquare}%
+    \setlist[enumerate]{font=\sffamily\bfseries}
+
+    % For compact itemize lists within table cells:
+    \newlist{tabitemize}{itemize}{1}% Second argument is max. depth
+    \setlist[tabitemize]{%
+        label=\smblksquare,%
+        nosep,% nosep kills all vertical spacing
+        align=parleft,
+        leftmargin=*,
+        % https://tex.stackexchange.com/a/443573/120853,
+        % but before=\compress didn't work:
+        after=\vspace{-\baselineskip},
+        before=\vspace{-0.75\baselineskip},% Hacky manual parameter
+    }
+
+    % For compact enumerations lists within table cells:
+    \newlist{tabenum}{enumerate}{1}% Second argument is max. depth
+    \setlist[tabenum]{
+        label={\arabic*.},
+        font=\sffamily\bfseries,
+        leftmargin=*,
+        nosep,% nosep kills all vertical spacing
+        align=parleft,
+        % https://tex.stackexchange.com/a/443573/120853,
+        % but before=\compress didn't work:
+        after=\vspace{-\baselineskip},
+        before=\vspace{-0.75\baselineskip},% Hacky manual parameter
+    }
+
+    % An enumerated description list:
+    % https://tex.stackexchange.com/a/30035/120853
+    \newcounter{descriptcount}
+    \newlist{enumdescript}{description}{2}% Derive from existing description env.
+    \setlist[enumdescript, 1]{% Set first level action
+        before={%
+            \setcounter{descriptcount}{0}%
+            % \renewcommand*\thedescriptcount{\alph{descriptcount}}%
+        },
+        font={\bfseries\stepcounter{descriptcount}\thedescriptcount.~}
+    }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Floats
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Does \centering automatically, provides side captions (fcapside) and much more.
+\RequirePackage{floatrow}
+
+\floatsetup{footposition=bottom}% For all floats
+
+\floatsetup[longtable]{LTcapwidth=table}% https://tex.stackexchange.com/a/345772/120853
+
+\floatsetup[table]{%
+    style=plaintop,% Always above, no matter where \caption is called
+    footnoterule=none,%
+    footskip=.35\skip\footins,%
+}%
+
+\floatsetup[figure]{%
+    capbesideposition=right,%
+    capbesidesep=quad,%
+}%
+
+\floatsetup[subfigure]{style=plain}% Plain style, so no rules
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Float Captions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{caption}
+
+% Will be printed between 'Figure/Table/... XYZ' and the caption text:
+\DeclareCaptionLabelSeparator{slash}{\ /\ }% `\ ' (backslash+space) is a short space
+
+\DeclareCaptionFont{ftfont}{%
+    \scriptsize%
+    \color{g3}%
+    \hypersetup{hidelinks}%
+    \sffamily\raggedleft%
+}%
+
+\captionsetup{% All captions
+    format=plain,%
+    textformat=period,% Always print period at end
+    font=small,% All fonts
+    labelfont={sf,bf},%
+    labelsep=slash,%
+    labelformat=simple,% Just Name/Number, no period or similar
+    indention=1em,%
+}%
+
+\captionsetup[floatfoot]{%
+    footfont=ftfont,% https://tex.stackexchange.com/q/9547/120853
+}%
+
+\captionsetup[capbesidefigure]{
+    % When using sidecaptions, the linewidth can be rather small and awkward breaks and
+    % many underfull hboxes occur. Therefore, raggedright.
+    justification=raggedright,
+}
+
+\captionsetup[subfigure]{%
+    labelformat=simple,% 'parens' uses parantheses, 'brace' just the right one
+    labelsep=slash,%
+    labelfont={sf,bf},%
+    list=off,% list=off removes subfigures from LoF
+}%
+
+\captionsetup[subtable]{%
+    labelformat=simple,% 'parens' uses parantheses, 'brace' just the right one
+    labelsep=slash,%
+    labelfont={sf,bf},%
+    list=off,% list=off removes subfigures from LoF
+}%
+
+\captionsetup[lstlisting]{%
+    width={\dimexpr1\linewidth-0.24\linewidth},% Manual, a bit hacky
+}%
+
+% Change counter from Arabic number to letter:
+\renewcommand*{\theContinuedFloat}{\alph{ContinuedFloat}}
+
+% Make this new length and indent, same length as regular caption indent:
+\newlength{\floatfootruleindent}
+\setlength{\floatfootruleindent}{\caption@indent}% Set the new length
+
+% A bit hacky; introduce a rule underneath caption if \floatfoot is called:
+\renewcommand*{\floatfootskip}{2pt\hspace{\floatfootruleindent}\hrulefill}%
+
+\RequirePackage{subcaption}% For subfloats
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[% Default back-end: biber
+    % short style is 'alphabetic' (like [AB99]);
+    % longer: 'authoryear' (like (Einstein, 1940)):
+    style=verbose,
+    %
+    sortcites=true,% Apply what is specified in sorting=
+    % Introduce back references in bibliography:
+    % https://tex.stackexchange.com/a/211631/120853
+    % Do not use hyperref for this
+    backref,
+    url=false,% Still prints URL for @online, but nowhere else
+    doi=false,%
+    isbn=false,%
+]{biblatex}%
+
+\addbibresource{bib/bibliography.bib}% *.bib file goes here
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Arrays / Tables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{tabu}% For longtabu in the glossary
+
+\RequirePackage{array}
+    \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}% Vert.+Hor. centered cells
+
+    % A command to have a cell with vertical text as a multirow:
+    \newcommand*{\multirotatecell}[2]{%
+        \multirow{#1}{*}{%
+            \begin{tabular}{@{}c@{}}%
+                \rotatebox[origin=c]{90}{#2}%
+            \end{tabular}%
+        }%
+    }%
+
+\RequirePackage{multirow}% Cells spanning multiple rows (like multicolumn)
+
+\RequirePackage{booktabs}% Pretty tables; an absolute must
+
+% More vertical stretch for more relaxed visuals in all tables (global setting)
+\renewcommand*{\arraystretch}{1.3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Other
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Replaces datetime; use regional date format from document language
+\RequirePackage[useregional]{datetime2}
+
+\RequirePackage{xifthen}% For \isempty logical tests
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Visuals, Graphics, Drawing etc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{cancel}% Cancel out math in equations
+
+\RequirePackage{setspace}% Line spacing, used for title page
+    % To achieve a reasonable 'text color', i.e. 'filled-ness' of the text,
+    % adjust line spacing.
+    % Recommendation for Palatino fonts (TeX Gyre Pagella is a Palatino clone) is a
+    % factor of 1.05.
+    % Discussion: https://tex.stackexchange.com/q/31064/120853
+    % For German, we might even want to go higher to allow space for the many capital
+    % letters.
+    % Also note that inline-math will look terrible at too low leading/linespread
+    \linespread{1.05}
+    \KOMAoption{singlespacing}{true}% Do not apply changed linespread to header/footer
+
+% Print a contour around letters, e.g. black text with a white border on some noisy
+% background, so that text remains legible.
+% NOT COMPATIBLE WITH XELATEX! Requires pdflatex or lualatex (our case)
+\RequirePackage[outline]{contour}
+    \contourlength{0.12em}
+
+    \newcommand*{\ctrw}[1]{% Black text, white contour
+        \hypersetup{hidelinks}% Hide links, which might be colored
+        \contour{white}{\textcolor{black}{#1}}%
+    }%
+
+    \newcommand*{\ctrb}[1]{% White text, black contour
+        \hypersetup{hidelinks}% Hide links, which might be colored
+        \contour{black}{\textcolor{white}{#1}}%
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graphics + Path
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{graphicx}
+    % Set a global standard path, so don't specify ourselves each time;
+    % only do bitmaps here, vectors are handled by the svg package and its path specs
+    \graphicspath{{images/bitmaps/}}
+
+\RequirePackage{svg}
+    % See also:
+    % https://tex.stackexchange.com/a/158612/120853.
+    % pdftexcmds package etc. no longer seems necessary.
+    % svg package documentation states that it is a dependency, but done automatically.
+    % https://tex.stackexchange.com/a/74693/120853
+
+    % Build failed on my system due to lack of the 'canberra' module,
+    % see for a fix: https://askubuntu.com/a/872397/978477
+
+    % Running the document to generate the PDF and PDF_TEX file from the original SVG
+    % will require SHELL ESCAPE (--shell-escape), aka elevation.
+    % However, after the auxiliary images have been created, they only need to be input;
+    % shell-escape will no longer be required.
+    \svgpath{images/vectors/}% Analogous to \graphicspath{}
+    \svgsetup{%
+        inkscapepath=svgsubdir,% Put into subdirectory of where original SVG was found
+        % In most cases, we include SVGs that contain no text, then add it in a
+        % tikzpicture overlay. Therefore, don't generate *.pdf_tex file.
+        % Toggle this back to true wherever needed, on a per-file basis
+        inkscapelatex=false,
+    }
+
+    % When placing nodes over included SVGs using Tikz,
+    % we require some help to debug the positions:
+    \newcommand*{\debugtikzsvg}{%
+        % This has to be evoked within a TikZ scope of:
+        % `\begin{scope}[x={(image.south east)},y={(image.north west)}]`
+        % The image we invoke the grid "on top of" needs to be labelled "image":
+        \draw[help lines, xstep=0.02,ystep=0.02, opacity=0.5]
+            (image.south west) grid (image.north east);
+        \draw[gray, thick, xstep=0.1,ystep=0.1, opacity=0.8]
+            (image.south west) grid (image.north east);
+        %
+        \foreach \posfraction in {%
+            0, 0.1, ...,1%
+        }{%
+            \foreach \startpoint/\endpoint/\nodeorientation in {% 2D-grid
+                south west/south east/below,%
+                north west/north east/above,%
+                south east/north east/right,%
+                south west/north west/left%
+            }{
+                \node[\nodeorientation, opacity=0.5]
+                    at ($(image.\startpoint)!\posfraction!(image.\endpoint)$)
+                    {%
+                        \pgfmathparse{int(\posfraction*10)}% Round result
+                        \num{\pgfmathresult}%
+                    };
+            }%
+        }%
+    }%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Tikz + Plots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{pgfplots}% Also loads Tikz
+
+% For advanced table calcs, e.g. 'y expr' to mathematically process input data:
+\RequirePackage{pgfplotstable}
+
+\RequirePackage[edges]{forest}% Comprehensive trees
+
+\RequirePackage{tikz-3dplot}
+
+% Only use libraries as needed to keep compilation times low
+\usetikzlibrary{%
+    positioning,% Relative positioning etc.
+    calc,% Calculate distances, coordinates etc.
+    shapes, % For cross out
+    backgrounds,% Draw on background layer
+    fit,% Fit new node around existing coordinates
+    decorations,
+    arrows,
+    arrows.spaced,
+    intersections,
+    trees,
+    circuits.ee.IEC,% Electrical engineering circuits lib
+    patterns,
+    3d,
+    tikzmark,% Marks/coordinates at arbitrary positions
+}%
+\usepgfplotslibrary{%
+    colorbrewer,%
+    units,%
+    dateplot,
+    fillbetween,
+    groupplots,
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colour Cycle for plots
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pgfplotscreateplotcyclelist{mod RdYlBu3}{% Modify existing colorbrewer
+    {rdylbu2},
+    {black!50},
+    {rdylbu5}% No comma or space here!
+}%
+
+\pgfplotscreateplotcyclelist{mod mark list}{% Modify predefined to start without mark
+    every mark/.append style={solid,fill=\pgfplotsmarklistfill}\\
+    every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=*\\
+    every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=square*\\
+    every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=triangle*\\
+    every mark/.append style={solid},mark=star\\
+    every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=diamond*\\
+    every mark/.append style={solid,fill=\pgfplotsmarklistfill!40},mark=otimes*\\
+    every mark/.append style={solid},mark=|\\
+    every mark/.append style={solid,fill=\pgfplotsmarklistfill},mark=pentagon*\\
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Global plot settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pgfplotstableset{col sep=comma}% If ALL files/tables are comma-separated
+
+\pgfplotsset{%
+    % Version this document was originally created with;
+    % see also https://tex.stackexchange.com/a/81912/120853
+    % Important for reproducibility
+    compat=1.16,
+    % In case nodes reach out of plot area, dont clip them off.
+    % See: https://tex.stackexchange.com/a/127904/120853 and
+    % https://tex.stackexchange.com/a/311194/120853
+    clip mode=individual,
+    label style={font=\small},% https://tex.stackexchange.com/a/300673/120853
+    tick label style={%
+        font=\small,%
+        /pgf/number format/1000 sep={\,}% Small space instead of comma
+    },
+    cycle multi list={%
+        mod mark list\nextlist% Just in case; likely never reached
+        linestyles*\nextlist
+        % Iterate through last one first; if at end,
+        % start anew using next in parent (linestyles *):
+        mod RdYlBu3%
+    },%
+    colormap/viridis,% For 3D/surf plots
+    legend style={%
+        at={(0.5,1.05)},% Center hor. (0.5), slightly out of drawing(>1 vert.)
+        anchor=south,%
+        legend columns=-1,% -1 means only rows, as many columns as required
+        font=\footnotesize,%
+        draw=none,% Do not draw box
+        fill=none,% No white fill. Important for gray backgrounds
+    },%
+    % These comment lines (visual separation) are super important.
+    % Empty lines will throw errors here!
+    unit code/.code 2 args={\si{#1#2}},% Use siunitx for units library
+    unit markings={slash space},% The proper way... apparently?
+    %
+    % Fix micro unit display, see https://tex.stackexchange.com/a/224574/120853:
+    x SI prefix/micro/.style={/pgfplots/axis base prefix={axis x base 6 prefix \micro}},
+    y SI prefix/micro/.style={/pgfplots/axis base prefix={axis y base 6 prefix \micro}},
+    z SI prefix/micro/.style={/pgfplots/axis base prefix={axis z base 6 prefix \micro}},
+    %
+    % Plot styles:
+    regularplot/.style={% A broadly usable, regular plot
+        ultra thick,
+        axis line style=thick,
+        ymajorgrids=true,
+        xmajorgrids=true,
+        grid style=dashed,
+        axis lines=left,
+        % scale only axis,% If off, labels are taken into account for size calculations
+        ytick align=outside,% Puts ticks outside the plot itself
+        xtick align=outside,%
+        % Won't work if enlarge limits are invoked before 'axis lines left':
+        enlargelimits=0.05,
+    },%
+    plainplot/.style={%
+        % A clean, simple plot when numerical values and labels don't matter
+        regularplot,
+        xmajorgrids=false,
+        ymajorgrids=false,
+        ticks=none,% No ticks with numbers
+    },
+    % Unfortunately, decorations lib is relatively verbose:
+    arrowplot/.style={
+        decoration={
+            markings,
+            mark=at position 0.25 with {\arrow{#1}},
+            mark=at position 0.5 with {\arrow{#1}},
+            mark=at position 0.75 with {\arrow{#1}},
+        },
+        postaction=decorate,
+    },
+    %
+    log x ticks with fixed point/.style={%
+        % Logarithmic plot, but with linear labels instead of scientific notation
+        % (10^2 becomes 100 etc.)
+        % https://tex.stackexchange.com/a/139084/120853
+        xticklabel={
+            \pgfkeys{/pgf/fpu=true}
+            \pgfmathparse{exp(\tick)}%
+            \pgfmathprintnumber[fixed relative, precision=3]{\pgfmathresult}
+            \pgfkeys{/pgf/fpu=false}
+        }
+    },
+    %
+    log y ticks with fixed point/.style={
+        yticklabel={
+            \pgfkeys{/pgf/fpu=true}
+            \pgfmathparse{exp(\tick)}%
+            \pgfmathprintnumber[fixed relative, precision=3]{\pgfmathresult}
+            \pgfkeys{/pgf/fpu=false}
+        }
+    }
+}
+
+% Required in \tikset body for node placing at x style.
+% Requires intersection lib
+% https://tex.stackexchange.com/a/93968/120853
+\def\parsenode[#1]#2\pgf@nil{%
+    \tikzset{label node/.style={#1}}
+    \def\nodetext{#2}
+}
+
+\tikzset{%
+    >=stealth',% Global arrow style
+    symmetrycross/.style={%
+        % Style for a center-cross to mark symmetry in technical drawings.
+        % Styles have one argument per default. Use it for size,
+        % but also provide a default
+        draw,
+        cross out,% From shapes library
+        thin,
+        dashdotted,
+        rotate=45,
+        minimum size=#1,% This is an argument
+    },
+    symmetrycross/.default={2em},
+    pipecrosssection/.style={
+        circle,
+        minimum size=#1,
+        draw=black!90!red,
+        ultra thick,% Simulate thick pipe around it
+        fill=MediumFluid
+    },
+    pipecrosssection/.default={0.5em},
+    arrowlabel/.style={ % Style for labels along arrows
+        pos=#1,
+        text=black,% Overwrite in case encapsulating draw command is white etc.
+        draw=none,% Do not draw border
+        fill=white,
+        inner sep=1.5pt,
+        rounded corners,
+    },
+    arrowlabel/.default={0.5}, % Default for position: middle
+    wall/.style={ % For all walls, e.g. in crosssections of pipes, ...
+        draw,
+        thick,
+        fill=#1,
+        line join=round,
+        rounded corners=0.5,
+    },
+    wall/.default={g5},
+    fluid/.style={ % For all fluids
+        fill=#1,
+    },
+    fluid/.default={MediumFluid},
+    flowarrow/.style 2 args={% A style for squiggly arrows, for flows:
+        ->,
+        line join=round,
+        thick,
+        dashed,
+        decorate,
+        decoration={
+            snake, % alternatives: snake, zigzag
+            segment length=#1,
+            amplitude=#2,
+            % Stop with decoration at start and end by the given length and just draw
+            % a line:
+            pre=lineto,
+            post=lineto,
+            pre length=1em,
+            post length=1em
+        },
+    },
+    annotationarrow/.style={%
+        % A style intended to point a line with a thick black dot at its end onto
+        % elements to give further explanations.
+        % Since we shorten the line START, any line using this style should originate
+        % from the place where the shortening is supposed to take place.
+        % Further explanation here:
+        % https://tex.stackexchange.com/a/115268/120853
+        % Simply call -* (or any other similar command) after annoationarrow if the
+        % direction should be inverted.
+        *-,
+        shorten <=-(1.8pt + 1.4\pgflinewidth),%
+    },
+    flowarrow/.default={3em}{2em},% {<INVERSE FREQUENCY>}{<AMPLITUDE>}
+    origindot/.style={ % A simple small dot for coordinate starts/origins
+        circle,
+        fill=#1,
+        inner sep=0pt,
+        minimum width=0.4em
+    },
+    origindot/.default={black},
+    add node at x/.style 2 args={% https://tex.stackexchange.com/a/93968/120853
+        % Add node on a plot by just specifying its x-position.
+        % The corresponding y/value is computed automatically!
+        name path global=plot line,
+        /pgfplots/execute at end plot visualization/.append={
+                \begingroup
+                \@ifnextchar[{\parsenode}{\parsenode[]}#2\pgf@nil
+            \path [name path global=position line #1-1]
+                ({axis cs:#1,0}|-{rel axis cs:0,0}) --
+                ({axis cs:#1,0}|-{rel axis cs:0,1});
+            \path [xshift=1pt, name path global=position line #1-2]
+                ({axis cs:#1,0}|-{rel axis cs:0,0}) --
+                ({axis cs:#1,0}|-{rel axis cs:0,1});
+            \path [
+                name intersections={
+                    of={plot line and position line #1-1},
+                    name=left intersection
+                },
+                name intersections={
+                    of={plot line and position line #1-2},
+                    name=right intersection
+                },
+                label node/.append style={pos=1}
+            ] (left intersection-1) -- (right intersection-1)
+            node [label node]{\nodetext};
+            \endgroup
+        }
+    },
+    shorten <>/.style={% Allow shortening of both ends simultaneously
+        shorten >=#1,
+        shorten <=#1,
+    },
+    circlednum/.style={% Used for a custom circled number command
+        shape=circle,
+        draw,
+        inner sep=2pt,
+        fill=white
+    }%,
+%     % A reusable little 'pic' for a common radiator.
+%     % Further down, we also declare a 'shape' for a radiator. A 'shape' is a node shape with anchors etc. and intended to be used to connect nodes together, like in a circuit diagram.
+%     % A 'pic' is really just a reusable picture that can be put anywhere, but it (by the package author) not intended to be connected etc.
+%     % This pic is prettier than the shape below. The pic should be used for large radiator images where more detail is desired.
+%     radiator/.pic={
+%         \tikzset{%
+%             every path/.style={
+%                     draw,
+%                     thick,
+%                     line join=round,
+%                     line cap=round,% End of lines
+%                     fill=g5,
+%                     pic actions,% Whatever is used in \pic[<drawing options>], e.g. dashed, is propagated to this drawing
+%                 },
+%         }
+%         % Base measurements. Default unit is centimeter
+%         \pgfmathsetmacro{\radiatorheight}{2}
+%         \pgfmathsetmacro{\radiatorwidth}{3}
+%         \pgfmathsetmacro{\radiatordepth}{0.5}
+
+%         % Right surface:
+%         \begin{scope}[canvas is yz plane at x=\radiatorwidth]
+%             \draw[fill=g4] (0,0) rectangle (\radiatorheight,\radiatordepth);
+
+%             % Fake the thermostat a bit:
+%             \draw[fill=g3] (0.8*\radiatorheight,0.5*\radiatordepth) circle (0.2*\radiatordepth);
+
+%             % Generate some coordinates in analogy to regular tikz naming convetions:
+%             \foreach \yfrac/\zfrac/\coordname in {%
+%                     0.5/0.5/center,%
+%                     0/0.5/south,%
+%                     1/0.5/north,%
+%                     0.5/0/east,
+%                     0.5/1/west,
+%                     0/0/south east,%
+%                     0/1/south west,%
+%                     1/1/north east,%
+%                     1/0/north west,%
+%                     0.8/0.5/thermostat%
+%                 }{
+%                     \coordinate (-right \coordname) at (\yfrac*\radiatorheight,\zfrac*\radiatordepth);
+%                 }
+%         \end{scope}
+
+%         % Top surface:
+%         \begin{scope}[canvas is xz plane at y=\radiatorheight]
+%             \draw (0,0) rectangle (\radiatorwidth,\radiatordepth);
+
+%             % "Hollow space" inside the radiator:
+%             \draw[fill=g2, rounded corners=0.75] (0.05*\radiatorwidth,0.3*\radiatordepth) rectangle (0.95*\radiatorwidth,0.7*\radiatordepth);
+
+%             % Generate some coordinates in analogy to regular tikz naming convetions:
+%             \foreach \xfrac/\zfrac/\coordname in {%
+%                     0.5/0.5/center,%
+%                     0.5/1/south,%
+%                     0.5/0/north,%
+%                     1/0.5/east,
+%                     0/0.5/west,
+%                     1/1/south east,%
+%                     0/1/south west,%
+%                     1/0/north east,%
+%                     0/0/north west%
+%                 }{
+%                     \coordinate (-top \coordname) at (\xfrac*\radiatorwidth,\zfrac*\radiatordepth);
+%                 }
+%         \end{scope}
+
+%         % Front surface:
+%         \begin{scope}[canvas is xy plane at z=\radiatordepth]
+%             \draw (0,0) rectangle (\radiatorwidth,\radiatorheight);
+
+%             \foreach \posfraction in {0.1, 0.2, ..., 0.9}
+%                 {%
+%                     \draw[
+%                         thick,
+%                         preaction={draw, ultra thick, g3},
+%                     ] (\posfraction*\radiatorwidth, 0.1*\radiatorheight) -- (\posfraction*\radiatorwidth, 0.9*\radiatorheight);
+%                 }
+%             % Generate some coordinates in analogy to regular tikz naming convetions:
+%             \foreach \xfrac/\yfrac/\coordname in {%
+%                     0.5/0.5/center,%
+%                     0.5/0/south,%
+%                     0.5/1/north,%
+%                     1/0.5/east,
+%                     0/0.5/west,
+%                     1/0/south east,%
+%                     0/0/south west,%
+%                     1/1/north east,%
+%                     0/1/north west%
+%                 }{
+%                     \coordinate (-front \coordname) at (\xfrac*\radiatorwidth,\yfrac*\radiatorheight);
+%                 }
+%             \node at (-front center) {\ctrw{\tikzpictext}};% value of "pic text" key is stored in \tikzpictext macro
+%         \end{scope}
+
+%         % Coordinates for convenience:
+%         \coordinate (-thermostat) at (-right thermostat);
+%         \coordinate (-entry) at ($(-front north west)!0.2!(-front south west)$);
+%         \coordinate (-exit) at ($(-right south)!0.2!(-right north)$);
+%         \coordinate (-left center) at (-front west|--right center);% To have an exact opposite of the visible 'center right' position
+
+%         % Debugging coordinate system:
+%         % \draw[->] (0,0,0) -- (1,0,0) node[right] {\(x\)};
+%         % \draw[->] (0,0,0) -- (0,1,0) node[left] {\(y\)};
+%         % \draw[->] (0,0,0) -- (0,0,1) node[above] {\(z\)};
+%     },
+%     TUHHuman/.pic={% A human member of TUHH. Hilarious...
+%         \pgfmathsetmacro{\roundingradius}{0.4}
+%         \filldraw[pic actions] (0,0) circle (1);% Head
+%         %
+%         % Use arc over just specifying 'rounded corners', because rounded corners are absolute and aren't affected by 'scale'
+%         \filldraw[pic actions]
+%         (0,-1.2)% Below head
+%          -- ++ (2.5-\roundingradius,0) arc (90:0:\roundingradius)% Right shoulder
+%          -- ++ (0,{-(5 - 2*\roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(0.8 - 2*\roundingradius)},0) arc (270:180:\roundingradius) -- ++ (0,{4 - \roundingradius})% Right arm
+%          -- ++ (-0.25,0)% Right arm pit
+%          -- ++ (0,{-(8 - \roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(1 - 2*\roundingradius)},0) arc (270:180:\roundingradius) -- ++ (0,{4 - 2*\roundingradius}) arc (0:90:\roundingradius)% Right leg
+%          -- ++ ({-(1 - 2*\roundingradius)},0)% Gap between legs
+%          arc (90:180:\roundingradius) -- ++ (0,{-(4 - 2*\roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(1 - 2*\roundingradius)},0) arc (270:180:\roundingradius) -- ++ (0,{8 - \roundingradius})% Left leg
+%          -- ++ (-0.25,0)% Left arm pit
+%          -- ++ (0,{-(4 - \roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(0.8 - 2*\roundingradius},0) arc (270:180:\roundingradius) -- ++ (0,{5 - 2*\roundingradius})% Left arm
+%          arc (180:90:\roundingradius)-- cycle;% Left shoulder; cycle back to below head
+        
+%         \node[right, transform shape] at (-1.25,-2.5) {\ctrw{\textcolor[RGB]{45,198,214}{\textbf{\textsf{TUHH}}}}};% Chest emblem; transform shape allows node to be affected by 'scale' option
+%         %
+%         % \draw[help lines] (-3,-11) grid (3,1);% Debugging grid
+%     },
+%     boilercylinder/.style={
+%         cylinder,% Shapes lib
+%         draw,
+%         thick,
+%         shape border rotate=90,
+%         aspect=0.3,% Flatten
+%         cylinder uses custom fill,
+%         % cylinder body fill=g5,% For regular filling, use these and comment out the colors at the bottom here
+%         % cylinder end fill=g4,%
+%         left color=HotFluid!70,
+%         middle color=orange!20,
+%         right color=g4,
+%         shading angle=180,
+%     },
+%     % Still use a pic so we can flexible add stuff to all boilers later one, like a burner on the bottom left side:
+%     boiler/.pic={
+%         \node[
+%             boilercylinder,
+%             minimum width=4em,
+%             minimum height=6em,
+%             pic actions,% Whatever is used in \pic[<drawing options>], e.g. dashed, is propagated to this drawing
+%         ] () {\ctrw{\tikzpictext}};% Empty coordinate is important for namespace stuff
+%     },
+%     equalizing tank/.style={
+%         circle split,
+%         draw,
+%         solid,% In case surrounding context is dashed etc.
+%         -,% As opposed to arrows etc.
+%         fill=white,
+%         double,
+%         minimum width=#1,
+%     },
+%     equalizing tank/.default={1.5em},
+%     pipe/.style={% (Water) pipes between devices. For a pipe without arrow line end, call it as e.g. \draw[pipe, -]
+%         line width=#1,
+%         double=MediumFluid,
+%         double distance={1*#1},
+%         -{Triangle Cap []. Fast Triangle[] Fast Triangle[] Fast Triangle[]},% dot represents line end
+%         line join=round,
+%     },
+%     pipe/.default={1.5pt},
+%     valve/.style={
+%         shape=valve,
+%         draw,
+%         solid,% In case surrounding context is dashed etc.
+%         -,% As opposed to arrows etc.
+%         fill=white,
+%         rounded corners=0.5,
+%         rotate=90,% We probably need the horizontal version more often. Also, this way, \draw ... node[midway, valve, sloped] {}; works out of the box
+%         minimum width=0.6*#1,% Fixed aspect ratio
+%         minimum height=#1,
+%     },
+%     valve/.default={1em},
+%     control valve/.style={% Same node style but different shape
+%         valve,
+%         % blue!10,
+%         shape=controlvalve,
+%     },
+%     threeway valve/.style={
+%         valve,
+%         shape=threeway valve,
+%         minimum width=0.85*#1,% Scale it a bit...
+%         minimum height=#1,
+%     },
+%     threeway valve/.default={1em},
+%     fourway valve/.style={
+%         valve,
+%         rotate=-90,% It's symmetrical, no need to rotate; undo inherited rotation
+%         shape=fourway valve,
+%         minimum width=#1,% Fixed aspect ratio, square
+%         minimum height=#1,
+%     },
+%     fourway valve/.default={1em},
+%     threeway control valve/.style={
+%         threeway valve,
+%         shape=threewaycontrolvalve,
+%     },
+%     radiator/.style={
+%         shape=radiator,
+%         draw,
+%         fill=g6,
+%         line join=round,
+%         minimum width=#1,
+%         minimum height=(2/3)*#1,% Fixed aspect ratio
+%     },
+%     radiator/.default={3em},
+%     vented radiator/.style={
+%         radiator,% Inherit from style
+%         shape=vented radiator,% Different shape
+%     },
+%     pump/.style={
+%         shape=pump,
+%         draw,
+%         solid,% In case surrounding context is dashed etc.
+%         -,% As opposed to arrows etc.
+%         fill=white,
+%         line join=round,
+%         minimum width=#1,
+%         rounded corners=0.5,% Alter rounded corners in case surrounding style has them
+%     },
+%     pump/.default={1.5em},
+%     compressor/.style={
+%         shape=compressor,
+%         draw,
+%         solid,
+%         -,
+%         fill=white,
+%         line join=round,
+%         minimum size=#1,
+%         sloped,% Because why not
+%     },
+%     compressor/.default={1.5em},
+%     heat exchanger/.style={
+%         shape=heat exchanger,
+%         draw,
+%         solid,
+%         -,
+%         fill=white,
+%         line join=round,
+%         rounded corners=0.5,
+%         minimum width=#1,
+%         minimum height=0.5*#1,% Fixed aspect ratio
+%         sloped,% Because why not
+%     },
+%     heat exchanger/.default={1.5em},
+%     simple heat exchanger/.style={
+%         shape=simple heat exchanger,
+%         draw,
+%         solid,
+%         -,
+%         fill=white,
+%         line join=round,
+%         minimum width=#1,
+%         minimum height=2/3*#1,% Fixed aspect ratio
+%         sloped,% Because why not
+%     },
+%     simple heat exchanger/.default={1.5em},
+%     sensor/.style={% A vertical stroke with with three horizontal lines of decreasing width underneath
+%         shape=sensor,
+%         draw,
+%         solid,
+%         -,
+%         line join=round,
+%         line cap=round,
+%         minimum width=#1,
+%         minimum height=2*#1
+%     },
+%     sensor/.default={0.5em},
+%     level indicator/.style={% An upside-down triangle with three horizontal lines of decreasing width underneath
+%         shape=levelindicator,
+%         draw,
+%         fill=white,
+%         solid,
+%         -,
+%         line join=round,
+%         line cap=round,
+%         minimum width=#1,
+%         minimum height=2*#1,
+%         inner sep=1.5pt,
+%     },
+%     level indicator/.default={0.25em}
+}
+
+% \pgfdeclareshape{valve}{%
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough
+%     \inheritanchorborder[from=rectangle]
+%     \inheritanchor[from=rectangle]{north}
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{mid}
+%     \inheritanchor[from=rectangle]{mid west}
+%     \inheritanchor[from=rectangle]{mid east}
+%     \inheritanchor[from=rectangle]{base}
+%     \inheritanchor[from=rectangle]{base west}
+%     \inheritanchor[from=rectangle]{base east}
+%     \inheritanchor[from=rectangle]{south}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+
+%     \backgroundpath{%
+%         % Store lower left in xa/ya and upper right in xb/yb
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         % Construct main path, basically 'two triangles touching'
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+%         \pgfpathclose
+%     }
+% }
+
+% \pgfdeclareshape{threeway valve}{
+%     % This is asymetrical and stuff, so inheriting from the base valve is a bit hopeless, I don't know how to do it properly
+
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough
+%     \inheritanchorborder[from=rectangle]
+
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{mid}
+%     \inheritanchor[from=rectangle]{mid west}
+%     \inheritanchor[from=rectangle]{mid east}
+%     \inheritanchor[from=rectangle]{base}
+%     \inheritanchor[from=rectangle]{base west}
+%     \inheritanchor[from=rectangle]{base east}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+
+%     % These have shifted now, since the three-point valve middle is not the node center anymore:
+%     \anchor{center}{
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xa + 0.5*0.75*(\pgf@xb - \pgf@xa)}
+%         \pgfmathsetlength\pgf@y{\pgf@ya + 0.5*(\pgf@yb - \pgf@ya)}
+%     }
+%     \anchor{north}{
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \southwest \pgf@xa=\pgf@x
+%         \pgfmathsetlength\pgf@x{\pgf@xa + 0.5*0.75*(\pgf@xb - \pgf@xa)}
+%         \pgfmathsetlength\pgf@y{\pgf@yb}
+%     }
+%     \anchor{south}{
+%         \northeast \pgf@xb=\pgf@x
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xa + 0.5*0.75*(\pgf@xb - \pgf@xa)}
+%         \pgfmathsetlength\pgf@y{\pgf@ya}
+%     }
+
+%     % The triangles meeting at their middle, each with an aspect ratio of 0.75 (base) to 0.5 (height)
+%     \backgroundpath{
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         \pgfpathmoveto{\southwest}
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*(\pgf@xb - \pgf@xa)}{\pgf@yb}}
+%         \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*0.5*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.5*(\pgf@yb - \pgf@ya)}}% Valve centerpoint
+%         \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+%         \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*0.5*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.5*(\pgf@yb - \pgf@ya)}}% Valve centerpoint
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*(\pgf@xb - \pgf@xa)}{\pgf@ya}}
+%         \pgfpathclose
+%     }
+% }
+
+% \pgfdeclareshape{fourway valve}{%
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough
+%     \inheritanchorborder[from=rectangle]
+%     \inheritanchor[from=rectangle]{north}
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{mid}
+%     \inheritanchor[from=rectangle]{mid west}
+%     \inheritanchor[from=rectangle]{mid east}
+%     \inheritanchor[from=rectangle]{base}
+%     \inheritanchor[from=rectangle]{base west}
+%     \inheritanchor[from=rectangle]{base east}
+%     \inheritanchor[from=rectangle]{south}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+
+%     \backgroundpath{%
+%         % Store lower left in xa/ya and upper right in xb/yb
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         % This yields four triangles meeting in the middle, each with an aspect ratio of 0.6/1.
+%         % Construct main path, basically 'two triangles touching'
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa + 0.2*(\pgf@xb - \pgf@xa)}{\pgf@ya}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xa + 0.8*(\pgf@xb - \pgf@xa)}{\pgf@yb}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xa + 0.2*(\pgf@xb - \pgf@xa)}{\pgf@yb}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xa + 0.8*(\pgf@xb - \pgf@xa)}{\pgf@ya}}
+%         \pgfpathclose
+        
+%         % Do the same again in the horizontal direction:
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+%         \pgfpathclose
+%     }
+% }
+
+% \pgfdeclareshape{controlvalve}{
+%     \inheritsavedanchors[from=valve]
+%     \inheritanchorborder[from=valve]
+%     \inheritanchor[from=valve]{north}
+%     \inheritanchor[from=valve]{north west}
+%     \inheritanchor[from=valve]{north east}
+%     \inheritanchor[from=valve]{center}
+%     \inheritanchor[from=valve]{west}
+%     \inheritanchor[from=valve]{east}
+%     \inheritanchor[from=valve]{mid}
+%     \inheritanchor[from=valve]{mid west}
+%     \inheritanchor[from=valve]{mid east}
+%     \inheritanchor[from=valve]{base}
+%     \inheritanchor[from=valve]{base west}
+%     \inheritanchor[from=valve]{base east}
+%     \inheritanchor[from=valve]{south}
+%     \inheritanchor[from=valve]{south west}
+%     \inheritanchor[from=valve]{south east}
+
+%     \inheritbackgroundpath[from={valve}]
+
+%     \beforebackgroundpath{%
+%         % Store lower left in xa/ya and upper right in xb/yb
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         % Extension line to control wheel:
+%         \pgfpathmoveto{\pgfpoint{(\pgf@xa + \pgf@xb)/2}{(\pgf@ya + \pgf@yb)/2}}
+%         \pgfpathlineto{\pgfpoint{\pgf@xb}{(\pgf@ya + \pgf@yb)/2}}
+        
+%         % The factors 0.3, 0.4 and 0.3 need to add up to 1 to give a symmetrical, nice semicircle.
+%         % Factor 0.4 is divided by 2 to give the radius
+%         \pgfpathmoveto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.3*(\pgf@yb - \pgf@ya)}}
+%         \pgfpatharc{-90}{90}{0.4/2*(\pgf@yb - \pgf@ya)}
+%         \pgfpathclose
+%         \pgfsetfillcolor{black}
+%         \pgfusepath{fill, stroke}
+%     }
+% }
+
+% \pgfdeclareshape{pump}{%
+%     \inheritsavedanchors[from=circle]%
+%     \inheritanchorborder[from=circle]
+%     \inheritbackgroundpath[from={circle}]
+%     \inheritanchor[from=circle]{center}
+%     \inheritanchor[from=circle]{north}
+%     \inheritanchor[from=circle]{south}
+%     \inheritanchor[from=circle]{west}
+%     \inheritanchor[from=circle]{east}
+
+%     \beforebackgroundpath{
+%         % The simple-most approach:
+%         \pgfpathmoveto{\pgf@anchor@pump@west}
+%             \pgfpathlineto{\pgf@anchor@pump@north}
+%             \pgfpathlineto{\pgf@anchor@pump@east}
+%         \pgfusepath{stroke}
+%     }
+% }
+
+% \pgfdeclareshape{compressor}{%
+%     \inheritsavedanchors[from=circle]%
+%     \inheritanchorborder[from=circle]%
+%     \inheritbackgroundpath[from={circle}]%
+%     \inheritanchor[from=circle]{center}%
+%     \inheritanchor[from=circle]{north}%
+%     \inheritanchor[from=circle]{south}%
+%     \inheritanchor[from=circle]{west}%
+%     \inheritanchor[from=circle]{east}%
+
+%     % Circle has savedanchor of 'centerpoint' and saveddim of 'radius', that's it
+
+%     \beforebackgroundpath{
+%         \centerpoint \pgf@yc=\pgf@y
+
+%         % Pythagorean theorem is enough here.
+%         % Assumption is that default compressor shape 'points to the right'.
+%         % This is important to get coorect behaviour out of the 'sloped' node option!
+
+%         % Idea (Example for top right point):
+%         % 1. Go to center point.
+%         % 2. On y-axis, move a fraction of the radius up. This is the y-portion of our top-right coordinate point.
+%         % 3. On x-axis, move as far right as Pythagorean theorem dictates (hypotenuse is the radius vector, other known length is the y-length we just specified)
+%         % 4. Repeat process to draw and move accordingly; don't forget squares and sqrt() in correct places.
+        
+%         \pgfmathsetmacro{\upperyfraction}{0.3}% y-coordinate of the upper points is \upperyfraction*\radius to the sides of the centerpoint
+%         \pgfmathsetmacro{\loweryfraction}{0.7}% y-coordinate of the lower points is \loweryfraction*\radius to the sides of the centerpoint
+
+%         \foreach \signdirection in {1, -1}{% For left and right side
+%             % Upper (always same x-dimension, only y switches sign):
+%             \pgfpathmoveto{\pgfpoint{sqrt(\radius^2 - (\pgf@yc + \upperyfraction*\radius)^2)}{\pgf@yc + \signdirection*\upperyfraction*\radius}}
+%             % Bottom (always same x-dimension, only y switches sign):
+%             \pgfpathlineto{\pgfpoint{-1*sqrt(\radius^2 - (\pgf@yc - \loweryfraction*\radius)^2)}{\pgf@yc + \signdirection*\loweryfraction*\radius}}
+%         }
+
+%         \pgfusepath{stroke}
+%     }
+% }
+
+% \pgfdeclareshape{heat exchanger}{
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+%     \inheritanchorborder[from=rectangle]
+%     % Doesn't hurt to also inherit specific anchors:
+%     \inheritanchor[from=rectangle]{north}
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{mid}
+%     \inheritanchor[from=rectangle]{mid west}
+%     \inheritanchor[from=rectangle]{mid east}
+%     \inheritanchor[from=rectangle]{base}
+%     \inheritanchor[from=rectangle]{base west}
+%     \inheritanchor[from=rectangle]{base east}
+%     \inheritanchor[from=rectangle]{south}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+
+%     \inheritbackgroundpath[from={rectangle}]
+
+%     % Anchor to 'in' port of heat exchanger.
+%     % This code does not get executed necessarily; we cannot use the \pgfsetmacros from below.
+%     % A solution is probably \pgfkeys, but this will do for now.
+%     % IT NEEDS MANUAL ADJUSTING IF THE SHAPE IS CHANGED.
+%     \anchor{in}{%
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xa + (1 - 0.7)/2*(\pgf@xb - \pgf@xa)}
+%         \pgfmathsetlength\pgf@y{\pgf@ya - 0.3*(\pgf@yb - \pgf@ya)}
+%     }
+%     \anchor{out}{%
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xb - (1 - 0.7)/2*(\pgf@xb - \pgf@xa)}
+%         \pgfmathsetlength\pgf@y{\pgf@ya - 0.3*(\pgf@yb - \pgf@ya)}
+%     }
+
+%     \beforebackgroundpath{
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         \pgfmathsetmacro{\heatsymbolextension}{0.3}% How far out the 'legs' extend out of the rectangle as a fraction of the overall node's height
+%         \pgfmathsetmacro{\heatsymbolwidth}{0.7}% The inner drawing's width as a fraction of the node's overall width
+%         \pgfmathsetmacro{\heatsymbolheight}{0.8}% How high the inner drawing reaches as a fraction of the node's overall height (at 1, it touches the upper rectangle border)
+%         \pgfmathsetmacro{\heatsymbolindentation}{0.3}% How 'indented' the triangle is, i.e. the vertical distance between the inner drawings highest point and the triangle's down-pointing 'tip'
+
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa + (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya - \heatsymbolextension*(\pgf@yb - \pgf@ya)}}% Bottom left corner
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \heatsymbolheight*(\pgf@yb - \pgf@ya)}}% Straight line up
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + 0.5*(\pgf@xb - \pgf@xa)}{\pgf@ya + (\heatsymbolheight - \heatsymbolindentation)*(\pgf@yb - \pgf@ya)}}% Line down, to the right; x-coordinate is the middle of the node
+%         \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \heatsymbolheight*(\pgf@yb - \pgf@ya)}}% Line up, to the right
+%         \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya - \heatsymbolextension*(\pgf@yb - \pgf@ya)}}% Line straight down
+%         \pgfusepath{stroke}
+%     }
+% }
+
+% \pgfdeclareshape{simple heat exchanger}{% Just a cross-out rectangle
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+%     \inheritanchorborder[from=rectangle]
+%     % Doesn't hurt to also inherit specific anchors:
+%     \inheritanchor[from=rectangle]{north}
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{mid}
+%     \inheritanchor[from=rectangle]{mid west}
+%     \inheritanchor[from=rectangle]{mid east}
+%     \inheritanchor[from=rectangle]{base}
+%     \inheritanchor[from=rectangle]{base west}
+%     \inheritanchor[from=rectangle]{base east}
+%     \inheritanchor[from=rectangle]{south}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+
+%     \inheritbackgroundpath[from={rectangle}]
+
+%     \beforebackgroundpath{
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Top left corner
+%         \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}% Bottom right corner
+%         \pgfusepath{stroke}
+%     }
+% }
+
+% \pgfkeys{/pgf/.cd,
+%     radiator offset x/.initial=0.3em,
+%     radiator offset y/.initial=0.3em
+% }
+% \pgfdeclareshape{radiator}{%
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+%     \inheritanchorborder[from=rectangle]
+%     % Doesn't hurt to also inherit specific anchors:
+%     \inheritanchor[from=rectangle]{north}
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{mid}
+%     \inheritanchor[from=rectangle]{mid west}
+%     \inheritanchor[from=rectangle]{mid east}
+%     \inheritanchor[from=rectangle]{base}
+%     \inheritanchor[from=rectangle]{base west}
+%     \inheritanchor[from=rectangle]{base east}
+%     \inheritanchor[from=rectangle]{south}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+    
+%     \saveddimen{\xoffset}{% https://tex.stackexchange.com/a/181283/120853
+%         \pgfmathsetlength\pgf@x{\pgfkeysvalueof{/pgf/radiator offset x}}
+%     }
+%     \saveddimen{\yoffset}{
+%         \pgfmathsetlength\pgf@y{\pgfkeysvalueof{/pgf/radiator offset y}}
+%     }
+
+%     % In the middle of the right surface:
+%     \anchor{right}{%
+%         \southwest \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xb + \xoffset/2}
+%         \pgfmathsetlength\pgf@y{(\pgf@ya + \pgf@yb)/2 + \yoffset/2}
+%     }
+%     % In the middle of the top surface:
+%     \anchor{top}{%
+%         \southwest \pgf@xa=\pgf@x
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \pgfmathsetlength\pgf@x{(\pgf@xa + \pgf@xb)/2 + \xoffset/2}
+%         \pgfmathsetlength\pgf@y{\pgf@yb + \yoffset/2}
+%     }
+%     % Exit at the thermostat:
+%     \anchor{exit}{%
+%         \southwest \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xb + \xoffset/2}
+%         \pgfmathsetlength\pgf@y{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya) + \yoffset/2}
+%     }
+%     % Lower exit on the right side, below the thermostat:
+%     \anchor{lower exit}{%
+%         \southwest \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xb + \xoffset/2}
+%         \pgfmathsetlength\pgf@y{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya) + \yoffset/2}
+%     }
+%     % Entry in the bottom left somewhere:
+%     \anchor{lower entry}{%
+%     \northeast \pgf@yb=\pgf@y
+%     \southwest \pgf@ya=\pgf@y% x is now given implicitly
+%     \pgfmathsetlength\pgf@y{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}
+%     }
+    
+%     % Alternative entry in the top left somewhere:
+%     \anchor{upper entry}{%
+%         \northeast \pgf@yb=\pgf@y
+%         \southwest \pgf@ya=\pgf@y% x is now given implicitly
+%         \pgfmathsetlength\pgf@y{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}
+%     }
+
+%     % Front surface is inherited from rectangle:
+%     \inheritbackgroundpath[from={rectangle}]
+
+%     % Background is inherited already, so add behind background path:
+%     \behindbackgroundpath{%
+%         % Store lower left in xa/ya and upper right in xb/yb
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         % Top surface:
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Top left
+%         \pgfpathlineto{\pgfpointadd{\pgfpoint{\pgf@xa}{\pgf@yb}}{\pgfqpoint{\xoffset}{\yoffset}}}% Top left plus offset vector
+%         \pgfpathlineto{\pgfpointadd{\northeast}{\pgfqpoint{\xoffset}{\yoffset}}}% Top right (northeast) plus offset vector
+%         \pgfpathlineto{\northeast}
+%         \pgfpathclose
+
+%         % Access current fillcolor as specified by user
+%         % Make sides darker than current fill color for some 3D effect
+%         \colorlet{currentfill}{\tikz@fillcolor}
+%         \pgfsetfillcolor{currentfill!90!black}
+%         \pgfusepath{fill, stroke}
+        
+%         % Right surface:
+%         \pgfpathmoveto{\northeast}
+%         \pgfpathlineto{\pgfpointadd{\northeast}{\pgfqpoint{\xoffset}{\yoffset}}}% Top right corner plus offset vector
+%         \pgfpathlineto{\pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@ya}}{\pgfqpoint{\xoffset}{\yoffset}}}% Bottom right corner plus offset vector
+%         \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}% Bottom right corner
+%         \pgfpathclose
+%         \pgfsetfillcolor{currentfill!80!black}% Even darker than top surface
+%         \pgfusepath{fill, stroke}
+
+%         % Draw an ellipse to fake a thermostat or pipe exit.
+%         % Position it at 0.8 / 80% height
+%         % Ellipse axes are confusing and I did not do it properly fully
+%         \pgfpathellipse{\pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}{\pgfpointscale{0.5}{\pgfqpoint{\xoffset}{\yoffset}}}}{\pgfpoint{0.2*\xoffset}{0.2*\yoffset}}{\pgfpoint{0pt}{1pt}}
+%         \pgfsetfillcolor{black}
+%         \pgfusepath{fill}
+%     }
+%     % Background is already the inherited rectangle. Draw on top of it with beforebackgroundpath
+%     \beforebackgroundpath{
+%         % Store lower left in xa/ya and upper right in xb/yb
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         % Draw vertical lines on top of front surface:
+%         \foreach \posfraction in {0.2, 0.4, ..., 0.8}{
+%             \pgfpathmoveto{\pgfpoint{\pgf@xa + \posfraction*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xa + \posfraction*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+%             \pgfusepath{stroke}
+%         }
+%     }
+% }
+
+% \pgfdeclareshape{vented radiator}{
+%     \inheritsavedanchors[from=radiator]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+%     \inheritanchorborder[from=radiator]
+%     % Doesn't hurt to also inherit specific anchors:
+%     \inheritanchor[from=radiator]{north}
+%     \inheritanchor[from=radiator]{north west}
+%     \inheritanchor[from=radiator]{north east}
+%     \inheritanchor[from=radiator]{center}
+%     \inheritanchor[from=radiator]{west}
+%     \inheritanchor[from=radiator]{east}
+%     \inheritanchor[from=radiator]{mid}
+%     \inheritanchor[from=radiator]{mid west}
+%     \inheritanchor[from=radiator]{mid east}
+%     \inheritanchor[from=radiator]{base}
+%     \inheritanchor[from=radiator]{base west}
+%     \inheritanchor[from=radiator]{base east}
+%     \inheritanchor[from=radiator]{south}
+%     \inheritanchor[from=radiator]{south west}
+%     \inheritanchor[from=radiator]{south east}
+
+%     % Inherit our special nodes:
+%     \inheritanchor[from=radiator]{right}
+%     \inheritanchor[from=radiator]{top}
+%     \inheritanchor[from=radiator]{exit}
+%     \inheritanchor[from=radiator]{lower entry}
+%     \inheritanchor[from=radiator]{upper entry}
+
+%     % Inherit all stuff from base radiator:
+%     \inheritbackgroundpath[from={radiator}]
+%     \inheritbehindbackgroundpath[from={radiator}]
+%     \inheritbeforebackgroundpath[from={radiator}]
+
+%     % Anchor for the ventilation point.
+%     % I tried with \savedanchor, but it didn't work so we have to repeat the calculations for the ventilation device
+%     \anchor{ventilation}{%
+%         \southwest \pgf@xa=\pgf@x
+%         \northeast \pgf@yb=\pgf@y
+%         \pgfmathsetlength\pgf@x{\pgf@xa - 3pt}
+%         \pgfmathsetlength\pgf@y{\pgf@yb - 3pt}
+%     }
+
+%     \behindforegroundpath{
+%         \southwest \pgf@xa=\pgf@x
+%         \northeast \pgf@yb=\pgf@y
+
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Top left corner
+%         \pgfpatharc{90}{270}{3pt}% Arc from top-top left corner down with specified radius in last argument
+%         \pgfsetfillcolor{black}
+%         \pgfusepath{fill}
+%     }
+% }
+
+% \pgfdeclareshape{sensor}{
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+%     \inheritanchorborder[from=rectangle]
+%     % Doesn't hurt to also inherit specific anchors:
+%     \inheritanchor[from=rectangle]{north}
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{south}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+
+%     \backgroundpath{
+%         % Store lower left in xa/ya and upper right in xb/yb
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@yb}}% Upper middle
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@ya + 0.3*(\pgf@yb - \pgf@ya)}}% Down the middle, to 1/4 of the node height
+
+%         % These are percentages of the node height.
+%         % At each percentage/fraction of the height, draw a centered line with a width of a certain percentage (fractionlength) of the overall node width
+%         \foreach \fractionheight/\fractionlength in {
+%             0.3/1,%
+%             0.15/0.75,%
+%             0/0.5%
+%         }{
+%             % One horizontal line on this height:
+%             \pgfpathmoveto{\pgfpoint{\pgf@xa + (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+%         }
+%     }
+% }
+
+% \pgfdeclareshape{levelindicator}{
+%     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+%     \inheritanchorborder[from=rectangle]
+%     % Doesn't hurt to also inherit specific anchors:
+%     \inheritanchor[from=rectangle]{north}
+%     \inheritanchor[from=rectangle]{north west}
+%     \inheritanchor[from=rectangle]{north east}
+%     % \inheritanchor[from=rectangle]{center}
+%     \inheritanchor[from=rectangle]{west}
+%     \inheritanchor[from=rectangle]{east}
+%     \inheritanchor[from=rectangle]{south}
+%     \inheritanchor[from=rectangle]{south west}
+%     \inheritanchor[from=rectangle]{south east}
+
+%     % When no other anchor is specified, nodes are placed by their 'center' anchor.
+%     % Change it here to be the lower pointy triangle bit, as opposed to the rectangle center.
+%     % That way, the triangle always points onto the fluid surface if placed as a node on a drawn line representing this surface
+%     \anchor{center}{%
+%         \southwest \pgf@xa=\pgf@x
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+%         % Lower pointy bit of triangle, as below:
+%         \pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@yb - sqrt(3)*((\pgf@xb - \pgf@xa)/2)}
+%     }
+
+%     \backgroundpath{
+%         % Store lower left in xa/ya and upper right in xb/yb
+%         \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+%         \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+%         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Upper left corner
+%         \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}% Upper right corner
+%         \pgfpathlineto{\pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@yb - sqrt(3)*((\pgf@xb - \pgf@xa)/2)}}% Forming an equilateral triangle
+%         \pgfpathclose
+
+%         % These are percentages of the node height.
+%         % At each percentage/fraction of the height, draw a centered line with a width of a certain percentage (fractionlength) of the overall node width
+%         \foreach \fractionheight/\fractionlength in {
+%             0.3/1,%
+%             0.15/0.75,%
+%             0/0.5%
+%         }{
+%             % One horizontal line on this height:
+%             \pgfpathmoveto{\pgfpoint{\pgf@xa + (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+%             \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+%         }
+%     }
+% }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Scientifics Typesetting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{chemformula}% \ch{}, \chcpd[]{compound} etc.
+    \setchemformula{%
+        font-family={tgpl}% Use math font family
+    }
+
+    % Provide a new environment for chemical reactions.
+    % I tried the syntax from the 'environ' package and also the \NewDocumentEnvironment
+    % command from 'xparse', but none of them worked especially well, so it's back to
+    % plain syntax, unfortunately.
+    \newcounter{chemreac}[chapter]
+    \setcounter{chemreac}{0}
+    %
+    \newenvironment{chemreac}{%
+        \addtocounter{equation}{-1}
+        \renewcommand*\theequation{\textbf{R}\thechemreac}
+        \begin{equation}
+            % Our counter is called 'chemreac', however it seems that cref always uses
+            % the 'type' of the last \refstepcounter{} called.
+            % Therefore, step our custom counter after equation starts
+            % see https://tex.stackexchange.com/a/239121/120853
+            \refstepcounter{chemreac}
+    }{%
+        \end{equation}%
+    }%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{siunitx}% Typesetting physical units correctly
+    \sisetup{%
+        detect-all,% Detect surrounding font context, like weight, italics etc.
+        text-rm=\unitnumberfont,% https://tex.stackexchange.com/a/468031/120853
+        %
+        % Alternative range-phrase:
+        % en-dash via '--', but inside \text{}, so it's not 'two minus signs'
+        % range-phrase={\,\text{--}\,},
+        range-units=single,% single: Print unit only once, at end
+        math-micro=\text{µ},% https://tex.stackexchange.com/a/54915/120853
+        text-micro=µ,
+        per-mode=symbol,
+    }%
+    % Declare units ourselves:
+    % Set as text so it stays a hyphen in math mode, as opposed to minus sign
+    \DeclareSIUnit{\volpercent}{Vol.\text{-}\%}
+    \DeclareSIUnit{\kilowatthour}{kWh}%
+    \DeclareSIUnit{\annum}{a}%
+    \DeclareSIUnit{\atmosphere}{atm}%
+    \DeclareSIUnit{\partspermillion}{ppm}%
+
+    % TODO
+    % Unit qualifiers, i.e. subscripts.
+    % We already have a dedicated system (bib file with glossaries-extra) for subscripts
+    % for symbols, so use those (just format, don't index) also for units here.
+    \DeclareSIQualifier{\normzustand}{\glsfmtname{sub.normzustand}}
+    \DeclareSIQualifier{\trockeneluft}{\glsfmtname{sub.trocken}\glsfmtname{sub.luft}}% for moist air context
+    \DeclareSIQualifier{\elektrisch}{\glsfmtname{sub.elektrisch}}
+    \DeclareSIQualifier{\lufttrocken}{lftr}% for fuel/air context
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperref and PDFs appearance
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage[pdfusetitle]{hyperref}% Loads url-package internally
+    \hypersetup{%
+        % Unicode settings are automatically true for luatex engine,
+        % don't specify manually
+        colorlinks=true,% No ugly frames, but still colored
+        allcolors=darklink,%
+        hidelinks,% Toggle here!
+        plainpages=false,%
+        pdfcreator={LaTeX with hyperref, glossaries-extra/bib2gls and biblatex/biber},
+        bookmarksnumbered=true,%
+        % Default opening of the document in supported PDF viewers:
+        pdfpagelayout=TwoPageRight,
+        pdfsubject={Skript zur Vorlesung},%
+        pdfkeywords={%
+            Wärmetechnik,%
+            Heizungstechnik,%
+            Thermodynamik,%
+            Wärmeübertragung,%
+            Strömungsmechanik,%
+            Energie,%
+            Energietechnik%
+        },%
+        pdfdisplaydoctitle,% https://tex.stackexchange.com/a/435434/120853
+    }%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Appearance of the bookmarks popup in viewers that support it
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{bookmark}% Control bookmark appearance in PDF
+    \bookmarksetup{%
+        open,% Open bookmark pane in PDF viewer
+        openlevel=1,% Open first two levels, hide all subsections etc. (0-indexed)
+        addtohook={%
+            \ifnum\bookmarkget{level}=0% Only print top-level (0) bookmarks bold
+                \bookmarksetup{bold}%
+            \fi%
+        },%
+    }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% References
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[
+    capitalise,% Always capitalise; still, use \Cref and \cref appropriately
+    nameinlink,% Name of reference is part of PDF hyperlink
+    noabbrev,% Full expansion: Figure instead of Fig., etc.
+]{cleveref}%
+    \creflabelformat{equation}{#2#1#3}% No (1), but 1, aka remove parentheses
+
+    % Syntax: \crefname{<counter>}{<singular>}{<plural>}
+    % \Crefname (capitalised) is not required; when it is not present but \Cref{} is
+    % called, it uses \MakeUppercase on \crefname definitions.
+    % For a German word, this is always capitalized anyway.
+    \crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
+    \creflabelformat{chemreac}{#2\textbf{R}#1#3}% No (1), but 1, aka remove parentheses
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Glossaries
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage[% Initiate with package options for predefined styles
+    nomain,% Nomain, aka no default glossary
+    record,% Record usages of commands to auxiliary files for bib2gls
+    abbreviations,% Regular abbreviations/acronyms
+    symbols,% Physical symbols
+    index,% A regular book index at the end
+    numbers% constants like Pi
+]{glossaries-extra}% Also see https://tex.stackexchange.com/q/477658/120853
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% New Glossary 'types'
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Using Abbreviations/Symbols etc. package options creates these glossaries already.
+    % Create the rest manually.
+    \newglossary*{subscripts}{\TransSubscripts{}}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% New Glossary 'fields'
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Add custom key for a 'unit' field for symbols:
+    \glsaddkey{unit}%
+        {\relax}%
+        {\glsentryunit}%
+        {\Glsentryunit}%
+        {\glsunit}%
+        {\Glsunit}%
+        {\GLSunit}
+
+    % For specific quantities (enthalpy etc.)
+    \glsaddkey{specific}%
+        {\relax}%
+        {\glsentryspecific}%
+        {\Glsentryspecific}%
+        {\glsspecific}%
+        {\Glsspecific}%
+        {\GLSspecific}
+
+    % For First names of people
+    \glsaddkey{firstname}%
+        {\relax}%
+        {\glsentryfirstname}%
+        {\Glsentryfirstname}%
+        {\glsfirstname}%
+        {\Glsfirstname}%
+        {\GLSfirstname}
+
+    % For values of numbers/constants
+    \glsaddkey{value}%
+        {\relax}%
+        {\glsentryvalue}%
+        {\Glsentryvalue}%
+        {\glsvalue}%
+        {\Glsvalue}%
+        {\GLSvalue}
+
+    % For international versions of symbols
+    \glsaddkey{international-symbol}%
+        {\relax}%
+        {\glsentryinternationalsymbol}%
+        {\Glsentryinternationalsymbol}%
+        {\glsinternationalsymbol}%
+        {\Glsinternationalsymbol}%
+        {\GLSinternationalsymbol}
+
+    % For alternative versions of symbols
+    \glsaddkey{alternative-symbol}%
+        {\relax}%
+        {\glsentryalternativesymbol}%
+        {\Glsentryalternativesymbol}%
+        {\glsalternativesymbol}%
+        {\Glsalternativesymbol}%
+        {\GLSalternativesymbol}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract the prefixes here.
+% For example, if we load 'symbols' from a 'roman' file,
+% we define a prefix and call entries later as \gls{<prefix>.<entry>}
+% These prefixes are used in various places; define them here once and reference later
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \newcommand*{\symprefix}{sym.}
+    \newcommand*{\subprefix}{sub.}
+    \newcommand*{\nameprefix}{name.}
+    \newcommand*{\constantsprefix}{cons.}
+    \newcommand*{\indexprefix}{idx.}
+    \newcommand*{\abbreviationprefix}{abb.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load the bib files:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \GlsXtrLoadResources[%
+        src={./glossaries/abbreviations},%
+        sort=doc,% Use document language for sorting
+        label-prefix={\abbreviationprefix},
+        type=abbreviations,
+        selection={all},%
+    ]%
+    \GlsXtrLoadResources[%
+        src={./glossaries/index/terms},%
+        sort=doc, % Use document language for sorting
+        type=index,
+        group=terms,
+        label-prefix={\indexprefix},
+        selection={all},%
+    ]%
+    \GlsXtrLoadResources[%
+        src={./glossaries/index/names},%
+        sort=doc, % Use document language for sorting
+        type=index,
+        category=names,
+        group=names,
+        label-prefix={\nameprefix},
+        selection={all},%
+    ]%
+    \GlsXtrLoadResources[%
+        src={./glossaries/symbols/roman},%
+        sort=doc, % Use document language for sorting
+        symbol-sort-fallback=name,% Sort by name aka symbol if sort field is missing
+        %
+        % If first field is equal, sort by this next (by appending it).
+        % E.g. 'c' for 'Velocity' and also for 'Heat Capacity' is then sorted with
+        % 'Heat Capacity' first etc.:
+        sort-suffix=description,
+        label-prefix={\symprefix},
+        type=symbols,
+        category={same as type},
+        selection={all},
+        group={roman},
+    ]%
+    \GlsXtrLoadResources[%
+        src={./glossaries/symbols/greek},%
+        sort=doc, % Use document language for sorting
+        symbol-sort-fallback=name,% Sort by name aka symbol if sort field is missing
+        %
+        % If first field is equal, sort by this next (by appending it).
+        % E.g. 'c' for 'Velocity' and also for 'Heat Capacity' is then sorted with
+        % 'Heat Capacity' first etc.:
+        sort-suffix=description,
+        label-prefix={\symprefix},
+        type=symbols,
+        category={same as type},
+        selection={all},
+        group={greek},
+    ]%
+    \GlsXtrLoadResources[%
+        src={./glossaries/symbols/other},%
+        sort=doc, % Use document language for sorting
+        symbol-sort-fallback=name,% Sort by name aka symbol if sort field is missing
+        %
+        % If first field is equal, sort by this next (by appending it).
+        % E.g. 'c' for 'Velocity' and also for 'Heat Capacity' is then sorted with
+        % 'Heat Capacity' first etc.:
+        sort-suffix=description,
+        label-prefix={\symprefix},
+        type=symbols,
+        category={same as type},
+        selection={all},
+        group={other},
+    ]%
+    \GlsXtrLoadResources[%
+        src={./glossaries/symbols/subscripts},%
+        % sort=doc, % Use document language for sorting
+        sort-field=name,% Default is by label, not by name
+        type=subscripts,%
+        category=subscripts,
+        label-prefix={\subprefix},
+        selection={all},%
+    ]%
+    \GlsXtrLoadResources[
+        src={./glossaries/constants},% constants.bib
+        type={numbers},% set the type for all selected entries
+        category={number},% set the category for all selected entries
+        label-prefix={\constantsprefix},
+    ]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Introduce new commands that alias \gls commands and allow modifiers
+% You then use e.g. \sym{velocity} to access \gls{sym.velocity} etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \glsxtrnewgls{\symprefix}{\sym}% \sym{XYZ} is like \gls{sym.XYZ}
+    \glsxtrnewgls{\subprefix}{\sub}
+    \glsxtrnewgls{\nameprefix}{\name}
+    \glsxtrnewgls{\constantsprefix}{\cons}
+    \glsxtrnewgls{\indexprefix}{\idx}
+    \glsxtrnewgls{\abbreviationprefix}{\abb}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Further Options:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % indexonlyfirst can also be a package option.
+    % Index only on first use for certain categories, as set manually above.
+    % https://tex.stackexchange.com/a/318886/120853
+    % \glssetcategoryattribute{symbols}{indexonlyfirst}{true}
+    % \glssetcategoryattribute{subscripts}{indexonlyfirst}{true}
+    \glssetcategoryattribute{names}{textformat}{textsc} % As printed in the text
+    \glssetcategoryattribute{names}{glossnamefont}{textsc} % As printed in the Glossary
+
+    \newcommand*{\specificsymbolmark}{*}
+    %
+    \glsdefpostdesc{symbols}{% If entry has field 'specific', its description is marked
+        \ifglshasfield{specific}{\glscurrententrylabel}%
+        {\specificsymbolmark}%
+        {}%
+    }
+
+    % Append stuff after 'name' field for the 'symbols' category.
+    % Syntax: \ifglshasfield{<field>}{<label>}{<true part>}{<falsepart>}
+    \newcommand*{\alternativesymbolmark}{/}
+    %
+    \glsdefpostname{symbols}{%
+        % If entry has field 'international-symbol', append it after the regular entry:
+        \ifglshasfield{international-symbol}{\glscurrententrylabel}%
+        { [\glsentryinternationalsymbol{\glscurrententrylabel}]}%
+        {}% Do nothing in else
+        % If entry has a field 'alternative-symbol', append it after the regular entry:
+        \ifglshasfield{alternative-symbol}{\glscurrententrylabel}%
+        {\ \alternativesymbolmark{}\ \glsentryalternativesymbol{\glscurrententrylabel}}%
+        {}%
+    }
+
+    % Give proper names for all groups here to override the default,
+    % automatically generated ones
+    \AtBeginDocument{% Do this after preamble, else errors out
+        \glsxtrsetgrouptitle{greek}{\TransGreek{}}
+        \glsxtrsetgrouptitle{roman}{\TransRoman{}}
+        \glsxtrsetgrouptitle{other}{\TransOther{}}
+        \glsxtrsetgrouptitle{terms}{\TransTerms{}}
+        \glsxtrsetgrouptitle{names}{\TransNames{}}
+    }
+
+    \setglossarysection{section} % One down in rprt/book
+
+    % Some styles require manual setting of width for the first column.
+    % Automate this and find widest entry:
+    \setglossarypreamble[subscripts]{\glsfindwidesttoplevelname[\currentglossary]}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% New Styles for glossary printing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \RequirePackage{glossary-bookindex} % The style used for the Index
+
+    \RequirePackage{glossary-mcols} % Multi-column styles used for Subscripts
+
+    % Long, elaborate base style, providing e.g. 'long3col' for the abbreviations etc.:
+    \RequirePackage{glossary-longextra}
+
+    \newcommand*{\glshdrfont}[1]{\textbf{#1}} % Font for gls table heads
+
+    \newglossarystyle{symbunitlong}{% https://tex.stackexchange.com/a/269571/120853
+        % Base new style on existing one. This is quite important, since it implements
+        % all otherwise missing but maybe required commands,
+        % like \glsgroupskip if --group option is used for bib2gls
+        \setglossarystyle{long-name-desc-loc}
+
+        \renewcommand*{\glossaryheader}{}% Remove it
+
+        \renewenvironment{theglossary}{%
+            % Use Longtabu over longtable, the latter caused inexplicable issues with
+            % 'Column widths have changed, rerun Latex'
+            \begin{longtabu}{%
+                r%
+                p{0.5\linewidth}%
+                p{\glspagelistwidth}%
+                l%
+            }%
+        }{%
+            \end{longtabu}%
+        }%
+
+        \renewcommand*{\glsgroupskip}{\addlinespace\addlinespace}%
+
+        \renewcommand*{\glsgroupheading}[1]{%
+            \glshdrfont{\glsgetgrouptitle{##1}} &
+            \glshdrfont{\descriptionname} &
+            \glshdrfont{\pagelistname} &
+            \glshdrfont{\TransUnit{}}
+            \tabularnewline
+        }%
+
+        \renewcommand*{\glossentry}[2]{%
+            \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+            \glossentrydesc{##1}\glspostdescription &
+            ##2 &
+            % Use glsentryunit to access entry, NOT glsunit,
+            % https://tex.stackexchange.com/a/281772/120853:
+            \glsentryunit{##1}
+            \tabularnewline
+        }
+    }
+
+    \newglossarystyle{numberlong}{% https://tex.stackexchange.com/a/269571/120853
+        % Base new style on existing one. This is quite important, since it implements
+        % all otherwise missing but maybe required commands, like
+        % \glsgroupskip if --group option is used for bib2gls
+        \setglossarystyle{long-name-desc-loc}
+
+        \renewcommand*{\glossaryheader}{}% Remove it
+
+        \renewenvironment{theglossary}{
+            % Use Longtabu over longtable, the latter caused inexplicable issues with
+            % 'Column widths have changed, rerun Latex'
+            \begin{longtabu}{%
+                r%
+                p{0.3\linewidth}%
+                r%
+                @{\;}%
+                l%
+                p{\glspagelistwidth}%
+            }%
+        }{%
+            \end{longtabu}%
+        }%
+
+        \renewcommand*{\glossaryheader}[1]{%
+            \glshdrfont{\symbolname} &
+            \glshdrfont{\descriptionname} &
+            \multicolumn{2}{l}{{\glshdrfont{\TransPhysicalQuantity{}}}} &
+            \glshdrfont{\pagelistname}
+            \tabularnewline
+        }%
+
+        \renewcommand*{\glossentry}[2]{%
+            \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+            \glossentrydesc{##1}\glspostdescription &
+            \glsentryvalue{##1} &
+            % Use glsentryunit to access entry, NOT glsunit,
+            % https://tex.stackexchange.com/a/281772/120853:
+            \glsentryunit{##1} &
+            ##2
+            \tabularnewline
+        }%
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Color Boxes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{tcolorbox}% Put after tikz
+    \tcbuselibrary{many}%
+    \tcbset{%
+        highlight math style={%
+            colframe=white,
+            colback=g6,
+        },%
+    }%
+
+    \newtcolorbox[%
+        auto counter,%
+        number within=chapter,%
+        % Set cleveref, see https://tex.stackexchange.com/a/126023/120853:
+        crefname={\TransExample{}}{\TransExamples{}},
+        % List of Examples. *.loe file ending could clash with package thmtools,
+        % careful if that is used!
+        list inside=loe,
+    ]{example}% Name of environment itself
+        [2]% Number of arguments for the environment
+        []% Default of optional argument, which is the first one. Use it for label
+        {%
+            beforeafter skip=18pt plus 4pt minus 4pt,%
+            width=0.95\linewidth,%
+            % Center box; see https://tex.stackexchange.com/a/273111/120853:
+            enlarge left by=0.025\linewidth,
+            title=\TransExample{}\ \thetcbcounter: #2,%
+            fonttitle=\sffamily,%
+            leftrule=1mm,%
+            arc is angular,%
+            parbox,% Allows regular paragraph breaks
+            breakable,% Breaks across pages
+            enhanced,% Hands drawing to tikz
+            rightrule=0mm,%
+            bottomrule=0mm,%
+            % Setting what ends up in 'list of' so that '<Title>' is not shown:
+            list text=#2,
+            #1,%
+            colback=g6,%
+            colframe=g1,%
+            % float,
+        }%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Custom Commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{suffix}% For variants of custom commands
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Maths
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To insert math equations into the text flow,
+% we need punctuation marks at the end of display-style equations.
+% Prepend them with a small horizontal space for visual separation.
+
+\newcommand*{\eqend}{\,.}% Command \eqdot reserved by unicode-math
+\newcommand*{\eqcomma}{\,,}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Gradient operator (so that it will be printed upright)
+\DeclareMathOperator{\grad}{grad}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand*{\const}{\text{\TransConstant{}.}}% For all 'constant' expressions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Quick Quad like physics package. For text between two equation parts.
+% We do not use physics package because it is currently not in a good condition:
+% https://tex.stackexchange.com/q/471532/120853
+\newcommand*{\qq}[1]{\quad\text{#1}\quad}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Unified markup for constructs of the form:
+% '1.2 ppm CO2' etc., with correct, specified spacing.
+\newcommand*{\chemamount}[3]{%
+    \ensuremath{%
+        \SI{#1}{#2}%
+        \;% Medium-sized space
+        \chcpd{#3}%
+    }%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Circle input and parse as a number
+\newcommand*{\circlednum}[1]{%
+    \tikz[baseline=(char.base)]{%
+            \node[circlednum] (char) {\num{#1}};
+    }
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Create a couple of wrappers to integrate with gls
+% These are only necessary because we cannot really create gls entries that also accept
+% arguments, so we treat them separately.
+
+% Use the \<XYZ>fmt commands only to format arguments, without doing anything else.
+% Then use the \<XYZ> commands in the text, which includes indexing etc.
+% We use \glsdisp, which works like \glsdisp{<indexed label>}{<displayed link text>}
+% and respects the first use flag.
+% If {<displayed link text>} contains another glossary-entry, e.g. a \sym command,
+% that is still indexed and seems to work. The link leads to <indexed label>.
+
+% If the custom commands do not make use of gls-like commands explicitly,
+% add a \glsadd to create an entry in the glossary, but no text at the location
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% use dottedsquare (provided by unicode-math package, refer to unimath-symbols.pdf)
+% as a placeholder for symbols
+% HACKY: Raise it a bit, since default symbol hangs low
+\newcommand*{\symbolplaceholder}{\raisebox{0.3ex}{\dottedsquare}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mean value: horizontal overbar. The built-in options all look poor
+% https://tex.stackexchange.com/a/22134/120853
+\newcommand*{\meanfmt}[1]{%
+    \ensuremath{%
+        \mkern 1.5mu%
+        \overline{%
+            \mkern-1.5mu#1\mkern-1.5mu%
+        }%
+        \mkern 1.5mu%
+    }%
+}
+\newcommand*{\mean}[1]{\glsdisp{sym.mean}{\meanfmt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Logarithmic mean
+\newcommand*{\logmeanfmt}[1]{\ensuremath{\tilde{#1}}}
+\newcommand*{\logmean}[1]{\glsdisp{sym.logmean}{\logmeanfmt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dotted symbol for flows
+\newcommand*{\flowfmt}[1]{\ensuremath{\dot{#1}}}
+\newcommand*{\flow}[1]{\glsdisp{sym.flow}{\flowfmt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Delta/Difference
+\newcommand*{\differencefmt}[1]{\ensuremath{\Delta #1}}
+\newcommand*{\difference}[1]{\glsdisp{sym.difference}{\differencefmt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Wrapper for Nabla Operator
+\newcommand*{\nablaoperatorfmt}[1]{\ensuremath{\nabla #1}}
+\newcommand*{\nablaoperator}[2][]{% Optional argument is degree
+    \ensuremath{%
+        \glsdisp{sym.nabla}{\nablaoperatorfmt{^{#1}#2}}
+    }%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Wrapper for Heat Exchanger Entry
+\newcommand*{\heatexentryfmt}[1]{\ensuremath{#1'}}
+\newcommand*{\heatexentry}[1]{\glsdisp{sym.heatexentry}{\heatexentryfmt{#1}}}
+
+% Wrapper for Heat Exchanger Exit
+\newcommand*{\heatexexitfmt}[1]{\ensuremath{#1''}}
+\newcommand*{\heatexexit}[1]{\glsdisp{sym.heatexexit}{\heatexexitfmt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Vectors
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Vector with bold symbol instead of arrow
+\newcommand*{\vectfmt}[1]{\ensuremath{\symbf{#1}}}
+\newcommand*{\vect}[1]{\glsdisp{sym.vector}{\vectfmt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Derivatives
+% These functionalities are also provided by the otherwise useful 'physics' package.
+% However, that package has many issues and is best avoided!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Base Version:
+% Syntax: \deriv[<degree>]{<symbol>}
+
+% Starred variant gives partial derivative.
+% The star/asterisk and brackets (optional argument in []) may both be left out.
+
+% Usage example 1: \deriv*[2]{x} -> 2nd degree partial derivative of x
+% Usage example 2: \deriv{x} -> derivative of x
+% Usage example 3: \deriv*{x} -> partial derivative of x
+% Usage example 4: \deriv[5]{x} -> 5th derivative of x
+
+% \newcommand syntax: 
+% \newcommand{<command>}[<number of arguments>][<defaults>]{<code>}
+
+% I.e., if [<defaults>] is empty, no default values exist.
+% If one optional argument exists, it takes #1, and the mandatory arguments are appended
+% as #2, ...
+
+% Use explicit glssymbol, since the regular field 'name' is oppcupied by what will be
+% printed in the glossary (with the \symbolplaceholder appended)
+\newcommand*{\derivativefmt}[1]{%
+     % Upright d in derivatives
+    \ensuremath{\mathup{d}#1}%
+}%
+
+\newcommand*{\partialderivativefmt}[1]{%
+    \ensuremath{\partial #1}
+}
+
+\newcommand*{\deriv}[2][]{%
+    \ensuremath{%
+        \glsdisp{sym.derivative}{%
+            \derivativefmt{^{#1}#2}%
+        }%
+    }%
+}%
+
+% Make it so that starred version of \deriv{} command gives partial derivative
+\WithSuffix\newcommand\deriv*[2][]{%
+    \ensuremath{%
+        \glsdisp{sym.partial_derivative}{%
+            \partialderivativefmt{^{#1}#2}%
+        }%
+    }%
+}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fraction version:
+
+% Syntax: \fracderiv[<degree>]{<numerator>}{<denominator>}
+
+% Starred variant gives partial derivative.
+% The star/asterisk and brackets (optional argument in []) may both be left out.
+
+% timederiv simply inserts the time symbol as the denominator automatically.
+% posderiv does the same for the positional coordinate symbol.
+
+% Usage example 1: \fracderiv*[2]{x}{y}
+% Usage example 2: \fracderiv{x}{y}
+% Usage example 3: \timederiv[3]{x} % Note how there is no second mandatory argument
+% Usage example 4 \posderiv*[2]{y} % Note how there is no second mandatory argument
+
+\newcommand{\fracderiv}[3][]{%
+    \ensuremath{%
+        \frac{%
+            \deriv[#1]{#2}%
+        }{%
+            \deriv{#3}^{#1}%
+        }%
+    }%
+}%
+% starred version gives partial derivative
+\WithSuffix\newcommand\fracderiv*[3][]{%
+    \ensuremath{%
+        \frac{%
+            \deriv*[#1]{#2}%
+        }{%
+            \deriv*{#3}^{#1}%
+        }%
+    }%
+}
+
+% Time derivative
+\newcommand*{\timederiv}[2][]{%
+    \fracderiv[#1]{#2}{\gls{sym.zeit}}%
+}%
+% Partial Time derivative
+\WithSuffix\newcommand\timederiv*[2][]{%
+    \fracderiv*[#1]{#2}{\gls{sym.zeit}}%
+}
+
+% Positional derivative
+\newcommand*{\posderiv}[2][]{%
+    \fracderiv[#1]{#2}{\gls{sym.x}}%
+}
+% Partial Positional derivative
+\WithSuffix\newcommand\posderiv*[2][]{%
+    \fracderiv*[#1]{#2}{\gls{sym.x}}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Temperature splits/pairs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To print: 45/55 °C
+\newcommand*{\temperaturepair}[2]{%
+    \SIrange[%
+        range-phrase={/},%
+        range-units=single%
+    ]{#1}{#2}{\degreeCelsius}%
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Other
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Indicating an image etc. has been adapted from it source
+\newcommand*{\adaptedfrom}{%
+    \TransAdaptedFrom{}%
+}%
