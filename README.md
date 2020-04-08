@@ -1,7 +1,7 @@
 ---
 title: "LaTeX, GitLab and Continuous Integration"
 author: [Alex Povel]
-date: "2020-04-02"
+date: "2020"
 subject: "Presenting the advantages and a workflow using LaTeX and GitLab"
 keywords: [LaTeX, GitLab, CI, Markdown]
 lang: "en"

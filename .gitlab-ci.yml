@@ -75,6 +75,9 @@ compile_latex:
 
 compile_pandoc:
     script:
+        # Replace date metadata with current date.
+        # Escape because of colon in script command.
+        - 'sed -i "s~\(^date: \)\".*\"~\1\"$(date +"%B %-d, %Y")\"~" README.md'
         # pandoc looks for template with .latex suffix in current dir
         # Use lualatex for Unicode support
         - pandoc README.md --template eisvogel --pdf-engine=lualatex --number-sections -o README.pdf
