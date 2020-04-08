@@ -289,7 +289,7 @@
 % In the build process, the defaults should be replaced by the respective,
 % current values (see gitlab-ci.yml / your CI script for this)
 \newcommand*{\GitVersion}{n.a.}
-\newcommand*{\GitShorthash}{n.a.}
+\newcommand*{\GitShortHash}{n.a.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

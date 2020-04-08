@@ -44,12 +44,14 @@ replace_git_metadata:
         # with
         # e.g. \newcommand*{\GitVersion}{v1.00}.
         # Use double quotes to enable variable expansion.
-        # Employ and use capture group (\1) to replace current LaTeX command
+        # Employ and use capture group \1 to replace current LaTeX command
         # (given by key in array) by corresponding value for that key.
+        # Run on all class files (cls) found. Only do it once (no global option to sed),
+        # for safety: \newcommand should only occur once anyway.
         - |
             for k in "${!GITINFO[@]}"
                 do
-                    sed -i "s!\($k}{\).*}!\1${GITINFO[$k]}}!g" gitlab_latex_presentation.tex
+                    sed -i "s~\(newcommand\*{\\\\$k}\){.*}~\1{${GITINFO[$k]}}~" *.cls
                 done
 
 compile_latex:
