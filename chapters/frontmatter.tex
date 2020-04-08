@@ -56,4 +56,54 @@
 
 \listofexamples%
 
-% \lstlistoflistings% Listings are code/algorithms
+\lstlistoflistings%
+
+\begin{lstlisting}[
+        % style=python,
+        language=CustomPython,
+        float,
+        caption={[Short code caption description possible]
+        This is an example for a floating code environment with some interesting \LaTeX{} stuff.
+        The actual code is likely crap, you be the judge
+        },
+        label={code:bigbrother}
+    ]
+    def value_cleanup(raw_in) -> float:
+        """Turn dirtied string(s) (e.g. ",233 kg") to float(s)."""
+        if isinstance(raw_in, (int, float, datetime)) or raw_in is None:
+            return raw_in `\phnote{A useless note: \(x^2 \neq x\)}``\label{codeline:empty_list}`
+        elif isinstance(raw_in, list):
+            clean_list = []
+            for substr in raw_in:
+                clean_list.append(value_cleanup(substr))  # Recursion
+            return clean_list
+        elif not isinstance(raw_in, str):
+            raise TypeError(f"Expected type 'str', got '{type(raw_in).__name__}'.")
+        else:
+            dotted = raw_in.replace(",", ".")  # Decimal representation
+            cleaned = dotted.strip()  # Remove surrounding whitespace
+            numeric = '0123456789-.'  # Include negatives/decimal sep. in search
+            position = None  # Initialize to throw error just in case
+            # Append space for search to work
+            for position, char in enumerate(cleaned + " "):
+                if char not in numeric:
+                if position == 0:  # Didn't even start with numerical char
+                    return None `\phstring{\textbf{This is interesting}}`
+                break
+            # Up to just before found nun-numeric char
+            return float(cleaned[:position]) `\phnum{\num{-1.5e-2} is also a float}`
+\end{lstlisting}
+
+\chapter{Hello}
+
+\begin{figure}
+    \includegraphics{git_sha_in_pdf_metadata}
+    \caption{wow}
+\end{figure}
+
+\begin{table}
+    \begin{tabular}{ll}
+        Hello & World\\
+    \end{tabular}
+    \caption{rofl}
+\end{table}

@@ -67,6 +67,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Translations for somewhat automatic internationalization
 \RequirePackage{cookbook-translations}
 
 \RequirePackage{scrhack}% Fixes for packages incompatible with KOMA features
@@ -156,6 +157,79 @@
     \definecolor{mGreen}{HTML}{77AC30}
     \definecolor{mSky}{HTML}{4DBEEE}
     \definecolor{mRed}{HTML}{A2142F}
+
+    % Code annotations:
+    \definecolor{cRed}{RGB}{209,0,86}%
+    \definecolor{cBlue}{RGB}{0, 130, 185}%
+    \definecolor{cGreen}{RGB}{0, 128, 63}%
+    \definecolor{cOrange}{RGB}{244, 131, 66}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Typeset code snippets
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{listings}% Verbatim code environments
+
+% If code is indented in the LaTeX source, this is reflected in the print.
+% This package automatically removes as much whitespace as the first line of a listing
+% is indented by.
+\RequirePackage{lstautogobble}%
+
+% Custom package with style/language definitions:
+\RequirePackage{listings-languages}
+
+% In code environments, to be able to copy from the PDF (despite that not being a good
+% idea usually), we want the line numbers to not be part of the selection.
+% This command prints them, but renders the actual copied content empty.
+\RequirePackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
+    \newcommand*{\emptyaccsupp}[1]{%
+        \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
+    }%
+
+
+% Colors for escaped, normal LaTeX in code environments
+\newcommand*{\phstring}[1]{\color{cRed}{#1}}%
+\newcommand*{\phnum}[1]{\color{mBlue}{#1}}%
+\newcommand*{\phother}[1]{\color{mGreen}{#1}}%
+\newcommand*{\phnote}[1]{%
+    \bfseries\color{cOrange}%
+    \hypersetup{allcolors=cOrange}{#1}%
+}%
+
+\lstset{%
+    % These base styles are valid for all languages. Take care to not overwrite these
+    % settings in the definition for new languages.
+    basicstyle=\scriptsize\ttfamily,% Font size so that c. 140 chars fit into one line
+    escapechar=`,%
+    % mlplaceholderstyle=\rmfamily\itshape,%
+    % mlshowsectionrules=true,% Show rules done by %%
+    numbers=left,%
+    numberstyle=\ttfamily\color{g3}\tiny\emptyaccsupp,%
+    firstnumber=1,% https://stackoverflow.com/q/2178301
+    stepnumber=5,% Step between printed line numbers
+    numberfirstline=true,% Count first line as well
+    numbersep=2pt,% Hor. sep. between line numbers and code
+    frame=lines,% Top and bottom lines with 'lines'
+    framerule=1pt,%
+    autogobble=true,% Remove leading empty spaces/indentation automatically
+    xleftmargin=0.15\linewidth,%
+    xrightmargin=0.1\linewidth,%
+    tabsize=3,% Default is 8, which indents a lot
+    backgroundcolor=\color{g6},%
+    columns=flexible,% Characters printed at natural width, more readable
+    keepspaces=true,% Don't drop spaces and convert tab to spaces
+}%
+
+\lstdefinestyle{betweenpar}{%between paragraphs, i.e. not a huge, independent chunk
+    numbers=none,%
+    basicstyle=\small\ttfamily,%
+    xleftmargin=0.15\linewidth,%
+    xrightmargin=0.05\linewidth,%
+    frame=leftline,%
+    framerule=2pt,%default 0.4pt
+    rulecolor=\color{g3},%
+    backgroundcolor=\color{white},%
+}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
