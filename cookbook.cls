@@ -25,6 +25,7 @@
 \RequirePackage{kvoptions}
     %[default]{language} % If no default entered: option requires a value:
     \DeclareStringOption[english]{language}
+    \DeclareStringOption{titlestyle}
     \ProcessKeyvalOptions*
 
 \PassOptionsToClass{%
@@ -70,6 +71,11 @@
 \RequirePackage{scrhack}% Fixes for packages incompatible with KOMA features
 
 \RequirePackage{import}% Relative path imports
+
+\RequirePackage[super]{nth}% For ordinal numbers, like \nth{1} -> 1^{st}
+
+\RequirePackage{etoolbox}% Programming facilities
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tweaks and improvements for amsmath; also loads amsmath.
 % Needs to be loaded before unicode-math!
@@ -320,54 +326,9 @@
 % Titlepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% These exist already, overwrite:
-\setkomafont{title}{\sffamily\bfseries\Huge}
-\setkomafont{subtitle}{\itshape}
-\setkomafont{author}{\scshape\Large}
-\setkomafont{date}{\normalfont\normalsize\sffamily}
-\setkomafont{publishers}{\scshape}
 
-% New font types:
-% One same line as date, so should look the same; inherit style:
-\newkomafont{documenttype}{\usekomafont{date}}
-
-\renewcommand{\maketitle}{%
-    \begin{titlepage}
-        \hfill%
-        %
-        % 2nd optional argument is height, required for \vfill etc. to work
-        \begin{minipage}[b][1\textheight]{0.05\textwidth}%
-            \color{black}\rule{0.15em}{\textheight}% Vertical line
-            \hfill%
-        \end{minipage}% This comment char is important to suppress linebreak
-        %
-        \begin{minipage}[b][1\textheight]{0.75\textwidth}
-            \vspace{2\baselineskip}
-            {\usekomafont{author}
-                % Tabular enables \and and \\ syntax
-                \begin{tabular}[t]{@{}l@{}}%
-                    \@author
-                \end{tabular}
-            }\par
-            \vspace{1.5\baselineskip}
-            \begin{spacing}{1.1}% In case of multi-line titles, more relaxed spacing
-                \usekomafont{title}\raggedright\@title
-            \end{spacing}
-            \hrule
-            \vspace{0.8\baselineskip}
-            {\usekomafont{documenttype}\@subtitle}
-            \hfill
-            {\usekomafont{date}\@date}\par
-            \vfill
-            {\usekomafont{publishers}
-            \begin{tabular}[t]{@{}l@{}}%
-                \@publishers
-             \end{tabular}
-            }\par
-            \vspace{0.2ex}% Also required for \vfill as something to 'fill against'
-        \end{minipage}
-    \end{titlepage}
-}%
+% Get titlepage definition from an outside file
+\input{chapters/other/titlepage.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -683,8 +644,6 @@
 
 % Replaces datetime; use regional date format from document language
 \RequirePackage[useregional]{datetime2}
-
-\RequirePackage{xifthen}% For \isempty logical tests
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2716,3 +2675,12 @@
 \newcommand*{\adaptedfrom}{%
     \TransAdaptedFrom{}%
 }%
+
+% Document metadata commands, like \author etc.
+% See also https://stackoverflow.com/a/2833982
+\newcommand*{\documenttype}[1]{%
+    \renewcommand\@documenttype{#1}%
+}
+\newcommand*{\@documenttype}{%
+    \@latex@error{No \noexpand\documenttype given}\@ehc%
+}
