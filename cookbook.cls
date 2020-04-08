@@ -1992,16 +1992,8 @@
         bookmarksnumbered=true,%
         % Default opening of the document in supported PDF viewers:
         pdfpagelayout=TwoPageRight,
-        pdfsubject={Skript zur Vorlesung},%
-        pdfkeywords={%
-            Wärmetechnik,%
-            Heizungstechnik,%
-            Thermodynamik,%
-            Wärmeübertragung,%
-            Strömungsmechanik,%
-            Energie,%
-            Energietechnik%
-        },%
+        % pdfsubject={},%
+        % pdfkeywords={},%
         pdfdisplaydoctitle,% https://tex.stackexchange.com/a/435434/120853
     }%
 
