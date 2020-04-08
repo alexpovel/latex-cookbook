@@ -442,7 +442,36 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{polyglossia}% Language rules. Replacement for babel in lualatex
-    \setdefaultlanguage{\cookbook@language}
+    % Expand this properly; the version without \expandsafters does not work fully.
+    % It works this way:
+    % The first \expandafter is seen, so the following \setdefaultlanguage is not
+    % expanded and skipped.
+    % Next, the second \expandafter is looked at. It sees the token { next, saving it
+    % for later.
+    % \cookbook@language is then expanded fully, to the current language.
+    % What is left is a properly working string, \setdefaultlanguage{<language string>}
+    \expandafter\setdefaultlanguage\expandafter{\cookbook@language }
+
+    % Whatever main language (setmainlanguage = setdefaultlanguage) was loaded, we want
+    % the "other" one (since we expect only English and German) to be available as a
+    % secondary language. This is very convenient if for example a thesis is in English,
+    % but certain parts have to be in German, e.g. for legal reasons. A simple switch
+    % \begin{german} ... \end{german} would then achieve that.
+    %
+    % Note that we can also do \setotherlanguages{english, german, ...}, for a
+    % one-stop-shop, but that would also mean loading the main language as an "other"
+    % language, which has "trouble" written all over it. Therefore, choose this weak/
+    % somewhat manual approach.
+    \iflanguageloaded{english}{%
+        \setotherlanguage{german}%
+    }{%
+        % False: do nothing
+    }
+    \iflanguageloaded{german}{%
+        \setotherlanguage{english}%
+    }{%
+        % False: do nothing
+    }
 
 % Proper quotation support, mainly through \enquote
 \RequirePackage{csquotes}
@@ -1966,6 +1995,15 @@
         text-micro=µ,
         per-mode=symbol,
     }%
+    % Second setup step, with locales. See also
+    % https://tex.stackexchange.com/a/46979/120853
+    \gappto{\blockextras@german}{%
+        \sisetup{locale=DE}
+    }
+    \gappto{\blockextras@english}{%
+        \sisetup{locale=US}
+    }
+
     % Declare units ourselves:
     % Set as text so it stays a hyphen in math mode, as opposed to minus sign
     \DeclareSIUnit{\volpercent}{Vol.\text{-}\%}
@@ -2011,6 +2049,36 @@
         % pdfkeywords={},%
         pdfdisplaydoctitle,% https://tex.stackexchange.com/a/435434/120853
     }%
+
+    % In order to translate, polyglossia wraps things into \text<language>, e.g.
+    % \textenglish. If this is part of a PDF string, like when we do
+    % \addchap{\glossaryname}, LaTeX/hyperref will complain that \textenglish is not a
+    % PDF string and is dropped.
+    % Therefore, disable commands of the form \text<language> in this document. Don't
+    % use a static language but the current language from kvoptions.
+    %
+    % Expansion works as follows:
+    % \expandafter is executed, causing \let to be saved for later.
+    % \csname is then executed next. It scans ahead to its matching \endcsname,
+    % "performing full expansion as it goes" (Quote from
+    %  https://tex.stackexchange.com/a/430557/120853).
+    % In that process, \cookbook@language is expanded to the value it was given in the
+    % document options through kvoptions.
+    % Now, \csname finishes and presents a token \text<language>, e.g. \textenglish.
+    % LaTeX starts over; \expandafter is now gone, so it reads \let\text<language> ...
+    % In this case, ... is \relax, removing the macro definition.
+    % It will no longer occur in PDF commands.
+    % See also:
+    % https://www.overleaf.com/learn/latex/Articles/How_does_%5Cexpandafter_work:
+    % _A_detailed_study_of_consecutive_%5Cexpandafter_commands
+    % and
+    % TUGboat, Volume 9, 1988, No. 1: Macros: A Tutorial on \expandafter by
+    % Stephan v. Bechtolsheim.
+    %
+    % Idea from https://tex.stackexchange.com/a/230197/120853
+    \pdfstringdefDisableCommands{%
+        \expandafter\let\csname text\cookbook@language\endcsname \relax%
+    }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Appearance of the bookmarks popup in viewers that support it

@@ -23,10 +23,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % addchap is KOMA equivalent for \chapter*, but also creates ToC entry, see also
 % https://tex.stackexchange.com/a/116085/120853
-% Use built-in macro \glossaryname for proper internationalization.
-% It will contain \text<language>, so fall back to English string for the PDF/hyperref
-% output. It does not matter anyway since this is an unnumbered chapter.
-\addchap{\texorpdfstring{\glossaryname}{Glossary}}%
+% Use built-in macro \glossaryname for proper internationalization. With polyglossia, it
+% will contain \text<language>{<glossary translation>}, which has been taken care of
+% using \pdfstringdefDisableCommands{} in the class file
+\addchap{\glossaryname}%
 
 % Print "unsorted" glossaries; these are in fact sorted, but externally using bib2gls.
 % These will throw 'Token not allowed in PDF, removing \text<language>' warning.
@@ -37,7 +37,6 @@
 ]
 \printunsrtglossary[
     type=numbers,
-    title={Konstanten},
     style=numberlong,
 ]
 \printunsrtglossary[
