@@ -275,7 +275,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setmonofont[%
     Path=fonts/mono/,
-    Extension=.ttf,%
+    % Inconsolata doesn't have italics font, so fake it. Discouraged but should
+    % only occur in a few places in code and not be noticable there. Inconsolata
+    % is too nice to give up on it for lack of italics. See also
+    % https://tex.stackexchange.com/a/183220/120853
+    AutoFakeSlant,
     Scale=MatchLowercase,% Prettier when using inline-code alongside our main font
     UprightFont=*-regular,%
     BoldFont=*-bold,%
