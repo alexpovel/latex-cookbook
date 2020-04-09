@@ -2,6 +2,9 @@
 
 *.pdf
 
+# Testing environment
+testing.tex
+
 # Some weird junk file from VSCode LaTeX Workshop?
 __latexindent_temp.tex
 
