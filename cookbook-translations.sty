@@ -129,8 +129,12 @@
 \providecaptionname{english}{\TransListOfIllustrations}{List of Illustrations}
 \providecaptionname{german,ngerman}{\TransListOfIllustrations}{Illustrationsverzeichnis}
 
-\providecaptionname{english}{\lstlistingname}{List of Code}
-\providecaptionname{german,ngerman}{\lstlistingname}{Codeverzeichnis}
+% Instead of providing a translation \Trans command here, just override commands
+% from listings package directly
+\providecaptionname{english}{\lstlistingname}{Code}
+\providecaptionname{german,ngerman}{\lstlistingname}{Code}
+\providecaptionname{english}{\lstlistlistingname}{List of Code}
+\providecaptionname{german,ngerman}{\lstlistlistingname}{Codeverzeichnis}
 
 \providecaptionname{english}{\TransListOfExamples}{List of Examples}
 \providecaptionname{german,ngerman}{\TransListOfExamples}{Beispielverzeichnis}
