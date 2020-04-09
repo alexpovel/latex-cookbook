@@ -59,8 +59,6 @@
 \lstlistoflistings%
 
 \begin{lstlisting}[
-        % style=python,
-        language=CustomPython,
         float,
         caption={[Short code caption description possible]
         This is an example for a floating code environment with some interesting \LaTeX{} stuff.
@@ -71,7 +69,7 @@
     def value_cleanup(raw_in) -> float:
         """Turn dirtied string(s) (e.g. ",233 kg") to float(s)."""
         if isinstance(raw_in, (int, float, datetime)) or raw_in is None:
-            return raw_in `\phnote{A useless note: \(x^2 \neq x\)}``\label{codeline:empty_list}`
+            return raw_in ¬\phnote{A useless note: \(x^2 \neq x\)}¬¬\label{codeline:empty_list}¬
         elif isinstance(raw_in, list):
             clean_list = []
             for substr in raw_in:

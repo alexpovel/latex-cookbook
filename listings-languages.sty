@@ -1,85 +1,3333 @@
 \ProvidesPackage{listings-languages}% Same as filename
 % File to define listings style for various languages
 
-% \RequirePackage{xcolor}
-    \colorlet{commentcolour}{green!50!black}
-    \colorlet{stringcolour}{red!60!black}
-    \colorlet{keywordcolour}{magenta!90!black}
-    \colorlet{exceptioncolour}{yellow!50!red}
-    \colorlet{commandcolour}{blue!60!black}
-    \colorlet{numpycolour}{blue!60!green}
-    \colorlet{literatecolour}{magenta!90!black}
-    \colorlet{promptcolour}{green!50!black}
-    \colorlet{specmethodcolour}{violet}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Styles
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Color Themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Define different color scheme sets, then hand them over below,
+% in the \colorlet definitions. That way, \lstdefinestyle{base}
+% does not have to be modified.
+
+% Circus Theme colors,
+% loosely based on "Material Theme Lighter High Contrast"
+% (under Apache License Version 2.0,
+% https://github.com/material-theme/vsc-material-theme)
+% a light theme, since we print on white paper
+    \definecolor{CircusRed}{RGB}{229, 57, 53}
+    \definecolor{CircusLightRed}{RGB}{247, 109, 71}
+    \definecolor{CircusOrange}{RGB}{244, 131, 66}
+    \definecolor{CircusTurq}{RGB}{57, 173, 181}
+    \definecolor{CircusBlue}{RGB}{97, 130, 191}
+    \definecolor{CircusBlueGray}{RGB}{144, 164, 174}
+    \definecolor{CircusGreen}{RGB}{145, 184, 89}
+    \definecolor{CircusViolet}{RGB}{124, 77, 255}
+
+% Change the theme here
+\colorlet{Keyword1}{CircusTurq}
+\colorlet{Keyword2}{CircusViolet}
+\colorlet{Keyword3}{Keyword1}
+\colorlet{Exception}{CircusOrange}
+\colorlet{Classes1}{Exception}
+\colorlet{Classes2}{CircusBlue}
+\colorlet{Dunder}{Classes2}
+\colorlet{Comment}{CircusBlueGray}
+\colorlet{String}{CircusGreen}
+\colorlet{Digit}{CircusLightRed}
+\colorlet{Operator}{CircusTurq}
+\colorlet{Other}{Keyword1}
+\colorlet{Function}{Classes2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Style definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstdefinestyle{base}{%
+    % Basic settings
+    basicstyle=\scriptsize\ttfamily,% Font size so that c. 140 chars fit into one line
+    %
+    % Regular LaTeX can occur in these (on UK Keyboard: SHIFT+`).
+    % Otherwise, you'll have to copy-paste this whenever needed.
+    % The problem is that the escapechar has to be quite exotic so it never occurs
+    % in source code.
+    escapechar=¬,
+    %
+    % Line numbering
+    numbers=left,%
+    numberstyle=\ttfamily\color{g3}\tiny\emptyaccsupp,%
+    firstnumber=1,% https://stackoverflow.com/q/2178301
+    stepnumber=5,% Step between printed line numbers
+    numberfirstline=true,% Count first line as well
+    numbersep=2pt,% Hor. sep. between line numbers and code
+    %
+    % Framing
+    frame=lines,% Top and bottom lines with 'lines'
+    framerule=1pt,%
+    rulecolor=\color{g3},
+    xleftmargin=0.15\linewidth,%
+    xrightmargin=0.1\linewidth,%
+    backgroundcolor=\color{g6},%
+    %
+    % Spacing
+    autogobble=true,% Remove leading empty spaces/indentation automatically
+    tabsize=3,% Default is 8, which indents a lot; USE SPACES
+    columns=flexible,% Characters printed at natural width, more readable
+    keepspaces=true,% Don't drop spaces and convert tab to spaces
+    % Linebreaking
+    breakindent=0.5\linewidth,
+    breaklines=true,%
+    % If linebreak occurs, insert these characters to signal it.
+    % No dynamic spaces allowed, so use mbox. \space is redefined by package
+    % and is allowed. See also
+    % https://tex.stackexchange.com/a/116572/120853
+    postbreak={\mbox{\textcolor{g2}{\(\hookrightarrow\)}\space}},
+    %
+    % Styles
+    keywordstyle=[1]\color{Keyword1}\itshape,%
+    keywordstyle=[2]\color{Keyword2}\bfseries,%
+    keywordstyle=[3]\color{Keyword3},%
+    keywordstyle=[4]\color{Classes1},%
+    keywordstyle=[5]\color{Classes2},%
+    keywordstyle=[6]\color{Exception},%
+    keywordstyle=[7]\color{Dunder},%
+    keywordstyle=[8]\color{Other},%
+    keywordstyle=[9]\color{Function},%
+    %
+    stringstyle=\color{String},
+    commentstyle=\color{Comment}\itshape,% Inconsolata Italics is faked
+    identifierstyle=\color{g1},% Anything else
+    %
+}
+
+\lstdefinestyle{betweenpar}{% Between paragraphs, i.e. not a huge, independent chunk
+    style=base,% Inherit
+    numbers=none,%
+    basicstyle=\small\ttfamily,%
+    frame=leftline,%
+    framerule=2pt,% Default is 0.4pt
+    backgroundcolor=\color{white},%
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Language Definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Python
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% From https://github.com/olivierverdier/python-latex-highlighting/:
-\newcommand*{\literatecolour}{%
-    \textcolor{literatecolour}%
-}%
+% Signature is: [<dialect>]{<name>}[<base dialect>]{<base name>}
+\lstdefinelanguage[Custom]{Python}[]{Python}{%
+    % Print digits dark, aka as letters. Don't really know what this does
+    alsoletter={0123456789},
+    % Changes based on Python 3.8.2 (2020-04-09)
+    %
+    morestring=[s]{f'}{'},% f-strings
+    morestring=[s]{f"}{"},%
+    morestring=[s]{f'''}{'''},%
+    morestring=[s]{f"""}{"""},%
+    %
+    % Color special, individual characters.
+    % This can break other languages, e.g. if // is replaced here but occurs as
+    % a comment character. Therefore, these should be strictly language-specific.
+    literate=*% Asterisk disables these for delimited contexts like strings
+        % Syntax is {<original>}{<replacement>}{<column width>}
+        %
+        % All sorts of operators
+        {-}{\color{Operator}-}{1}%
+        {,}{\color{Operator},}{1}%
+        {:}{\color{Operator}:}{1}%
+        {!}{\color{Operator}!}{1}%
+        {.}{\color{Operator}.}{1}%
+        {(}{\color{Operator}(}{1}%
+        {)}{\color{Operator})}{1}%
+        {[}{\color{Operator}[}{1}%
+        {]}{\color{Operator}]}{1}%
+        {@}{\color{Operator}@}{1}%
+        {*}{\color{Operator}*}{1}%
+        {/}{\color{Operator}/}{1}%
+        {\{ }{\color{Operator}\{ }{1}%
+        {\}}{\color{Operator}\}}{1}%
+        {\&}{\color{Operator}\&}{1}%
+        {\%}{\color{Operator}\%}{1}%
+        {\^}{\color{Operator}\^}{1}%
+        {\|}{\color{Operator}\|}{1}%
+        {+}{\color{Operator}+}{1}%
+        {<}{\color{Operator}<}{1}%
+        {=}{\color{Operator}=}{1}%
+        {>}{\color{Operator}>}{1}%
+        {//}{\color{Operator}{//}}{2}%
+        {**}{\color{Operator}{**}}{2},%
+    %
+    % Keywords lists 1 and 2 are overridden from default package definitions,
+    % which are found in lstlang1.sty in the package directory. They are
+    % overridden because we change too much anyway and they are outdated.
+    % Python 'keywords', as in the literal Python keywords, as generated by
+    % import keyword; keyword.kwlist
+    keywords=[1]{% Base keywords
+        % False, see keyword list 3
+        % None, see keyword list 3
+        % True, see keyword list 3
+        and,
+        as,
+        assert,
+        % async, see keyword list 2
+        await,
+        break,
+        % class, see keyword list 2
+        continue,
+        % def, see keyword list 2
+        del,
+        elif,
+        else,
+        except,
+        finally,
+        for,
+        from,
+        global,
+        if,
+        import,
+        in,
+        is,
+        lambda,
+        nonlocal,
+        not,
+        or,
+        pass,
+        raise,
+        return,
+        try,
+        while,
+        with,
+        yield%
+    },
+    keywords=[2]{% Special base keywords
+        % They are divided from list 1 so they can be styled differently
+        async,
+        class,
+        def%
+    },
+    keywords=[3]{% More special base keywords
+        False,
+        None,
+        True%
+    },
+    % Built-ins from __builtins__.__dict__ with the help of pprint
+    keywords=[4]{% Built-in Classes
+        bool,
+        bytearray,
+        bytes,
+        classmethod,
+        complex,
+        dict,
+        float,
+        frozenset,
+        int,
+        list,
+        object,
+        property,
+        set,
+        slice,
+        staticmethod,
+        str,
+        super,
+        tuple,
+        type%
+    },
+    keywords=[5]{% Built-in Functions or callable classes (like zip, map)
+        abs,
+        all,
+        any,
+        ascii,
+        bin,
+        breakpoint,
+        callable,
+        chr,
+        compile,
+        copyright,
+        credits,
+        delattr,
+        dir,
+        divmod,
+        enumerate,% class
+        eval,
+        exec,
+        exit,
+        filter,% class
+        format,
+        getattr,
+        globals,
+        hasattr,
+        hash,
+        help,
+        hex,
+        id,
+        input,
+        isinstance,
+        issubclass,
+        iter,
+        len,
+        license,
+        locals,
+        map,% class
+        max,
+        memoryview,% class
+        min,
+        next,
+        oct,
+        open,
+        ord,
+        pow,
+        print,
+        quit,
+        range,% class
+        repr,
+        reversed,% class
+        round,
+        setattr,
+        sorted,
+        sum,
+        vars,
+        zip% class
+    },
+    keywords=[6]{% Built-in Exceptions
+        ArithmeticError,
+        AssertionError,
+        AttributeError,
+        BaseException,
+        BlockingIOError,
+        BrokenPipeError,
+        BufferError,
+        BytesWarning,
+        ChildProcessError,
+        ConnectionAbortedError,
+        ConnectionError,
+        ConnectionRefusedError,
+        ConnectionResetError,
+        DeprecationWarning,
+        EOFError,
+        Exception,
+        FileExistsError,
+        FileNotFoundError,
+        FloatingPointError,
+        FutureWarning,
+        GeneratorExit,
+        ImportError,
+        ImportWarning,
+        IndentationError,
+        IndexError,
+        InterruptedError,
+        IsADirectoryError,
+        KeyboardInterrupt,
+        KeyError,
+        LookupError,
+        MemoryError,
+        ModuleNotFoundError,
+        NameError,
+        NotADirectoryError,
+        NotImplementedError,
+        OSError,
+        OverflowError,
+        PendingDeprecationWarning,
+        PermissionError,
+        ProcessLookupError,
+        RecursionError,
+        ReferenceError,
+        ResourceWarning,
+        RuntimeError,
+        RuntimeWarning,
+        StopAsyncIteration,
+        StopIteration,
+        SyntaxError,
+        SyntaxWarning,
+        SystemError,
+        SystemExit,
+        TabError,
+        TimeoutError,
+        TypeError,
+        UnboundLocalError,
+        UnicodeDecodeError,
+        UnicodeEncodeError,
+        UnicodeError,
+        UnicodeTranslateError,
+        UnicodeWarning,
+        UserWarning,
+        ValueError,
+        Warning,
+        ZeroDivisionError,
+    },
+    keywords=[7]{% Dunder/magic methods/attributes
+        __abs__,
+        __add__,
+        __all__,
+        __and__,
+        __call__,
+        __ceil__,
+        __class__,
+        __cmp__,
+        __coerce__,
+        __complex__,
+        __contains__,
+        __del__,
+        __delattr__,
+        __delete__,
+        __delitem__,
+        __delslice__,
+        __dict__,
+        __dir__,
+        __div__,
+        __divmod__,
+        __doc__,
+        __eq__,
+        __float__,
+        __floor__,
+        __floordiv__,
+        __format__,
+        __ge__,
+        __get__,
+        __getattr__,
+        __getattribute__,
+        __getitem__,
+        __getslice__,
+        __gt__,
+        __hash__,
+        __hex__,
+        __iadd__,
+        __iand__,
+        __idiv__,
+        __ifloordiv__,
+        __ilshift__,
+        __imod__,
+        __imul__,
+        __index__,
+        __init__,
+        __instancecheck__,
+        __int__,
+        __invert__,
+        __ior__,
+        __ipow__,
+        __irshift__,
+        __isub__,
+        __iter__,
+        __itruediv__,
+        __ixor__,
+        __le__,
+        __len__,
+        __long__,
+        __lshift__,
+        __lt__,
+        __metaclass__,
+        __mod__,
+        __mro__,
+        __mul__,
+        __name__,
+        __ne__,
+        __neg__,
+        __new__,
+        __nonzero__,
+        __oct__,
+        __or__,
+        __pos__,
+        __pow__,
+        __radd__,
+        __rand__,
+        __rcmp__,
+        __rdiv__,
+        __rdivmod__,
+        __repr__,
+        __reversed__,
+        __rfloordiv__,
+        __rlshift__,
+        __rmod__,
+        __rmul__,
+        __ror__,
+        __round__,
+        __rpow__,
+        __rrshift__,
+        __rshift__,
+        __rsub__,
+        __rtruediv__,
+        __rxor__,
+        __set__,
+        __setattr__,
+        __setitem__,
+        __setslice__,
+        __sizeof__,
+        __slots__,
+        __str__,
+        __sub__,
+        __subclasscheck__,
+        __truediv__,
+        __trunc__,
+        __unicode__,
+        __weakref__,
+        __xor__%
+    },
+    keywords=[8]{% numpy
+        abs,
+        all,
+        any,
+        arange,
+        arccos,
+        arctan,
+        arctan2,
+        array,
+        cla,
+        column_stack,
+        concatenate,
+        cos,
+        cumprod,
+        cumsum,
+        det,
+        diff,
+        dot,
+        eig,
+        eigs,
+        eigvals,
+        empty,
+        exp,
+        eye,
+        find,
+        flatten,
+        fsolve,
+        grid,
+        hstack,
+        isscalar,
+        legend,
+        linspace,
+        logspace,
+        lstsq,
+        max,
+        mean,
+        min,
+        norm,
+        ode,
+        ones,
+        pcolor,
+        pi,
+        plot,
+        polyfit,
+        polyval,
+        qr,
+        quad,
+        rand,
+        reshape,
+        roll,
+        shape,
+        sin,
+        solve,
+        sqrt,
+        squeeze,
+        sum,
+        svd,
+        tan,
+        vander,
+        vectorize,
+        vstack,
+        xlabel,
+        ylabel,
+        zeros%
+    },
+    keywords=[9]{%
+        % Your custom functions go here
+    },
+}
 
-\newcommand*{\pythonprompt}{%
-    \textcolor{promptcolour}{{>}{>}{>}}%
-}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modelica
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\lstdefinelanguage{CustomPython}[]{Python}{% {NewLanguage}[BaseDialect]{BaseLanguage}
-    showtabs=true,
-    tab=,
-    stringstyle=\color{stringcolour},
-    showstringspaces=false,
-    alsoletter={1234567890},
-    otherkeywords={\%, \}, \{, \&, \|},
-    keywordstyle=\color{keywordcolour}\bfseries,
-    emph={and,break,class,continue,def,yield,del,elif ,else,%
-        except,exec,finally,for,from,global,if,import,in,%
-        lambda,not,or,pass,print,raise,return,try,while,assert,with},
-    emphstyle=\color{blue}\bfseries,
-    emph={[2]True, False, None},
-    emphstyle=[2]\color{keywordcolour},
-    emph={[3]object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,%
-        len,dict,tuple,xrange,append,execfile,real,imag,reduce,str,repr},
-    emphstyle=[3]\color{commandcolour},
-    emph={Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,%
-        OverflowError,ZeroDivisionError},
-    emphstyle=\color{exceptioncolour}\bfseries,
-    %upquote=true,
-    morecomment=[s]{"""}{"""},
-    commentstyle=\color{commentcolour},%\itshape, Inconsolata can't do itshape
-    %emph={[4]1, 2, 3, 4, 5, 6, 7, 8, 9, 0},
-    emph={[4]ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi,array,norm,solve,dot,%
-        arange,isscalar,max,sum,flatten,shape,reshape,find,any,all,abs,plot,linspace,%
-        legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,%
-        ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,%
-        mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze},
-    emphstyle=[4]\color{numpycolour},
-    emph={[5]__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,%
-        __eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,%
-        __truediv__,__pow__,__name__,__future__,__all__},
-    emphstyle=[5]\color{specmethodcolour},
-    emph={[6]assert,yield},
-    emphstyle=[6]\color{keywordcolour}\bfseries,
-    emph={[7]range},
-    emphstyle={[7]\color{keywordcolour}\bfseries},
-    literate=*%
-        {:}{{\literatecolour:}}{1}%
-        {=}{{\literatecolour=}}{1}%
-        {-}{{\literatecolour-}}{1}%
-        {+}{{\literatecolour+}}{1}%
-        {*}{{\literatecolour*}}{1}%
-        {**}{{\literatecolour{**}}}2%
-        {/}{{\literatecolour/}}{1}%
-        {//}{{\literatecolour{//}}}2%
-        {!}{{\literatecolour!}}{1}%
-        {[}{{\literatecolour[}}{1}%
-        {]}{{\literatecolour]}}{1}%
-        {<}{{\literatecolour<}}{1}%
-        {>}{{\literatecolour>}}{1}%
-        {>>>}{\pythonprompt}{3}%
-    ,%
-    rulecolor=\color{black!40},
-    breakindent=.5\textwidth,
-    breaklines=true,%
+%% Copyright 2014 Martin Sjoelund, Dietmar Winkler
+%
+% This work may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This work has the LPPL maintenance status `maintained'.
+%
+% The Current Maintainer of this work is Dietmar Winkler
+%
+% Code repository https://github.com/modelica-tools/listings-modelica
+
+\lstdefinelanguage{Modelica}{%
+    % Print digits dark, aka as letters. Don't really know what this does
+    alsoletter={0123456789},
+    %
+    % Color special, individual characters.
+    % This can break other languages, e.g. if // is replaced here but occurs as
+    % a comment character. Therefore, these should be strictly language-specific.
+    literate=*% Asterisk disables these for delimited contexts like strings
+        % Syntax is {<original>}{<replacement>}{<column width>}
+        %
+        % All sorts of operators
+        {-}{\color{Operator}-}{1}%
+        {,}{\color{Operator},}{1}%
+        {:}{\color{Operator}:}{1}%
+        {!}{\color{Operator}!}{1}%
+        {.}{\color{Operator}.}{1}%
+        {(}{\color{Operator}(}{1}%
+        {)}{\color{Operator})}{1}%
+        {[}{\color{Operator}[}{1}%
+        {]}{\color{Operator}]}{1}%
+        {@}{\color{Operator}@}{1}%
+        {*}{\color{Operator}*}{1}%
+        {\{ }{\color{Operator}\{ }{1}%
+        {\}}{\color{Operator}\}}{1}%
+        {\&}{\color{Operator}\&}{1}%
+        {\%}{\color{Operator}\%}{1}%
+        {\^}{\color{Operator}\^}{1}%
+        {\|}{\color{Operator}\|}{1}%
+        {+}{\color{Operator}+}{1}%
+        {<}{\color{Operator}<}{1}%
+        {=}{\color{Operator}=}{1}%
+        {>}{\color{Operator}>}{1}%
+        {**}{\color{Operator}{**}}{2},%
+    morekeywords=[1]{%
+        algorithm,
+        and,
+        annotation,
+        as,
+        assert,
+        block,
+        break,
+        case,
+        class,
+        connect,
+        connector,
+        constant,
+        constrainedby,
+        der,
+        discrete,
+        each,
+        else,
+        elseif,
+        elsewhen,
+        encapsulated,
+        end,
+        enumeration,
+        equality,
+        equation,
+        expandable,
+        extends,
+        external,
+        failure,
+        final,
+        flow,
+        for,
+        function,
+        guard,
+        if,
+        import,
+        in,
+        initial,
+        inner,
+        input,
+        List,
+        local,
+        loop,
+        match,
+        matchcontinue,
+        model,
+        not,
+        operator,
+        Option,
+        or,
+        outer,
+        output,
+        package,
+        parameter,
+        partial,
+        protected,
+        public,
+        record,
+        redeclare,
+        replaceable,
+        return,
+        stream,
+        subtypeof,
+        then,
+        Tuple,
+        type,
+        uniontype,
+        when,
+        while,
+        within%
+    },%
+    morekeywords=[2]{%
+        % Optimica keywords
+        constraint,
+        optimization%
+    },
+    morekeywords=[3]{%
+        % Do not make true,false keywords because fn(true,x, false ) shows up as
+        %   fn(true,x, *false*)
+        false,
+        true%
+    },%
+    morekeywords=[4]{%
+        finalTime,
+        initialGuess,
+        objective,
+        startTime%
+    },
+    morekeywords=[9]{%
+        % Your custom functions go here
+    },
+    sensitive=true,% Case (in)senstive
+    comment=[l]//,
+    morecomment=[s]{/*}{*/},
+    alsodigit={.,-},
+    morestring=[b]',
+    morestring=[b]",
+}[keywords,comments,strings]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MATLAB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstdefinelanguage[Custom]{Matlab}[]{Matlab}{%
+    % Print digits dark, aka as letters. Don't really know what this does
+    alsoletter={0123456789},
+    %
+    % Color special, individual characters.
+    % This can break other languages, e.g. if // is replaced here but occurs as
+    % a comment character. Therefore, these should be strictly language-specific.
+    literate=*% Asterisk disables these for delimited contexts like strings
+        % Syntax is {<original>}{<replacement>}{<column width>}
+        %
+        % All sorts of operators
+        {-}{\color{Operator}-}{1}%
+        {,}{\color{Operator},}{1}%
+        {:}{\textcolor{Operator}{:}}{1}%
+        {!}{\textcolor{Operator}{!}}{1}%
+        {.}{\textcolor{Operator}{.}}{1}%
+        {~}{\textcolor{Operator}{\~{}}}{1}% https://tex.stackexchange.com/a/9365/120853
+        {(}{\textcolor{Operator}{(}}{1}%
+        {)}{\textcolor{Operator}{)}}{1}%
+        {[}{\textcolor{Operator}{[}}{1}%
+        {]}{\textcolor{Operator}{]}}{1}%
+        {@}{\textcolor{Operator}{@}}{1}%
+        {*}{\textcolor{Operator}{*}}{1}%
+        {\{ }{\textcolor{Operator}{\{ }}{1}%
+        {\}}{\textcolor{Operator}{\} }}{1}%
+        {\&}{\textcolor{Operator}{\& }}{1}%
+        {\^}{\textcolor{Operator}{\^{} }}{1}%
+        {\|}{\textcolor{Operator}{\| }}{1}%
+        {+}{\textcolor{Operator}{+}}{1}%
+        {<}{\textcolor{Operator}{<}}{1}%
+        {=}{\textcolor{Operator}{=}}{1}%
+        {>}{\textcolor{Operator}{>}}{1}%
+        {**}{\textcolor{Operator}{**}}{2},%
+    % keywords instead of morekeywords: overwrite package defaults
+    % Based on MATLAB 2019b, running `iskeyword`
+    keywords=[1]{% Base keywords
+        break,
+        case,
+        catch,
+        classdef,
+        continue,
+        else,
+        elseif,
+        end,
+        for,
+        function,
+        % global, see keywords [2]
+        if,
+        otherwise,
+        parfor,
+        % persistent, see keywords[2]
+        return,
+        spmd,
+        switch,
+        try,
+        while%
+    },
+    morekeywords=[2]{% Special keywords
+        global,%
+        persistent%
+    },
+    morekeywords=[3]{% More special keywords
+        false,%
+        NaN,%
+        true%
+    },
+    morekeywords=[9]{%
+        % Your custom functions go here
+    },
+    morecomment=[s]{\%\{ }{\%\} },% Comment block
+    % And last, because of its lengths (one \deletekeywords afterwards though):
+    % All the built-in functions from the MATLAB base. Scraped from
+    % https://www.mathworks.com/help/matlab/referencelist.html
+    % on 2020-04-09 using Python 3.8.2 and chromedriver 80
+    % (https://chromedriver.chromium.org/downloads). The Python script:
+    %
+    %
+    % from selenium import webdriver
+    % from bs4 import BeautifulSoup as bs
+    % import time
+    % 
+    % url = "https://www.mathworks.com/help/matlab/referencelist.html"
+    % 
+    % browser = webdriver.Chrome(executable_path=r"C:\chromedriver.exe")
+    % browser.get(url)
+    % time.sleep(10)  # Wait for page to load
+    % source = browser.page_source
+    % soup = bs(source)
+    % 
+    % matlab_commands = soup.find_all("td", "add_font_monospace")
+    % matlab_command_descriptions = soup.find_all("td", "description")
+    % 
+    % cmds_to_descs = {# Dict gets rid of duplicate entries
+    %     cmd.text: desc.text
+    %     for cmd, desc in zip(matlab_commands, matlab_command_descriptions)
+    % }
+    % 
+    % with open("matlab_commands.txt", "w") as f:
+    %     for cmd in sorted(cmds_to_descs):
+    %         f.write(f"{cmd},% {cmds_to_descs[cmd]}\n")
+    %
+    %
+    morekeywords=[5]{%
+        abs,% Absolute value and complex magnitude
+        accumarray,% Construct array with accumulation
+        acos,% Inverse cosine in radians
+        acosd,% Inverse cosine in degrees
+        acosh,% Inverse hyperbolic cosine
+        acot,% Inverse cotangent in radians
+        acotd,% Inverse cotangent in degrees
+        acoth,% Inverse hyperbolic cotangent
+        acsc,% Inverse cosecant in radians
+        acscd,% Inverse cosecant in degrees
+        acsch,% Inverse hyperbolic cosecant
+        actxGetRunningServer,% Handle to running instance of Automation server
+        actxserver,% Create COM server
+        add,% Add single key-value pair to KeyValueStore
+        addboundary,% Add polyshape boundary
+        addcats,% Add categories to categorical array
+        addCause,% Record additional causes of exception
+        addCorrection,% Provide suggested fix for exception
+        addedge,% Add new edge to graph
+        addevent,% Add event to timeseries
+        addFile,% Add file or folder to project
+        addFolderIncludingChildFiles,% Add folder and child files to project
+        addGroup,% Add new settings group
+        addLabel,% Attach label to project file
+        addlistener,% Create event listener bound to event source
+        addmulti,% Add multiple key-value pairs to KeyValueStore
+        addnode,% Add new node to graph
+        addPath,% Add folder to project path
+        addpath,% Add folders to search path
+        addpoints,% Add points to animated line
+        addpref,% Add custom preference
+        addprop,% Add custom properties to table or timetable
+        addReference,% Add referenced project to project
+        addsample,% Add data sample to timeseries object
+        addsampletocollection,% Add sample to tscollection
+        addSetting,% Add new setting
+        addShortcut,% Add shortcut to project
+        addShutdownFile,% Add shutdown file to project
+        addStartupFile,% Add startup file to project
+        addStyle,% Add style to table UI component
+        addtodate,% Modify date number by field
+        addToolbarExplorationButtons,% Add data exploration buttons to figure toolbar
+        addts,% Add timeseries to tscollection
+        addvars,% Add variables to table or timetable
+        adjacency,% Graph adjacency matrix
+        airy,% Airy Functions
+        align,% Align UI components and graphics objects
+        alim,% Set or query axes alpha limits
+        all,% Determine if all array elements are nonzero or true
+        allchild,% Find all children of specified objects
+        alpha,% Add transparency to objects in axes
+        alphamap,% Specify figure alphamap (transparency)
+        alphaShape,% Polygons and polyhedra from points in 2-D and 3-D
+        alphaSpectrum,% Alpha values giving distinct alpha shapes
+        alphaTriangulation,% Triangulation that fills alpha shape
+        amd,% Approximate minimum degree permutation
+        analyzeCodeCompatibility,% Create code compatibility analysis results
+        ancestor,% Ancestor of graphics object
+        angle,% Phase angle
+        animatedline,% Create animated line
+        annotation,% Create annotations
+        ans,% Most recent answer
+        any,% Determine if any array elements are nonzero
+        appdesigner,% Open App Designer Start Page or existing app file
+        append,% Concatenate timeseries objects in time
+        area,% Filled area 2-D plot
+        arguments,% Declare function argument validation
+        array2table,% Convert homogeneous array to table
+        array2timetable,% Convert homogeneous array to timetable
+        arrayfun,% Apply function to each element of array
+        ascii,% Set FTP transfer mode to ASCII
+        asec,% Inverse secant in radians
+        asecd,% Inverse secant in degrees
+        asech,% Inverse hyperbolic secant
+        asin,% Inverse sine in radians
+        asind,% Inverse sine in degrees
+        asinh,% Inverse hyperbolic sine
+        assert,% Throw error if condition false
+        assignin,% Assign value to variable in specified workspace
+        atan,% Inverse tangent in radians
+        atan2,% Four-quadrant inverse tangent
+        atan2d,% Four-quadrant inverse tangent in degrees
+        atand,% Inverse tangent in degrees
+        atanh,% Inverse hyperbolic tangent
+        audiodevinfo,% Information about audio device
+        audioinfo,% Information about audio file
+        audioplayer,% Object for playing audio
+        audioread,% Read audio file
+        audiorecorder,% Object for recording audio
+        audiowrite,% Write audio file
+        autumn,% Autumn colormap array
+        axes,% Create Cartesian axes
+        axis,% Set axis limits and aspect ratios
+        axtoolbar,% Create axes toolbar
+        axtoolbarbtn,% Add buttons to axes toolbar
+        balance,% Diagonal scaling to improve eigenvalue accuracy
+        bandwidth,% Lower and upper matrix bandwidth
+        bar,% Bar graph
+        bar3,% Plot 3-D bar graph
+        bar3h,% Plot horizontal 3-D bar graph
+        barh,% Horizontal bar graph
+        barycentricToCartesian,% Convert coordinates from barycentric to Cartesian
+        base2dec,% Convert text representing number in base N to decimal number
+        batchStartupOptionUsed,% Determine if MATLAB started with -batch option
+        bctree,% Block-cut tree graph
+        beep,% Produce operating system beep sound
+        BeginInvoke,% Initiate asynchronous .NET delegate call
+        bench,% MATLAB benchmark
+        besselh,% Bessel function of third kind (Hankel function)
+        besseli,% Modified Bessel function of first kind
+        besselj,% Bessel function of first kind
+        besselk,% Modified Bessel function of second kind
+        bessely,% Bessel function of second kind
+        beta,% Beta function
+        betainc,% Incomplete beta function
+        betaincinv,% Beta inverse cumulative distribution function
+        betaln,% Logarithm of beta function
+        between,% Calendar math differences
+        bfsearch,% Breadth-first graph search
+        bicg,% Solve system of linear equations — biconjugate gradients method
+        bicgstab,% Solve system of linear equations — stabilized biconjugate gradients method
+        bicgstabl,% Solve system of linear equations — stabilized biconjugate gradients (l) method
+        biconncomp,% Biconnected graph components
+        bin2dec,% Convert text representation of binary number to decimal number
+        binary,% Set FTP transfer mode to binary
+        binscatter,% Binned scatter plot
+        bitand,% Bit-wise AND
+        bitcmp,% Bit-wise complement
+        bitget,% Get bit at specified position
+        bitnot,% .NET enumeration object bit-wise NOT instance method
+        bitor,% Bit-wise OR
+        bitset,% Set bit at specific location
+        bitshift,% Shift bits specified number of places
+        bitxor,% Bit-wise XOR
+        blanks,% Create character array of blanks
+        ble,% Connect to Bluetooth Low Energy peripheral device
+        blelist,% Scan nearby Bluetooth Low Energy peripheral devices
+        blkdiag,% Block diagonal matrix
+        bone,% Bone colormap array
+        boundary,% Vertex coordinates of polyshape boundary
+        boundaryFacets,% Boundary facets of alpha shape
+        boundaryshape,% Create polyshape from 2-D triangulation
+        boundingbox,% Bounding box of polyshape
+        bounds,% Smallest and largest elements
+        box,% Display axes outline
+        boxchart,% Create box chart (box plot)
+        break,% Terminate execution of for or while loop
+        brighten,% Brighten or darken colormap
+        brush,% Interactively mark data values in a chart
+        bsxfun,% Apply element-wise operation to two arrays with implicit expansion enabled
+        builddocsearchdb,% Build searchable documentation database
+        builtin,% Execute built-in function from overloaded method
+        bvp4c,% Solve boundary value problem — fourth-order method
+        bvp5c,% Solve boundary value problem — fifth-order method
+        bvpget,% Extract properties from options structure created with bvpset
+        bvpinit,% Form initial guess for boundary value problem solver
+        bvpset,% Create or alter options structure of boundary value problem
+        bvpxtend,% Form guess structure for extending boundary value solutions
+        caldays,% Calendar duration in days
+        caldiff,% Calendar math successive differences
+        calendar,% Calendar for specified month
+        calendarDuration,% Lengths of time in variable-length calendar units
+        calllib,% Call function in C shared library
+        calmonths,% Calendar duration in months
+        calquarters,% Calendar duration in quarters
+        calweeks,% Calendar duration in weeks
+        calyears,% Calendar duration in years
+        camdolly,% Move camera position and target
+        cameratoolbar,% Control camera toolbar programmatically
+        camlight,% Create or move light object in camera coordinates
+        camlookat,% Position camera to view object or group of objects
+        camorbit,% Rotate camera position around camera target
+        campan,% Rotate camera target around camera position
+        campos,% Set or query camera position
+        camproj,% Set or query projection type
+        camroll,% Rotate camera about view axis
+        camtarget,% Set or query location of camera target
+        camup,% Set or query camera up vector
+        camva,% Set or query camera view angle
+        camzoom,% Zoom in and out on scene
+        cart2pol,% Transform Cartesian coordinates to polar or cylindrical
+        cart2sph,% Transform Cartesian coordinates to spherical
+        cartesianToBarycentric,% Convert coordinates from Cartesian to barycentric
+        cast,% Convert variable to different data type
+        cat,% Concatenate arrays
+        categorical,% Array that contains values assigned to categories
+        categories,% Categories of categorical array
+        caxis,% Set colormap limits
+        cd,% Change current folder
+        cdf2rdf,% Convert complex diagonal form to real block diagonal form
+        cdfepoch,% Convert date text or serial date number to CDF formatted dates
+        cdfinfo,% Information about Common Data Format (CDF) file
+        cdflib,% Interact directly with CDF library
+        cdfread,% Read data from Common Data Format (CDF) file
+        ceil,% Round toward positive infinity
+        cell,% Cell array
+        cell2mat,% Convert cell array to ordinary array of the underlying data type
+        cell2struct,% Convert cell array to structure array
+        cell2table,% Convert cell array to table
+        celldisp,% Display cell array contents
+        cellfun,% Apply function to each cell in cell array
+        cellplot,% Graphically display structure of cell array
+        cellstr,% Convert to cell array of character vectors
+        centrality,% Measure node importance
+        centroid,% Centroid of polyshape
+        cgs,% Solve system of linear equations — conjugate gradients squared method
+        char,% Character array
+        characteristic,% Access a characteristic on Bluetooth Low Energy peripheral device
+        checkcode,% Check MATLAB code files for possible problems
+        chol,% Cholesky factorization
+        cholupdate,% Rank 1 update to Cholesky factorization
+        choose,% Perform choose gesture on UI component
+        circshift,% Shift array circularly
+        circumcenter,% Circumcenter of triangle or tetrahedron
+        cla,% Clear axes
+        clabel,% Label contour plot elevation
+        class,% Class of object
+        classdef,% Class definition keywords
+        classUnderlying,% Class of underlying data in tall array
+        clc,% Clear Command Window
+        clear,% Remove items from workspace, freeing up system memory
+        clearAllMemoizedCaches,% Clear caches for all MemoizedFunction objects
+        clearPersonalValue,% Clear the personal value for a setting
+        clearpoints,% Clear points from animated line
+        clearTemporaryValue,% Clear the temporary value for a setting
+        clearvars,% Clear variables from memory
+        clf,% Clear current figure window
+        clibArray,% Create MATLAB object for C++ array or std::vector
+        clibConvertArray,% Convert numeric array to MATLAB object for C++ array
+        clibgen.buildInterface,% Create interface to C++ library without definition file
+        clibgen.generateLibraryDefinition,% Create definition file for C++ library
+        clibIsNull,% Determine if C++ object is null
+        clibIsReadOnly,% Determine if C++ object is read-only
+        clibRelease,% Release C++ object from MATLAB
+        clipboard,% Copy and paste text to and from system clipboard
+        clock,% Current date and time as date vector
+        clone,% Create duplicate System object
+        close,% Close project
+        closeFile,% Close FITS file
+        closereq,% Default figure close request function
+        cmpermute,% Rearrange colors in colormap
+        cmunique,% Eliminate duplicate colors in colormap; convert grayscale or truecolor image to indexed image
+        codeCompatibilityReport,% Create code compatibility report
+        colamd,% Column approximate minimum degree permutation
+        collapse,% Collapse tree node
+        colon,% Vector creation, array subscripting, and for-loop iteration
+        colorbar,% Colorbar showing color scale
+        colorcube,% Colorcube colormap array
+        colormap,% View and set current colormap
+        colororder,% Set color order for visualizing multiple data series
+        ColorSpec (Color Specification),% Color specification
+        colperm,% Sparse column permutation based on nonzero count
+        COM,% Access COM components from MATLAB
+        com.mathworks.engine.MatlabEngine,% Java class using MATLAB as a computational engine
+        com.mathworks.matlab.types.CellStr,% Java class to represent MATLAB cell array of char vectors
+        com.mathworks.matlab.types.Complex,% Java class to pass complex data to and from MATLAB
+        com.mathworks.matlab.types.HandleObject,% Java class to represent MATLAB handle objects
+        com.mathworks.matlab.types.Struct,% Java class to pass MATLAB struct to and from MATLAB
+        combine,% Combine data from multiple datastores
+        Combine,% Convenience function for static .NET System.Delegate Combine method
+        CombinedDatastore,% Datastore to combine data read from multiple underlying datastores
+        comet,% 2-D comet plot
+        comet3,% 3-D comet plot
+        compan,% Companion matrix
+        compass,% Plot arrows emanating from origin
+        complex,% Create complex array
+        compose,% Format data into multiple strings
+        computer,% Information about computer on which MATLAB is running
+        comserver,% Register, unregister, or query MATLAB COM server
+        cond,% Condition number for inversion
+        condeig,% Condition number with respect to eigenvalues
+        condensation,% Graph condensation
+        condest,% 1-norm condition number estimate
+        coneplot,% Plot velocity vectors as cones in 3-D vector field
+        configureCallback,% Set serial port callback function and trigger
+        configureTerminator,% Set terminator for ASCII string communication on serial port
+        conj,% Complex conjugate
+        conncomp,% Connected graph components
+        containers.Map,% Object that maps values to unique keys
+        contains,% Determine if pattern is in strings
+        containsrange,% Determine if timetable row times contain specified time range
+        continue,% Pass control to next iteration of for or while loop
+        contour,% Contour plot of matrix
+        contour3,% 3-D contour plot
+        contourc,% Low-level contour plot computation
+        contourf,% Filled 2-D contour plot
+        contourslice,% Draw contours in volume slice planes
+        contrast,% Create grayscale colormap to enhance image contrast
+        conv,% Convolution and polynomial multiplication
+        conv2,% 2-D convolution
+        convertCharsToStrings,% Convert character arrays to string arrays, leaving other arrays unaltered
+        convertContainedStringsToChars,% Convert string arrays at any level of cell array or structure
+        convertStringsToChars,% Convert string arrays to character arrays, leaving other arrays unaltered
+        convertTo,% Convert datetime values to numeric representations
+        convertvars,% Convert table or timetable variables to specified data type
+        convexHull,% Convex hull of Delaunay triangulation
+        convhull,% Convex hull of polyshape
+        convhulln,% N-D convex hull
+        convn,% N-D convolution
+        cool,% Cool colormap array
+        copper,% Copper colormap array
+        copyfile,% Copy file or folder
+        copygraphics,% Copy plot or graphics content to clipboard
+        copyHDU,% Copy current HDU from one file to another
+        copyobj,% Copy graphics objects and their descendants
+        corrcoef,% Correlation coefficients
+        cos,% Cosine of argument in radians
+        cosd,% Cosine of argument in degrees
+        cosh,% Hyperbolic cosine
+        cospi,% Compute cos(X*pi) accurately
+        cot,% Cotangent of angle in radians
+        cotd,% Cotangent of argument in degrees
+        coth,% Hyperbolic cotangent
+        count,% Count occurrences of pattern in strings
+        countcats,% Count occurrences of categorical array elements by category
+        cov,% Covariance
+        cplxpair,% Sort complex numbers into complex conjugate pairs
+        cputime,% Elapsed CPU time
+        createCategory,% Create category of project labels
+        createFile,% Create FITS file
+        createImg,% Create FITS image
+        createLabel,% Create project label
+        createTbl,% Create new ASCII or binary table extension
+        criticalAlpha,% Alpha radius defining critical transition in shape
+        cross,% Cross product
+        csc,% Cosecant of input angle in radians
+        cscd,% Cosecant of argument in degrees
+        csch,% Hyperbolic cosecant
+        ctranspose,% Complex conjugate transpose
+        cummax,% Cumulative maximum
+        cummin,% Cumulative minimum
+        cumprod,% Cumulative product
+        cumsum,% Cumulative sum
+        cumtrapz,% Cumulative trapezoidal numerical integration
+        curl,% Compute curl and angular velocity of vector field
+        currentProject,% Get current project
+        cylinder,% Create cylinder
+        daspect,% Control data unit length along each axis
+        datacursormode,% Enable data cursor mode
+        datastore,% Create datastore for large collections of data
+        datatip,% Create data tip
+        dataTipInteraction,% Data tip interaction
+        dataTipTextRow,% Add row to data tips
+        date,% Current date as character vector
+        datenum,% Convert date and time to serial date number
+        dateshift,% Shift date or generate sequence of dates and time
+        datestr,% Convert date and time to string format
+        datetick,% Date formatted tick labels
+        datetime,% Arrays that represent points in time
+        datevec,% Convert date and time to vector of components
+        day,% Day number or name
+        days,% Duration in days
+        dbclear,% Remove breakpoints
+        dbcont,% Resume execution
+        dbdown,% Reverse dbup workspace shift
+        dbmex,% Enable MEX-file debugging on UNIX platforms
+        dbquit,% Quit debug mode
+        dbstack,% Function call stack
+        dbstatus,% List all breakpoints
+        dbstep,% Execute next executable line from current breakpoint
+        dbstop,% Set breakpoints for debugging
+        dbtype,% Display file with line numbers
+        dbup,% Shift current workspace to workspace of caller in debug mode
+        dde23,% Solve delay differential equations (DDEs) with constant delays
+        ddeget,% Extract properties from delay differential equations options structure
+        ddensd,% Solve delay differential equations (DDEs) of neutral type
+        ddesd,% Solve delay differential equations (DDEs) with general delays
+        ddeset,% Create or alter delay differential equations options structure
+        deblank,% Remove trailing whitespace from ends of strings
+        dec2base,% Convert decimal number to character array representing base-N number
+        dec2bin,% Convert decimal number to character array representing binary number
+        dec2hex,% Convert decimal number to character array representing hexadecimal number
+        decic,% Compute consistent initial conditions for ode15i
+        decomposition,% Matrix decomposition for solving linear systems
+        deconv,% Deconvolution and polynomial division
+        deg2rad,% Convert angle from degrees to radians
+        degree,% Degree of graph nodes
+        del2,% Discrete Laplacian
+        delaunay,% Delaunay triangulation
+        delaunayn,% N-D Delaunay triangulation
+        delaunayTriangulation,% Delaunay triangulation in 2-D and 3-D
+        delete,% Remove timer object from memory
+        deleteCol,% Delete column from table
+        deleteFile,% Delete FITS file
+        deleteHDU,% Delete current HDU in FITS file
+        deleteKey,% Delete key by name
+        deleteRecord,% Delete key by record number
+        deleteRows,% Delete rows from table
+        delevent,% Remove event from timeseries
+        delimitedTextImportOptions,% Import options object for delimited text
+        delsample,% Remove sample from timeseries object
+        delsamplefromcollection,% Delete sample from tscollection
+        demo,% Access product examples in Help browser
+        descriptor,% Access a descriptor on Bluetooth Low Energy peripheral device
+        det,% Matrix determinant
+        details,% Display array details
+        detectImportOptions,% Create import options based on file content
+        detrend,% Remove polynomial trend
+        deval,% Evaluate differential equation solution structure
+        dfsearch,% Depth-first graph search
+        diag,% Create diagonal matrix or get diagonal elements of matrix
+        dialog,% Create empty modal dialog box
+        diary,% Log Command Window text to file
+        diff,% Differences and approximate derivatives
+        diffuse,% Calculate diffuse reflectance
+        digraph,% Graph with directed edges
+        dir,% List folder contents
+        disableDefaultInteractivity,% Disable built-in axes interactions
+        discretize,% Group data into bins or categories
+        disp,% Display value of variable
+        display,% Show information about variable or result of expression
+        dissect,% Nested dissection permutation
+        distances,% Shortest path distances of all node pairs
+        dither,% Convert image, increasing apparent color resolution by dithering
+        divergence,% Compute divergence of vector field
+        dmperm,% Dulmage-Mendelsohn decomposition
+        doc,% Reference page in Help browser
+        docsearch,% Help browser search
+        dos,% Execute DOS command and return output
+        dot,% Dot product
+        double,% Double-precision arrays
+        drag,% Perform drag gesture on UI component
+        dragrect,% Drag rectangles with mouse
+        drawnow,% Update figures and process callbacks
+        dsearchn,% Nearest point search
+        duration,% Lengths of time in fixed-length units
+        dynamicprops,% Superclass for classes that support dynamic properties
+        echo,% Display statements during function execution
+        echodemo,% Run example script step-by-step in Command Window
+        edgeAttachments,% Triangles or tetrahedra attached to specified edge
+        edgecount,% Number of edges between two nodes
+        edges,% Triangulation edges
+        edit,% Edit or create file
+        eig,% Eigenvalues and eigenvectors
+        eigs,% Subset of eigenvalues and eigenvectors
+        ellipj,% Jacobi elliptic functions
+        ellipke,% Complete elliptic integrals of first and second kind
+        ellipsoid,% Generate ellipsoid
+        empty,% Create empty array of specified class
+        enableDefaultInteractivity,% Enable built-in axes interactions
+        enableLegacyExplorationModes,% Control behavior of modes in UI figures
+        enableNETfromNetworkDrive,% (To be removed) Enable access to .NET commands from network drive
+        enableservice,% Enable, disable, or report status of MATLAB Automation server
+        end,% Terminate block of code or indicate last array index
+        EndInvoke,% Retrieve result of asynchronous call initiated by .NET System.Delegate BeginInvoke method
+        endsWith,% Determine if strings end with pattern
+        enumeration,% Class enumeration members and names
+        eomday,% Last day of month
+        eps,% Floating-point relative accuracy
+        eq,% Determine equality
+        equilibrate,% Matrix scaling for improved conditioning
+        erase,% Delete substrings within strings
+        eraseBetween,% Delete substrings between start and end points
+        erf,% Error function
+        erfc,% Complementary error function
+        erfcinv,% Inverse complementary error function
+        erfcx,% Scaled complementary error function
+        erfinv,% Inverse error function
+        error,% Throw error and display message
+        errorbar,% Line plot with error bars
+        errordlg,% Create error dialog box
+        etime,% Time elapsed between date vectors
+        etree,% Elimination tree
+        etreeplot,% Plot elimination tree
+        eval,% Evaluate MATLAB expression
+        evalc,% Evaluate MATLAB expression and capture results
+        evalin,% Evaluate MATLAB expression in specified workspace
+        event.ClassInstanceEvent,% Event data for InstanceCreated and InstanceDestroyed events
+        event.DynamicPropertyEvent,% Event data for dynamic property events
+        event.EventData,% Base class for event data
+        event.hasListener,% Determine if listeners exist for event
+        event.listener,% Class defining listener objects
+        event.PropertyEvent,% Data for property events
+        event.proplistener,% Define listener object for property events
+        eventlisteners,% List event handler functions associated with COM object events
+        events,% Event names
+        exceltime,% Convert MATLAB datetime to Excel date number
+        Execute,% Execute MATLAB command in Automation server
+        exist,% Check existence of variable, script, function, folder, or class
+        exit,% Terminate MATLAB program (same as quit)
+        exp,% Exponential
+        expand,% Expand tree node
+        expint,% Exponential integral
+        expm,% Matrix exponential
+        expm1,% Compute exp(x)-1 accurately for small values of x
+        export,% Export project to archive
+        export2wsdlg,% Create dialog box for exporting variables to workspace
+        exportgraphics,% Save plot or graphics content to file
+        exportsetupdlg,% Open figure Export Setup dialog box
+        extractAfter,% Extract substrings after specified positions
+        extractBefore,% Extract substrings before specified positions
+        extractBetween,% Extract substrings between start and end points
+        eye,% Identity matrix
+        ezpolar,% Easy-to-use polar coordinate plotter
+        faceNormal,% Triangulation unit normal vectors
+        factor,% Prime factors
+        factorial,% Factorial of input
+        FactoryGroup,% Group of factory settings and factory subgroup objects
+        FactorySetting,% Factory settings object
+        false,% Logical 0 (false)
+        fclose,% Close one or all open files
+        fcontour,% Plot contours
+        feather,% Plot velocity vectors
+        featureEdges,% Handle sharp edges of triangulation
+        feof,% Test for end of file
+        ferror,% File I/O error information
+        feval,% Evaluate C++ MEX function in MEX host process
+        Feval,% Execute MATLAB function in Automation server
+        fewerbins,% Decrease number of histogram bins
+        fft,% Fast Fourier transform
+        fft2,% 2-D fast Fourier transform
+        fftn,% N-D fast Fourier transform
+        fftshift,% Shift zero-frequency component to center of spectrum
+        fftw,% Define method for determining FFT algorithm
+        fgetl,% Read line from file, removing newline characters
+        fgets,% Read line from file, keeping newline characters
+        fieldnames,% Field names of structure, or public fields of Java or Microsoft COM object
+        figure,% Create figure window
+        figurepalette,% Show or hide Figure Palette
+        fileattrib,% Set or get attributes of file or folder
+        fileDatastore,% Datastore with custom file reader
+        filemarker,% Character to separate file name from local or nested function name
+        fileMode,% I/O mode of FITS file
+        fileName,% Name of FITS file
+        fileparts,% Get parts of file name
+        fileread,% Read contents of file as text
+        filesep,% File separator for current platform
+        fill,% Filled 2-D polygons
+        fill3,% Filled 3-D polygons
+        fillmissing,% Fill missing values
+        filloutliers,% Detect and replace outliers in data
+        filter,% 1-D digital filter
+        filter2,% 2-D digital filter
+        fimplicit,% Plot implicit function
+        fimplicit3,% Plot 3-D implicit function
+        find,% Find indices and values of nonzero elements
+        findall,% Find all graphics objects
+        findCategory,% Find project category of labels
+        findedge,% Locate edge in graph
+        findEvent,% Query tsdata.event by name
+        findfigs,% Find visible offscreen figures
+        findFile,% Find project file by name
+        findgroups,% Find groups and return group numbers
+        findLabel,% Get project file label
+        findnode,% Locate node in graph
+        findobj,% Find handle objects
+        findprop,% Find meta.property object
+        finish,% User-defined termination script for MATLAB
+        fitsdisp,% Display FITS metadata
+        fitsinfo,% Information about FITS file
+        fitsread,% Read data from FITS file
+        fitswrite,% Write image to FITS file
+        fix,% Round toward zero
+        fixedWidthImportOptions,% Import options object for fixed-width text files
+        flag,% Flag colormap array
+        flintmax,% Largest consecutive integer in floating-point format
+        flip,% Flip order of elements
+        flipedge,% Reverse edge directions
+        fliplr,% Flip array left to right
+        flipud,% Flip array up to down
+        floor,% Round toward negative infinity
+        flow,% Simple function of three variables
+        flush,% Flush serial port buffers
+        fmesh,% Plot 3-D mesh
+        fminbnd,% Find minimum of single-variable function on fixed interval
+        fminsearch,% Find minimum of unconstrained multivariable function using derivative-free method
+        fopen,% Open file, or obtain information about open files
+        for,% for loop to repeat specified number of times
+        format,% Set Command Window output display format
+        fplot,% Plot expression or function
+        fplot3,% 3-D parametric curve plotter
+        fprintf,% Write data to text file
+        frame2im,% Return image data associated with movie frame
+        fread,% Read data from binary file
+        freeBoundary,% Free boundary facets
+        freqspace,% Frequency spacing for frequency response
+        frewind,% Move file position indicator to beginning of open file
+        fscanf,% Read data from text file
+        fseek,% Move to specified position in file
+        fsurf,% Plot 3-D surface
+        ftell,% Current position
+        ftp,% Object to connect to FTP server and access its files
+        full,% Convert sparse matrix to full storage
+        fullfile,% Build full file name from parts
+        func2str,% Construct character vector from function handle
+        function_handle,% Handle to function
+        function,% Declare function name, inputs, and outputs
+        functions,% Information about function handle
+        FunctionTestCase,% TestCase used for function-based tests
+        functiontests,% Create array of tests from handles to local functions
+        funm,% Evaluate general matrix function
+        fwrite,% Write data to binary file
+        fzero,% Root of nonlinear function
+        gallery,% Test matrices
+        gamma,% Gamma function
+        gammainc,% Incomplete gamma function
+        gammaincinv,% Inverse incomplete gamma function
+        gammaln,% Logarithm of gamma function
+        gather,% Collect tall array into memory after executing queued operations
+        gca,% Current axes or chart
+        gcbf,% Handle of figure containing object whose callback is executing
+        gcbo,% Handle of object whose callback is executing
+        gcd,% Greatest common divisor
+        gcf,% Current figure handle
+        gcmr,% Get current mapreducer configuration
+        gco,% Handle of current object
+        genpath,% Generate path name
+        geoaxes,% Create geographic axes
+        geobasemap,% Set or query basemap
+        geobubble,% Visualize data values at specific geographic locations
+        geodensityplot,% Geographic density plot
+        geolimits,% Set or query geographic limits
+        geoplot,% Plot line in geographic coordinates
+        geoscatter,% Scatter chart in geographic coordinates
+        geotickformat,% Set or query geographic tick label format
+        get,% Query property values for timer object
+        getabstime,% Convert tscollection time vector to cell array
+        getAColParms,% ASCII table information
+        getappdata,% Retrieve application-defined data
+        getaudiodata,% Store recorded audio signal in numeric array
+        getAxes,% Get axes for chart container subclass
+        getBColParms,% Binary table information
+        GetCharArray,% Character array from Automation server
+        getColName,% Table column name
+        getColorbar,% Get colorbar object for colorbar mixin subclass
+        getColType,% Scaled column data type, repeat value, width
+        getConstantValue,% Numeric value of named constant
+        getdatasamples,% Access timeseries data samples
+        getdatasamplesize,% timeseries data sample size
+        getenv,% Environment variable
+        getEqColType,% Column data type, repeat value, width
+        getfield,% Field of structure array
+        getFileFormats,% File formats that VideoReader supports
+        getframe,% Capture axes or figure as movie frame
+        GetFullMatrix,% Matrix from Automation server workspace
+        getHdrSpace,% Number of keywords in header
+        getHDUnum,% Number of current HDU in FITS file
+        getHDUtype,% Type of current HDU
+        getImgSize,% Size of image
+        getImgType,% Data type of image
+        getinterpmethod,% timeseries interpolation method
+        getLayout,% Get tiled chart layout for chart container subclass
+        getLegend,% Get legend object for legend mixin subclass
+        getMockHistory,% Return history of mock interactions from TestCase instance
+        getnext,% Get next value from ValueIterator
+        getNumCols,% Number of columns in table
+        getNumHDUs,% Total number of HDUs in FITS file
+        getNumInputs,% Number of inputs required to call the System object
+        getNumInputsImpl,% Number of inputs to the System object
+        getNumOutputs,% Number of outputs from calling the System object
+        getNumOutputsImpl,% Number of outputs from System object
+        getNumRows,% Number of rows in table
+        getOpenFiles,% List of open FITS files
+        getpinstatus,% Get serial pin status
+        getpixelposition,% Get component position in pixels
+        getplayer,% Creates associated audioplayer object
+        getpoints,% Return points that define animated line
+        getpref,% Get custom preference value
+        getProfiles,% Profiles and file formats that VideoWriter supports
+        getPropertyGroupsImpl,% Property groups for System object display
+        getqualitydesc,% timeseries data quality
+        getrangefromclass,% Default display range of image based on its class
+        getReport,% Get error message for exception
+        getsamples,% Subset of timeseries
+        getsampleusingtime,% Subset of tscollection data
+        gettimeseriesnames,% Names of timeseries in tscollection
+        getTimeStr,% Query tsdata.event times
+        gettsafteratevent,% Create timeseries at or after event
+        gettsafterevent,% Create timeseries after event
+        gettsatevent,% Create timeseries at event
+        gettsbeforeatevent,% Create timeseries at or before event
+        gettsbeforeevent,% Create timeseries before event
+        gettsbetweenevents,% Create timeseries between events
+        GetVariable,% Data from variable in Automation server workspace
+        getvaropts,% Get variable import options
+        getVersion,% Revision number of the CFITSIO library
+        GetWorkspaceData,% Data from Automation server workspace
+        ginput,% Identify axes coordinates
+        global,% Declare variables as global
+        gmres,% Solve system of linear equations — generalized minimum residual method
+        gobjects,% Initialize array for graphics objects
+        gplot,% Plot nodes and edges in adjacency matrix
+        grabcode,% Extract MATLAB code from file published to HTML
+        gradient,% Numerical gradient
+        graph,% Graph with undirected edges
+        GraphPlot,% Graph plot for directed and undirected graphs
+        gray,% Gray colormap array
+        grid,% Display or hide axes grid lines
+        griddata,% Interpolate 2-D or 3-D scattered data
+        griddatan,% Interpolate N-D scattered data
+        griddedInterpolant,% Gridded data interpolation
+        groot,% Graphics root object
+        groupcounts,% Number of group elements
+        groupfilter,% Filter by group
+        groupsummary,% Group summary computations
+        grouptransform,% Transform by group
+        gsvd,% Generalized singular value decomposition
+        gtext,% Add text to figure using mouse
+        guidata,% Store or retrieve UI data
+        guide,% (To be removed) Create or edit UI file in GUIDE
+        guihandles,% Create structure containing all child objects of Figure
+        gunzip,% Extract contents of GNU zip file
+        gzip,% Compress files into GNU zip files
+        H5.close,% Close HDF5 library
+        H5.garbage_collect,% Free unused memory in HDF5 library
+        H5.get_libversion,% Version of HDF5 library
+        H5.open,% Open HDF5 library
+        H5.set_free_list_limits,% Set size limits on free lists
+        H5A.close,% Close specified attribute
+        H5A.create,% Create attribute
+        H5A.delete,% Delete attribute
+        H5A.get_info,% Information about attribute
+        H5A.get_name,% Attribute name
+        H5A.get_space,% Copy of attribute data space
+        H5A.get_type,% Copy of attribute data type
+        H5A.iterate,% Execute function for attributes attached to object
+        H5A.open_by_idx,% Open attribute specified by index
+        H5A.open_by_name,% Open attribute specified by name
+        H5A.open,% Open attribute
+        H5A.read,% Read attribute
+        H5A.write,% Write attribute
+        h5create,% Create HDF5 dataset
+        H5D.close,% Close dataset
+        H5D.create,% Create new dataset
+        H5D.get_access_plist,% Copy of dataset access property list
+        H5D.get_create_plist,% Copy of dataset creation property list
+        H5D.get_offset,% Location of dataset in file
+        H5D.get_space_status,% Determine if space is allocated
+        H5D.get_space,% Copy of dataset data space
+        H5D.get_storage_size,% Determine required storage size
+        H5D.get_type,% Copy of datatype
+        H5D.open,% Open specified dataset
+        H5D.read,% Read data from HDF5 dataset
+        H5D.set_extent,% Change size of dataset dimensions
+        H5D.vlen_get_buf_size,% Determine variable length storage requirements
+        H5D.write,% Write data to HDF5 dataset
+        h5disp,% Display contents of HDF5 file
+        H5DS.attach_scale,% Attach dimension scale to specific dataset dimension
+        H5DS.detach_scale,% Detach dimension scale from specific dataset dimension
+        H5DS.get_label,% Retrieve label from specific dataset dimension
+        H5DS.get_num_scales,% Number of scales attached to dataset dimension
+        H5DS.get_scale_name,% Name of dimension scale
+        H5DS.is_scale,% Determine if dataset is a dimension scale
+        H5DS.iterate_scales,% Iterate on scales attached to dataset dimension
+        H5DS.set_label,% Set label for dataset dimension
+        H5DS.set_scale,% Convert dataset to dimension scale
+        H5E.clear,% Clear error stack
+        H5E.get_major,% Description of major error number
+        H5E.get_minor,% Description of minor error number
+        H5E.walk,% Walk error stack
+        H5F.close,% Close HDF5 file
+        H5F.create,% Create HDF5 file
+        H5F.flush,% Flush buffers to disk
+        H5F.get_access_plist,% File access property list
+        H5F.get_create_plist,% File creation property list
+        H5F.get_filesize,% Size of HDF5 file
+        H5F.get_freespace,% Amount of free space in file
+        H5F.get_info,% Global information about file
+        H5F.get_mdc_config,% Metadata cache configuration
+        H5F.get_mdc_hit_rate,% Metadata cache hit-rate
+        H5F.get_mdc_size,% Metadata cache size data
+        H5F.get_name,% Name of HDF5 file
+        H5F.get_obj_count,% Number of open objects in HDF5 file
+        H5F.get_obj_ids,% List of open HDF5 file objects
+        H5F.is_hdf5,% Determine if file is HDF5
+        H5F.mount,% Mount HDF5 file onto specified location
+        H5F.open,% Open HDF5 file
+        H5F.reopen,% Reopen HDF5 file
+        H5F.set_mdc_config,% Configure HDF5 file metadata cache
+        H5F.unmount,% Unmount file or group from mount point
+        H5G.close,% Close group
+        H5G.create,% Create group
+        H5G.get_info,% Information about group
+        H5G.open,% Open specified group
+        H5I.dec_ref,% Decrement reference count
+        H5I.get_file_id,% File identifier for specified object
+        H5I.get_name,% Name of object
+        H5I.get_ref,% Reference count of object
+        H5I.get_type,% Type of object
+        H5I.inc_ref,% Increment reference count of specified object
+        H5I.is_valid,% Determine if specified identifier is valid
+        h5info,% Information about HDF5 file
+        H5L.copy,% Copy link from source location to destination location
+        H5L.create_external,% Create soft link to external object
+        H5L.create_hard,% Create hard link
+        H5L.create_soft,% Create soft link
+        H5L.delete,% Remove link
+        H5L.exists,% Determine if link exists
+        H5L.get_info,% Information about link
+        H5L.get_name_by_idx,% Information about link specified by index
+        H5L.get_val,% Value of symbolic link
+        H5L.iterate_by_name,% Iterate through links in group specified by name
+        H5L.iterate,% Iterate over links
+        H5L.move,% Rename link
+        H5L.visit_by_name,% Recursively iterate through links in group specified by location and group name
+        H5L.visit,% Recursively iterate through links in group specified by group identifier
+        H5ML.compare_values,% Numerically compare two HDF5 values
+        H5ML.get_constant_names,% Constants known by HDF5 library
+        H5ML.get_constant_value,% Value corresponding to a string
+        H5ML.get_function_names,% Functions provided by HDF5 library
+        H5ML.get_mem_datatype,% Data type for dataset ID
+        H5O.close,% Close object
+        H5O.copy,% Copy object from source location to destination location
+        H5O.get_comment_by_name,% Get comment for object specified by location and object name
+        H5O.get_comment,% Get comment for object specified by object identifier
+        H5O.get_info,% Object metadata
+        H5O.link,% Create hard link to specified object
+        H5O.open_by_idx,% Open object specified by index
+        H5O.open,% Open specified object
+        H5O.set_comment_by_name,% Set comment for object specified by location and object name
+        H5O.set_comment,% Set comment for object specified by object identifier
+        H5O.visit_by_name,% Visit objects specified by location and object name
+        H5O.visit,% Visit objects specified by object identifier
+        H5P.all_filters_avail,% Determine availability of all filters
+        H5P.close_class,% Close property list class
+        H5P.close,% Close property list
+        H5P.copy,% Copy of property list
+        H5P.create,% Create new property list
+        H5P.equal,% Determine equality of property lists
+        H5P.exist,% Determine if specified property exists in property list
+        H5P.fill_value_defined,% Determine if fill value is defined
+        H5P.get_alignment,% Retrieve alignment properties
+        H5P.get_alloc_time,% Return timing of storage space allocation
+        H5P.get_attr_creation_order,% Return tracking order and indexing settings
+        H5P.get_attr_phase_change,% Retrieve attribute phase change thresholds
+        H5P.get_btree_ratios,% B-tree split ratios
+        H5P.get_char_encoding,% Return character encoding
+        H5P.get_chunk_cache,% Raw data chunk cache parameters
+        H5P.get_chunk,% Return size of chunks
+        H5P.get_class_name,% Name of property list class
+        H5P.get_class_parent,% Identifier for parent class
+        H5P.get_class,% Property list class
+        H5P.get_copy_object,% Return properties to be used when object is copied
+        H5P.get_create_intermediate_group,% Determine creation of intermediate groups
+        H5P.get_driver,% Low-level file driver
+        H5P.get_edc_check,% Determine if error detection is enabled
+        H5P.get_external_count,% Return count of external files
+        H5P.get_external,% Return information about external file
+        H5P.get_family_offset,% Offset for family file driver
+        H5P.get_fapl_core,% Information about core file driver properties
+        H5P.get_fapl_family,% File access property list information
+        H5P.get_fapl_multi,% Information about multifile access property list
+        H5P.get_fclose_degree,% File close degree
+        H5P.get_fill_time,% Return time when fill values are written to dataset
+        H5P.get_fill_value,% Return dataset fill value
+        H5P.get_filter_by_id,% Return information about specified filter
+        H5P.get_filter,% Return information about filter in pipeline
+        H5P.get_gc_references,% Garbage collection references setting
+        H5P.get_hyper_vector_size,% Number of I/O vectors
+        H5P.get_istore_k,% Return 1/2 rank of indexed storage B-tree
+        H5P.get_layout,% Determine layout of raw data for dataset
+        H5P.get_libver_bounds,% Library version bounds settings
+        H5P.get_link_creation_order,% Query if link creation order is tracked
+        H5P.get_link_phase_change,% Query settings for conversion between groups
+        H5P.get_mdc_config,% Metadata cache configuration
+        H5P.get_meta_block_size,% Metadata block size setting
+        H5P.get_multi_type,% Type of data property for MULTI driver
+        H5P.get_nfilters,% Return number of filters in pipeline
+        H5P.get_nprops,% Query number of properties in property list or class
+        H5P.get_sieve_buf_size,% Maximum data sieve buffer size
+        H5P.get_size,% Query size of property value in bytes
+        H5P.get_sizes,% Return size of offsets and lengths
+        H5P.get_small_data_block_size,% Small data block size setting
+        H5P.get_sym_k,% Return size of B-tree 1/2 rank and leaf node 1/2 size
+        H5P.get_userblock,% Return size of user block
+        H5P.get_version,% Return version information for file creation property list
+        H5P.get,% Value of specified property in property list
+        H5P.isa_class,% Determine if property list is member of class
+        H5P.iterate,% Iterate over properties in property list
+        H5P.modify_filter,% Modify filter in pipeline
+        H5P.remove_filter,% Remove filter from property list
+        H5P.set_alignment,% Set alignment properties for file access property list
+        H5P.set_alloc_time,% Set timing for storage space allocation
+        H5P.set_attr_creation_order,% Set tracking of attribute creation order
+        H5P.set_attr_phase_change,% Set attribute storage phase change thresholds
+        H5P.set_btree_ratios,% Set B-tree split ratios for dataset transfer
+        H5P.set_char_encoding,% Set character encoding used to encode strings
+        H5P.set_chunk_cache,% Set raw data chunk cache parameters
+        H5P.set_chunk,% Set chunk size
+        H5P.set_copy_object,% Set properties to be used when objects are copied
+        H5P.set_create_intermediate_group,% Set creation of intermediate groups
+        H5P.set_deflate,% Set compression method and compression level
+        H5P.set_edc_check,% Enable error detection for dataset transfer
+        H5P.set_external,% Add additional file to external file list
+        H5P.set_family_offset,% Set offset property for family of files
+        H5P.set_fapl_core,% Modify file access to use H5FD_CORE driver
+        H5P.set_fapl_family,% Set file access to use family driver
+        H5P.set_fapl_log,% Set use of logging driver
+        H5P.set_fapl_multi,% Set use of multifile driver
+        H5P.set_fapl_sec2,% Set file access for sec2 driver
+        H5P.set_fapl_split,% Set file access for emulation of split file driver
+        H5P.set_fapl_stdio,% Set file access for standard I/O driver
+        H5P.set_fclose_degree,% Set file access for file close degree
+        H5P.set_fill_time,% Set time when fill values are written to dataset
+        H5P.set_fill_value,% Set fill value for dataset creation property list
+        H5P.set_filter,% Add filter to filter pipeline
+        H5P.set_fletcher32,% Set Fletcher32 checksum filter in dataset creation
+        H5P.set_gc_references,% Set garbage collection references flag
+        H5P.set_hyper_vector_size,% Set number of I/O vectors for hyperslab I/O
+        H5P.set_istore_k,% Set size of parameter for indexing chunked datasets
+        H5P.set_layout,% Set type of storage for dataset
+        H5P.set_libver_bounds,% Set library version bounds for objects
+        H5P.set_link_creation_order,% Set creation order tracking and indexing
+        H5P.set_link_phase_change,% Set parameters for group conversion
+        H5P.set_mdc_config,% Set initial metadata cache configuration
+        H5P.set_meta_block_size,% Set minimum metadata block size
+        H5P.set_multi_type,% Specify type of data accessed with MULTI driver
+        H5P.set_nbit,% Set N-Bit filter
+        H5P.set_scaleoffset,% Set Scale-Offset filter
+        H5P.set_shuffle,% Set shuffle filter
+        H5P.set_sieve_buf_size,% Set maximum size of data sieve buffer
+        H5P.set_sizes,% Set byte size of offsets and lengths
+        H5P.set_small_data_block_size,% Set size of block reserved for small data
+        H5P.set_sym_k,% Set size of parameters used to control symbol table nodes
+        H5P.set_userblock,% Set user block size
+        H5P.set,% Set property list value
+        H5R.create,% Create reference
+        H5R.dereference,% Open object specified by reference
+        H5R.get_name,% Name of referenced object
+        H5R.get_obj_type,% Type of referenced object
+        H5R.get_region,% Copy of data space of specified region
+        h5read,% Read data from HDF5 dataset
+        h5readatt,% Read attribute from HDF5 file
+        H5S.close,% Close data space
+        H5S.copy,% Create copy of data space
+        H5S.create_simple,% Create new simple data space
+        H5S.create,% Create new data space
+        H5S.extent_copy,% Copy extent from source to destination data space
+        H5S.get_select_bounds,% Bounding box of data space selection
+        H5S.get_select_elem_npoints,% Number of element points in selection
+        H5S.get_select_elem_pointlist,% Element points in data space selection
+        H5S.get_select_hyper_blocklist,% List of hyperslab blocks
+        H5S.get_select_hyper_nblocks,% Number of hyperslab blocks
+        H5S.get_select_npoints,% Number of elements in data space selection
+        H5S.get_select_type,% Type of data space selection
+        H5S.get_simple_extent_dims,% Data space size and maximum size
+        H5S.get_simple_extent_ndims,% Data space rank
+        H5S.get_simple_extent_npoints,% Number of elements in data space
+        H5S.get_simple_extent_type,% Data space class
+        H5S.is_simple,% Determine if data space is simple
+        H5S.offset_simple,% Set offset of simple data space
+        H5S.select_all,% Select entire extent of data space
+        H5S.select_elements,% Specify coordinates to include in selection
+        H5S.select_hyperslab,% Select hyperslab region
+        H5S.select_none,% Reset selection region to include no elements
+        H5S.select_valid,% Determine validity of selection
+        H5S.set_extent_none,% Remove extent from data space
+        H5S.set_extent_simple,% Set size of data space
+        H5T.array_create,% Create array data type object
+        H5T.close,% Close data type
+        H5T.commit,% Commit transient data type
+        H5T.committed,% Determine if data type is committed
+        H5T.copy,% Copy data type
+        H5T.create,% Create new data type
+        H5T.detect_class,% Determine of data type contains specific class
+        H5T.enum_create,% Create new enumeration data type
+        H5T.enum_insert,% Insert enumeration data type member
+        H5T.enum_nameof,% Name of enumeration data type member
+        H5T.enum_valueof,% Value of enumeration data type member
+        H5T.equal,% Determine equality of data types
+        H5T.get_array_dims,% Array dimension extents
+        H5T.get_array_ndims,% Rank of array data type
+        H5T.get_class,% Data type class identifier
+        H5T.get_create_plist,% Copy of data type creation property list
+        H5T.get_cset,% Character set of string data type
+        H5T.get_ebias,% Exponent bias of floating-point type
+        H5T.get_fields,% Floating-point data type bit field information
+        H5T.get_inpad,% Internal padding type for floating-point data types
+        H5T.get_member_class,% Data type class for compound data type member
+        H5T.get_member_index,% Index of compound or enumeration type member
+        H5T.get_member_name,% Name of compound or enumeration type member
+        H5T.get_member_offset,% Offset of field of compound data type
+        H5T.get_member_type,% Data type of specified member
+        H5T.get_member_value,% Value of enumeration data type member
+        H5T.get_native_type,% Native data type of dataset data type
+        H5T.get_nmembers,% Number of elements in enumeration type
+        H5T.get_norm,% Mantissa normalization type
+        H5T.get_offset,% Bit offset of first significant bit
+        H5T.get_order,% Byte order of atomic data type
+        H5T.get_pad,% Padding type of least and most-significant bits
+        H5T.get_precision,% Precision of atomic data type
+        H5T.get_sign,% Sign type for integer data type
+        H5T.get_size,% Size of data type in bytes
+        H5T.get_strpad,% Storage mechanism for string data type
+        H5T.get_super,% Base data type
+        H5T.get_tag,% Tag associated with opaque data type
+        H5T.insert,% Add member to compound data type
+        H5T.is_variable_str,% Determine if data type is variable-length string
+        H5T.lock,% Lock data type
+        H5T.open,% Open named data type
+        H5T.pack,% Recursively remove padding from compound data type
+        H5T.set_cset,% Set character dataset for string data type
+        H5T.set_ebias,% Set exponent bias of floating-point data type
+        H5T.set_fields,% Set sizes and locations of floating-point bit fields
+        H5T.set_inpad,% Specify how unused internal bits are to be filled
+        H5T.set_norm,% Set mantissa normalization of floating-point data type
+        H5T.set_offset,% Set bit offset of first significant bit
+        H5T.set_order,% Set byte ordering of atomic data type
+        H5T.set_pad,% Set padding type for least and most significant bits
+        H5T.set_precision,% Set precision of atomic data type
+        H5T.set_sign,% Set sign property for integer data type
+        H5T.set_size,% Set size of data type in bytes
+        H5T.set_strpad,% Set storage mechanism for string data type
+        H5T.set_tag,% Tag opaque data type with description
+        H5T.vlen_create,% Create new variable-length data type
+        h5write,% Write to HDF5 dataset
+        h5writeatt,% Write HDF5 attribute
+        H5Z.filter_avail,% Determine if filter is available
+        H5Z.get_filter_info,% Information about filter
+        hadamard,% Hadamard matrix
+        handle,% Superclass of all handle classes
+        hankel,% Hankel matrix
+        hasdata,% Determine if data is available to read
+        hasFactoryValue,% Determine whether the setting has a factory value set
+        hasFrame,% Determine if video frame is available to read
+        hasGroup,% Determine if settings group exists
+        hasnext,% Determine if ValueIterator has one or more values available
+        hasPersonalValue,% Determine whether the setting has a personal value set
+        hasSetting,% Determine if setting exists in settings group
+        hasTemporaryValue,% Determine whether the setting has a temporary value set
+        hdfan,% Gateway to HDF multifile annotation (AN) interface
+        hdfdf24,% Gateway to HDF 24-bit raster image (DF24) interface
+        hdfdfr8,% Gateway to HDF 8-bit raster image (DFR8) interface
+        hdfh,% Gateway to HDF H interface
+        hdfhd,% Gateway to HDF HD interface
+        hdfhe,% Gateway to HDF HE interface
+        hdfhx,% Gateway to HDF external data (HX) interface
+        hdfinfo,% Information about HDF4 or HDF-EOS file
+        hdfml,% Utilities for working with MATLAB HDF gateway functions
+        hdfpt,% Interface to HDF-EOS Point object
+        hdfread,% Read data from HDF4 or HDF-EOS file
+        hdfv,% Gateway to HDF Vgroup (V) interface
+        hdfvf,% Gateway to VF functions in HDF Vdata interface
+        hdfvh,% Gateway to VH functions in HDF Vdata interface
+        hdfvs,% Gateway to VS functions in HDF Vdata interface
+        head,% Get top rows of table, timetable, or tall array
+        heatmap,% Create heatmap chart
+        height,% Number of table rows
+        help,% Help for functions in Command Window
+        helpdlg,% Create help dialog box
+        hess,% Hessenberg form of matrix
+        hex2dec,% Convert text representation of hexadecimal number to decimal number
+        hex2num,% Convert IEEE hexadecimal format to double-precision number
+        hgexport,% Export figure
+        hggroup,% Create group object
+        hgtransform,% Create transform object
+        hidden,% Remove hidden lines from mesh plot
+        highlight,% Highlight nodes and edges in plotted graph
+        hilb,% Hilbert matrix
+        histcounts,% Histogram bin counts
+        histcounts2,% Bivariate histogram bin counts
+        histogram,% Histogram plot
+        histogram2,% Bivariate histogram plot
+        hms,% Hour, minute, and second numbers of datetime or duration
+        hold,% Retain current plot when adding new plots
+        holes,% Convert polyshape hole boundaries to array of polyshape objects
+        home,% Send cursor home
+        horzcat,% Horizontally concatenate tscollection objects
+        hot,% Hot colormap array
+        hour,% Hour number
+        hours,% Duration in hours
+        hover,% Perform hover gesture on UI component
+        hsv,% HSV colormap array
+        hsv2rgb,% Convert HSV colors to RGB
+        hypot,% Square root of sum of squares (hypotenuse)
+        i,% Imaginary unit
+        ichol,% Incomplete Cholesky factorization
+        idealfilter,% timeseries ideal filter
+        idivide,% Integer division with rounding option
+        if, elseif, else,% Execute statements if condition is true
+        ifft,% Inverse fast Fourier transform
+        ifft2,% 2-D inverse fast Fourier transform
+        ifftn,% Multidimensional inverse fast Fourier transform
+        ifftshift,% Inverse zero-frequency shift
+        ilu,% Incomplete LU factorization
+        im2double,% Convert image to double precision
+        im2frame,% Convert image to movie frame
+        im2java,% Convert image to Java image
+        imag,% Imaginary part of complex number
+        image,% Display image from array
+        imageDatastore,% Datastore for image data
+        imagesc,% Display image with scaled colors
+        imapprox,% Approximate indexed image by reducing number of colors
+        imfinfo,% Information about graphics file
+        imformats,% Manage image file format registry
+        imgCompress,% Compress HDU from one file into another
+        import,% Add package, class, or functions to current import list
+        importdata,% Load data from file
+        imread,% Read image from graphics file
+        imresize,% Resize image
+        imshow,% Display image
+        imtile,% Combine multiple image frames into one rectangular tiled image
+        imwrite,% Write image to graphics file
+        incenter,% Incenter of triangulation elements
+        incidence,% Graph incidence matrix
+        ind2rgb,% Convert indexed image to RGB image
+        ind2sub,% Convert linear indices to subscripts
+        indegree,% In-degree of nodes
+        inedges,% Incoming edges to node
+        Inf,% Create array of all Inf values
+        infoImpl,% Information about System object
+        inmem,% Names of functions, MEX-files, classes in memory
+        inner2outer,% Invert nested table-in-table hierarchy in tables or timetables
+        innerjoin,% Inner join between two tables or timetables
+        inpolygon,% Points located inside or on edge of polygonal region
+        input,% Request user input
+        inputdlg,% Create dialog box to gather user input
+        inputname,% Variable name of function input
+        inputParser,% Input parser for functions
+        insertAfter,% Insert strings after specified substrings
+        insertATbl,% Insert ASCII table after current HDU
+        insertBefore,% Insert strings before specified substrings
+        insertBTbl,% Insert binary table after current HDU
+        insertCol,% Insert column into table
+        insertImg,% Insert FITS image after current image
+        insertRows,% Insert rows into table
+        inShape,% Determine if point is inside alpha shape
+        int16,% 16-bit signed integer arrays
+        int2str,% Convert integers to characters
+        int32,% 32-bit signed integer arrays
+        int64,% 64-bit signed integer arrays
+        int8,% 8-bit signed integer arrays
+        integral,% Numerical integration
+        integral2,% Numerically evaluate double integral
+        integral3,% Numerically evaluate triple integral
+        interp1,% 1-D data interpolation (table lookup)
+        interp2,% Interpolation for 2-D gridded data in meshgrid format
+        interp3,% Interpolation for 3-D gridded data in meshgrid format
+        interpft,% 1-D interpolation (FFT method)
+        interpn,% Interpolation for 1-D, 2-D, 3-D, and N-D gridded data in ndgrid format
+        interpstreamspeed,% Interpolate stream-line vertices from flow speed
+        intersect,% Intersection of polyshape objects
+        intmax,% Largest value of specific integer type
+        intmin,% Smallest value of specified integer type
+        inv,% Matrix inverse
+        invhilb,% Inverse of Hilbert matrix
+        ipermute,% Inverse permute array dimensions
+        iqr,% Interquartile range of timeseries data
+        is*,% Detect state
+        isa,% Determine if input has specified data type
+        isappdata,% True if application-defined data exists
+        isaUnderlying,% Determine if tall array data is of specified class
+        isbanded,% Determine if matrix is within specific bandwidth
+        isbetween,% Determine elements within date and time interval
+        iscalendarduration,% Determine if input is calendar duration array
+        iscategorical,% Determine whether input is categorical array
+        iscategory,% Test for categorical array categories
+        iscell,% Determine if input is cell array
+        iscellstr,% Determine if input is cell array of character vectors
+        ischange,% Find abrupt changes in data
+        ischar,% Determine if input is character array
+        iscolumn,% Determine whether input is column vector
+        iscom,% Determine whether input is COM object
+        isCompressedImg,% Determine if current image is compressed
+        isConnected,% Test if two vertices are connected by an edge
+        isdag,% Determine if graph is acyclic
+        isdatetime,% Determine if input is datetime array
+        isdiag,% Determine if matrix is diagonal
+        isDiscreteStateSpecificationMutableImpl,% Control whether discrete states can change data type
+        isDone,% End-of-data status
+        isDoneImpl,% End-of-data flag
+        isdst,% Determine daylight saving time elements
+        isduration,% Determine if input is duration array
+        isempty,% Determine whether array is empty
+        isenum,% Determine if variable is enumeration
+        isequal,% Determine array equality
+        isequaln,% Determine array equality, treating NaN values as equal
+        isevent,% Determine whether input is COM object event
+        isfield,% Determine if input is structure array field
+        isfile,% Determine if input is file
+        isfinite,% Determine which array elements are finite
+        isfloat,% Determine if input is floating-point array
+        isfolder,% Determine if input is folder
+        isgraphics,% True for valid graphics object handles
+        ishandle,% Test for valid graphics or Java object handle
+        ishermitian,% Determine if matrix is Hermitian or skew-Hermitian
+        ishold,% Current hold state
+        ishole,% Determine if polyshape boundary is a hole
+        isInactivePropertyImpl,% Status of inactive property
+        isinf,% Determine which array elements are infinite
+        isInputComplexityMutableImpl,% Set whether System object input complexity can change
+        isInputDataTypeMutableImpl,% Set whether System object input data type can change
+        isInputSizeMutableImpl,% Set whether System object input size can change
+        isinteger,% Determine whether input is integer array
+        isinterface,% Determine whether input is COM interface
+        isInterior,% Query interior points of Delaunay triangulation
+        isinterior,% Query points inside polyshape
+        isisomorphic,% Determine whether two graphs are isomorphic
+        isjava,% Determine if input is Java object
+        isKey,% Determine if Map object contains key
+        iskeyword,% Determine whether input is MATLAB keyword
+        isletter,% Determine which characters are letters
+        isLoaded,% Determine if project is loaded
+        islocalmax,% Find local maxima
+        islocalmin,% Find local minima
+        isLocked,% Determine if System object is in use
+        islogical,% Determine if input is logical array
+        ismac,% Determine if version is for macOS platform
+        ismatrix,% Determine whether input is matrix
+        ismember,% Array elements that are members of set array
+        ismembertol,% Members of set within tolerance
+        ismethod,% Determine if object has specified method
+        ismissing,% Find missing values
+        ismultigraph,% Determine whether graph has multiple edges
+        isnan,% Determine which array elements are NaN
+        isnat,% Determine NaT (Not-a-Time) elements
+        isnumeric,% Determine whether input is numeric array
+        isobject,% Determine if input is MATLAB object
+        isocaps,% Compute isosurface end-cap geometry
+        isocolors,% Calculate isosurface and patch colors
+        isomorphism,% Compute isomorphism between two graphs
+        isonormals,% Compute normals of isosurface vertices
+        isordinal,% Determine whether input is ordinal categorical array
+        isosurface,% Extract isosurface data from volume data
+        isoutlier,% Find outliers in data
+        isPartitionable,% Determine whether datastore is partitionable
+        ispc,% Determine if version is for Windows (PC) platform
+        isplaying,% Determine if playback is in progress
+        ispref,% Determine if custom preference exists
+        isprime,% Determine which array elements are prime
+        isprop,% True if property exists
+        isprotected,% Determine whether categories of categorical array are protected
+        isreal,% Determine whether array is real
+        isrecording,% Determine if recording is in progress
+        isregular,% Determine if timetable is regular with respect to time or calendar unit
+        isrow,% Determine whether input is row vector
+        isscalar,% Determine whether input is scalar
+        isShuffleable,% Determine whether datastore is shuffleable
+        issimplified,% Determine if polyshape is well-defined
+        issorted,% Determine if array is sorted
+        issortedrows,% Determine if matrix or table rows are sorted
+        isspace,% Determine which characters are space characters
+        issparse,% Determine whether input is sparse
+        isstring,% Determine if input is string array
+        isStringScalar,% Determine if input is string array with one element
+        isstrprop,% Determine which characters in input strings are of specified category
+        isstruct,% Determine if input is structure array
+        isstudent,% Determine if version is Student Version
+        issymmetric,% Determine if matrix is symmetric or skew-symmetric
+        istable,% Determine whether input is table
+        istall,% Determine if input is tall array
+        istimetable,% Determine if input is timetable
+        istril,% Determine if matrix is lower triangular
+        istriu,% Determine if matrix is upper triangular
+        isTunablePropertyDataTypeMutableImpl,% Set whether tunable properties can change data type
+        isundefined,% Find undefined elements in categorical array
+        isunix,% Determine if version is for Linux or Mac platforms
+        isvalid,% Determine timer object validity
+        isvarname,% Determine if input is valid variable name
+        isvector,% Determine whether input is vector
+        isweekend,% Determine weekend elements
+        j,% Imaginary unit
+        javaaddpath,% Add entries to dynamic Java class path
+        javaArray,% Construct Java array object
+        javachk,% Error message based on Java feature support
+        javaclasspath,% Return Java class path or specify dynamic path
+        javaMethod,% Call Java method
+        javaMethodEDT,% Call Java method from Event Dispatch Thread (EDT)
+        javaObject,% Call Java constructor
+        javaObjectEDT,% Call Java constructor on Event Dispatch Thread (EDT)
+        javarmpath,% Remove entries from dynamic Java class path
+        jet,% Jet colormap array
+        join,% Combine two tables or timetables by rows using key variables
+        jsondecode,% Decode JSON-formatted text
+        jsonencode,% Create JSON-formatted text from structured MATLAB data
+        juliandate,% Convert MATLAB datetime to Julian date
+        keyboard,% Give control to keyboard
+        keys,% Return keys of Map object
+        KeyValueDatastore,% Datastore for key-value pair data for use with mapreduce
+        KeyValueStore,% Store key-value pairs for use with mapreduce
+        kron,% Kronecker tensor product
+        labeledge,% Label graph edges
+        labelnode,% Label graph nodes
+        lag,% Time-shift data in timetable
+        laplacian,% Graph Laplacian matrix
+        lastwarn,% Last warning message
+        layout,% Change layout of graph plot
+        lcm,% Least common multiple
+        ldl,% Block LDL' factorization for Hermitian indefinite matrices
+        leapseconds,% List all leap seconds supported by datetime data type
+        legend,% Add legend to axes
+        legendre,% Associated Legendre functions
+        length,% Length of tscollection time vector
+        lib.pointer,% Pointer object compatible with C pointer
+        libfunctions,% Return information on functions in shared C library
+        libfunctionsview,% Display shared C library function signatures in window
+        libisloaded,% Determine if shared C library is loaded
+        libpointer,% Pointer object for use with shared C library
+        libstruct,% Convert MATLAB structure to C-style structure for use with shared C library
+        license,% Get license number or perform licensing task
+        light,% Create light
+        lightangle,% Create or position light object in spherical coordinates
+        lighting,% Specify lighting algorithm
+        lin2mu,% Convert linear audio signal to mu-law
+        line,% Create primitive line
+        lines,% Lines colormap array
+        LineSpec (Line Specification),% Line specification
+        linkaxes,% Synchronize limits of multiple axes
+        linkdata,% Automatically update charted data
+        linkprop,% Keep same value for corresponding properties of graphics objects
+        linsolve,% Solve linear system of equations
+        linspace,% Generate linearly spaced vector
+        listdlg,% Create list selection dialog box
+        listener,% Create event listener without binding to event source
+        listfonts,% List available system fonts
+        listModifiedFiles,% List modified files in project
+        listRequiredFiles,% Get project file dependencies
+        load,% Load variables from file into workspace
+        loadlibrary,% Load C shared library into MATLAB
+        loadobj,% Customize load process for objects
+        loadObjectImpl,% Load System object from MAT file
+        localfunctions,% Function handles to all local functions in MATLAB file
+        log,% Natural logarithm
+        log10,% Common logarithm (base 10)
+        log1p,% Compute log(1+x) accurately for small values of x
+        log2,% Base 2 logarithm and floating-point number dissection
+        logical,% Convert numeric values to logicals
+        loglog,% Log-log scale plot
+        logm,% Matrix logarithm
+        logspace,% Generate logarithmically spaced vector
+        lookfor,% Search for keyword in all help entries
+        lower,% Convert strings to lowercase
+        ls,% List folder contents
+        lscov,% Least-squares solution in presence of known covariance
+        lsqminnorm,% Minimum norm least-squares solution to linear equation
+        lsqnonneg,% Solve nonnegative linear least-squares problem
+        lsqr,% Solve system of linear equations — least-squares method
+        lu,% LU matrix factorization
+        magic,% Magic square
+        makehgtform,% Create 4-by-4 transform matrix
+        makima,% Modified Akima piecewise cubic Hermite interpolation
+        mapreduce,% Programming technique for analyzing data sets that do not fit in memory
+        mapreducer,% Define execution environment for mapreduce or tall arrays
+        mat2cell,% Convert array to cell array whose cells contain subarrays
+        mat2str,% Convert matrix to characters
+        matches,% Determine if pattern matches strings
+        matchpairs,% Solve linear assignment problem
+        material,% Control reflectance properties of surfaces and patches
+        matfile,% Access and change variables in MAT-file without loading file into memory
+        matlab (Linux),% Start MATLAB program from Linux system prompt
+        matlab (macOS),% Start MATLAB program from macOS Terminal
+        matlab (Windows),% Start MATLAB program from Windows system prompt
+        matlab.addons.disableAddon,% Disable installed add-on
+        matlab.addons.enableAddon,% Enable installed add-on
+        matlab.addons.install,% Install add-on
+        matlab.addons.installedAddons,% Get list of installed add-ons
+        matlab.addons.isAddonEnabled,% Determine if add-on is enabled
+        matlab.addons.toolbox.installedToolboxes,% Return information about installed toolboxes
+        matlab.addons.toolbox.installToolbox,% Install toolbox file
+        matlab.addons.toolbox.packageToolbox,% Package toolbox project
+        matlab.addons.toolbox.toolboxVersion,% Query or modify version of toolbox
+        matlab.addons.toolbox.uninstallToolbox,% Uninstall toolbox
+        matlab.addons.uninstall,% Uninstall add-on
+        matlab.apputil.create,% Create or modify app project file interactively using the Package App dialog box
+        matlab.apputil.getInstalledAppInfo,% List installed app information
+        matlab.apputil.install,% Install app from a .mlappinstall file
+        matlab.apputil.package,% Package app files into a .mlappinstall file
+        matlab.apputil.run,% Run app programmatically
+        matlab.apputil.uninstall,% Uninstall app
+        matlab.codetools.requiredFilesAndProducts,% List dependencies of MATLAB program files
+        matlab.engine.connect_matlab,% Connect shared MATLAB session to MATLAB Engine for Python
+        matlab.engine.engineName,% Return name of shared MATLAB session
+        matlab.engine.find_matlab,% Find shared MATLAB sessions to connect to MATLAB Engine for Python
+        matlab.engine.FutureResult,% Results of asynchronous call to MATLAB function stored in Python object
+        matlab.engine.isEngineShared,% Determine if MATLAB session is shared
+        matlab.engine.MatlabEngine,% Python object using MATLAB as computational engine within Python session
+        matlab.engine.shareEngine,% Convert running MATLAB session to shared session
+        matlab.engine.start_matlab,% Start MATLAB Engine for Python
+        matlab.exception.JavaException,% Capture error information for Java exception
+        matlab.exception.PyException,% Capture error information for Python exception
+        matlab.graphics.chartcontainer.ChartContainer,% Base class for developing chart objects
+        matlab.graphics.chartcontainer.mixin.Colorbar,% Add colorbar support to chart container subclass
+        matlab.graphics.chartcontainer.mixin.Legend,% Add legend support to chart container subclass
+        matlab.io.Datastore,% Base datastore class
+        matlab.io.datastore.BlockedFileSet,% Blocked file-set for collection of blocks within file
+        matlab.io.datastore.DsFileReader,% File-reader object for files in a datastore
+        matlab.io.datastore.DsFileSet,% File-set object for collection of files in datastore
+        matlab.io.datastore.FileSet,% File-set for collection of files in datastore
+        matlab.io.datastore.FileWritable,% Add file writing support to datastore
+        matlab.io.datastore.FoldersPropertyProvider,% Add Folder property support to datastore
+        matlab.io.datastore.HadoopLocationBased,% Add Hadoop support to datastore
+        matlab.io.datastore.Partitionable,% Add parallelization support to datastore
+        matlab.io.datastore.Shuffleable,% Add shuffling support to datastore
+        matlab.io.hdf4.sd,% Interact directly with HDF4 multifile scientific data set (SD) interface
+        matlab.io.hdfeos.gd,% Low-level access to HDF-EOS grid data
+        matlab.io.hdfeos.sw,% Low-level access to HDF-EOS swath files
+        matlab.io.saveVariablesToScript,% Save workspace variables to MATLAB script
+        matlab.lang.correction.AppendArgumentsCorrection,% Correct error by appending missing input arguments
+        matlab.lang.correction.ConvertToFunctionNotationCorrection,% Correct error by converting to function notation
+        matlab.lang.correction.ReplaceIdentifierCorrection,% Correct error by replacing identifier in function call
+        matlab.lang.makeUniqueStrings,% Construct unique strings from input strings
+        matlab.lang.makeValidName,% Construct valid MATLAB identifiers from input strings
+        matlab.lang.OnOffSwitchState,% Represent on and off states with logical values
+        matlab.mex.MexHost,% Out-of-process host for C++ MEX function execution
+        matlab.mixin.Copyable,% Superclass providing copy functionality for handle objects
+        matlab.mixin.CustomDisplay,% Interface for customizing object display
+        matlab.mixin.Heterogeneous,% Superclass for heterogeneous array formation
+        matlab.mixin.SetGet,% Provide handle classes with set and get methods
+        matlab.mixin.SetGetExactNames,% Require exact name match for set and get methods
+        matlab.mixin.util.PropertyGroup,% Custom property list for object display
+        matlab.mock.actions.AssignOutputs,% Define return values for method called or property accessed
+        matlab.mock.actions.DoNothing,% Take no action
+        matlab.mock.actions.Invoke,% Invoke function handle when method is called
+        matlab.mock.actions.ReturnStoredValue,% Return stored property value
+        matlab.mock.actions.StoreValue,% Store property value
+        matlab.mock.actions.ThrowException,% Throw exception when method is called or when property is set or accessed
+        matlab.mock.AnyArguments,% Match any number of arguments
+        matlab.mock.constraints.Occurred,% Constraint qualifying mock object interactions
+        matlab.mock.constraints.WasAccessed,% Constraint determining property get access
+        matlab.mock.constraints.WasCalled,% Constraint determining method call
+        matlab.mock.constraints.WasSet,% Constraint determining property set interaction
+        matlab.mock.InteractionHistory,% Interface for mock object interaction history
+        matlab.mock.InteractionHistory.forMock,% Return history from mock object
+        matlab.mock.MethodCallBehavior,% Specify mock object method behavior and qualify method calls
+        matlab.mock.PropertyBehavior,% Specify mock object property behavior and qualify interactions
+        matlab.mock.PropertyGetBehavior,% Specify mock property get behavior
+        matlab.mock.PropertySetBehavior,% Specify mock object set behavior
+        matlab.mock.TestCase,% TestCase to write tests with mocking framework
+        matlab.net.ArrayFormat,% Convert arrays in HTTP queries
+        matlab.net.base64decode,% Base 64 decoding of string
+        matlab.net.base64encode,% Base 64 encoding of byte string or vector
+        matlab.net.http.AuthenticationScheme,% HTTP Authentication scheme
+        matlab.net.http.AuthInfo,% Authentication or authorization information in HTTP messages
+        matlab.net.http.Cookie,% HTTP cookie received from server
+        matlab.net.http.CookieInfo,% HTTP cookie information
+        matlab.net.http.Credentials,% Credentials for authenticating HTTP requests
+        matlab.net.http.Disposition,% Results in HTTP log record
+        matlab.net.http.field.AcceptField,% HTTP Accept header field
+        matlab.net.http.field.AuthenticateField,% HTTP WWW-Authenticate or Proxy-Authenticate header field
+        matlab.net.http.field.AuthenticationInfoField,% HTTP Authentication-Info header field in response message
+        matlab.net.http.field.AuthorizationField,% HTTP Authorization or Proxy-Authorization header field
+        matlab.net.http.field.ContentDispositionField,% HTTP Content-Disposition header field
+        matlab.net.http.field.ContentLengthField,% HTTP Content-Length field
+        matlab.net.http.field.ContentLocationField,% HTTP Content-Location header field
+        matlab.net.http.field.ContentTypeField,% HTTP Content-Type header field
+        matlab.net.http.field.CookieField,% HTTP Cookie header field
+        matlab.net.http.field.DateField,% HTTP Date header field
+        matlab.net.http.field.GenericField,% HTTP header field with any name and value
+        matlab.net.http.field.GenericParameterizedField,% GenericField to support parameterized syntax
+        matlab.net.http.field.HTTPDateField,% HTTP header field containing date
+        matlab.net.http.field.IntegerField,% Base class for HTTP header fields containing nonnegative integers
+        matlab.net.http.field.LocationField,% HTTP Location header field
+        matlab.net.http.field.MediaRangeField,% Base class for HTTP Content-Type and Accept header fields
+        matlab.net.http.field.SetCookieField,% HTTP Set-Cookie header field
+        matlab.net.http.field.URIReferenceField,% Base class for HTTP header fields containing URI components
+        matlab.net.http.HeaderField,% Header field of HTTP message
+        matlab.net.http.HTTPException,% Exception thrown by HTTP services
+        matlab.net.http.HTTPOptions,% Options controlling HTTP message exchange
+        matlab.net.http.io.BinaryConsumer,% Consumer for binary data in HTTP messages
+        matlab.net.http.io.ContentConsumer,% Consumer for HTTP message payloads
+        matlab.net.http.io.ContentProvider,% ContentProvider for HTTP message payloads
+        matlab.net.http.io.FileConsumer,% Consumer for files in HTTP messages
+        matlab.net.http.io.FileProvider,% ContentProvider to send files
+        matlab.net.http.io.FormProvider,% ContentProvider that sends form data
+        matlab.net.http.io.GenericConsumer,% Consumer for multiple content types in HTTP messages
+        matlab.net.http.io.GenericProvider,% Generic ContentProvider for HTTP payloads
+        matlab.net.http.io.ImageConsumer,% Consumer for image data in HTTP payloads
+        matlab.net.http.io.ImageProvider,% ContentProvider to send MATLAB image data
+        matlab.net.http.io.JSONConsumer,% Content consumer that converts JSON input into MATLAB data
+        matlab.net.http.io.JSONProvider,% ContentProvider to send MATLAB data as JSON string
+        matlab.net.http.io.MultipartConsumer,% Helper for multipart content types in HTTP messages
+        matlab.net.http.io.MultipartFormProvider,% ContentProvider to send multipart/form-data messages
+        matlab.net.http.io.MultipartProvider,% ContentProvider to send multipart/mixed HTTP messages
+        matlab.net.http.io.StringConsumer,% String consumer for HTTP payloads
+        matlab.net.http.io.StringProvider,% ContentProvider to send MATLAB strings
+        matlab.net.http.LogRecord,% HTTP history log record
+        matlab.net.http.MediaType,% Internet media type used in HTTP headers
+        matlab.net.http.Message,% HTTP request or response message
+        matlab.net.http.MessageBody,% Body of HTTP message
+        matlab.net.http.MessageType,% HTTP message type
+        matlab.net.http.ProgressMonitor,% Progress monitor for HTTP message exchange
+        matlab.net.http.ProtocolVersion,% HTTP protocol version
+        matlab.net.http.RequestLine,% First line of HTTP request message
+        matlab.net.http.RequestMessage,% HTTP request message
+        matlab.net.http.RequestMethod,% HTTP request method
+        matlab.net.http.ResponseMessage,% HTTP response message
+        matlab.net.http.StartLine,% First line of HTTP message
+        matlab.net.http.StatusClass,% Status class of HTTP response
+        matlab.net.http.StatusCode,% Status code in HTTP response
+        matlab.net.http.StatusLine,% First line of HTTP response message
+        matlab.net.QueryParameter,% Parameter in query portion of uniform resource identifier (URI)
+        matlab.net.URI,% Uniform resource identifier (URI)
+        matlab.perftest.FixedTimeExperiment,% TimeExperiment that collects fixed number of measurements
+        matlab.perftest.FrequentistTimeExperiment,% TimeExperiment that collects variable number of measurements
+        matlab.perftest.TestCase,% Superclass of matlab.perftest performance test classes
+        matlab.perftest.TimeExperiment,% Interface for measuring execution time of code under test
+        matlab.perftest.TimeResult,% Result from running time experiment
+        matlab.project.createProject,% Create blank project
+        matlab.project.deleteProject,% Stop folder management and delete project definition files
+        matlab.project.loadProject,% Load project
+        matlab.project.Project,% Project object
+        matlab.project.rootProject,% Get root project
+        matlab.settings.FactoryGroup.createToolboxGroup,% Create FactoryGroup root object for toolbox
+        matlab.settings.loadSettingsCompatibilityResults,% Get results of upgrading personal settings of toolbox for specific version
+        matlab.settings.mustBeIntegerScalar,% Validate that setting value is integer array with one element
+        matlab.settings.mustBeLogicalScalar,% Validate that setting value is logical array with one element
+        matlab.settings.mustBeNumericScalar,% Validate that setting value is numeric array with one element
+        matlab.settings.mustBeStringScalar,% Validate that setting value is string array with one element
+        matlab.settings.reloadFactoryFile,% Load or reload factory settings
+        matlab.System,% Base class for System objects
+        matlab.system.mixin.FiniteSource,% Finite source mixin class
+        matlab.tall.blockMovingWindow,% Apply moving window function and block reduction to padded blocks of data
+        matlab.tall.movingWindow,% Apply moving window function to blocks of data
+        matlab.tall.reduce,% Reduce arrays by applying reduction algorithm to blocks of data
+        matlab.tall.transform,% Transform array by applying function handle to blocks of data
+        matlab.test.behavior.Missing,% Test if class satisfies contract for missing values
+        matlab.uitest.TestCase,% TestCase to write tests with app testing framework
+        matlab.uitest.TestCase.forInteractiveUse,% Create a TestCase object for interactive use
+        matlab.uitest.unlock,% Unlock figure locked by app testing framework
+        matlab.unittest.constraints.BooleanConstraint,% Interface class for Boolean combinations of constraints
+        matlab.unittest.constraints.Constraint,% Fundamental interface class for comparisons
+        matlab.unittest.constraints.Tolerance,% Abstract interface class for tolerances
+        matlab.unittest.diagnostics.ConstraintDiagnostic,% Diagnostic with fields common to most constraints
+        matlab.unittest.diagnostics.Diagnostic,% Fundamental interface class for matlab.unittest diagnostics
+        matlab.unittest.fixtures.Fixture,% Interface class for test fixtures
+        matlab.unittest.measurement.chart.ComparisonPlot,% Visually compare two sets of time experiment results
+        matlab.unittest.measurement.DefaultMeasurementResult,% Default implementation of MeasurementResult class
+        matlab.unittest.measurement.MeasurementResult,% Base class for classes holding measurement results
+        matlab.unittest.plugins.OutputStream,% Interface that determines where to send text output
+        matlab.unittest.plugins.Parallelizable,% Interface for plugins that support running tests in parallel
+        matlab.unittest.plugins.QualifyingPlugin,% Interface for plugins that perform system-wide qualifications
+        matlab.unittest.plugins.TestRunnerPlugin,% Plugin interface for extending TestRunner
+        matlab.unittest.Test,% Specification of single test method
+        matlab.unittest.TestCase,% Superclass of all matlab.unittest test classes
+        matlab.unittest.TestResult,% Result of running test suite
+        matlab.unittest.TestRunner,% Class for running tests in matlab.unittest framework
+        matlab.unittest.TestSuite,% Class for grouping tests to run
+        matlab.wsdl.createWSDLClient,% Create interface to SOAP-based web service
+        matlab.wsdl.setWSDLToolPath,% Location of WSDL tools
+        matlabrc,% System administrator-defined start up script for MATLAB
+        matlabroot,% MATLAB root folder
+        max,% Maximum elements of an array
+        maxflow,% Maximum flow in graph
+        MaximizeCommandWindow,% Open Automation server window
+        maxk,% Find k largest elements of array
+        mean,% Average or mean value of array
+        median,% Median value of array
+        memmapfile,% Create memory map to a file
+        memoize,% Add memoization semantics to function handle
+        MemoizedFunction,% Call memoized function and cache results
+        memory,% Display memory information
+        mergecats,% Merge categories in categorical array
+        mergevars,% Combine table or timetable variables into multicolumn variable
+        mesh,% Mesh surface plot
+        meshc,% Contour plot under mesh surface plot
+        meshgrid,% 2-D and 3-D grids
+        meshz,% Mesh surface plot with curtain
+        meta.abstractDetails,% Find abstract methods and properties
+        meta.ArrayDimension,% Size information for property validation
+        meta.class,% Describe MATLAB class
+        meta.class.fromName,% Return meta.class object associated with named class
+        meta.DynamicProperty,% Describe dynamic property of MATLAB object
+        meta.EnumeratedValue,% Describe enumeration member of MATLAB class
+        meta.event,% Describe event defined by MATLAB class
+        meta.FixedDimension,% Fixed dimension in property size specification
+        meta.MetaData,% Root of the hierarchy of metaclasses
+        meta.method,% Information about class method
+        meta.package,% Describe MATLAB package
+        meta.package.fromName,% Return meta.package object for specified package
+        meta.package.getAllPackages,% Get all top-level packages
+        meta.property,% Describe property of MATLAB class
+        meta.UnrestrictedDimension,% Unrestricted dimension in property size specification
+        meta.Validation,% Describes property validation
+        metaclass,% Obtain meta.class object
+        methods,% Class method names
+        methodsview,% View class methods
+        mex,% Build MEX function or engine application
+        MException,% Capture error information
+        MException.last,% Return last uncaught exception
+        mexext,% Binary MEX file-name extension
+        mexhost,% Create host process for C++ MEX function
+        mfilename,% File name of currently running code
+        mget,% Download files from FTP server
+        milliseconds,% Duration in milliseconds
+        min,% Minimum elements of an array
+        MinimizeCommandWindow,% Minimize size of Automation server window
+        mink,% Find k smallest elements of array
+        minres,% Solve system of linear equations — minimum residual method
+        minspantree,% Minimum spanning tree of graph
+        minute,% Minute number
+        minutes,% Duration in minutes
+        mislocked,% Determine if function or script is locked in memory
+        missing,% Create missing values
+        mkdir,% Make new folder
+        mkpp,% Make piecewise polynomial
+        mldivide,% Solve systems of linear equations Ax = B for x
+        mlintrpt,% Run checkcode for file or folder
+        mlock,% Prevent clearing function or script from memory
+        mmfileinfo,% Information about multimedia file
+        mod,% Remainder after division (modulo operation)
+        mode,% Most frequent values in array
+        month,% Month number and name
+        more,% Control paged output in Command Window
+        morebins,% Increase number of histogram bins
+        movAbsHDU,% Move to absolute HDU number
+        move,% Record move or rename of factory setting or group
+        movefile,% Move or rename file or folder
+        movegui,% Move figure to specified location on screen
+        movevars,% Move variables in table or timetable
+        movie,% Play recorded movie frames
+        movmad,% Moving median absolute deviation
+        movmax,% Moving maximum
+        movmean,% Moving mean
+        movmedian,% Moving median
+        movmin,% Moving minimum
+        movNamHDU,% Move to first HDU having specific type and keyword values
+        movprod,% Moving product
+        movRelHDU,% Move relative number of HDUs from current HDU
+        movstd,% Moving standard deviation
+        movsum,% Moving sum
+        movvar,% Moving variance
+        mpower,% Matrix power
+        mput,% Upload file or folder to FTP server
+        mrdivide,% Solve systems of linear equations xA = B for x
+        msgbox,% Create message dialog box
+        mtimes,% Matrix multiplication
+        mu2lin,% Convert mu-law audio signal to linear
+        multibandread,% Read band-interleaved data from binary file
+        multibandwrite,% Write band-interleaved data to file
+        munlock,% Allow clearing function or script from memory
+        mustBeFinite,% Validate that value is finite or issue error
+        mustBeGreaterThan,% Validate that value is greater than another value or issue error
+        mustBeGreaterThanOrEqual,% Validate that value is greater than or equal to another value or issue error
+        mustBeInteger,% Validate that value is integer or issue error
+        mustBeLessThan,% Validate that value is less than another value or issue error
+        mustBeLessThanOrEqual,% Validate that value is less than or equal to another value or issue error
+        mustBeMember,% Validate that value is member of specified set
+        mustBeNegative,% Validate that value is negative or issue error
+        mustBeNonempty,% Validate that value is nonempty or issue error
+        mustBeNonNan,% Validate that value is nonNaN
+        mustBeNonnegative,% Validate that value is nonnegative or issue error
+        mustBeNonpositive,% Validate that value is nonpositive or issue error
+        mustBeNonsparse,% Validate that value is nonsparse or issue error
+        mustBeNonzero,% Validate that value is nonzero or issue error
+        mustBeNumeric,% Validate that value is numeric or issue error
+        mustBeNumericOrLogical,% Validate that value is numeric or logical or issue error
+        mustBePositive,% Validate that value is positive or issue error
+        mustBeReal,% Validate that value is real or issue error
+        namedargs2cell,% Convert structure containing name-value pairs to cell array
+        namelengthmax,% Maximum identifier length
+        NaN,% Create array of all NaN values
+        nargin,% Number of input arguments for System object
+        narginchk,% Validate number of input arguments
+        nargout,% Number of output arguments for System object
+        nargoutchk,% Validate number of output arguments
+        NaT,% Not-a-Time
+        native2unicode,% Convert numeric bytes to Unicode character representation
+        nccreate,% Create variable in NetCDF file
+        ncdisp,% Display contents of NetCDF data source in Command Window
+        nchoosek,% Binomial coefficient or all combinations
+        ncinfo,% Return information about NetCDF data source
+        ncread,% Read data from variable in NetCDF data source
+        ncreadatt,% Read attribute value from NetCDF data source
+        ncwrite,% Write data to NetCDF file
+        ncwriteatt,% Write attribute to NetCDF file
+        ncwriteschema,% Add NetCDF schema definitions to NetCDF file
+        ndgrid,% Rectangular grid in N-D space
+        ndims,% Number of array dimensions
+        nearest,% Nearest neighbors within radius
+        nearestNeighbor,% Determine nearest alpha shape boundary point
+        nearestvertex,% Query nearest polyshape vertex
+        neighbors,% Triangle or tetrahedron neighbors
+        NET,% Summary of functions in MATLAB .NET interface
+        NET.addAssembly,% Make .NET assembly visible to MATLAB
+        NET.Assembly,% Members of .NET assembly
+        NET.convertArray,% (Not recommended) Convert numeric MATLAB array to .NET array
+        NET.createArray,% Array for nonprimitive .NET types
+        NET.createGeneric,% Create instance of specialized .NET generic type
+        NET.disableAutoRelease,% Lock .NET object representing RunTime Callable Wrapper (COM wrapper)
+        NET.enableAutoRelease,% Unlock .NET object representing RunTime Callable Wrapper (COM wrapper)
+        NET.GenericClass,% Represent parameterized generic type definitions
+        NET.invokeGenericMethod,% Invoke generic method of object
+        NET.isNETSupported,% Check for supported Microsoft .NET Framework
+        NET.NetException,% Capture error information for .NET exception
+        NET.setStaticProperty,% Static property or field name
+        netcdf.abort,% Revert recent netCDF file definitions
+        netcdf.close,% Close netCDF file
+        netcdf.copyAtt,% Copy attribute to new location
+        netcdf.create,% Create new NetCDF dataset
+        netcdf.defDim,% Create netCDF dimension
+        netcdf.defGrp,% Create group in NetCDF file
+        netcdf.defVar,% Create NetCDF variable
+        netcdf.defVarChunking,% Define chunking behavior for NetCDF variable
+        netcdf.defVarDeflate,% Define compression parameters for NetCDF variable
+        netcdf.defVarFill,% Define fill parameters for NetCDF variable
+        netcdf.defVarFletcher32,% Define checksum parameters for NetCDF variable
+        netcdf.delAtt,% Delete netCDF attribute
+        netcdf.endDef,% End netCDF file define mode
+        netcdf.getAtt,% Return netCDF attribute
+        netcdf.getChunkCache,% Retrieve chunk cache settings for NetCDF library
+        netcdf.getConstant,% Return numeric value of named constant
+        netcdf.getConstantNames,% Return list of constants known to netCDF library
+        netcdf.getVar,% Read data from NetCDF variable
+        netcdf.inq,% Return information about netCDF file
+        netcdf.inqAtt,% Return information about netCDF attribute
+        netcdf.inqAttID,% Return ID of netCDF attribute
+        netcdf.inqAttName,% Return name of netCDF attribute
+        netcdf.inqDim,% Return netCDF dimension name and length
+        netcdf.inqDimID,% Return dimension ID
+        netcdf.inqDimIDs,% Retrieve list of dimension identifiers in group
+        netcdf.inqFormat,% Determine format of NetCDF file
+        netcdf.inqGrpName,% Retrieve name of group
+        netcdf.inqGrpNameFull,% Complete pathname of group
+        netcdf.inqGrpParent,% Retrieve ID of parent group.
+        netcdf.inqGrps,% Retrieve array of child group IDs
+        netcdf.inqLibVers,% Return NetCDF library version information
+        netcdf.inqNcid,% Return ID of named group
+        netcdf.inqUnlimDims,% Return list of unlimited dimensions in group
+        netcdf.inqVar,% Information about variable
+        netcdf.inqVarChunking,% Determine chunking settings for NetCDF variable
+        netcdf.inqVarDeflate,% Determine compression settings for NetCDF variable
+        netcdf.inqVarFill,% Determine values of fill parameters for NetCDF variable
+        netcdf.inqVarFletcher32,% Fletcher32 checksum setting for NetCDF variable
+        netcdf.inqVarID,% Return ID associated with variable name
+        netcdf.inqVarIDs,% IDs of all variables in group
+        netcdf.open,% Open NetCDF data source
+        netcdf.putAtt,% Write netCDF attribute
+        netcdf.putVar,% Write data to netCDF variable
+        netcdf.reDef,% Put open netCDF file into define mode
+        netcdf.renameAtt,% Change name of attribute
+        netcdf.renameDim,% Change name of netCDF dimension
+        netcdf.renameVar,% Change name of netCDF variable
+        netcdf.setChunkCache,% Set default chunk cache settings for NetCDF library
+        netcdf.setDefaultFormat,% Change default netCDF file format
+        netcdf.setFill,% Set netCDF fill mode
+        netcdf.sync,% Synchronize netCDF file to disk
+        newline,% Create newline character
+        newplot,% Determine where to draw graphics objects
+        nextpow2,% Exponent of next higher power of 2
+        nexttile,% Create axes in tiled chart layout
+        nnz,% Number of nonzero matrix elements
+        nonzeros,% Nonzero matrix elements
+        norm,% Vector and matrix norms
+        normalize,% Normalize data
+        normest,% 2-norm estimate
+        notify,% Notify listeners that event is occurring
+        now,% Current date and time as serial date number
+        nsidedpoly,% Regular polygon
+        nthroot,% Real nth root of real numbers
+        nufft,% Nonuniform fast Fourier transform
+        nufftn,% N-D nonuniform fast Fourier transform
+        null,% Null space of matrix
+        num2cell,% Convert array to cell array with consistently sized cells
+        num2hex,% Convert single- and double-precision numbers to IEEE hexadecimal format
+        num2ruler,% Convert numeric data for use with specific ruler
+        num2str,% Convert numbers to character array
+        numArgumentsFromSubscript,% Number of arguments for customized indexing methods
+        numboundaries,% Number of polyshape boundaries
+        numedges,% Number of edges in graph
+        numel,% Number of array elements
+        numnodes,% Number of nodes in graph
+        numpartitions,% Number of datastore partitions
+        numRegions,% Number of regions in alpha shape
+        numsides,% Number of polyshape sides
+        nzmax,% Amount of storage allocated for nonzero matrix elements
+        ode113,% Solve nonstiff differential equations — variable order method
+        ode15i,% Solve fully implicit differential equations — variable order method
+        ode15s,% Solve stiff differential equations and DAEs — variable order method
+        ode23,% Solve nonstiff differential equations — low order method
+        ode23s,% Solve stiff differential equations — low order method
+        ode23t,% Solve moderately stiff ODEs and DAEs — trapezoidal rule
+        ode23tb,% Solve stiff differential equations — trapezoidal rule + backward differentiation formula
+        ode45,% Solve nonstiff differential equations — medium order method
+        odeget,% Extract ODE option values
+        odeset,% Create or modify options structure for ODE and PDE solvers
+        odextend,% Extend solution to ODE
+        onCleanup,% Cleanup tasks upon function completion
+        ones,% Create array of all ones
+        open,% Open context menu at location within UI figure
+        openDiskFile,% Open FITS file
+        openfig,% Open figure saved in FIG-file
+        openFile,% Open FITS file
+        opengl,% Control OpenGL rendering
+        openProject,% Load an existing project
+        openvar,% Open workspace variable in Variables editor or other graphical editing tool
+        OperationResult,% Operation result object
+        optimget,% Optimization options values
+        optimset,% Create or modify optimization options structure
+        ordeig,% Eigenvalues of quasitriangular matrices
+        orderfields,% Order fields of structure array
+        ordqz,% Reorder eigenvalues in QZ factorization
+        ordschur,% Reorder eigenvalues in Schur factorization
+        orient,% Paper orientation for printing or saving
+        orth,% Orthonormal basis for range of matrix
+        outdegree,% Out-degree of nodes
+        outedges,% Outgoing edges from node
+        outerjoin,% Outer join between two tables or timetables
+        overlaps,% Determine whether polyshape objects overlap
+        overlapsrange,% Determine if timetable row times overlap specified time range
+        pack,% Consolidate workspace memory
+        pad,% Add leading or trailing characters to strings
+        padecoef,% Padé approximation of time delays
+        pan,% Pan view of graph interactively
+        panInteraction,% Pan interaction
+        parallelplot,% Create parallel coordinates plot
+        pareto,% Pareto chart
+        parfor,% Parallel for loop
+        parquetDatastore,% Datastore for collection of Parquet files
+        parquetinfo,% Get information about Parquet file
+        parquetread,% Read columnar data from a Parquet file
+        parquetwrite,% Write columnar data to Parquet file
+        partition,% Partition a datastore
+        parula,% Parula colormap array
+        pascal,% Pascal matrix
+        patch,% Plot one or more filled polygonal regions
+        path,% View or change search path
+        pathsep,% Search path separator for current platform
+        pathtool,% Open Set Path dialog box to view and change search path
+        pause,% Pause playback or recording
+        pbaspect,% Control relative lengths of each axis
+        pcg,% Solve system of linear equations — preconditioned conjugate gradients method
+        pchip,% Piecewise Cubic Hermite Interpolating Polynomial (PCHIP)
+        pcode,% Create content-obscured, executable files
+        pcolor,% Pseudocolor plot
+        pdepe,% Solve 1-D parabolic and elliptic PDEs
+        pdeval,% Interpolate numerical solution of PDE
+        peaks,% Example function of two variables
+        perimeter,% Perimeter of polyshape
+        perl,% Call Perl script using operating system executable
+        perms,% All possible permutations
+        permute,% Permute array dimensions
+        persistent,% Define persistent variable
+        pi,% Ratio of circle's circumference to its diameter
+        pie,% Pie chart
+        pie3,% 3-D pie chart
+        pink,% Pink colormap array
+        pinv,% Moore-Penrose pseudoinverse
+        planerot,% Givens plane rotation
+        play,% Play audio from audioplayer object
+        playblocking,% Play audio from audioplayer object, hold control until playback completes
+        plot,% 2-D line plot
+        plot3,% 3-D point or line plot
+        plotbrowser,% Show or hide figure Plot Browser
+        plotedit,% Interactively edit and annotate plots
+        plotmatrix,% Scatter plot matrix
+        plottools,% Show or hide plot tools
+        pointLocation,% Triangle or tetrahedron enclosing point
+        pol2cart,% Transform polar or cylindrical coordinates to Cartesian
+        polaraxes,% Create polar axes
+        polarhistogram,% Histogram chart in polar coordinates
+        polarplot,% Plot line in polar coordinates
+        polarscatter,% Scatter chart in polar coordinates
+        poly,% Polynomial with specified roots or characteristic polynomial
+        polyarea,% Area of polygon
+        polybuffer,% Create buffer around points, lines, or polyshape objects
+        polyder,% Polynomial differentiation
+        polyeig,% Polynomial eigenvalue problem
+        polyfit,% Polynomial curve fitting
+        polyint,% Polynomial integration
+        polyshape,% 2-D polygons
+        polyval,% Polynomial evaluation
+        polyvalm,% Matrix polynomial evaluation
+        posixtime,% Convert MATLAB datetime to POSIX time
+        pow2,% Base 2 power and scale floating-point numbers
+        ppval,% Evaluate piecewise polynomial
+        predecessors,% Node predecessors
+        prefdir,% Folder containing preferences, settings, history, and layout files
+        preferences,% Open Preferences dialog box
+        press,% Perform press gesture on UI component
+        preview,% Subset of data in datastore
+        primes,% Prime numbers less than or equal to input value
+        print,% Print figure or save to specific file format
+        printdlg,% Open figure Print dialog box
+        printopt,% Configure printer defaults
+        printpreview,% Open figure Print Preview dialog box
+        prism,% Prism colormap array
+        processInputSpecificationChangeImpl,% Perform actions when input size, complexity, or data type change
+        processTunedPropertiesImpl,% Action when tunable properties change
+        prod,% Product of array elements
+        profile,% Profile execution time for functions
+        propedit,% Open Property Editor
+        properties,% Class property names
+        propertyeditor,% Show or hide Property Editor
+        psi,% Psi (polygamma) function
+        publish,% Generate view of MATLAB file in specified format
+        PutCharArray,% Character array in Automation server
+        PutFullMatrix,% Matrix in Automation server workspace
+        PutWorkspaceData,% Data in Automation server workspace
+        pwd,% Identify current folder
+        pyargs,% Create keyword arguments for Python function
+        pyenv,% Change default environment of Python interpreter
+        PythonEnvironment,% Python environment information
+        qmr,% Solve system of linear equations — quasi-minimal residual method
+        qr,% QR decomposition
+        qrdelete,% Remove column or row from QR factorization
+        qrinsert,% Insert column or row into QR factorization
+        qrupdate,% Rank 1 update to QR factorization
+        quad2d,% Numerically evaluate double integral — tiled method
+        quadgk,% Numerically evaluate integral — Gauss-Kronrod quadrature
+        quarter,% Quarter number
+        questdlg,% Create question dialog box
+        Quit,% Terminate MATLAB Automation server
+        quit,% Terminate MATLAB program
+        quiver,% Quiver or velocity plot
+        quiver3,% 3-D quiver or velocity plot
+        qz,% QZ factorization for generalized eigenvalues
+        rad2deg,% Convert angle from radians to degrees
+        rand,% Uniformly distributed random numbers
+        randi,% Uniformly distributed pseudorandom integers
+        randn,% Normally distributed random numbers
+        randperm,% Random permutation of integers
+        RandStream,% Random number stream
+        rank,% Rank of matrix
+        rat,% Rational fraction approximation
+        rats,% Rational output
+        rbbox,% Create rubberband box for area selection
+        rcond,% Reciprocal condition number
+        read,% Read data in datastore
+        readall,% Read all data in datastore
+        readATblHdr,% Read header information from current ASCII table
+        readBTblHdr,% Read header information from current binary table
+        readCard,% Header record of keyword
+        readcell,% Read cell array from file
+        readCol,% Read rows of ASCII or binary table column
+        readFrame,% Read next video frame
+        readImg,% Read image data
+        readKey,% Keyword
+        readKeyCmplx,% Keyword as complex scalar value
+        readKeyDbl,% Keyword as double precision value
+        readKeyLongLong,% Keyword as int64
+        readKeyLongStr,% Long string value
+        readKeyUnit,% Physical units string from keyword
+        readline,% Read line of ASCII string data from serial port
+        readmatrix,% Read matrix from file
+        readRecord,% Header record specified by number
+        readtable,% Create table from file
+        readtimetable,% Create timetable from file
+        readvars,% Read variables from file
+        real,% Real part of complex number
+        reallog,% Natural logarithm for nonnegative real arrays
+        realmax,% Largest positive floating-point number
+        realmin,% Smallest normalized floating-point number
+        realpow,% Array power for real-only output
+        realsqrt,% Square root for nonnegative real arrays
+        record,% Record audio to audiorecorder object
+        recordblocking,% Record audio to audiorecorder object, hold control until recording completes
+        rectangle,% Create rectangle with sharp or curved corners
+        rectint,% Rectangle intersection area
+        recycle,% Set option to move deleted files to recycle folder
+        reducepatch,% Reduce number of patch faces
+        reducevolume,% Reduce number of elements in volume data set
+        refresh,% Redraw current figure
+        refreshdata,% Refresh charted data
+        refreshSourceControl,% Update source control status of project files
+        regexp,% Match regular expression (case sensitive)
+        regexpi,% Match regular expression (case insensitive)
+        regexprep,% Replace text using regular expression
+        regexptranslate,% Translate text into regular expression
+        regions,% Access polyshape regions
+        regionZoomInteraction,% Region-zoom interaction
+        registerevent,% Associate event handler for COM object event at run time
+        regmatlabserver,% Register current MATLAB as COM server
+        rehash,% Refresh function and file system path caches
+        relationaloperators,% Determine equality or sort handle objects
+        release,% Release resources and allow changes to System object property values and input characteristics
+        ReleaseCompatibilityException,% Release compatibility exception object
+        ReleaseCompatibilityResults,% Release compatibility results object
+        releaseImpl,% Release resources
+        reload,% Reload project
+        rem,% Remainder after division
+        Remove,% Convenience function for static .NET System.Delegate Remove method
+        remove,% Record removal of factory setting or group
+        RemoveAll,% Convenience function for static .NET System.Delegate RemoveAll method
+        removeCategory,% Remove project category of labels
+        removecats,% Remove categories from categorical array
+        removeFile,% Remove file from project
+        removeGroup,% Remove settings group
+        removeLabel,% Remove label from project
+        removePath,% Remove folder from project path
+        removeReference,% Remove project reference
+        removeSetting,% Remove setting
+        removeShortcut,% Remove shortcut from project
+        removeShutdownFile,% Remove shutdown file from project shutdown list
+        removeStartupFile,% Remove startup file from project startup list
+        removeStyle,% Remove style from table UI component
+        removeToolbarExplorationButtons,% Remove data exploration buttons from figure toolbar
+        removets,% Remove timeseries from tscollection
+        removevars,% Delete variables from table or timetable
+        rename,% Rename file on FTP server
+        renamecats,% Rename categories in categorical array
+        renamevars,% Rename variables in table or timetable
+        rendererinfo,% Graphics renderer information
+        reordercats,% Reorder categories in categorical array
+        reordernodes,% Reorder graph nodes
+        repelem,% Repeat copies of array elements
+        replace,% Find and replace one or more substrings
+        replaceBetween,% Replace substrings between start and end points
+        repmat,% Repeat copies of array
+        resample,% Resample tscollection time vector
+        rescale,% Scale range of array elements
+        reset,% Reset internal states of System object
+        resetImpl,% Reset System object states
+        reshape,% Reshape array
+        residue,% Partial fraction expansion (partial fraction decomposition)
+        restoredefaultpath,% Restore search path to factory-installed state
+        resume,% Resume playback or recording from paused state
+        rethrow,% Rethrow previously caught exception
+        retime,% Resample or aggregate data in timetable, and resolve duplicate or irregular times
+        return,% Return control to invoking script or function
+        reverse,% Reverse order of characters in strings
+        rgb2gray,% Convert RGB image or colormap to grayscale
+        rgb2hsv,% Convert RGB colors to HSV
+        rgb2ind,% Convert RGB image to indexed image
+        rgbplot,% Plot colormap
+        ribbon,% Ribbon plot
+        rlim,% Set or query r-axis limits for polar axes
+        rmappdata,% Remove application-defined data
+        rmboundary,% Remove polyshape boundary
+        rmdir,% Remove folder
+        rmedge,% Remove edge from graph
+        rmfield,% Remove fields from structure
+        rmholes,% Remove holes in polyshape
+        rmmissing,% Remove missing entries
+        rmnode,% Remove node from graph
+        rmoutliers,% Detect and remove outliers in data
+        rmpath,% Remove folders from search path
+        rmpref,% Remove custom preference
+        rmprop,% Remove custom properties from table or timetable
+        rmslivers,% Remove polyshape boundary outliers
+        rng,% Control random number generator
+        roots,% Polynomial roots
+        rosser,% Classic symmetric eigenvalue test problem
+        rot90,% Rotate array 90 degrees
+        rotate,% Rotate object about specified origin and direction
+        rotate3d,% Rotate 3-D view using mouse
+        rotateInteraction,% Rotate interaction
+        round,% Round to nearest decimal or integer
+        rowfun,% Apply function to table or timetable rows
+        rows2vars,% Reorient table or timetable so that rows become variables
+        rref,% Reduced row echelon form (Gauss-Jordan elimination)
+        rsf2csf,% Convert real Schur form to complex Schur form
+        rtickangle,% Rotate r-axis tick labels
+        rtickformat,% Specify r-axis tick label format
+        rticklabels,% Set or query r-axis tick labels
+        rticks,% Set or query r-axis tick values
+        ruler2num,% Convert data from specific ruler to numeric data
+        rulerPanInteraction,% Ruler-pan interaction
+        run,% Run TestCase test
+        runChecks,% Run all project checks
+        runperf,% Run set of tests for performance measurement
+        runtests,% Run set of tests
+        save,% Save workspace variables to file
+        saveas,% Save figure to specific file format
+        savefig,% Save figure and contents to FIG-file
+        saveobj,% Modify save process for object
+        saveObjectImpl,% Save System object in MAT file
+        savepath,% Save current search path
+        scale,% Scale polyshape
+        scatter,% Scatter plot
+        scatter3,% 3-D scatter plot
+        scatteredInterpolant,% Interpolate 2-D or 3-D scattered data
+        scatterhistogram,% Create scatter plot with histograms
+        schur,% Schur decomposition
+        scroll,% Scroll to location within container, list box, or tree
+        sec,% Secant of angle in radians
+        secd,% Secant of argument in degrees
+        sech,% Hyperbolic secant
+        second,% Second number
+        seconds,% Duration in seconds
+        semilogx,% Semilog plot (x-axis has log scale)
+        semilogy,% Semilog plot (y-axis has log scale)
+        sendmail,% Send email message to address list
+        serialport,% Connection to serial port
+        serialportlist,% List of serial ports connected to your system
+        set,% Set property values for timer object
+        setabstime,% Set tscollection times as date character vectors
+        setappdata,% Store application-defined data
+        setBscale,% Reset image scaling
+        setcats,% Set categories in categorical array
+        setCompressionType,% Set image compression type
+        setdiff,% Set difference of two arrays
+        setDTR,% Set serial DTR pin
+        setenv,% Set environment variable
+        setfield,% Assign value to structure array field
+        setHCompScale,% Set scale parameter for HCOMPRESS algorithm
+        setHCompSmooth,% Set smoothing for images compressed with HCOMPRESS
+        setinterpmethod,% Set default interpolation method for timeseries object
+        setpixelposition,% Set component position in pixels
+        setpref,% Set custom preference value
+        setProperties,% Set property values using name-value pairs when creating System object
+        setRTS,% Set serial RTS pin
+        setTileDim,% Set tile dimensions
+        settimeseriesnames,% Rename timeseries in tscollection
+        Setting,% Setting object
+        settings,% Access the SettingsGroup root object
+        SettingsFileUpgrader,% Settings file upgrader object
+        SettingsGroup,% Group of settings and subgroup objects
+        setTscale,% Reset image scaling
+        setuniformtime,% Modify uniform timeseries time vector
+        setup,% One-time set up tasks for System objects
+        setupImpl,% Initialize System object
+        setvaropts,% Set variable import options
+        setvartype,% Set variable data types
+        setxor,% Set exclusive OR of two arrays
+        sgtitle,% Add title to subplot grid
+        shading,% Set color shading properties
+        sheetnames,% Get sheet names from spreadsheet file
+        shg,% Show most recent graph window
+        shiftdim,% Shift array dimensions
+        Short-circuit &&, ||,% Logical operations with short-circuiting
+        shortestpath,% Shortest path between two single nodes
+        shortestpathtree,% Shortest path tree from node
+        showplottool,% Show or hide figure plot tool
+        shrinkfaces,% Reduce size of patch faces
+        shuffle,% Shuffle files in datastore
+        sign,% Sign function (signum function)
+        simplify,% Simplify polyshape boundaries
+        sin,% Sine of argument in radians
+        sind,% Sine of argument in degrees
+        single,% Single-precision arrays
+        sinh,% Hyperbolic sine
+        sinpi,% Compute sin(X*pi) accurately
+        size,% Size of triangulation connectivity list
+        slice,% Volume slice planes
+        smooth3,% Smooth 3-D data
+        smoothdata,% Smooth noisy data
+        snapnow,% Take snapshot of image for inclusion in published document
+        sort,% Sort array elements
+        sortboundaries,% Sort polyshape boundaries
+        sortregions,% Sort polyshape regions
+        sortrows,% Sort rows of matrix or table
+        sortx,% Sort elements in heatmap row
+        sorty,% Sort elements in heatmap column
+        sound,% Convert matrix of signal data to sound
+        soundsc,% Scale data and play as sound
+        spalloc,% Allocate space for sparse matrix
+        sparse,% Create sparse matrix
+        spaugment,% Form least-squares augmented system
+        spconvert,% Import from sparse matrix external format
+        spdiags,% Extract nonzero diagonals and create sparse band and diagonal matrices
+        specular,% Calculate specular reflectance
+        speye,% Sparse identity matrix
+        spfun,% Apply function to nonzero sparse matrix elements
+        sph2cart,% Transform spherical coordinates to Cartesian
+        sphere,% Create sphere
+        spinmap,% Rotate colormap colors
+        spline,% Cubic spline data interpolation
+        split,% Split calendar duration into numeric and duration units
+        splitapply,% Split data into groups and apply function
+        splitlines,% Split strings at newline characters
+        splitvars,% Split multicolumn variables in table or timetable
+        spones,% Replace nonzero sparse matrix elements with ones
+        spparms,% Set parameters for sparse matrix routines
+        sprand,% Sparse uniformly distributed random matrix
+        sprandn,% Sparse normally distributed random matrix
+        sprandsym,% Sparse symmetric random matrix
+        sprank,% Structural rank
+        spreadsheetDatastore,% Datastore for spreadsheet files
+        spreadsheetImportOptions,% Import options object for Spreadsheets
+        spring,% Spring colormap array
+        sprintf,% Format data into string or character vector
+        spy,% Visualize sparsity pattern of matrix
+        sqrt,% Square root
+        sqrtm,% Matrix square root
+        squeeze,% Remove dimensions of length 1
+        ss2tf,% Convert state-space representation to transfer function
+        sscanf,% Read formatted data from strings
+        stack,% Stack data from multiple variables into single variable
+        stackedplot,% Stacked plot of several variables with common x-axis
+        stairs,% Stairstep graph
+        standardizeMissing,% Insert standard missing values
+        start,% Start timer object
+        startat,% Schedule timer to fire at specified time
+        startsWith,% Determine if strings start with pattern
+        startup,% User-defined startup script for MATLAB
+        std,% Standard deviation
+        stem,% Plot discrete sequence data
+        stem3,% Plot 3-D discrete sequence data
+        step,% Run System object algorithm
+        stepImpl,% System output and state update equations
+        stlread,% Create triangulation from STL file
+        stlwrite,% Create STL file from triangulation
+        stop,% Stop timer object
+        str2double,% Convert strings to double precision values
+        str2func,% Construct function handle from character vector
+        str2num,% Convert character array or string to numeric array
+        strcat,% Concatenate strings horizontally
+        strcmp,% Compare strings
+        strcmpi,% Compare strings (case insensitive)
+        stream2,% Compute 2-D streamline data
+        stream3,% Compute 3-D streamline data
+        streamline,% Plot streamlines from 2-D or 3-D vector data
+        streamparticles,% Plot stream particles
+        streamribbon,% 3-D stream ribbon plot from vector volume data
+        streamslice,% Plot streamlines in slice planes
+        streamtube,% Create 3-D stream tube plot
+        strfind,% Find strings within other strings
+        string,% String array
+        strings,% Create string array with no characters
+        strip,% Remove leading and trailing characters from strings
+        strjoin,% Join strings in array
+        strjust,% Justify strings
+        strlength,% Lengths of strings
+        strncmp,% Compare first n characters of strings (case sensitive)
+        strncmpi,% Compare first n characters of strings (case insensitive)
+        strrep,% Find and replace substrings
+        strsplit,% Split string or character vector at specified delimiter
+        strtok,% Selected parts of strings
+        strtrim,% Remove leading and trailing whitespace from strings
+        struct,% Structure array
+        struct2cell,% Convert structure to cell array
+        struct2table,% Convert structure array to table
+        structfun,% Apply function to each field of scalar structure
+        sub2ind,% Convert subscripts to linear indices
+        subgraph,% Extract subgraph
+        subplot,% Create axes in tiled positions
+        subsasgn,% Redefine subscripted assignment
+        subscribe,% Subscribe to characteristic notification or indication
+        subsindex,% Convert object to array index
+        subspace,% Angle between two subspaces
+        subsref,% Subscripted reference
+        substruct,% Create structure argument for subsasgn or subsref
+        subtract,% Difference of two polyshape objects
+        subvolume,% Extract subset of volume data set
+        successors,% Node successors
+        sum,% Sum of array elements
+        summary,% Print summary of table, timetable, or categorical array
+        summer,% Summer colormap array
+        superclasses,% Names of superclasses
+        surf,% Surface plot
+        surf2patch,% Convert surface data to patch data
+        surface,% Primitive surface plot
+        surfaceArea,% Surface area of 3-D alpha shape
+        surfc,% Contour plot under surface plot
+        surfl,% Surface plot with colormap-based lighting
+        surfnorm,% Surface normals
+        svd,% Singular value decomposition
+        svds,% Subset of singular values and vectors
+        swapbytes,% Swap byte ordering
+        switch, case, otherwise,% Execute one of several groups of statements
+        sylvester,% Solve Sylvester equation AX + XB = C for X
+        symamd,% Symmetric approximate minimum degree permutation
+        symbfact,% Symbolic factorization analysis
+        symmlq,% Solve system of linear equations — symmetric LQ method
+        symrcm,% Sparse reverse Cuthill-McKee ordering
+        synchronize,% Synchronize and resample two timeseries objects using common time vector
+        system,% Execute operating system command and return output
+        table,% Table array with named variables that can contain different types
+        table2array,% Convert table to homogeneous array
+        table2cell,% Convert table to cell array
+        table2struct,% Convert table to structure array
+        table2timetable,% Convert table to timetable
+        tabularTextDatastore,% Datastore for tabular text files
+        tail,% Get bottom rows of table, timetable, or tall array
+        tall,% Create tall array
+        TallDatastore,% Datastore for checkpointing tall arrays
+        tallrng,% Control random number generation for tall arrays
+        tan,% Tangent of argument in radians
+        tand,% Tangent of argument in degrees
+        tanh,% Hyperbolic tangent
+        tar,% Compress files into tar file
+        tcpclient,% Create TCP/IP client object to communicate over TCP/IP
+        tempdir,% Name of temporary folder for the system
+        tempname,% Unique name for temporary file
+        Test,% Specification of single test method
+        TestResult,% Result of running test suite
+        testsuite,% Create suite of tests
+        tetramesh,% Tetrahedron mesh plot
+        texlabel,% Format text with TeX characters
+        text,% Add text descriptions to data points
+        textscan,% Read formatted data from text file or string
+        textwrap,% Wrap text for user interface control
+        tfqmr,% Solve system of linear equations — transpose-free quasi-minimal residual method
+        thetalim,% Set or query theta-axis limits for polar axes
+        thetatickformat,% Specify theta-axis tick label format
+        thetaticklabels,% Set or query theta-axis tick labels
+        thetaticks,% Set or query theta-axis tick values
+        thingSpeakRead,% Read data stored in a ThingSpeak channel
+        thingSpeakWrite,% Write data to a ThingSpeak channel
+        throw,% Throw exception
+        throwAsCaller,% Throw exception as if occurs within calling function
+        tic,% Start stopwatch timer
+        Tiff,% MATLAB Gateway to LibTIFF library routines
+        tiledlayout,% Create tiled chart layout
+        time,% Convert time of calendar duration to duration
+        timeit,% Measure time required to run function
+        timeofday,% Elapsed time since midnight for datetimes
+        timer,% Create object to schedule execution of MATLAB commands
+        timerange,% Time range for timetable row subscripting
+        timerfind,% Find timer object
+        timerfindall,% Find timer object, regardless of visibility
+        timeseries,% Create timeseries object
+        timetable,% Timetable array with time-stamped rows and variables of different types
+        timetable2table,% Convert timetable to table
+        timezones,% List time zones
+        title,% Add title
+        toc,% Read elapsed time from stopwatch
+        todatenum,% Convert CDF epoch object to MATLAB serial date number
+        toeplitz,% Toeplitz matrix
+        toolboxdir,% Root folder for specified toolbox
+        topkrows,% Top rows in sorted order
+        toposort,% Topological order of directed acyclic graph
+        trace,% Sum of diagonal elements
+        transclosure,% Transitive closure
+        transform,% Transform datastore
+        TransformedDatastore,% Datastore to transform underlying datastore
+        translate,% Translate polyshape
+        transpose,% Transpose vector or matrix
+        transreduction,% Transitive reduction
+        trapz,% Trapezoidal numerical integration
+        treelayout,% Lay out tree or forest
+        treeplot,% Plot picture of tree
+        triangulation,% Triangulate polyshape
+        tril,% Lower triangular part of matrix
+        trimesh,% Triangular mesh plot
+        triplot,% 2-D triangular plot
+        trisurf,% Triangular surface plot
+        triu,% Upper triangular part of matrix
+        true,% Logical 1 (true)
+        try, catch,% Execute statements and catch resulting errors
+        tscollection,% Create tscollection object
+        tsdata.event,% Create tsdata.event object
+        tsearchn,% N-D closest simplex search
+        turningdist,% Compute turning distance between polyshape objects
+        type,% Type in UI component
+        typecast,% Convert data type without changing underlying data
+        tzoffset,% Time zone offset from UTC
+        uialert,% Display alert dialog box
+        uiaxes,% Create UI axes for plots in apps
+        uibutton,% Create push button or state button component
+        uibuttongroup,% Create button group to manage radio buttons and toggle buttons
+        uicheckbox,% Create check box component
+        uiconfirm,% Create confirmation dialog box
+        uicontextmenu,% Create context menu component
+        uicontrol,% Create user interface control
+        uidatepicker,% Create date picker component
+        uidropdown,% Create drop-down component
+        uieditfield,% Create text or numeric edit field component
+        uifigure,% Create figure for designing apps
+        uigauge,% Create gauge component
+        uigetdir,% Open folder selection dialog box
+        uigetfile,% Open file selection dialog box
+        uigetpref,% Create dialog box that opens according to user preference
+        uigridlayout,% Create grid layout manager
+        uihtml,% Create HTML UI component
+        uiimage,% Create image component
+        uiknob,% Create knob component
+        uilabel,% Create label component
+        uilamp,% Create lamp component
+        uilistbox,% Create list box component
+        uimenu,% Create menu or menu items
+        uint16,% 16-bit unsigned integer arrays
+        uint32,% 32-bit unsigned integer arrays
+        uint64,% 64-bit unsigned integer arrays
+        uint8,% 8-bit unsigned integer arrays
+        uiopen,% Open file selection dialog box and load selected file into workspace
+        uipanel,% Create panel container
+        uiprogressdlg,% Create progress dialog box
+        uipushtool,% Create push tool in toolbar
+        uiputfile,% Open dialog box for saving files
+        uiradiobutton,% Create radio button component
+        uiresume,% Resume execution of blocked program
+        uisave,% Open dialog box for saving variables to MAT-file
+        uisetcolor,% Open color picker
+        uisetfont,% Open font selection dialog box
+        uisetpref,% Manage preferences used in uigetpref
+        uislider,% Create slider component
+        uispinner,% Create spinner component
+        uistack,% Reorder visual stacking of UI components
+        uistyle,% Create style for table UI component
+        uiswitch,% Create slider switch, rocker switch, or toggle switch component
+        uitab,% Create tabbed panel
+        uitabgroup,% Create container for tabbed panels
+        uitable,% Create table user interface component
+        uitextarea,% Create text area component
+        uitogglebutton,% Create toggle button component
+        uitoggletool,% Create toggle tool in toolbar
+        uitoolbar,% Create toolbar in figure
+        uitree,% Create tree component
+        uitreenode,% Create tree node component
+        uiwait,% Block program execution and wait to resume
+        uminus,% Unary minus
+        underlyingValue,% Underlying numeric value for C++ enumeration object created in MATLAB
+        unicode2native,% Convert Unicode character representation to numeric bytes
+        union,% Union of polyshape objects
+        unique,% Unique values in array
+        uniquetol,% Unique values within tolerance
+        unix,% Execute UNIX command and return output
+        unloadlibrary,% Unload shared C library from memory
+        unmesh,% Convert edge matrix to coordinate and Laplacian matrices
+        unmkpp,% Extract piecewise polynomial details
+        unregisterallevents,% Unregister all event handlers associated with COM object events
+        unregisterevent,% Unregister event handler associated with COM object event at run time
+        unstack,% Unstack data from single variable into multiple variables
+        unsubscribe,% Unsubscribe from characteristic notification and indication
+        untar,% Extract contents of tar file
+        unwrap,% Shift phase angles
+        unzip,% Extract contents of zip file
+        update,% Update instance of chart container subclass after setting properties
+        updateDependencies,% Update project dependencies
+        uplus,% Unary plus
+        upper,% Convert strings to uppercase
+        usejava,% Determine if Java feature is available
+        userpath,% View or change default user work folder
+        validateattributes,% Check validity of array
+        validateFunctionSignaturesJSON,% Validate functionSignatures.json files
+        validateInputsImpl,% Validate inputs to System object
+        validatePropertiesImpl,% Validate property values of System object
+        validatestring,% Check validity of text
+        ValueIterator,% An iterator over intermediate values for use with mapreduce
+        values,% Return values of Map object
+        vander,% Vandermonde matrix
+        var,% Variance
+        varargin,% Variable-length input argument list
+        varargout,% Variable-length output argument list
+        varfun,% Apply function to table or timetable variables
+        vartype,% Subscript into table or timetable by variable type
+        vecnorm,% Vector-wise norm
+        ver,% Version information for MathWorks products
+        verLessThan,% Compare toolbox version to specified character vector
+        version,% Version number for MATLAB and libraries
+        VersionResults,% Version results object
+        vertcat,% Vertically concatenate tscollection objects
+        vertexAttachments,% Triangles or tetrahedra attached to vertex
+        vertexNormal,% Triangulation vertex normal
+        VideoReader,% Create object to read video files
+        VideoWriter,% Create object to write video files
+        view,% Camera line of sight
+        viewmtx,% View transformation matrices
+        visdiff,% Compare two files or folders
+        volume,% Volume of 3-D alpha shape
+        volumebounds,% Coordinate and color limits for volume data
+        voronoi,% Voronoi diagram
+        voronoiDiagram,% Voronoi diagram of Delaunay triangulation
+        voronoin,% N-D Voronoi diagram
+        wait,% Block command prompt until timer stops running
+        waitbar,% Create or update wait bar dialog box
+        waitfor,% Block execution and wait for condition
+        waitforbuttonpress,% Wait for click or key press
+        warndlg,% Create warning dialog box
+        warning,% Display warning message
+        waterfall,% Waterfall plot
+        web,% Open web page or file in browser
+        weboptions,% Specify parameters for RESTful web service
+        webread,% Read content from RESTful web service
+        websave,% Save content from RESTful web service to file
+        webwrite,% Write data to RESTful web service
+        week,% Week number
+        weekday,% Day of week
+        what,% List MATLAB files in folder
+        which,% Locate functions and files
+        while,% while loop to repeat when condition is true
+        who,% List variables in workspace
+        whos,% List variables in workspace, with sizes and types
+        width,% Number of table variables
+        wilkinson,% Wilkinson's eigenvalue test matrix
+        winopen,% Open file in appropriate application (Windows)
+        winqueryreg,% Item from Windows registry
+        winter,% Winter colormap array
+        withinrange,% Determine if timetable row times are within specified time range
+        withtol,% Time tolerance for timetable row subscripting
+        wordcloud,% Create word cloud chart from text data
+        write,% Write tall array to local and remote locations for checkpointing
+        writeall,% Write datastore to files
+        writecell,% Write cell array to file
+        writeChecksum,% Compute and write checksum for current HDU
+        writeCol,% Write elements into ASCII or binary table column
+        writeComment,% Write or append COMMENT keyword to CHU
+        writeDate,% Write DATE keyword to CHU
+        writeHistory,% Write or append HISTORY keyword to CHU
+        writeImg,% Write to FITS image
+        writeKey,% Update or add new keyword into current HDU
+        writeKeyUnit,% Write physical units string
+        writeline,% Write line of ASCII data to serial port
+        writematrix,% Write a matrix to a file
+        writetable,% Write table to file
+        writetimetable,% Write timetable to file
+        writeVideo,% Write video data to file
+        xcorr,% Cross-correlation
+        xcov,% Cross-covariance
+        xlabel,% Label x-axis
+        xlim,% Set or query x-axis limits
+        xline,% Vertical line with constant x-value
+        xmlread,% Read XML document and return Document Object Model node
+        xmlwrite,% Write XML Document Object Model node
+        xor,% Exclusive OR of two polyshape objects
+        xslt,% Transform XML document using XSLT engine
+        xtickangle,% Rotate x-axis tick labels
+        xtickformat,% Specify x-axis tick label format
+        xticklabels,% Set or query x-axis tick labels
+        xticks,% Set or query x-axis tick values
+        year,% Year number
+        years,% Duration in years
+        ylabel,% Label y-axis
+        ylim,% Set or query y-axis limits
+        yline,% Horizontal line with constant y-value
+        ymd,% Year, month, and day numbers of datetime
+        ytickangle,% Rotate y-axis tick labels
+        ytickformat,% Specify y-axis tick label format
+        yticklabels,% Set or query y-axis tick labels
+        yticks,% Set or query y-axis tick values
+        yyaxis,% Create chart with two y-axes
+        yyyymmdd,% Convert MATLAB datetime to YYYYMMDD numeric value
+        zeros,% Create array of all zeros
+        zip,% Compress files into zip file
+        zlabel,% Label z-axis
+        zlim,% Set or query z-axis limits
+        zoom,% Turn zooming on or off or magnify by factor
+        zoomInteraction,% Zoom interaction
+        ztickangle,% Rotate z-axis tick labels
+        ztickformat,% Specify z-axis tick label format
+        zticklabels,% Set or query z-axis tick labels
+        zticks% Set or query z-axis tick values
+    },
+    deletekeywords=[5]{% Delete those that occur in other keyword lists
+        false,
+        NaN,
+        true,
+        %
+        break,
+        case,
+        catch,
+        classdef,
+        continue,
+        else,
+        elseif,
+        end,
+        for,
+        function,
+        global,
+        if,
+        otherwise,
+        parfor,
+        persistent,
+        return,
+        spmd,
+        switch,
+        try,
+        while%
+    },
 }

@@ -180,7 +180,8 @@
 
 % In code environments, to be able to copy from the PDF (despite that not being a good
 % idea usually), we want the line numbers to not be part of the selection.
-% This command prints them, but renders the actual copied content empty.
+% This command prints them, but renders the actual copied content empty,
+% on supported readers like Adobe Acrobat.
 \RequirePackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
     \newcommand*{\emptyaccsupp}[1]{%
         \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
@@ -196,39 +197,9 @@
     \hypersetup{allcolors=cOrange}{#1}%
 }%
 
-\lstset{%
-    % These base styles are valid for all languages. Take care to not overwrite these
-    % settings in the definition for new languages.
-    basicstyle=\scriptsize\ttfamily,% Font size so that c. 140 chars fit into one line
-    escapechar=`,%
-    % mlplaceholderstyle=\rmfamily\itshape,%
-    % mlshowsectionrules=true,% Show rules done by %%
-    numbers=left,%
-    numberstyle=\ttfamily\color{g3}\tiny\emptyaccsupp,%
-    firstnumber=1,% https://stackoverflow.com/q/2178301
-    stepnumber=5,% Step between printed line numbers
-    numberfirstline=true,% Count first line as well
-    numbersep=2pt,% Hor. sep. between line numbers and code
-    frame=lines,% Top and bottom lines with 'lines'
-    framerule=1pt,%
-    autogobble=true,% Remove leading empty spaces/indentation automatically
-    xleftmargin=0.15\linewidth,%
-    xrightmargin=0.1\linewidth,%
-    tabsize=3,% Default is 8, which indents a lot
-    backgroundcolor=\color{g6},%
-    columns=flexible,% Characters printed at natural width, more readable
-    keepspaces=true,% Don't drop spaces and convert tab to spaces
-}%
-
-\lstdefinestyle{betweenpar}{%between paragraphs, i.e. not a huge, independent chunk
-    numbers=none,%
-    basicstyle=\small\ttfamily,%
-    xleftmargin=0.15\linewidth,%
-    xrightmargin=0.05\linewidth,%
-    frame=leftline,%
-    framerule=2pt,%default 0.4pt
-    rulecolor=\color{g3},%
-    backgroundcolor=\color{white},%
+\lstset{% Global settings
+    style=base,
+    language={[Custom]Python},% global default; put most likely encountered language
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
