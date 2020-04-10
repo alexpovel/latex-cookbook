@@ -2873,3 +2873,23 @@
         \end{tabular}
     \end{center}
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the purpose of demonstration
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Wrapper for links to CTAN, or elsewhere
+\newcommand*{\ctanpackage}[2][None]{%
+    % Usage:
+    % \ctanpackage[]{siunitx} -> no link generated, warning issued
+    % \ctanpackage[www.test.com]{siunitx} -> link to optional argument
+    % \ctanpackage{siunitx} -> link to siunitx on CTAN (https://ctan.org/pkg/siunitx)
+    \ifstrequal{#1}{None}{%
+        \def\package@link{https://ctan.org/pkg/#2}%
+    }{%
+        \def\package@link{#1}%
+    }%
+    \expandafter\href\expandafter{\package@link}{%
+        \textcolor{green!50!black}{\texttt{\textbf{#2}}}%
+    }%
+}%
