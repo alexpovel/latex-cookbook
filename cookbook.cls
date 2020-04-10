@@ -679,6 +679,7 @@
     % short style is 'alphabetic' (like [AB99]);
     % longer: 'authoryear' (like (Einstein, 1940)):
     style=verbose,
+    autocite=footnote,% Control what \autocite does
     %
     sortcites=true,% Apply what is specified in sorting=
     % Introduce back references in bibliography:
