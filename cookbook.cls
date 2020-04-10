@@ -168,38 +168,29 @@
 % Typeset code snippets
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RequirePackage{listings}% Verbatim code environments
-
-% If code is indented in the LaTeX source, this is reflected in the print.
-% This package automatically removes as much whitespace as the first line of a listing
-% is indented by.
-\RequirePackage{lstautogobble}%
-
 % Custom package with style/language definitions:
 \RequirePackage{listings-languages}
 
-% In code environments, to be able to copy from the PDF (despite that not being a good
-% idea usually), we want the line numbers to not be part of the selection.
-% This command prints them, but renders the actual copied content empty,
-% on supported readers like Adobe Acrobat.
-\RequirePackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
-    \newcommand*{\emptyaccsupp}[1]{%
-        \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
-    }%
-
-
 % Colors for escaped, normal LaTeX in code environments
-\newcommand*{\phstring}[1]{\color{cRed}{#1}}%
-\newcommand*{\phnum}[1]{\color{mBlue}{#1}}%
-\newcommand*{\phother}[1]{\color{mGreen}{#1}}%
+\newcommand*{\phstring}[1]{%
+    \textcolor{cRed}{#1}%
+}%
+\newcommand*{\phnum}[1]{%
+    \textcolor{cBlue}{#1}%
+}%
+\newcommand*{\phother}[1]{%
+    \textcolor{cGreen}{#1}%
+}%
 \newcommand*{\phnote}[1]{%
-    \bfseries\color{cOrange}%
-    \hypersetup{allcolors=cOrange}{#1}%
+    {%
+        \hypersetup{allcolors=cOrange}% If references occur in here
+        \textbf{\textcolor{cOrange}{#1}}%
+    }%
 }%
 
 \lstset{% Global settings
     style=base,
-    language={[Custom]Python},% global default; put most likely encountered language
+    language={[3]Python},% global default; put most likely encountered language
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

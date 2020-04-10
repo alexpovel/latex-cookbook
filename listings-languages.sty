@@ -1,6 +1,24 @@
 \ProvidesPackage{listings-languages}% Same as filename
 % File to define listings style for various languages
 
+\RequirePackage{listings}% Base package
+
+% If code is indented in the LaTeX source, this is reflected in the print.
+% This package automatically removes as much whitespace as the first line of a listing
+% is indented by.
+\RequirePackage{lstautogobble}%
+
+\RequirePackage{xcolor}
+
+% In code environments, to be able to copy from the PDF (despite that not being a good
+% idea usually), we want the line numbers to not be part of the selection.
+% This command prints them, but renders the actual copied content empty,
+% on supported readers like Adobe Acrobat.
+\RequirePackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
+    \newcommand*{\emptyaccsupp}[1]{%
+        \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
+    }%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Styles
@@ -29,6 +47,8 @@
     \definecolor{CircusGreen}{RGB}{145, 184, 89}
     \definecolor{CircusViolet}{RGB}{124, 77, 255}
 
+% Further themes can go here...
+
 % Change the theme here
 \colorlet{Keyword1}{CircusTurq}
 \colorlet{Keyword2}{CircusViolet}
@@ -50,7 +70,7 @@
 
 \lstdefinestyle{base}{%
     % Basic settings
-    basicstyle=\scriptsize\ttfamily,% Font size so that c. 140 chars fit into one line
+    basicstyle=\scriptsize\ttfamily,%
     %
     % Regular LaTeX can occur in these (on UK Keyboard: SHIFT+`).
     % Otherwise, you'll have to copy-paste this whenever needed.
@@ -70,8 +90,8 @@
     frame=lines,% Top and bottom lines with 'lines'
     framerule=1pt,%
     rulecolor=\color{g3},
-    xleftmargin=0.15\linewidth,%
-    xrightmargin=0.1\linewidth,%
+    xleftmargin=0.1\linewidth,%
+    xrightmargin=0.05\linewidth,%
     backgroundcolor=\color{g6},%
     %
     % Spacing
@@ -100,17 +120,18 @@
     keywordstyle=[9]\color{Function},%
     %
     stringstyle=\color{String},
-    commentstyle=\color{Comment}\itshape,% Inconsolata Italics is faked
+    commentstyle=\color{Comment}\itshape,%
     identifierstyle=\color{g1},% Anything else
-    %
-}
+}%
 
 \lstdefinestyle{betweenpar}{% Between paragraphs, i.e. not a huge, independent chunk
     style=base,% Inherit
+    basicstyle=\small\ttfamily,% Overwrite
+    %
+    % Framing
     numbers=none,%
-    basicstyle=\small\ttfamily,%
     frame=leftline,%
-    framerule=2pt,% Default is 0.4pt
+    framerule=1pt,% Default is 0.4pt
     backgroundcolor=\color{white},%
 }%
 
@@ -125,9 +146,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Signature is: [<dialect>]{<name>}[<base dialect>]{<base name>}
-\lstdefinelanguage[Custom]{Python}[]{Python}{%
-    % Print digits dark, aka as letters. Don't really know what this does
-    alsoletter={0123456789},
+% lst@definelanguage threw error: Couldn't load requested language
+\lstdefinelanguage[3]{Python}[]{Python}{%
     % Changes based on Python 3.8.2 (2020-04-09)
     %
     morestring=[s]{f'}{'},% f-strings
@@ -141,35 +161,48 @@
     literate=*% Asterisk disables these for delimited contexts like strings
         % Syntax is {<original>}{<replacement>}{<column width>}
         %
-        % All sorts of operators
-        {-}{\color{Operator}-}{1}%
-        {,}{\color{Operator},}{1}%
-        {:}{\color{Operator}:}{1}%
-        {!}{\color{Operator}!}{1}%
-        {.}{\color{Operator}.}{1}%
-        {(}{\color{Operator}(}{1}%
-        {)}{\color{Operator})}{1}%
-        {[}{\color{Operator}[}{1}%
-        {]}{\color{Operator}]}{1}%
-        {@}{\color{Operator}@}{1}%
-        {*}{\color{Operator}*}{1}%
-        {/}{\color{Operator}/}{1}%
-        {\{ }{\color{Operator}\{ }{1}%
-        {\}}{\color{Operator}\}}{1}%
-        {\&}{\color{Operator}\&}{1}%
-        {\%}{\color{Operator}\%}{1}%
-        {\^}{\color{Operator}\^}{1}%
-        {\|}{\color{Operator}\|}{1}%
-        {+}{\color{Operator}+}{1}%
-        {<}{\color{Operator}<}{1}%
-        {=}{\color{Operator}=}{1}%
-        {>}{\color{Operator}>}{1}%
-        {//}{\color{Operator}{//}}{2}%
-        {**}{\color{Operator}{**}}{2},%
+        % All sorts of operators.
+        % The color scope has to be limited, else it leaks out of these escapes
+        % into whatever comes after. Use {\color{}} or just \textcolor{}{}
+        {-}{\textcolor{Operator}{-}}{1}%
+        {,}{\textcolor{Operator}{,}}{1}%
+        {:}{\textcolor{Operator}{:}}{1}%
+        {!}{\textcolor{Operator}{!}}{1}%
+        {.}{\textcolor{Operator}{.}}{1}%
+        {(}{\textcolor{Operator}{(}}{1}%
+        {)}{\textcolor{Operator}{)}}{1}%
+        {[}{\textcolor{Operator}{[}}{1}%
+        {]}{\textcolor{Operator}{]}}{1}%
+        {@}{\textcolor{Operator}{@}}{1}%
+        {*}{\textcolor{Operator}{*}}{1}%
+        {/}{\textcolor{Operator}{/}}{1}%
+        {+}{\textcolor{Operator}{+}}{1}%
+        {<}{\textcolor{Operator}{<}}{1}%
+        {=}{\textcolor{Operator}{=}}{1}%
+        {>}{\textcolor{Operator}{>}}{1}%
+        {\{ }{\textcolor{Operator}{\{ }}{1}%
+        {\}}{\textcolor{Operator}{\}}}{1}%
+        {\&}{\textcolor{Operator}{\&}}{1}%
+        {\%}{\textcolor{Operator}{\%}}{1}%
+        {\^}{\textcolor{Operator}{\^}}{1}%
+        {\|}{\textcolor{Operator}{\|}}{1}%
+        {//}{\textcolor{Operator}{//}}{2}%
+        {**}{\textcolor{Operator}{**}}{2},%
     %
     % Keywords lists 1 and 2 are overridden from default package definitions,
     % which are found in lstlang1.sty in the package directory. They are
-    % overridden because we change too much anyway and they are outdated.
+    % overridden because we change too much anyway and they are dated (Python 2).
+    % Further, we want full control here; if we inherit the 'wrong' keywords using
+    % `morekeywords`, those have to be deleted manually again using `deletekeywords`.
+    %
+    % In the original package, keywords are wrapped into blocks, with many keywords
+    % on each line. Here, we put one keyword a line for several reasons:
+    % - easier to scan for keywords
+    % - easier to sort alphabetically and thus to insert new keywords
+    % - clearer in a diff view (git)
+    % - easier got get overall number (= overall lines)
+    % Main disadvantage seems to be the excessive scrolling.
+    %
     % Python 'keywords', as in the literal Python keywords, as generated by
     % import keyword; keyword.kwlist
     keywords=[1]{% Base keywords
@@ -364,7 +397,7 @@
         Warning,
         ZeroDivisionError,
     },
-    keywords=[7]{% Dunder/magic methods/attributes
+    keywords=[7]{% Built-in dunder/magic methods/attributes
         __abs__,
         __add__,
         __all__,
@@ -698,8 +731,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \lstdefinelanguage[Custom]{Matlab}[]{Matlab}{%
-    % Print digits dark, aka as letters. Don't really know what this does
-    alsoletter={0123456789},
     %
     % Color special, individual characters.
     % This can break other languages, e.g. if // is replaced here but occurs as
@@ -708,8 +739,8 @@
         % Syntax is {<original>}{<replacement>}{<column width>}
         %
         % All sorts of operators
-        {-}{\color{Operator}-}{1}%
-        {,}{\color{Operator},}{1}%
+        {-}{\textcolor{Operator}{-}}{1}%
+        {,}{\textcolor{Operator}{,}}{1}%
         {:}{\textcolor{Operator}{:}}{1}%
         {!}{\textcolor{Operator}{!}}{1}%
         {.}{\textcolor{Operator}{.}}{1}%
