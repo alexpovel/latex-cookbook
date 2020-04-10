@@ -514,13 +514,15 @@
     \iflanguageloaded{english}{%
         \setotherlanguage{german}%
     }{%
-        % False: do nothing
-    }
-    \iflanguageloaded{german}{%
-        \setotherlanguage{english}%
-    }{%
-        % False: do nothing
-    }
+        % Nested ifs are ugly, but case-switch is not available and
+        % flat, subsequent ifs could load the first language both as a main and
+        % as an "other" language
+        \iflanguageloaded{german}{%
+            \setotherlanguage{english}%
+        }{%
+            % False: do nothing
+        }
+    }%
 
 % Proper quotation support, mainly through \enquote
 \RequirePackage{csquotes}
