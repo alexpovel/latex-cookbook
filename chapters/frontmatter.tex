@@ -1,5 +1,11 @@
 % Helper file that pulls subchapters together.
-% Note that \subincludefrom{}{} cannot be nested
+
+% In conjunction, packages polyglossia and cleveref do some serious witchcraft.
+% If we call these \crefname redefinitions in the preamble, it does not work.
+% Also does not work with \AtBeginDocument. Tried with both a macro inside the
+% redefinition, and just plain text.
+\crefname{listing}{\lstlistingname}{\lstlistingname s}
+\Crefname{listing}{\lstlistingname}{\lstlistingname s}
 
 % Set initial pages to alpha, so that they do not collide with later Arabic numbering
 % in the generated PDF. This won't show in print because page numbers aren't displayed
@@ -10,6 +16,8 @@
 \subimport{frontmatter/}{colophon}
 
 \frontmatter% In KOMAScript, resets pagenumber, uses Roman numerals etc.
+
+% Note that \subincludefrom{}{} cannot be nested, therefore us \subimport
 \subimport{frontmatter/}{task}
 \subimport{frontmatter/}{authorship_declaration}
 \subimport{frontmatter/}{abstract}

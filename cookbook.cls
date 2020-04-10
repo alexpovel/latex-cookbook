@@ -2145,25 +2145,6 @@
             \fi%
         },%
     }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% References
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\RequirePackage[
-    capitalise,% Always capitalise; still, use \Cref and \cref appropriately
-    nameinlink,% Name of reference is part of PDF hyperlink
-    noabbrev,% Full expansion: Figure instead of Fig., etc.
-]{cleveref}%
-    \creflabelformat{equation}{#2#1#3}% No (1), but 1, aka remove parentheses
-
-    % Syntax: \crefname{<counter>}{<singular>}{<plural>}
-    % \Crefname (capitalised) is not required; when it is not present but \Cref{} is
-    % called, it uses \MakeUppercase on \crefname definitions.
-    % For a German word, this is always capitalized anyway.
-    \crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
-    \creflabelformat{chemreac}{#2\textbf{R}#1#3}% No (1), but 1, aka remove parentheses
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2504,6 +2485,35 @@
             \tabularnewline
         }%
     }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% References
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Should be loaded late, because it does a lot of redefinitions.
+% With Polyglossia, cleveref recognizes what was passed in
+% \setdefaultlanguage and uses it. It must come before cleveref is loaded.
+
+\RequirePackage[
+    % Always capitalise; still, use \Cref and \cref appropriately in case that changes!
+    capitalise,
+    nameinlink,% Name of reference is part of PDF hyperlink
+    noabbrev,% Full expansion: Figure instead of Fig., etc.
+]{cleveref}%
+    \creflabelformat{equation}{#2#1#3}% No (1), but 1, aka remove parentheses
+
+    % Syntax: \crefname{<counter>}{<singular>}{<plural>}
+    % \Crefname (capitalised) is not required; when it is not present but \Cref{} is
+    % called, it uses \MakeUppercase on \crefname definitions.
+    % However, if LaTeX macros are used in the definition, it is required.
+    \crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
+    \Crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
+    \creflabelformat{chemreac}{#2\textbf{R}#1#3}% No (1), but 1, aka remove parentheses
+
+    % Note that there is also a \crefname redefinition for listings,
+    % later in the document
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
