@@ -64,11 +64,8 @@
 % Uncomment only the part work is currently done on, comment out all others.
 \includeonly{%
     chapters/frontmatter,%
-    text,%
-    floats,%
-    style,%
-    tech,%
-    backmatter,%
+    chapters/mainmatter,%
+    chapters/backmatter,%
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,6 +106,6 @@
 
 \begin{document}
     \subincludefrom{chapters/}{frontmatter}
-    \mainmatter
-    \backmatter
+    \subincludefrom{chapters/}{mainmatter}
+    \subincludefrom{chapters/}{backmatter}
 \end{document}
