@@ -243,7 +243,7 @@
     % https://tex.stackexchange.com/a/183220/120853
     AutoFakeSlant,
     Scale=MatchLowercase,% Prettier when using inline-code alongside our main font
-    UprightFont=*-regular,%
+    UprightFont=*-medium,%
     BoldFont=*-bold,%
     % Color=DodgerBlue3,% Toggle color for debugging (should be xcolor name)
 ]{inconsolata}%
