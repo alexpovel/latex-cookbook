@@ -663,10 +663,10 @@
         elseif,
         elsewhen,
         encapsulated,
-        end,
+        % end, % see keywords [2]
         enumeration,
         equality,
-        equation,
+        % equation, % see keywords [2]
         expandable,
         extends,
         external,
@@ -687,7 +687,7 @@
         loop,
         match,
         matchcontinue,
-        model,
+        % model, % see keywords [2]
         not,
         operator,
         Option,
@@ -707,16 +707,17 @@
         subtypeof,
         then,
         Tuple,
-        type,
+        % type, % see keywords [2]
         uniontype,
         when,
         while,
         within%
     },%
     morekeywords=[2]{%
-        % Optimica keywords
-        constraint,
-        optimization%
+        equation,
+        end,
+        model,
+        type%
     },
     morekeywords=[3]{%
         % Do not make true,false keywords because fn(true,x, false ) shows up as
@@ -783,32 +784,36 @@
         break,
         case,
         catch,
-        classdef,
+        % classdef, see keywords[2]
         continue,
         else,
         elseif,
         end,
         for,
-        function,
-        % global, see keywords [2]
+        % function, see keywords[2]
+        % global, see keywords [4]
         if,
         otherwise,
         parfor,
-        % persistent, see keywords[2]
+        % persistent, see keywords[4]
         return,
         spmd,
         switch,
         try,
         while%
     },
-    morekeywords=[2]{% Special keywords
-        global,%
-        persistent%
+    morekeywords=[2]{%
+        classdef,
+        function%
     },
     morekeywords=[3]{% More special keywords
         false,%
         NaN,%
         true%
+    },
+    morekeywords=[4]{% Special keywords
+        global,%
+        persistent%
     },
     morekeywords=[6]{% Exceptions, errors, ...
         error,%
