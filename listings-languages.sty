@@ -80,7 +80,12 @@
 
 \lstdefinestyle{base}{%
     % Basic settings
-    basicstyle=\scriptsize\ttfamily,%
+    basicstyle=%
+        \ttfamily% Always use mono-spaced font; no trailing comma here!
+        % Adjust font size to current context, e.g. normal size in inline code, but
+        % smaller size in environments. See also:
+        % https://tex.stackexchange.com/a/161551/120853
+        \lst@ifdisplaystyle\scriptsize\fi,%
     %
     % Regular LaTeX can occur in these (on UK Keyboard: SHIFT+`).
     % Otherwise, you'll have to copy-paste this whenever needed.
