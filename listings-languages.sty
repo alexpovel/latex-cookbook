@@ -19,6 +19,16 @@
         \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
     }%
 
+
+\RequirePackage{etoolbox}
+    % lstlistings makes it so that using `literate`, a closing parenthesis ) is not
+    % styled correctly. Fix this here. See also:
+    % https://tex.stackexchange.com/a/186225/120853
+    % This only occurs if `breaklines=true`. So if your lines are short enough, which
+    % is good style anyway, to be printed in the PDF, `breaklines=false` can be set
+    % and this hack is not needed.
+    \patchcmd{\lsthk@SelectCharTable}{)}{`}{}{}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Styles
