@@ -777,6 +777,17 @@ Hopefully, it spares you some despair.
   work even after refreshing the package database.
   This occurred on MiKTeX 2.9.
   TeXLive seemed fine in version 2019.
+- The error is or is similar to:
+
+  ```text
+  ! Undefined control sequence.
+  l.52 \glsxtr@r
+  ```
+
+  With an `*.aux` file mentioned in the error message as well.
+  Here, an auxiliary file got corrupted in an unsuccessful run and simply needs to be
+  deleted.
+  Do this manually or using `latexmk -c`.
 
 # Appendix
 
