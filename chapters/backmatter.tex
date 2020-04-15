@@ -6,13 +6,6 @@
 \printbibliography% see biblatex package settings
 
 \setglossarysection{chapter}
-% When using the 'index' package option for 'glossaries-extra', the command
-% '\printunsrtindex' is defined.
-% This works in analogy with 'symbols' -> '\printunsrtsymbols' etc.
-% These alias commands stand for:
-% \printunsrtglossary[type=index,<options>] etc.
-% However, they are not recognized in our current CI (Debian Testing/TeXLive full 2019).
-% Using the base command \printunsrtglossary works just fine.
 \printunsrtindex[%
     style=bookindex,%
 ]
