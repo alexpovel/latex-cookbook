@@ -23,6 +23,16 @@
     description={(specific) Gas Constant},
     unit={\si{\joule\per\kilogram\per\kelvin}},
 }
+@symbol{mass,
+    name={\ensuremath{m}},
+    description={Mass},
+    unit={\si{\kilogram}},
+}
+@symbol{density,
+    name={\ensuremath{\rho}},
+    description={Density},
+    unit={\si{\kilogram\per\meter\cubed}},
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Thermodynamic change of state / energy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -46,8 +56,14 @@
     description={(specific) Heating Value},
     unit={\si{\joule\per\kilogram}},
 }
+@symbol{heat_capacity,
+    name={\ensuremath{C}},
+    specific={\ensuremath{c}},
+    description={Heat capacity},
+    unit={\si{\joule\per\kelvin}},
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Coordinates
+% Coordinates etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 @symbol{first_cart_coord,
     name={\ensuremath{x}},
@@ -63,4 +79,19 @@
     name={\ensuremath{z}},
     description={Third Cartesian coordinate (height)},
     unit={\si{\meter}},
+}
+@symbol{radius,
+    name={\ensuremath{r}},
+    description={Radius},
+    unit={\si{\meter}},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dimensionless Quantities
+% Use \operatorname (for which \DeclareMathOperator is a wrapper)
+% for correct spacing etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@symbol{mach_number,
+    name={\ensuremath{\operatorname{M}}},
+    description={\glsfmtname{name.ernst_mach} number},
+    unit={--},
 }
