@@ -2017,11 +2017,10 @@
     % command from 'xparse', but none of them worked especially well, so it's back to
     % plain syntax, unfortunately.
     \newcounter{chemreac}[chapter]
-    \setcounter{chemreac}{0}
     %
     \newenvironment{chemreac}{%
         \addtocounter{equation}{-1}
-        \renewcommand*\theequation{\textbf{R}\thechemreac}
+        \renewcommand*{\theequation}{\textbf{R}\thechapter.\thechemreac}
         \begin{equation}
             % Our counter is called 'chemreac', however it seems that cref always uses
             % the 'type' of the last \refstepcounter{} called.
