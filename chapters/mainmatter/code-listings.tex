@@ -120,7 +120,7 @@ Lastly, you can use the base \texttt{lstlisting} environment for more elaborate,
 possibly very long code listings.
 These can be broken across pages and are probably best suited for the appendix.
 \begin{lstlisting}
-    def ansi_escaped_string( ¬\phnote{A random reference: \ref{lst:example} (use `cleveref`!)}¬
+    def ansi_escaped_string( ¬\phnote{A random reference: \cref{fig:censorbox}}¬
         string: str,
         *,
         effects: Union[List[str], None] = None,
@@ -256,7 +256,10 @@ This section contains example code for MATLAB, for example in the following,
 \begin{lstlisting}[%
     float,%
     language={[Custom]Matlab},%
-    caption={A class definition in MATLAB, from \cite{mathworks_create_2020}},%
+    caption={%
+        [A class definition in MATLAB]%
+        A class definition in MATLAB, from \cite{mathworks_create_2020}%
+    },%
     label={lst:matlab_class_definition},%
 ]
     classdef BasicClass
