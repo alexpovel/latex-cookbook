@@ -337,7 +337,7 @@ The steps are as follows:
        \node[anchor=south west,inner sep=0] (image) at (0,0) {
        % Specify \svgpath{} (like \graphicspath{} but for the svg package)
        % in the preamble for ease-of-use.
-           \includesvg[width=0.8\textwidth]{example_vector}
+           \includesvg[width=0.8\textwidth]{compressor_rotating_stall}
        };
        \begin{scope}[x={(image.south east)},y={(image.north west)}]
            \node[above, align=center] at (0.07,0.10) {%
@@ -450,10 +450,10 @@ The steps are as follows:
 
    ![Debuging of `svg` package with `tikz`](images/bitmaps/svg_tikz_example_debug.png)
 
-   All this while the base vector graphic file at `images/vectors/example_vector.svg` contains
-   no text at all:
+   All this while the base vector graphic file at
+   `images/vectors/compressor_rotating_stall.svg` contains no text at all:
 
-   ![Base vector graphic file](images/vectors/example_vector.svg)
+   ![Base vector graphic file](images/vectors/compressor_rotating_stall.svg)
 
    This is very conveninent indeed, since we can now do everything in `tikz` and basically
    never have to revisit the base SVG file, unless the *graphic itself* changes.
