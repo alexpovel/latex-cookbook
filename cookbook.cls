@@ -194,6 +194,13 @@
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TODO notes in the PDF
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{todonotes}% TODO-notes in the margins
+    \setuptodonotes{fancyline}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -525,7 +532,10 @@
     }%
 
 % Proper quotation support, mainly through \enquote
-\RequirePackage{csquotes}
+\RequirePackage[
+    autostyle=true,% true always adapst quotes to current language
+]
+{csquotes}
     % Add itshape to beginning (beg) of display quote environments:
     \renewcommand*{\mkbegdispquote}[2]{\itshape}
 
@@ -678,7 +688,7 @@
 \RequirePackage[% Default back-end: biber
     % short style is 'alphabetic' (like [AB99]);
     % longer: 'authoryear' (like (Einstein, 1940)):
-    style=verbose,
+    style=authoryear,
     autocite=footnote,% Control what \autocite does
     %
     sortcites=true,% Apply what is specified in sorting=
@@ -842,6 +852,22 @@
             }%
         }%
     }%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Custom Symbols
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{scalerel}% Scale stuff relative to e.g. letters
+
+% Wrapper to include vectors icons by filename and scale them
+\newcommand*{\mtlbsmlkicon}[1]{%
+    \scalerel*{%
+        \includesvg{logos/matlab_simulink/#1}%
+    }{%
+        X% Scale first argument to height for capital X
+    }%
+}%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tikz + Plots
@@ -2241,14 +2267,14 @@
 % Load the bib files:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \GlsXtrLoadResources[%
-        src={./glossaries/abbreviations},%
+        src={bib/glossaries/abbreviations},%
         sort=doc,% Use document language for sorting
         label-prefix={\abbreviationprefix},
         type=abbreviations,
         selection={all},%
     ]%
     \GlsXtrLoadResources[%
-        src={./glossaries/index/terms},%
+        src={bib/glossaries/index/terms},%
         sort=doc, % Use document language for sorting
         type=index,
         group=terms,
@@ -2256,7 +2282,7 @@
         selection={all},%
     ]%
     \GlsXtrLoadResources[%
-        src={./glossaries/index/names},%
+        src={bib/glossaries/index/names},%
         sort=doc, % Use document language for sorting
         type=index,
         category=names,
@@ -2265,7 +2291,7 @@
         selection={all},%
     ]%
     \GlsXtrLoadResources[%
-        src={./glossaries/symbols/roman},%
+        src={bib/glossaries/symbols/roman},%
         sort=doc, % Use document language for sorting
         symbol-sort-fallback=name,% Sort by name aka symbol if sort field is missing
         %
@@ -2280,7 +2306,7 @@
         group={roman},
     ]%
     \GlsXtrLoadResources[%
-        src={./glossaries/symbols/greek},%
+        src={bib/glossaries/symbols/greek},%
         sort=doc, % Use document language for sorting
         symbol-sort-fallback=name,% Sort by name aka symbol if sort field is missing
         %
@@ -2295,7 +2321,7 @@
         group={greek},
     ]%
     \GlsXtrLoadResources[%
-        src={./glossaries/symbols/other},%
+        src={bib/glossaries/symbols/other},%
         sort=doc, % Use document language for sorting
         symbol-sort-fallback=name,% Sort by name aka symbol if sort field is missing
         %
@@ -2310,7 +2336,7 @@
         group={other},
     ]%
     \GlsXtrLoadResources[%
-        src={./glossaries/symbols/subscripts},%
+        src={bib/glossaries/symbols/subscripts},%
         % sort=doc, % Use document language for sorting
         sort-field=name,% Default is by label, not by name
         type=subscripts,%
@@ -2319,7 +2345,7 @@
         selection={all},%
     ]%
     \GlsXtrLoadResources[
-        src={./glossaries/constants},% constants.bib
+        src={bib/glossaries/constants},% constants.bib
         type={numbers},% set the type for all selected entries
         category={number},% set the category for all selected entries
         label-prefix={\constantsprefix},
@@ -2334,6 +2360,16 @@
     \glsxtrnewgls{\constantsprefix}{\cons}
     \glsxtrnewgls{\indexprefix}{\idx}
     \glsxtrnewgls{\abbreviationprefix}{\abb}
+
+    % We cannot alias the commands introduced by `\glsaddkey` the same way:
+    % \glsxtrnewgls only works on \gls{<prefix>.<key>} to alias the <prefix> away
+    % into its own command. However, for a command like \glsspecific{}, it does not work.
+    % We can therefore do \sym{volume}, but have to do \glsspecific{sym.volume}, i.e.
+    % specify the prefix manually.
+    % A short-cut command is therefore enabled by the following commands.
+    \newcommand*{\symspec}[2][]{\glsspecific[#1]{\symprefix#2}}
+    % Register with glossaries-extra so it writes info to aux file:
+    \glsxtridentifyglslike{\symprefix}{\symspec}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Further Options:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2892,3 +2928,8 @@
         \textcolor{green!50!black}{\texttt{\textbf{#2}}}%
     }%
 }%
+
+% This sentence contains all 26 letters of the Latin alphabet (pangram)
+\newcommand*{\sampletext}{%
+    The quick brown Fox jumps over the lazy Dog 13 times!%
+}
