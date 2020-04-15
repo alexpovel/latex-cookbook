@@ -106,25 +106,27 @@ Some more examples follow.
         \symspec{gas_constant}\sym{abs_temperature}
         \label{eq:glossaries_extra_example}
     \\
-        e^{i\cons{pi}} + \num{1} = \num{0}
+        \cons{euler}^{\cons{imaginary}\cons{pi}} + \num{1} = \num{0}
     \\
         \tcbhighmath{
-            \lim\limits_{x \to \infty}
+            \lim\limits_{\sym{first_cart_coord} \to \infty}
             % Writing \frac this verbosely is good for readability and diffing/VCS.
             % This way, the fraction parts are stacked on top of each other, just like
             % they are in the print output.
             % Since math contexts gobble all whitespace anyway, we can freely use it
             % without accidentally producing extraneous spaces in the output.
             \frac{
-                \pi(x)
+                \cons{pi}\parens*{\sym{first_cart_coord}}
             }{
-                x / \ln(x)
+                \sym{first_cart_coord} / \ln\parens*{\sym{first_cart_coord}}
             }
             =
             \num{1}
         }
         \label{eq:highlighted}
     \\
+        % These equations do not use \sym etc. of glossaries-extra.
+        % This is of course still possible, but very much discouraged.
         \sum_{k = \num{0}}^{n}
             \begin{pmatrix}
                 n \\ k
@@ -139,13 +141,13 @@ Some more examples follow.
             x_{\num{1}}, x_{\num{2}}, \dots, x_{n}; M, g
         } = 0
     \\
-        \Delta \symspec{enthalpy}_{\text{change}}
+        \sym{difference} \symspec{enthalpy}_{\text{change}}
         =
         \nicefrac{\num{1}}{\num{2}}
         \parens*{
-            c^{\num{2}}_{\text{exit}}
+            \sym{velocity}^{\num{2}}_{\text{exit}}
             -
-            c^{\num{2}}_{\text{entry}}
+            \sym{velocity}^{\num{2}}_{\text{entry}}
         }
 \end{gather}
 
@@ -407,10 +409,7 @@ There is a censoring feature, provided by \ctanpackage{censor}.
 It allows you to publish documents containing sensitive information, \iecfeg{e.g.}\ for
 proofreading.
 So, this is now a huge
-\todo{%
-    I am a TODO note from \ctanpackage{todonotes}.%
-    I am also specially highlighted in many text editors.%
-}
+\todo{I am a TODO note.}
 secret:
 \censor{today is \DTMtoday{}}.
 

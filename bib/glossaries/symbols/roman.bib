@@ -24,13 +24,18 @@
     unit={\si{\joule\per\kilogram\per\kelvin}},
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Thermodynamic change of state
+% Thermodynamic change of state / energy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 @symbol{enthalpy,
     name={\ensuremath{H}},
     specific={\ensuremath{h}},
     description={Enthalpy},
     unit={\si{\joule}},
+}
+@symbol{velocity,
+    name={\ensuremath{c}},
+    description={Velocity/Speed},
+    unit={\si{\meter\per\second}},
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Material properties
@@ -40,4 +45,22 @@
     specific={\ensuremath{H_{\glsentryname{sub.inferior}}}},
     description={(specific) Heating Value},
     unit={\si{\joule\per\kilogram}},
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Coordinates
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@symbol{first_cart_coord,
+    name={\ensuremath{x}},
+    description={First Cartesian coordinate (length)},
+    unit={\si{\meter}},
+}
+@symbol{second_cart_coord,
+    name={\ensuremath{y}},
+    description={Second Cartesian coordinate (width)},
+    unit={\si{\meter}},
+}
+@symbol{third_cart_coord,
+    name={\ensuremath{z}},
+    description={Third Cartesian coordinate (height)},
+    unit={\si{\meter}},
 }
