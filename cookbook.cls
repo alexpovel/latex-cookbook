@@ -996,6 +996,30 @@
         ymajorgrids=false,
         ticks=none,% No ticks with numbers
     },
+    tuftelike/.style={% https://tex.stackexchange.com/a/155210/120853
+        axis line shift=10pt,% Also shifts label automatically
+        try min ticks=3,% https://tex.stackexchange.com/a/95753/120853
+        max space between ticks=50,% High number so ticks are far apart
+        axis lines=left,
+        ultra thick,
+        axis line style = {semithick, -},% '-' suppresses arrow
+        tick style = {semithick, black},%
+        ytick align=inside,% Puts ticks inside the plot itself
+        xtick align=inside,%
+        xtick={%
+            % Always set min, max and middle ticks;
+            % if more desired, use 'extra x ticks={}'
+            \pgfkeysvalueof{/pgfplots/xmin},
+            \pgfkeysvalueof{/pgfplots/xmax},
+            (\pgfkeysvalueof{/pgfplots/xmax}+\pgfkeysvalueof{/pgfplots/xmin})/2
+        },
+        ytick={% Same as x
+            \pgfkeysvalueof{/pgfplots/ymin},
+            \pgfkeysvalueof{/pgfplots/ymax},
+            (\pgfkeysvalueof{/pgfplots/ymax}+\pgfkeysvalueof{/pgfplots/ymin})/2
+        },
+        clip = false,% https://tex.stackexchange.com/a/311194/120853
+    },%
     % Unfortunately, decorations lib is relatively verbose:
     arrowplot/.style={
         decoration={
