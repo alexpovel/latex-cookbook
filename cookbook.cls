@@ -2761,7 +2761,7 @@
 }%
 
 \newcommand*{\partialderivativefmt}[1]{%
-    \ensuremath{\partial #1}
+    \ensuremath{\partial #1}%
 }
 
 \newcommand*{\deriv}[2][]{%
