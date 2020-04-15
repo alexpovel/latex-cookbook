@@ -50,11 +50,20 @@ If the current colors are not to your liking (that is, remind you of an
 \emph{angry fruit salad}) they can easily be changed.
 This is possible without having to deal with the mapping of keywords (for example
 \lstinline[language={[3]Python}]|class| for Python or
-\lstinline[language={[Custom]Matlab}]|classdef| for Matlab)
+\lstinline[language={[Custom]Matlab}]|classdef| for MATLAB)%
+\footnote{%
+    Notice how these keywords were created using an \emph{inline} listing, like:
+    \lstinline[language={[3]Python}]|y = [file_patterns[x] for x in ["send", "help"]]|.
+}
 into types (in this case, some sort of \enquote{class definition}\-/type).
 The \ctanpackage{listings} package does this numerically and just numbers groups of
 keywords, so there is no need to name them.
 These keyword groups only change when the language itself changes.
+
+\paragraph{References}
+Individual code lines can also be referenced.
+For example, we find a \lstinline[language={[3]Python}]|return| statement on
+\cref{line:python_return} in \cref{lst:float_example}.
 
 The following examples are not always complete or functioning, they are only supposed
 to showcase the available syntax highlighting.
@@ -113,7 +122,7 @@ As floats, they behave like any other figure, table \iecfeg{etc}.
             logging.warning(f"Using fallback: no logging config found at {config_filepath}")
             logger_name = __name__
 
-        return logging.getLogger(logger_name)
+        return logging.getLogger(logger_name) ¬\label{line:python_return}¬
 \end{lstlisting}
 
 Lastly, you can use the base \texttt{lstlisting} environment for more elaborate,
