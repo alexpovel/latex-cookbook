@@ -807,21 +807,306 @@
         try,
         while%
     },
-    morekeywords=[2]{%
+    morekeywords=[2]{% Definition keywords
         classdef,
         function%
     },
-    morekeywords=[3]{% More special keywords
+    morekeywords=[3]{% Special keywords
         false,%
         NaN,%
         true%
     },
-    morekeywords=[4]{% Special keywords
+    morekeywords=[4]{% More special keywords
         global,%
         persistent%
     },
+    morekeywords=[5]{% H5 file format operations
+        % From https://www.mathworks.com/help/matlab/referencelist.html.
+        % There, the functions are specified in dot notation, e.g. "H5E.copy".
+        % However, the listings package does not deal with dots in keywords;
+        % Therefore, the keywords were split into the "base" (all keywords
+        % occurring before dots) and methods on these bases, e.g. all the found
+        % keywords (duplicates removed) that occurred after dots.
+        %
+        % Bases:
+        H5,
+        H5A,
+        H5D,
+        H5DS,
+        H5E,
+        H5F,
+        H5G,
+        H5I,
+        H5L,
+        H5ML,
+        H5O,
+        H5P,
+        H5R,
+        H5S,
+        H5T,
+        H5Z,
+        % Methods on these bases (e.g. H5.close)
+        all_filters_avail,% Determine availability of all filters
+        array_create,% Create array data type object
+        attach_scale,% Attach dimension scale to specific dataset dimension
+        clear,% Clear error stack
+        close_class,% Close property list class
+        close,% Close dataset
+        commit,% Commit transient data type
+        committed,% Determine if data type is committed
+        compare_values,% Numerically compare two HDF5 values
+        copy,% Create copy of data space
+        create_external,% Create soft link to external object
+        create_hard,% Create hard link
+        create_simple,% Create new simple data space
+        create_soft,% Create soft link
+        create,% Create reference
+        dec_ref,% Decrement reference count
+        delete,% Remove link
+        dereference,% Open object specified by reference
+        detach_scale,% Detach dimension scale from specific dataset dimension
+        detect_class,% Determine of data type contains specific class
+        enum_create,% Create new enumeration data type
+        enum_insert,% Insert enumeration data type member
+        enum_nameof,% Name of enumeration data type member
+        enum_valueof,% Value of enumeration data type member
+        equal,% Determine equality of property lists
+        exist,% Determine if specified property exists in property list
+        exists,% Determine if link exists
+        extent_copy,% Copy extent from source to destination data space
+        fill_value_defined,% Determine if fill value is defined
+        filter_avail,% Determine if filter is available
+        flush,% Flush buffers to disk
+        garbage_collect,% Free unused memory in 5 library
+        get_access_plist,% File access property list
+        get_alignment,% Retrieve alignment properties
+        get_alloc_time,% Return timing of storage space allocation
+        get_array_dims,% Array dimension extents
+        get_array_ndims,% Rank of array data type
+        get_attr_creation_order,% Return tracking order and indexing settings
+        get_attr_phase_change,% Retrieve attribute phase change thresholds
+        get_btree_ratios,% B-tree split ratios
+        get_char_encoding,% Return character encoding
+        get_chunk_cache,% Raw data chunk cache parameters
+        get_chunk,% Return size of chunks
+        get_class_name,% Name of property list class
+        get_class_parent,% Identifier for parent class
+        get_class,% Property list class
+        get_comment_by_name,% Get comment for object specified by location and object name
+        get_comment,% Get comment for object specified by object identifier
+        get_constant_names,% Constants known by HDF5 library
+        get_constant_value,% Value corresponding to a string
+        get_copy_object,% Return properties to be used when object is copied
+        get_create_intermediate_group,% Determine creation of intermediate groups
+        get_create_plist,% File creation property list
+        get_cset,% Character set of string data type
+        get_driver,% Low-level file driver
+        get_ebias,% Exponent bias of floating-point type
+        get_edc_check,% Determine if error detection is enabled
+        get_external_count,% Return count of external files
+        get_external,% Return information about external file
+        get_family_offset,% Offset for family file driver
+        get_fapl_core,% Information about core file driver properties
+        get_fapl_family,% File access property list information
+        get_fapl_multi,% Information about multifile access property list
+        get_fclose_degree,% File close degree
+        get_fields,% Floating-point data type bit field information
+        get_file_id,% File identifier for specified object
+        get_filesize,% Size of HDF5 file
+        get_fill_time,% Return time when fill values are written to dataset
+        get_fill_value,% Return dataset fill value
+        get_filter_by_id,% Return information about specified filter
+        get_filter_info,% Information about filter
+        get_filter,% Return information about filter in pipeline
+        get_freespace,% Amount of free space in file
+        get_function_names,% Functions provided by HDF5 library
+        get_gc_references,% Garbage collection references setting
+        get_hyper_vector_size,% Number of I/O vectors
+        get_info,% Object metadata
+        get_inpad,% Internal padding type for floating-point data types
+        get_istore_k,% Return 1/2 rank of indexed storage B-tree
+        get_label,% Retrieve label from specific dataset dimension
+        get_layout,% Determine layout of raw data for dataset
+        get_libver_bounds,% Library version bounds settings
+        get_libversion,% Version of HDF5 library
+        get_link_creation_order,% Query if link creation order is tracked
+        get_link_phase_change,% Query settings for conversion between groups
+        get_major,% Description of major error number
+        get_mdc_config,% Metadata cache configuration
+        get_mdc_hit_rate,% Metadata cache hit-rate
+        get_mdc_size,% Metadata cache size data
+        get_mem_datatype,% Data type for dataset ID
+        get_member_class,% Data type class for compound data type member
+        get_member_index,% Index of compound or enumeration type member
+        get_member_name,% Name of compound or enumeration type member
+        get_member_offset,% Offset of field of compound data type
+        get_member_type,% Data type of specified member
+        get_member_value,% Value of enumeration data type member
+        get_meta_block_size,% Metadata block size setting
+        get_minor,% Description of minor error number
+        get_multi_type,% Type of data property for MULTI driver
+        get_name_by_idx,% Information about link specified by index
+        get_name,% Name of referenced object
+        get_native_type,% Native data type of dataset data type
+        get_nfilters,% Return number of filters in pipeline
+        get_nmembers,% Number of elements in enumeration type
+        get_norm,% Mantissa normalization type
+        get_nprops,% Query number of properties in property list or class
+        get_num_scales,% Number of scales attached to dataset dimension
+        get_obj_count,% Number of open objects in HDF5 file
+        get_obj_ids,% List of open HDF5 file objects
+        get_obj_type,% Type of referenced object
+        get_offset,% Location of dataset in file
+        get_order,% Byte order of atomic data type
+        get_pad,% Padding type of least and most-significant bits
+        get_precision,% Precision of atomic data type
+        get_ref,% Reference count of object
+        get_region,% Copy of data space of specified region
+        get_scale_name,% Name of dimension scale
+        get_select_bounds,% Bounding box of data space selection
+        get_select_elem_npoints,% Number of element points in selection
+        get_select_elem_pointlist,% Element points in data space selection
+        get_select_hyper_blocklist,% List of hyperslab blocks
+        get_select_hyper_nblocks,% Number of hyperslab blocks
+        get_select_npoints,% Number of elements in data space selection
+        get_select_type,% Type of data space selection
+        get_sieve_buf_size,% Maximum data sieve buffer size
+        get_sign,% Sign type for integer data type
+        get_simple_extent_dims,% Data space size and maximum size
+        get_simple_extent_ndims,% Data space rank
+        get_simple_extent_npoints,% Number of elements in data space
+        get_simple_extent_type,% Data space class
+        get_size,% Size of data type in bytes
+        get_sizes,% Return size of offsets and lengths
+        get_small_data_block_size,% Small data block size setting
+        get_space_status,% Determine if space is allocated
+        get_space,% Copy of dataset data space
+        get_storage_size,% Determine required storage size
+        get_strpad,% Storage mechanism for string data type
+        get_super,% Base data type
+        get_sym_k,% Return size of B-tree 1/2 rank and leaf node 1/2 size
+        get_tag,% Tag associated with opaque data type
+        get_type,% Type of object
+        get_userblock,% Return size of user block
+        get_val,% Value of symbolic link
+        get_version,% Return version information for file creation property list
+        get,% Value of specified property in property list
+        h5create,% Create HDF5 dataset
+        h5disp,% Display contents of HDF5 file
+        h5info,% Information about HDF5 file
+        h5read,% Read data from HDF5 dataset
+        h5readatt,% Read attribute from HDF5 file
+        h5write,% Write to HDF5 dataset
+        h5writeatt,% Write HDF5 attribute
+        inc_ref,% Increment reference count of specified object
+        insert,% Add member to compound data type
+        is_hdf5,% Determine if file is HDF5
+        is_scale,% Determine if dataset is a dimension scale
+        is_simple,% Determine if data space is simple
+        is_valid,% Determine if specified identifier is valid
+        is_variable_str,% Determine if data type is variable-length string
+        isa_class,% Determine if property list is member of class
+        iterate_by_name,% Iterate through links in group specified by name
+        iterate_scales,% Iterate on scales attached to dataset dimension
+        iterate,% Iterate over properties in property list
+        link,% Create hard link to specified object
+        lock,% Lock data type
+        modify_filter,% Modify filter in pipeline
+        mount,% Mount HDF5 file onto specified location
+        move,% Rename link
+        offset_simple,% Set offset of simple data space
+        open_by_idx,% Open object specified by index
+        open_by_name,% Open attribute specified by name
+        open,% Open specified object
+        pack,% Recursively remove padding from compound data type
+        read,% Read data from HDF5 dataset
+        remove_filter,% Remove filter from property list
+        reopen,% Reopen HDF5 file
+        select_all,% Select entire extent of data space
+        select_elements,% Specify coordinates to include in selection
+        select_hyperslab,% Select hyperslab region
+        select_none,% Reset selection region to include no elements
+        select_valid,% Determine validity of selection
+        set_alignment,% Set alignment properties for file access property list
+        set_alloc_time,% Set timing for storage space allocation
+        set_attr_creation_order,% Set tracking of attribute creation order
+        set_attr_phase_change,% Set attribute storage phase change thresholds
+        set_btree_ratios,% Set B-tree split ratios for dataset transfer
+        set_char_encoding,% Set character encoding used to encode strings
+        set_chunk_cache,% Set raw data chunk cache parameters
+        set_chunk,% Set chunk size
+        set_comment_by_name,% Set comment for object specified by location and object name
+        set_comment,% Set comment for object specified by object identifier
+        set_copy_object,% Set properties to be used when objects are copied
+        set_create_intermediate_group,% Set creation of intermediate groups
+        set_cset,% Set character dataset for string data type
+        set_deflate,% Set compression method and compression level
+        set_ebias,% Set exponent bias of floating-point data type
+        set_edc_check,% Enable error detection for dataset transfer
+        set_extent_none,% Remove extent from data space
+        set_extent_simple,% Set size of data space
+        set_extent,% Change size of dataset dimensions
+        set_external,% Add additional file to external file list
+        set_family_offset,% Set offset property for family of files
+        set_fapl_core,% Modify file access to use H5FD_CORE driver
+        set_fapl_family,% Set file access to use family driver
+        set_fapl_log,% Set use of logging driver
+        set_fapl_multi,% Set use of multifile driver
+        set_fapl_sec2,% Set file access for sec2 driver
+        set_fapl_split,% Set file access for emulation of split file driver
+        set_fapl_stdio,% Set file access for standard I/O driver
+        set_fclose_degree,% Set file access for file close degree
+        set_fields,% Set sizes and locations of floating-point bit fields
+        set_fill_time,% Set time when fill values are written to dataset
+        set_fill_value,% Set fill value for dataset creation property list
+        set_filter,% Add filter to filter pipeline
+        set_fletcher32,% Set Fletcher32 checksum filter in dataset creation
+        set_free_list_limits,% Set size limits on free lists
+        set_gc_references,% Set garbage collection references flag
+        set_hyper_vector_size,% Set number of I/O vectors for hyperslab I/O
+        set_inpad,% Specify how unused internal bits are to be filled
+        set_istore_k,% Set size of parameter for indexing chunked datasets
+        set_label,% Set label for dataset dimension
+        set_layout,% Set type of storage for dataset
+        set_libver_bounds,% Set library version bounds for objects
+        set_link_creation_order,% Set creation order tracking and indexing
+        set_link_phase_change,% Set parameters for group conversion
+        set_mdc_config,% Set initial metadata cache configuration
+        set_meta_block_size,% Set minimum metadata block size
+        set_multi_type,% Specify type of data accessed with MULTI driver
+        set_nbit,% Set N-Bit filter
+        set_norm,% Set mantissa normalization of floating-point data type
+        set_offset,% Set bit offset of first significant bit
+        set_order,% Set byte ordering of atomic data type
+        set_pad,% Set padding type for least and most significant bits
+        set_precision,% Set precision of atomic data type
+        set_scale,% Convert dataset to dimension scale
+        set_scaleoffset,% Set Scale-Offset filter
+        set_shuffle,% Set shuffle filter
+        set_sieve_buf_size,% Set maximum size of data sieve buffer
+        set_sign,% Set sign property for integer data type
+        set_size,% Set size of data type in bytes
+        set_sizes,% Set byte size of offsets and lengths
+        set_small_data_block_size,% Set size of block reserved for small data
+        set_strpad,% Set storage mechanism for string data type
+        set_sym_k,% Set size of parameters used to control symbol table nodes
+        set_tag,% Tag opaque data type with description
+        set_userblock,% Set user block size
+        set,% Set property list value
+        unmount,% Unmount file or group from mount point
+        visit_by_name,% Visit objects specified by location and object name
+        visit,% Visit objects specified by object identifier
+        vlen_create,% Create new variable-length data type
+        vlen_get_buf_size,% Determine variable length storage requirements
+        walk,% Walk error stack
+        write% Write data to HDF5 dataset
+    },
     morekeywords=[6]{% Exceptions, errors, ...
+        % See https://www.mathworks.com/help/matlab/error-handling.html
+        assert,
         error,%
+        lastwarn,
+        onCleanup,
         warning%
     },
     morekeywords=[9]{%
@@ -833,7 +1118,7 @@
     % https://www.mathworks.com/help/matlab/referencelist.html
     % on 2020-04-09 using Python 3.8.2 and chromedriver 80
     % (https://chromedriver.chromium.org/downloads). Had to use Selenium
-    % because of JavaScript. For a simple list. Oh boy.
+    % because of JavaScript. For a simple list...
     %
     % The Python script:
     %
@@ -1093,8 +1378,8 @@
         clf,% Clear current figure window
         clibArray,% Create MATLAB object for C++ array or std::vector
         clibConvertArray,% Convert numeric array to MATLAB object for C++ array
-        clibgen.buildInterface,% Create interface to C++ library without definition file
-        clibgen.generateLibraryDefinition,% Create definition file for C++ library
+%        clibgen.buildInterface,% Create interface to C++ library without definition file
+%        clibgen.generateLibraryDefinition,% Create definition file for C++ library
         clibIsNull,% Determine if C++ object is null
         clibIsReadOnly,% Determine if C++ object is read-only
         clibRelease,% Release C++ object from MATLAB
@@ -1114,14 +1399,14 @@
         colorcube,% Colorcube colormap array
         colormap,% View and set current colormap
         colororder,% Set color order for visualizing multiple data series
-        ColorSpec (Color Specification),% Color specification
+%        ColorSpec (Color Specification),% Color specification
         colperm,% Sparse column permutation based on nonzero count
         COM,% Access COM components from MATLAB
-        com.mathworks.engine.MatlabEngine,% Java class using MATLAB as a computational engine
-        com.mathworks.matlab.types.CellStr,% Java class to represent MATLAB cell array of char vectors
-        com.mathworks.matlab.types.Complex,% Java class to pass complex data to and from MATLAB
-        com.mathworks.matlab.types.HandleObject,% Java class to represent MATLAB handle objects
-        com.mathworks.matlab.types.Struct,% Java class to pass MATLAB struct to and from MATLAB
+%        com.mathworks.engine.MatlabEngine,% Java class using MATLAB as a computational engine
+%        com.mathworks.matlab.types.CellStr,% Java class to represent MATLAB cell array of char vectors
+%        com.mathworks.matlab.types.Complex,% Java class to pass complex data to and from MATLAB
+%        com.mathworks.matlab.types.HandleObject,% Java class to represent MATLAB handle objects
+%        com.mathworks.matlab.types.Struct,% Java class to pass MATLAB struct to and from MATLAB
         combine,% Combine data from multiple datastores
         Combine,% Convenience function for static .NET System.Delegate Combine method
         CombinedDatastore,% Datastore to combine data read from multiple underlying datastores
@@ -1142,7 +1427,7 @@
         configureTerminator,% Set terminator for ASCII string communication on serial port
         conj,% Complex conjugate
         conncomp,% Connected graph components
-        containers.Map,% Object that maps values to unique keys
+%        containers.Map,% Object that maps values to unique keys
         contains,% Determine if pattern is in strings
         containsrange,% Determine if timetable row times contain specified time range
         continue,% Pass control to next iteration of for or while loop
@@ -1331,13 +1616,13 @@
         eval,% Evaluate MATLAB expression
         evalc,% Evaluate MATLAB expression and capture results
         evalin,% Evaluate MATLAB expression in specified workspace
-        event.ClassInstanceEvent,% Event data for InstanceCreated and InstanceDestroyed events
-        event.DynamicPropertyEvent,% Event data for dynamic property events
-        event.EventData,% Base class for event data
-        event.hasListener,% Determine if listeners exist for event
-        event.listener,% Class defining listener objects
-        event.PropertyEvent,% Data for property events
-        event.proplistener,% Define listener object for property events
+%        event.ClassInstanceEvent,% Event data for InstanceCreated and InstanceDestroyed events
+%        event.DynamicPropertyEvent,% Event data for dynamic property events
+%        event.EventData,% Base class for event data
+%        event.hasListener,% Determine if listeners exist for event
+%        event.listener,% Class defining listener objects
+%        event.PropertyEvent,% Data for property events
+%        event.proplistener,% Define listener object for property events
         eventlisteners,% List event handler functions associated with COM object events
         events,% Event names
         exceltime,% Convert MATLAB datetime to Excel date number
@@ -1567,312 +1852,6 @@
         guihandles,% Create structure containing all child objects of Figure
         gunzip,% Extract contents of GNU zip file
         gzip,% Compress files into GNU zip files
-        H5.close,% Close HDF5 library
-        H5.garbage_collect,% Free unused memory in HDF5 library
-        H5.get_libversion,% Version of HDF5 library
-        H5.open,% Open HDF5 library
-        H5.set_free_list_limits,% Set size limits on free lists
-        H5A.close,% Close specified attribute
-        H5A.create,% Create attribute
-        H5A.delete,% Delete attribute
-        H5A.get_info,% Information about attribute
-        H5A.get_name,% Attribute name
-        H5A.get_space,% Copy of attribute data space
-        H5A.get_type,% Copy of attribute data type
-        H5A.iterate,% Execute function for attributes attached to object
-        H5A.open_by_idx,% Open attribute specified by index
-        H5A.open_by_name,% Open attribute specified by name
-        H5A.open,% Open attribute
-        H5A.read,% Read attribute
-        H5A.write,% Write attribute
-        h5create,% Create HDF5 dataset
-        H5D.close,% Close dataset
-        H5D.create,% Create new dataset
-        H5D.get_access_plist,% Copy of dataset access property list
-        H5D.get_create_plist,% Copy of dataset creation property list
-        H5D.get_offset,% Location of dataset in file
-        H5D.get_space_status,% Determine if space is allocated
-        H5D.get_space,% Copy of dataset data space
-        H5D.get_storage_size,% Determine required storage size
-        H5D.get_type,% Copy of datatype
-        H5D.open,% Open specified dataset
-        H5D.read,% Read data from HDF5 dataset
-        H5D.set_extent,% Change size of dataset dimensions
-        H5D.vlen_get_buf_size,% Determine variable length storage requirements
-        H5D.write,% Write data to HDF5 dataset
-        h5disp,% Display contents of HDF5 file
-        H5DS.attach_scale,% Attach dimension scale to specific dataset dimension
-        H5DS.detach_scale,% Detach dimension scale from specific dataset dimension
-        H5DS.get_label,% Retrieve label from specific dataset dimension
-        H5DS.get_num_scales,% Number of scales attached to dataset dimension
-        H5DS.get_scale_name,% Name of dimension scale
-        H5DS.is_scale,% Determine if dataset is a dimension scale
-        H5DS.iterate_scales,% Iterate on scales attached to dataset dimension
-        H5DS.set_label,% Set label for dataset dimension
-        H5DS.set_scale,% Convert dataset to dimension scale
-        H5E.clear,% Clear error stack
-        H5E.get_major,% Description of major error number
-        H5E.get_minor,% Description of minor error number
-        H5E.walk,% Walk error stack
-        H5F.close,% Close HDF5 file
-        H5F.create,% Create HDF5 file
-        H5F.flush,% Flush buffers to disk
-        H5F.get_access_plist,% File access property list
-        H5F.get_create_plist,% File creation property list
-        H5F.get_filesize,% Size of HDF5 file
-        H5F.get_freespace,% Amount of free space in file
-        H5F.get_info,% Global information about file
-        H5F.get_mdc_config,% Metadata cache configuration
-        H5F.get_mdc_hit_rate,% Metadata cache hit-rate
-        H5F.get_mdc_size,% Metadata cache size data
-        H5F.get_name,% Name of HDF5 file
-        H5F.get_obj_count,% Number of open objects in HDF5 file
-        H5F.get_obj_ids,% List of open HDF5 file objects
-        H5F.is_hdf5,% Determine if file is HDF5
-        H5F.mount,% Mount HDF5 file onto specified location
-        H5F.open,% Open HDF5 file
-        H5F.reopen,% Reopen HDF5 file
-        H5F.set_mdc_config,% Configure HDF5 file metadata cache
-        H5F.unmount,% Unmount file or group from mount point
-        H5G.close,% Close group
-        H5G.create,% Create group
-        H5G.get_info,% Information about group
-        H5G.open,% Open specified group
-        H5I.dec_ref,% Decrement reference count
-        H5I.get_file_id,% File identifier for specified object
-        H5I.get_name,% Name of object
-        H5I.get_ref,% Reference count of object
-        H5I.get_type,% Type of object
-        H5I.inc_ref,% Increment reference count of specified object
-        H5I.is_valid,% Determine if specified identifier is valid
-        h5info,% Information about HDF5 file
-        H5L.copy,% Copy link from source location to destination location
-        H5L.create_external,% Create soft link to external object
-        H5L.create_hard,% Create hard link
-        H5L.create_soft,% Create soft link
-        H5L.delete,% Remove link
-        H5L.exists,% Determine if link exists
-        H5L.get_info,% Information about link
-        H5L.get_name_by_idx,% Information about link specified by index
-        H5L.get_val,% Value of symbolic link
-        H5L.iterate_by_name,% Iterate through links in group specified by name
-        H5L.iterate,% Iterate over links
-        H5L.move,% Rename link
-        H5L.visit_by_name,% Recursively iterate through links in group specified by location and group name
-        H5L.visit,% Recursively iterate through links in group specified by group identifier
-        H5ML.compare_values,% Numerically compare two HDF5 values
-        H5ML.get_constant_names,% Constants known by HDF5 library
-        H5ML.get_constant_value,% Value corresponding to a string
-        H5ML.get_function_names,% Functions provided by HDF5 library
-        H5ML.get_mem_datatype,% Data type for dataset ID
-        H5O.close,% Close object
-        H5O.copy,% Copy object from source location to destination location
-        H5O.get_comment_by_name,% Get comment for object specified by location and object name
-        H5O.get_comment,% Get comment for object specified by object identifier
-        H5O.get_info,% Object metadata
-        H5O.link,% Create hard link to specified object
-        H5O.open_by_idx,% Open object specified by index
-        H5O.open,% Open specified object
-        H5O.set_comment_by_name,% Set comment for object specified by location and object name
-        H5O.set_comment,% Set comment for object specified by object identifier
-        H5O.visit_by_name,% Visit objects specified by location and object name
-        H5O.visit,% Visit objects specified by object identifier
-        H5P.all_filters_avail,% Determine availability of all filters
-        H5P.close_class,% Close property list class
-        H5P.close,% Close property list
-        H5P.copy,% Copy of property list
-        H5P.create,% Create new property list
-        H5P.equal,% Determine equality of property lists
-        H5P.exist,% Determine if specified property exists in property list
-        H5P.fill_value_defined,% Determine if fill value is defined
-        H5P.get_alignment,% Retrieve alignment properties
-        H5P.get_alloc_time,% Return timing of storage space allocation
-        H5P.get_attr_creation_order,% Return tracking order and indexing settings
-        H5P.get_attr_phase_change,% Retrieve attribute phase change thresholds
-        H5P.get_btree_ratios,% B-tree split ratios
-        H5P.get_char_encoding,% Return character encoding
-        H5P.get_chunk_cache,% Raw data chunk cache parameters
-        H5P.get_chunk,% Return size of chunks
-        H5P.get_class_name,% Name of property list class
-        H5P.get_class_parent,% Identifier for parent class
-        H5P.get_class,% Property list class
-        H5P.get_copy_object,% Return properties to be used when object is copied
-        H5P.get_create_intermediate_group,% Determine creation of intermediate groups
-        H5P.get_driver,% Low-level file driver
-        H5P.get_edc_check,% Determine if error detection is enabled
-        H5P.get_external_count,% Return count of external files
-        H5P.get_external,% Return information about external file
-        H5P.get_family_offset,% Offset for family file driver
-        H5P.get_fapl_core,% Information about core file driver properties
-        H5P.get_fapl_family,% File access property list information
-        H5P.get_fapl_multi,% Information about multifile access property list
-        H5P.get_fclose_degree,% File close degree
-        H5P.get_fill_time,% Return time when fill values are written to dataset
-        H5P.get_fill_value,% Return dataset fill value
-        H5P.get_filter_by_id,% Return information about specified filter
-        H5P.get_filter,% Return information about filter in pipeline
-        H5P.get_gc_references,% Garbage collection references setting
-        H5P.get_hyper_vector_size,% Number of I/O vectors
-        H5P.get_istore_k,% Return 1/2 rank of indexed storage B-tree
-        H5P.get_layout,% Determine layout of raw data for dataset
-        H5P.get_libver_bounds,% Library version bounds settings
-        H5P.get_link_creation_order,% Query if link creation order is tracked
-        H5P.get_link_phase_change,% Query settings for conversion between groups
-        H5P.get_mdc_config,% Metadata cache configuration
-        H5P.get_meta_block_size,% Metadata block size setting
-        H5P.get_multi_type,% Type of data property for MULTI driver
-        H5P.get_nfilters,% Return number of filters in pipeline
-        H5P.get_nprops,% Query number of properties in property list or class
-        H5P.get_sieve_buf_size,% Maximum data sieve buffer size
-        H5P.get_size,% Query size of property value in bytes
-        H5P.get_sizes,% Return size of offsets and lengths
-        H5P.get_small_data_block_size,% Small data block size setting
-        H5P.get_sym_k,% Return size of B-tree 1/2 rank and leaf node 1/2 size
-        H5P.get_userblock,% Return size of user block
-        H5P.get_version,% Return version information for file creation property list
-        H5P.get,% Value of specified property in property list
-        H5P.isa_class,% Determine if property list is member of class
-        H5P.iterate,% Iterate over properties in property list
-        H5P.modify_filter,% Modify filter in pipeline
-        H5P.remove_filter,% Remove filter from property list
-        H5P.set_alignment,% Set alignment properties for file access property list
-        H5P.set_alloc_time,% Set timing for storage space allocation
-        H5P.set_attr_creation_order,% Set tracking of attribute creation order
-        H5P.set_attr_phase_change,% Set attribute storage phase change thresholds
-        H5P.set_btree_ratios,% Set B-tree split ratios for dataset transfer
-        H5P.set_char_encoding,% Set character encoding used to encode strings
-        H5P.set_chunk_cache,% Set raw data chunk cache parameters
-        H5P.set_chunk,% Set chunk size
-        H5P.set_copy_object,% Set properties to be used when objects are copied
-        H5P.set_create_intermediate_group,% Set creation of intermediate groups
-        H5P.set_deflate,% Set compression method and compression level
-        H5P.set_edc_check,% Enable error detection for dataset transfer
-        H5P.set_external,% Add additional file to external file list
-        H5P.set_family_offset,% Set offset property for family of files
-        H5P.set_fapl_core,% Modify file access to use H5FD_CORE driver
-        H5P.set_fapl_family,% Set file access to use family driver
-        H5P.set_fapl_log,% Set use of logging driver
-        H5P.set_fapl_multi,% Set use of multifile driver
-        H5P.set_fapl_sec2,% Set file access for sec2 driver
-        H5P.set_fapl_split,% Set file access for emulation of split file driver
-        H5P.set_fapl_stdio,% Set file access for standard I/O driver
-        H5P.set_fclose_degree,% Set file access for file close degree
-        H5P.set_fill_time,% Set time when fill values are written to dataset
-        H5P.set_fill_value,% Set fill value for dataset creation property list
-        H5P.set_filter,% Add filter to filter pipeline
-        H5P.set_fletcher32,% Set Fletcher32 checksum filter in dataset creation
-        H5P.set_gc_references,% Set garbage collection references flag
-        H5P.set_hyper_vector_size,% Set number of I/O vectors for hyperslab I/O
-        H5P.set_istore_k,% Set size of parameter for indexing chunked datasets
-        H5P.set_layout,% Set type of storage for dataset
-        H5P.set_libver_bounds,% Set library version bounds for objects
-        H5P.set_link_creation_order,% Set creation order tracking and indexing
-        H5P.set_link_phase_change,% Set parameters for group conversion
-        H5P.set_mdc_config,% Set initial metadata cache configuration
-        H5P.set_meta_block_size,% Set minimum metadata block size
-        H5P.set_multi_type,% Specify type of data accessed with MULTI driver
-        H5P.set_nbit,% Set N-Bit filter
-        H5P.set_scaleoffset,% Set Scale-Offset filter
-        H5P.set_shuffle,% Set shuffle filter
-        H5P.set_sieve_buf_size,% Set maximum size of data sieve buffer
-        H5P.set_sizes,% Set byte size of offsets and lengths
-        H5P.set_small_data_block_size,% Set size of block reserved for small data
-        H5P.set_sym_k,% Set size of parameters used to control symbol table nodes
-        H5P.set_userblock,% Set user block size
-        H5P.set,% Set property list value
-        H5R.create,% Create reference
-        H5R.dereference,% Open object specified by reference
-        H5R.get_name,% Name of referenced object
-        H5R.get_obj_type,% Type of referenced object
-        H5R.get_region,% Copy of data space of specified region
-        h5read,% Read data from HDF5 dataset
-        h5readatt,% Read attribute from HDF5 file
-        H5S.close,% Close data space
-        H5S.copy,% Create copy of data space
-        H5S.create_simple,% Create new simple data space
-        H5S.create,% Create new data space
-        H5S.extent_copy,% Copy extent from source to destination data space
-        H5S.get_select_bounds,% Bounding box of data space selection
-        H5S.get_select_elem_npoints,% Number of element points in selection
-        H5S.get_select_elem_pointlist,% Element points in data space selection
-        H5S.get_select_hyper_blocklist,% List of hyperslab blocks
-        H5S.get_select_hyper_nblocks,% Number of hyperslab blocks
-        H5S.get_select_npoints,% Number of elements in data space selection
-        H5S.get_select_type,% Type of data space selection
-        H5S.get_simple_extent_dims,% Data space size and maximum size
-        H5S.get_simple_extent_ndims,% Data space rank
-        H5S.get_simple_extent_npoints,% Number of elements in data space
-        H5S.get_simple_extent_type,% Data space class
-        H5S.is_simple,% Determine if data space is simple
-        H5S.offset_simple,% Set offset of simple data space
-        H5S.select_all,% Select entire extent of data space
-        H5S.select_elements,% Specify coordinates to include in selection
-        H5S.select_hyperslab,% Select hyperslab region
-        H5S.select_none,% Reset selection region to include no elements
-        H5S.select_valid,% Determine validity of selection
-        H5S.set_extent_none,% Remove extent from data space
-        H5S.set_extent_simple,% Set size of data space
-        H5T.array_create,% Create array data type object
-        H5T.close,% Close data type
-        H5T.commit,% Commit transient data type
-        H5T.committed,% Determine if data type is committed
-        H5T.copy,% Copy data type
-        H5T.create,% Create new data type
-        H5T.detect_class,% Determine of data type contains specific class
-        H5T.enum_create,% Create new enumeration data type
-        H5T.enum_insert,% Insert enumeration data type member
-        H5T.enum_nameof,% Name of enumeration data type member
-        H5T.enum_valueof,% Value of enumeration data type member
-        H5T.equal,% Determine equality of data types
-        H5T.get_array_dims,% Array dimension extents
-        H5T.get_array_ndims,% Rank of array data type
-        H5T.get_class,% Data type class identifier
-        H5T.get_create_plist,% Copy of data type creation property list
-        H5T.get_cset,% Character set of string data type
-        H5T.get_ebias,% Exponent bias of floating-point type
-        H5T.get_fields,% Floating-point data type bit field information
-        H5T.get_inpad,% Internal padding type for floating-point data types
-        H5T.get_member_class,% Data type class for compound data type member
-        H5T.get_member_index,% Index of compound or enumeration type member
-        H5T.get_member_name,% Name of compound or enumeration type member
-        H5T.get_member_offset,% Offset of field of compound data type
-        H5T.get_member_type,% Data type of specified member
-        H5T.get_member_value,% Value of enumeration data type member
-        H5T.get_native_type,% Native data type of dataset data type
-        H5T.get_nmembers,% Number of elements in enumeration type
-        H5T.get_norm,% Mantissa normalization type
-        H5T.get_offset,% Bit offset of first significant bit
-        H5T.get_order,% Byte order of atomic data type
-        H5T.get_pad,% Padding type of least and most-significant bits
-        H5T.get_precision,% Precision of atomic data type
-        H5T.get_sign,% Sign type for integer data type
-        H5T.get_size,% Size of data type in bytes
-        H5T.get_strpad,% Storage mechanism for string data type
-        H5T.get_super,% Base data type
-        H5T.get_tag,% Tag associated with opaque data type
-        H5T.insert,% Add member to compound data type
-        H5T.is_variable_str,% Determine if data type is variable-length string
-        H5T.lock,% Lock data type
-        H5T.open,% Open named data type
-        H5T.pack,% Recursively remove padding from compound data type
-        H5T.set_cset,% Set character dataset for string data type
-        H5T.set_ebias,% Set exponent bias of floating-point data type
-        H5T.set_fields,% Set sizes and locations of floating-point bit fields
-        H5T.set_inpad,% Specify how unused internal bits are to be filled
-        H5T.set_norm,% Set mantissa normalization of floating-point data type
-        H5T.set_offset,% Set bit offset of first significant bit
-        H5T.set_order,% Set byte ordering of atomic data type
-        H5T.set_pad,% Set padding type for least and most significant bits
-        H5T.set_precision,% Set precision of atomic data type
-        H5T.set_sign,% Set sign property for integer data type
-        H5T.set_size,% Set size of data type in bytes
-        H5T.set_strpad,% Set storage mechanism for string data type
-        H5T.set_tag,% Tag opaque data type with description
-        H5T.vlen_create,% Create new variable-length data type
-        h5write,% Write to HDF5 dataset
-        h5writeatt,% Write HDF5 attribute
-        H5Z.filter_avail,% Determine if filter is available
-        H5Z.get_filter_info,% Information about filter
         hadamard,% Hadamard matrix
         handle,% Superclass of all handle classes
         hankel,% Hankel matrix
@@ -2147,7 +2126,7 @@
         legend,% Add legend to axes
         legendre,% Associated Legendre functions
         length,% Length of tscollection time vector
-        lib.pointer,% Pointer object compatible with C pointer
+%        lib.pointer,% Pointer object compatible with C pointer
         libfunctions,% Return information on functions in shared C library
         libfunctionsview,% Display shared C library function signatures in window
         libisloaded,% Determine if shared C library is loaded
@@ -2160,7 +2139,7 @@
         lin2mu,% Convert linear audio signal to mu-law
         line,% Create primitive line
         lines,% Lines colormap array
-        LineSpec (Line Specification),% Line specification
+%        LineSpec (Line Specification),% Line specification
         linkaxes,% Synchronize limits of multiple axes
         linkdata,% Automatically update charted data
         linkprop,% Keep same value for corresponding properties of graphics objects
@@ -2203,196 +2182,196 @@
         matchpairs,% Solve linear assignment problem
         material,% Control reflectance properties of surfaces and patches
         matfile,% Access and change variables in MAT-file without loading file into memory
-        matlab (Linux),% Start MATLAB program from Linux system prompt
-        matlab (macOS),% Start MATLAB program from macOS Terminal
-        matlab (Windows),% Start MATLAB program from Windows system prompt
-        matlab.addons.disableAddon,% Disable installed add-on
-        matlab.addons.enableAddon,% Enable installed add-on
-        matlab.addons.install,% Install add-on
-        matlab.addons.installedAddons,% Get list of installed add-ons
-        matlab.addons.isAddonEnabled,% Determine if add-on is enabled
-        matlab.addons.toolbox.installedToolboxes,% Return information about installed toolboxes
-        matlab.addons.toolbox.installToolbox,% Install toolbox file
-        matlab.addons.toolbox.packageToolbox,% Package toolbox project
-        matlab.addons.toolbox.toolboxVersion,% Query or modify version of toolbox
-        matlab.addons.toolbox.uninstallToolbox,% Uninstall toolbox
-        matlab.addons.uninstall,% Uninstall add-on
-        matlab.apputil.create,% Create or modify app project file interactively using the Package App dialog box
-        matlab.apputil.getInstalledAppInfo,% List installed app information
-        matlab.apputil.install,% Install app from a .mlappinstall file
-        matlab.apputil.package,% Package app files into a .mlappinstall file
-        matlab.apputil.run,% Run app programmatically
-        matlab.apputil.uninstall,% Uninstall app
-        matlab.codetools.requiredFilesAndProducts,% List dependencies of MATLAB program files
-        matlab.engine.connect_matlab,% Connect shared MATLAB session to MATLAB Engine for Python
-        matlab.engine.engineName,% Return name of shared MATLAB session
-        matlab.engine.find_matlab,% Find shared MATLAB sessions to connect to MATLAB Engine for Python
-        matlab.engine.FutureResult,% Results of asynchronous call to MATLAB function stored in Python object
-        matlab.engine.isEngineShared,% Determine if MATLAB session is shared
-        matlab.engine.MatlabEngine,% Python object using MATLAB as computational engine within Python session
-        matlab.engine.shareEngine,% Convert running MATLAB session to shared session
-        matlab.engine.start_matlab,% Start MATLAB Engine for Python
-        matlab.exception.JavaException,% Capture error information for Java exception
-        matlab.exception.PyException,% Capture error information for Python exception
-        matlab.graphics.chartcontainer.ChartContainer,% Base class for developing chart objects
-        matlab.graphics.chartcontainer.mixin.Colorbar,% Add colorbar support to chart container subclass
-        matlab.graphics.chartcontainer.mixin.Legend,% Add legend support to chart container subclass
-        matlab.io.Datastore,% Base datastore class
-        matlab.io.datastore.BlockedFileSet,% Blocked file-set for collection of blocks within file
-        matlab.io.datastore.DsFileReader,% File-reader object for files in a datastore
-        matlab.io.datastore.DsFileSet,% File-set object for collection of files in datastore
-        matlab.io.datastore.FileSet,% File-set for collection of files in datastore
-        matlab.io.datastore.FileWritable,% Add file writing support to datastore
-        matlab.io.datastore.FoldersPropertyProvider,% Add Folder property support to datastore
-        matlab.io.datastore.HadoopLocationBased,% Add Hadoop support to datastore
-        matlab.io.datastore.Partitionable,% Add parallelization support to datastore
-        matlab.io.datastore.Shuffleable,% Add shuffling support to datastore
-        matlab.io.hdf4.sd,% Interact directly with HDF4 multifile scientific data set (SD) interface
-        matlab.io.hdfeos.gd,% Low-level access to HDF-EOS grid data
-        matlab.io.hdfeos.sw,% Low-level access to HDF-EOS swath files
-        matlab.io.saveVariablesToScript,% Save workspace variables to MATLAB script
-        matlab.lang.correction.AppendArgumentsCorrection,% Correct error by appending missing input arguments
-        matlab.lang.correction.ConvertToFunctionNotationCorrection,% Correct error by converting to function notation
-        matlab.lang.correction.ReplaceIdentifierCorrection,% Correct error by replacing identifier in function call
-        matlab.lang.makeUniqueStrings,% Construct unique strings from input strings
-        matlab.lang.makeValidName,% Construct valid MATLAB identifiers from input strings
-        matlab.lang.OnOffSwitchState,% Represent on and off states with logical values
-        matlab.mex.MexHost,% Out-of-process host for C++ MEX function execution
-        matlab.mixin.Copyable,% Superclass providing copy functionality for handle objects
-        matlab.mixin.CustomDisplay,% Interface for customizing object display
-        matlab.mixin.Heterogeneous,% Superclass for heterogeneous array formation
-        matlab.mixin.SetGet,% Provide handle classes with set and get methods
-        matlab.mixin.SetGetExactNames,% Require exact name match for set and get methods
-        matlab.mixin.util.PropertyGroup,% Custom property list for object display
-        matlab.mock.actions.AssignOutputs,% Define return values for method called or property accessed
-        matlab.mock.actions.DoNothing,% Take no action
-        matlab.mock.actions.Invoke,% Invoke function handle when method is called
-        matlab.mock.actions.ReturnStoredValue,% Return stored property value
-        matlab.mock.actions.StoreValue,% Store property value
-        matlab.mock.actions.ThrowException,% Throw exception when method is called or when property is set or accessed
-        matlab.mock.AnyArguments,% Match any number of arguments
-        matlab.mock.constraints.Occurred,% Constraint qualifying mock object interactions
-        matlab.mock.constraints.WasAccessed,% Constraint determining property get access
-        matlab.mock.constraints.WasCalled,% Constraint determining method call
-        matlab.mock.constraints.WasSet,% Constraint determining property set interaction
-        matlab.mock.InteractionHistory,% Interface for mock object interaction history
-        matlab.mock.InteractionHistory.forMock,% Return history from mock object
-        matlab.mock.MethodCallBehavior,% Specify mock object method behavior and qualify method calls
-        matlab.mock.PropertyBehavior,% Specify mock object property behavior and qualify interactions
-        matlab.mock.PropertyGetBehavior,% Specify mock property get behavior
-        matlab.mock.PropertySetBehavior,% Specify mock object set behavior
-        matlab.mock.TestCase,% TestCase to write tests with mocking framework
-        matlab.net.ArrayFormat,% Convert arrays in HTTP queries
-        matlab.net.base64decode,% Base 64 decoding of string
-        matlab.net.base64encode,% Base 64 encoding of byte string or vector
-        matlab.net.http.AuthenticationScheme,% HTTP Authentication scheme
-        matlab.net.http.AuthInfo,% Authentication or authorization information in HTTP messages
-        matlab.net.http.Cookie,% HTTP cookie received from server
-        matlab.net.http.CookieInfo,% HTTP cookie information
-        matlab.net.http.Credentials,% Credentials for authenticating HTTP requests
-        matlab.net.http.Disposition,% Results in HTTP log record
-        matlab.net.http.field.AcceptField,% HTTP Accept header field
-        matlab.net.http.field.AuthenticateField,% HTTP WWW-Authenticate or Proxy-Authenticate header field
-        matlab.net.http.field.AuthenticationInfoField,% HTTP Authentication-Info header field in response message
-        matlab.net.http.field.AuthorizationField,% HTTP Authorization or Proxy-Authorization header field
-        matlab.net.http.field.ContentDispositionField,% HTTP Content-Disposition header field
-        matlab.net.http.field.ContentLengthField,% HTTP Content-Length field
-        matlab.net.http.field.ContentLocationField,% HTTP Content-Location header field
-        matlab.net.http.field.ContentTypeField,% HTTP Content-Type header field
-        matlab.net.http.field.CookieField,% HTTP Cookie header field
-        matlab.net.http.field.DateField,% HTTP Date header field
-        matlab.net.http.field.GenericField,% HTTP header field with any name and value
-        matlab.net.http.field.GenericParameterizedField,% GenericField to support parameterized syntax
-        matlab.net.http.field.HTTPDateField,% HTTP header field containing date
-        matlab.net.http.field.IntegerField,% Base class for HTTP header fields containing nonnegative integers
-        matlab.net.http.field.LocationField,% HTTP Location header field
-        matlab.net.http.field.MediaRangeField,% Base class for HTTP Content-Type and Accept header fields
-        matlab.net.http.field.SetCookieField,% HTTP Set-Cookie header field
-        matlab.net.http.field.URIReferenceField,% Base class for HTTP header fields containing URI components
-        matlab.net.http.HeaderField,% Header field of HTTP message
-        matlab.net.http.HTTPException,% Exception thrown by HTTP services
-        matlab.net.http.HTTPOptions,% Options controlling HTTP message exchange
-        matlab.net.http.io.BinaryConsumer,% Consumer for binary data in HTTP messages
-        matlab.net.http.io.ContentConsumer,% Consumer for HTTP message payloads
-        matlab.net.http.io.ContentProvider,% ContentProvider for HTTP message payloads
-        matlab.net.http.io.FileConsumer,% Consumer for files in HTTP messages
-        matlab.net.http.io.FileProvider,% ContentProvider to send files
-        matlab.net.http.io.FormProvider,% ContentProvider that sends form data
-        matlab.net.http.io.GenericConsumer,% Consumer for multiple content types in HTTP messages
-        matlab.net.http.io.GenericProvider,% Generic ContentProvider for HTTP payloads
-        matlab.net.http.io.ImageConsumer,% Consumer for image data in HTTP payloads
-        matlab.net.http.io.ImageProvider,% ContentProvider to send MATLAB image data
-        matlab.net.http.io.JSONConsumer,% Content consumer that converts JSON input into MATLAB data
-        matlab.net.http.io.JSONProvider,% ContentProvider to send MATLAB data as JSON string
-        matlab.net.http.io.MultipartConsumer,% Helper for multipart content types in HTTP messages
-        matlab.net.http.io.MultipartFormProvider,% ContentProvider to send multipart/form-data messages
-        matlab.net.http.io.MultipartProvider,% ContentProvider to send multipart/mixed HTTP messages
-        matlab.net.http.io.StringConsumer,% String consumer for HTTP payloads
-        matlab.net.http.io.StringProvider,% ContentProvider to send MATLAB strings
-        matlab.net.http.LogRecord,% HTTP history log record
-        matlab.net.http.MediaType,% Internet media type used in HTTP headers
-        matlab.net.http.Message,% HTTP request or response message
-        matlab.net.http.MessageBody,% Body of HTTP message
-        matlab.net.http.MessageType,% HTTP message type
-        matlab.net.http.ProgressMonitor,% Progress monitor for HTTP message exchange
-        matlab.net.http.ProtocolVersion,% HTTP protocol version
-        matlab.net.http.RequestLine,% First line of HTTP request message
-        matlab.net.http.RequestMessage,% HTTP request message
-        matlab.net.http.RequestMethod,% HTTP request method
-        matlab.net.http.ResponseMessage,% HTTP response message
-        matlab.net.http.StartLine,% First line of HTTP message
-        matlab.net.http.StatusClass,% Status class of HTTP response
-        matlab.net.http.StatusCode,% Status code in HTTP response
-        matlab.net.http.StatusLine,% First line of HTTP response message
-        matlab.net.QueryParameter,% Parameter in query portion of uniform resource identifier (URI)
-        matlab.net.URI,% Uniform resource identifier (URI)
-        matlab.perftest.FixedTimeExperiment,% TimeExperiment that collects fixed number of measurements
-        matlab.perftest.FrequentistTimeExperiment,% TimeExperiment that collects variable number of measurements
-        matlab.perftest.TestCase,% Superclass of matlab.perftest performance test classes
-        matlab.perftest.TimeExperiment,% Interface for measuring execution time of code under test
-        matlab.perftest.TimeResult,% Result from running time experiment
-        matlab.project.createProject,% Create blank project
-        matlab.project.deleteProject,% Stop folder management and delete project definition files
-        matlab.project.loadProject,% Load project
-        matlab.project.Project,% Project object
-        matlab.project.rootProject,% Get root project
-        matlab.settings.FactoryGroup.createToolboxGroup,% Create FactoryGroup root object for toolbox
-        matlab.settings.loadSettingsCompatibilityResults,% Get results of upgrading personal settings of toolbox for specific version
-        matlab.settings.mustBeIntegerScalar,% Validate that setting value is integer array with one element
-        matlab.settings.mustBeLogicalScalar,% Validate that setting value is logical array with one element
-        matlab.settings.mustBeNumericScalar,% Validate that setting value is numeric array with one element
-        matlab.settings.mustBeStringScalar,% Validate that setting value is string array with one element
-        matlab.settings.reloadFactoryFile,% Load or reload factory settings
-        matlab.System,% Base class for System objects
-        matlab.system.mixin.FiniteSource,% Finite source mixin class
-        matlab.tall.blockMovingWindow,% Apply moving window function and block reduction to padded blocks of data
-        matlab.tall.movingWindow,% Apply moving window function to blocks of data
-        matlab.tall.reduce,% Reduce arrays by applying reduction algorithm to blocks of data
-        matlab.tall.transform,% Transform array by applying function handle to blocks of data
-        matlab.test.behavior.Missing,% Test if class satisfies contract for missing values
-        matlab.uitest.TestCase,% TestCase to write tests with app testing framework
-        matlab.uitest.TestCase.forInteractiveUse,% Create a TestCase object for interactive use
-        matlab.uitest.unlock,% Unlock figure locked by app testing framework
-        matlab.unittest.constraints.BooleanConstraint,% Interface class for Boolean combinations of constraints
-        matlab.unittest.constraints.Constraint,% Fundamental interface class for comparisons
-        matlab.unittest.constraints.Tolerance,% Abstract interface class for tolerances
-        matlab.unittest.diagnostics.ConstraintDiagnostic,% Diagnostic with fields common to most constraints
-        matlab.unittest.diagnostics.Diagnostic,% Fundamental interface class for matlab.unittest diagnostics
-        matlab.unittest.fixtures.Fixture,% Interface class for test fixtures
-        matlab.unittest.measurement.chart.ComparisonPlot,% Visually compare two sets of time experiment results
-        matlab.unittest.measurement.DefaultMeasurementResult,% Default implementation of MeasurementResult class
-        matlab.unittest.measurement.MeasurementResult,% Base class for classes holding measurement results
-        matlab.unittest.plugins.OutputStream,% Interface that determines where to send text output
-        matlab.unittest.plugins.Parallelizable,% Interface for plugins that support running tests in parallel
-        matlab.unittest.plugins.QualifyingPlugin,% Interface for plugins that perform system-wide qualifications
-        matlab.unittest.plugins.TestRunnerPlugin,% Plugin interface for extending TestRunner
-        matlab.unittest.Test,% Specification of single test method
-        matlab.unittest.TestCase,% Superclass of all matlab.unittest test classes
-        matlab.unittest.TestResult,% Result of running test suite
-        matlab.unittest.TestRunner,% Class for running tests in matlab.unittest framework
-        matlab.unittest.TestSuite,% Class for grouping tests to run
-        matlab.wsdl.createWSDLClient,% Create interface to SOAP-based web service
-        matlab.wsdl.setWSDLToolPath,% Location of WSDL tools
+        % matlab (Linux),% Start MATLAB program from Linux system prompt
+        % matlab (macOS),% Start MATLAB program from macOS Terminal
+        % matlab (Windows),% Start MATLAB program from Windows system prompt
+%        matlab.addons.disableAddon,% Disable installed add-on
+%        matlab.addons.enableAddon,% Enable installed add-on
+%        matlab.addons.install,% Install add-on
+%        matlab.addons.installedAddons,% Get list of installed add-ons
+%        matlab.addons.isAddonEnabled,% Determine if add-on is enabled
+%        matlab.addons.toolbox.installedToolboxes,% Return information about installed toolboxes
+%        matlab.addons.toolbox.installToolbox,% Install toolbox file
+%        matlab.addons.toolbox.packageToolbox,% Package toolbox project
+%        matlab.addons.toolbox.toolboxVersion,% Query or modify version of toolbox
+%        matlab.addons.toolbox.uninstallToolbox,% Uninstall toolbox
+%        matlab.addons.uninstall,% Uninstall add-on
+%        matlab.apputil.create,% Create or modify app project file interactively using the Package App dialog box
+%        matlab.apputil.getInstalledAppInfo,% List installed app information
+%        matlab.apputil.install,% Install app from a .mlappinstall file
+%        matlab.apputil.package,% Package app files into a .mlappinstall file
+%        matlab.apputil.run,% Run app programmatically
+%        matlab.apputil.uninstall,% Uninstall app
+%        matlab.codetools.requiredFilesAndProducts,% List dependencies of MATLAB program files
+%        matlab.engine.connect_matlab,% Connect shared MATLAB session to MATLAB Engine for Python
+%        matlab.engine.engineName,% Return name of shared MATLAB session
+%        matlab.engine.find_matlab,% Find shared MATLAB sessions to connect to MATLAB Engine for Python
+%        matlab.engine.FutureResult,% Results of asynchronous call to MATLAB function stored in Python object
+%        matlab.engine.isEngineShared,% Determine if MATLAB session is shared
+%        matlab.engine.MatlabEngine,% Python object using MATLAB as computational engine within Python session
+%        matlab.engine.shareEngine,% Convert running MATLAB session to shared session
+%        matlab.engine.start_matlab,% Start MATLAB Engine for Python
+%        matlab.exception.JavaException,% Capture error information for Java exception
+%        matlab.exception.PyException,% Capture error information for Python exception
+%        matlab.graphics.chartcontainer.ChartContainer,% Base class for developing chart objects
+%        matlab.graphics.chartcontainer.mixin.Colorbar,% Add colorbar support to chart container subclass
+%        matlab.graphics.chartcontainer.mixin.Legend,% Add legend support to chart container subclass
+%        matlab.io.Datastore,% Base datastore class
+%        matlab.io.datastore.BlockedFileSet,% Blocked file-set for collection of blocks within file
+%        matlab.io.datastore.DsFileReader,% File-reader object for files in a datastore
+%        matlab.io.datastore.DsFileSet,% File-set object for collection of files in datastore
+%        matlab.io.datastore.FileSet,% File-set for collection of files in datastore
+%        matlab.io.datastore.FileWritable,% Add file writing support to datastore
+%        matlab.io.datastore.FoldersPropertyProvider,% Add Folder property support to datastore
+%        matlab.io.datastore.HadoopLocationBased,% Add Hadoop support to datastore
+%        matlab.io.datastore.Partitionable,% Add parallelization support to datastore
+%        matlab.io.datastore.Shuffleable,% Add shuffling support to datastore
+%        matlab.io.hdf4.sd,% Interact directly with HDF4 multifile scientific data set (SD) interface
+%        matlab.io.hdfeos.gd,% Low-level access to HDF-EOS grid data
+%        matlab.io.hdfeos.sw,% Low-level access to HDF-EOS swath files
+%        matlab.io.saveVariablesToScript,% Save workspace variables to MATLAB script
+%        matlab.lang.correction.AppendArgumentsCorrection,% Correct error by appending missing input arguments
+%        matlab.lang.correction.ConvertToFunctionNotationCorrection,% Correct error by converting to function notation
+%        matlab.lang.correction.ReplaceIdentifierCorrection,% Correct error by replacing identifier in function call
+%        matlab.lang.makeUniqueStrings,% Construct unique strings from input strings
+%        matlab.lang.makeValidName,% Construct valid MATLAB identifiers from input strings
+%        matlab.lang.OnOffSwitchState,% Represent on and off states with logical values
+%        matlab.mex.MexHost,% Out-of-process host for C++ MEX function execution
+%        matlab.mixin.Copyable,% Superclass providing copy functionality for handle objects
+%        matlab.mixin.CustomDisplay,% Interface for customizing object display
+%        matlab.mixin.Heterogeneous,% Superclass for heterogeneous array formation
+%        matlab.mixin.SetGet,% Provide handle classes with set and get methods
+%        matlab.mixin.SetGetExactNames,% Require exact name match for set and get methods
+%        matlab.mixin.util.PropertyGroup,% Custom property list for object display
+%        matlab.mock.actions.AssignOutputs,% Define return values for method called or property accessed
+%        matlab.mock.actions.DoNothing,% Take no action
+%        matlab.mock.actions.Invoke,% Invoke function handle when method is called
+%        matlab.mock.actions.ReturnStoredValue,% Return stored property value
+%        matlab.mock.actions.StoreValue,% Store property value
+%        matlab.mock.actions.ThrowException,% Throw exception when method is called or when property is set or accessed
+%        matlab.mock.AnyArguments,% Match any number of arguments
+%        matlab.mock.constraints.Occurred,% Constraint qualifying mock object interactions
+%        matlab.mock.constraints.WasAccessed,% Constraint determining property get access
+%        matlab.mock.constraints.WasCalled,% Constraint determining method call
+%        matlab.mock.constraints.WasSet,% Constraint determining property set interaction
+%        matlab.mock.InteractionHistory,% Interface for mock object interaction history
+%        matlab.mock.InteractionHistory.forMock,% Return history from mock object
+%        matlab.mock.MethodCallBehavior,% Specify mock object method behavior and qualify method calls
+%        matlab.mock.PropertyBehavior,% Specify mock object property behavior and qualify interactions
+%        matlab.mock.PropertyGetBehavior,% Specify mock property get behavior
+%        matlab.mock.PropertySetBehavior,% Specify mock object set behavior
+%        matlab.mock.TestCase,% TestCase to write tests with mocking framework
+%        matlab.net.ArrayFormat,% Convert arrays in HTTP queries
+%        matlab.net.base64decode,% Base 64 decoding of string
+%        matlab.net.base64encode,% Base 64 encoding of byte string or vector
+%        matlab.net.http.AuthenticationScheme,% HTTP Authentication scheme
+%        matlab.net.http.AuthInfo,% Authentication or authorization information in HTTP messages
+%        matlab.net.http.Cookie,% HTTP cookie received from server
+%        matlab.net.http.CookieInfo,% HTTP cookie information
+%        matlab.net.http.Credentials,% Credentials for authenticating HTTP requests
+%        matlab.net.http.Disposition,% Results in HTTP log record
+%        matlab.net.http.field.AcceptField,% HTTP Accept header field
+%        matlab.net.http.field.AuthenticateField,% HTTP WWW-Authenticate or Proxy-Authenticate header field
+%        matlab.net.http.field.AuthenticationInfoField,% HTTP Authentication-Info header field in response message
+%        matlab.net.http.field.AuthorizationField,% HTTP Authorization or Proxy-Authorization header field
+%        matlab.net.http.field.ContentDispositionField,% HTTP Content-Disposition header field
+%        matlab.net.http.field.ContentLengthField,% HTTP Content-Length field
+%        matlab.net.http.field.ContentLocationField,% HTTP Content-Location header field
+%        matlab.net.http.field.ContentTypeField,% HTTP Content-Type header field
+%        matlab.net.http.field.CookieField,% HTTP Cookie header field
+%        matlab.net.http.field.DateField,% HTTP Date header field
+%        matlab.net.http.field.GenericField,% HTTP header field with any name and value
+%        matlab.net.http.field.GenericParameterizedField,% GenericField to support parameterized syntax
+%        matlab.net.http.field.HTTPDateField,% HTTP header field containing date
+%        matlab.net.http.field.IntegerField,% Base class for HTTP header fields containing nonnegative integers
+%        matlab.net.http.field.LocationField,% HTTP Location header field
+%        matlab.net.http.field.MediaRangeField,% Base class for HTTP Content-Type and Accept header fields
+%        matlab.net.http.field.SetCookieField,% HTTP Set-Cookie header field
+%        matlab.net.http.field.URIReferenceField,% Base class for HTTP header fields containing URI components
+%        matlab.net.http.HeaderField,% Header field of HTTP message
+%        matlab.net.http.HTTPException,% Exception thrown by HTTP services
+%        matlab.net.http.HTTPOptions,% Options controlling HTTP message exchange
+%        matlab.net.http.io.BinaryConsumer,% Consumer for binary data in HTTP messages
+%        matlab.net.http.io.ContentConsumer,% Consumer for HTTP message payloads
+%        matlab.net.http.io.ContentProvider,% ContentProvider for HTTP message payloads
+%        matlab.net.http.io.FileConsumer,% Consumer for files in HTTP messages
+%        matlab.net.http.io.FileProvider,% ContentProvider to send files
+%        matlab.net.http.io.FormProvider,% ContentProvider that sends form data
+%        matlab.net.http.io.GenericConsumer,% Consumer for multiple content types in HTTP messages
+%        matlab.net.http.io.GenericProvider,% Generic ContentProvider for HTTP payloads
+%        matlab.net.http.io.ImageConsumer,% Consumer for image data in HTTP payloads
+%        matlab.net.http.io.ImageProvider,% ContentProvider to send MATLAB image data
+%        matlab.net.http.io.JSONConsumer,% Content consumer that converts JSON input into MATLAB data
+%        matlab.net.http.io.JSONProvider,% ContentProvider to send MATLAB data as JSON string
+%        matlab.net.http.io.MultipartConsumer,% Helper for multipart content types in HTTP messages
+%        matlab.net.http.io.MultipartFormProvider,% ContentProvider to send multipart/form-data messages
+%        matlab.net.http.io.MultipartProvider,% ContentProvider to send multipart/mixed HTTP messages
+%        matlab.net.http.io.StringConsumer,% String consumer for HTTP payloads
+%        matlab.net.http.io.StringProvider,% ContentProvider to send MATLAB strings
+%        matlab.net.http.LogRecord,% HTTP history log record
+%        matlab.net.http.MediaType,% Internet media type used in HTTP headers
+%        matlab.net.http.Message,% HTTP request or response message
+%        matlab.net.http.MessageBody,% Body of HTTP message
+%        matlab.net.http.MessageType,% HTTP message type
+%        matlab.net.http.ProgressMonitor,% Progress monitor for HTTP message exchange
+%        matlab.net.http.ProtocolVersion,% HTTP protocol version
+%        matlab.net.http.RequestLine,% First line of HTTP request message
+%        matlab.net.http.RequestMessage,% HTTP request message
+%        matlab.net.http.RequestMethod,% HTTP request method
+%        matlab.net.http.ResponseMessage,% HTTP response message
+%        matlab.net.http.StartLine,% First line of HTTP message
+%        matlab.net.http.StatusClass,% Status class of HTTP response
+%        matlab.net.http.StatusCode,% Status code in HTTP response
+%        matlab.net.http.StatusLine,% First line of HTTP response message
+%        matlab.net.QueryParameter,% Parameter in query portion of uniform resource identifier (URI)
+%        matlab.net.URI,% Uniform resource identifier (URI)
+%        matlab.perftest.FixedTimeExperiment,% TimeExperiment that collects fixed number of measurements
+%        matlab.perftest.FrequentistTimeExperiment,% TimeExperiment that collects variable number of measurements
+%        matlab.perftest.TestCase,% Superclass of matlab.perftest performance test classes
+%        matlab.perftest.TimeExperiment,% Interface for measuring execution time of code under test
+%        matlab.perftest.TimeResult,% Result from running time experiment
+%        matlab.project.createProject,% Create blank project
+%        matlab.project.deleteProject,% Stop folder management and delete project definition files
+%        matlab.project.loadProject,% Load project
+%        matlab.project.Project,% Project object
+%        matlab.project.rootProject,% Get root project
+%        matlab.settings.FactoryGroup.createToolboxGroup,% Create FactoryGroup root object for toolbox
+%        matlab.settings.loadSettingsCompatibilityResults,% Get results of upgrading personal settings of toolbox for specific version
+%        matlab.settings.mustBeIntegerScalar,% Validate that setting value is integer array with one element
+%        matlab.settings.mustBeLogicalScalar,% Validate that setting value is logical array with one element
+%        matlab.settings.mustBeNumericScalar,% Validate that setting value is numeric array with one element
+%        matlab.settings.mustBeStringScalar,% Validate that setting value is string array with one element
+%        matlab.settings.reloadFactoryFile,% Load or reload factory settings
+%        matlab.System,% Base class for System objects
+%        matlab.system.mixin.FiniteSource,% Finite source mixin class
+%        matlab.tall.blockMovingWindow,% Apply moving window function and block reduction to padded blocks of data
+%        matlab.tall.movingWindow,% Apply moving window function to blocks of data
+%        matlab.tall.reduce,% Reduce arrays by applying reduction algorithm to blocks of data
+%        matlab.tall.transform,% Transform array by applying function handle to blocks of data
+%        matlab.test.behavior.Missing,% Test if class satisfies contract for missing values
+%        matlab.uitest.TestCase,% TestCase to write tests with app testing framework
+%        matlab.uitest.TestCase.forInteractiveUse,% Create a TestCase object for interactive use
+%        matlab.uitest.unlock,% Unlock figure locked by app testing framework
+%        matlab.unittest.constraints.BooleanConstraint,% Interface class for Boolean combinations of constraints
+%        matlab.unittest.constraints.Constraint,% Fundamental interface class for comparisons
+%        matlab.unittest.constraints.Tolerance,% Abstract interface class for tolerances
+%        matlab.unittest.diagnostics.ConstraintDiagnostic,% Diagnostic with fields common to most constraints
+%        matlab.unittest.diagnostics.Diagnostic,% Fundamental interface class for matlab.unittest diagnostics
+%        matlab.unittest.fixtures.Fixture,% Interface class for test fixtures
+%        matlab.unittest.measurement.chart.ComparisonPlot,% Visually compare two sets of time experiment results
+%        matlab.unittest.measurement.DefaultMeasurementResult,% Default implementation of MeasurementResult class
+%        matlab.unittest.measurement.MeasurementResult,% Base class for classes holding measurement results
+%        matlab.unittest.plugins.OutputStream,% Interface that determines where to send text output
+%        matlab.unittest.plugins.Parallelizable,% Interface for plugins that support running tests in parallel
+%        matlab.unittest.plugins.QualifyingPlugin,% Interface for plugins that perform system-wide qualifications
+%        matlab.unittest.plugins.TestRunnerPlugin,% Plugin interface for extending TestRunner
+%        matlab.unittest.Test,% Specification of single test method
+%        matlab.unittest.TestCase,% Superclass of all matlab.unittest test classes
+%        matlab.unittest.TestResult,% Result of running test suite
+%        matlab.unittest.TestRunner,% Class for running tests in matlab.unittest framework
+%        matlab.unittest.TestSuite,% Class for grouping tests to run
+%        matlab.wsdl.createWSDLClient,% Create interface to SOAP-based web service
+%        matlab.wsdl.setWSDLToolPath,% Location of WSDL tools
         matlabrc,% System administrator-defined start up script for MATLAB
         matlabroot,% MATLAB root folder
         max,% Maximum elements of an array
@@ -2411,28 +2390,28 @@
         meshc,% Contour plot under mesh surface plot
         meshgrid,% 2-D and 3-D grids
         meshz,% Mesh surface plot with curtain
-        meta.abstractDetails,% Find abstract methods and properties
-        meta.ArrayDimension,% Size information for property validation
-        meta.class,% Describe MATLAB class
-        meta.class.fromName,% Return meta.class object associated with named class
-        meta.DynamicProperty,% Describe dynamic property of MATLAB object
-        meta.EnumeratedValue,% Describe enumeration member of MATLAB class
-        meta.event,% Describe event defined by MATLAB class
-        meta.FixedDimension,% Fixed dimension in property size specification
-        meta.MetaData,% Root of the hierarchy of metaclasses
-        meta.method,% Information about class method
-        meta.package,% Describe MATLAB package
-        meta.package.fromName,% Return meta.package object for specified package
-        meta.package.getAllPackages,% Get all top-level packages
-        meta.property,% Describe property of MATLAB class
-        meta.UnrestrictedDimension,% Unrestricted dimension in property size specification
-        meta.Validation,% Describes property validation
+%        meta.abstractDetails,% Find abstract methods and properties
+%        meta.ArrayDimension,% Size information for property validation
+%        meta.class,% Describe MATLAB class
+%        meta.class.fromName,% Return meta.class object associated with named class
+%        meta.DynamicProperty,% Describe dynamic property of MATLAB object
+%        meta.EnumeratedValue,% Describe enumeration member of MATLAB class
+%        meta.event,% Describe event defined by MATLAB class
+%        meta.FixedDimension,% Fixed dimension in property size specification
+%        meta.MetaData,% Root of the hierarchy of metaclasses
+%        meta.method,% Information about class method
+%        meta.package,% Describe MATLAB package
+%        meta.package.fromName,% Return meta.package object for specified package
+%        meta.package.getAllPackages,% Get all top-level packages
+%        meta.property,% Describe property of MATLAB class
+%        meta.UnrestrictedDimension,% Unrestricted dimension in property size specification
+%        meta.Validation,% Describes property validation
         metaclass,% Obtain meta.class object
         methods,% Class method names
         methodsview,% View class methods
         mex,% Build MEX function or engine application
         MException,% Capture error information
-        MException.last,% Return last uncaught exception
+%        MException.last,% Return last uncaught exception
         mexext,% Binary MEX file-name extension
         mexhost,% Create host process for C++ MEX function
         mfilename,% File name of currently running code
@@ -2527,69 +2506,69 @@
         nearestvertex,% Query nearest polyshape vertex
         neighbors,% Triangle or tetrahedron neighbors
         NET,% Summary of functions in MATLAB .NET interface
-        NET.addAssembly,% Make .NET assembly visible to MATLAB
-        NET.Assembly,% Members of .NET assembly
-        NET.convertArray,% (Not recommended) Convert numeric MATLAB array to .NET array
-        NET.createArray,% Array for nonprimitive .NET types
-        NET.createGeneric,% Create instance of specialized .NET generic type
-        NET.disableAutoRelease,% Lock .NET object representing RunTime Callable Wrapper (COM wrapper)
-        NET.enableAutoRelease,% Unlock .NET object representing RunTime Callable Wrapper (COM wrapper)
-        NET.GenericClass,% Represent parameterized generic type definitions
-        NET.invokeGenericMethod,% Invoke generic method of object
-        NET.isNETSupported,% Check for supported Microsoft .NET Framework
-        NET.NetException,% Capture error information for .NET exception
-        NET.setStaticProperty,% Static property or field name
-        netcdf.abort,% Revert recent netCDF file definitions
-        netcdf.close,% Close netCDF file
-        netcdf.copyAtt,% Copy attribute to new location
-        netcdf.create,% Create new NetCDF dataset
-        netcdf.defDim,% Create netCDF dimension
-        netcdf.defGrp,% Create group in NetCDF file
-        netcdf.defVar,% Create NetCDF variable
-        netcdf.defVarChunking,% Define chunking behavior for NetCDF variable
-        netcdf.defVarDeflate,% Define compression parameters for NetCDF variable
-        netcdf.defVarFill,% Define fill parameters for NetCDF variable
-        netcdf.defVarFletcher32,% Define checksum parameters for NetCDF variable
-        netcdf.delAtt,% Delete netCDF attribute
-        netcdf.endDef,% End netCDF file define mode
-        netcdf.getAtt,% Return netCDF attribute
-        netcdf.getChunkCache,% Retrieve chunk cache settings for NetCDF library
-        netcdf.getConstant,% Return numeric value of named constant
-        netcdf.getConstantNames,% Return list of constants known to netCDF library
-        netcdf.getVar,% Read data from NetCDF variable
-        netcdf.inq,% Return information about netCDF file
-        netcdf.inqAtt,% Return information about netCDF attribute
-        netcdf.inqAttID,% Return ID of netCDF attribute
-        netcdf.inqAttName,% Return name of netCDF attribute
-        netcdf.inqDim,% Return netCDF dimension name and length
-        netcdf.inqDimID,% Return dimension ID
-        netcdf.inqDimIDs,% Retrieve list of dimension identifiers in group
-        netcdf.inqFormat,% Determine format of NetCDF file
-        netcdf.inqGrpName,% Retrieve name of group
-        netcdf.inqGrpNameFull,% Complete pathname of group
-        netcdf.inqGrpParent,% Retrieve ID of parent group.
-        netcdf.inqGrps,% Retrieve array of child group IDs
-        netcdf.inqLibVers,% Return NetCDF library version information
-        netcdf.inqNcid,% Return ID of named group
-        netcdf.inqUnlimDims,% Return list of unlimited dimensions in group
-        netcdf.inqVar,% Information about variable
-        netcdf.inqVarChunking,% Determine chunking settings for NetCDF variable
-        netcdf.inqVarDeflate,% Determine compression settings for NetCDF variable
-        netcdf.inqVarFill,% Determine values of fill parameters for NetCDF variable
-        netcdf.inqVarFletcher32,% Fletcher32 checksum setting for NetCDF variable
-        netcdf.inqVarID,% Return ID associated with variable name
-        netcdf.inqVarIDs,% IDs of all variables in group
-        netcdf.open,% Open NetCDF data source
-        netcdf.putAtt,% Write netCDF attribute
-        netcdf.putVar,% Write data to netCDF variable
-        netcdf.reDef,% Put open netCDF file into define mode
-        netcdf.renameAtt,% Change name of attribute
-        netcdf.renameDim,% Change name of netCDF dimension
-        netcdf.renameVar,% Change name of netCDF variable
-        netcdf.setChunkCache,% Set default chunk cache settings for NetCDF library
-        netcdf.setDefaultFormat,% Change default netCDF file format
-        netcdf.setFill,% Set netCDF fill mode
-        netcdf.sync,% Synchronize netCDF file to disk
+%        NET.addAssembly,% Make .NET assembly visible to MATLAB
+%        NET.Assembly,% Members of .NET assembly
+%        NET.convertArray,% (Not recommended) Convert numeric MATLAB array to .NET array
+%        NET.createArray,% Array for nonprimitive .NET types
+%        NET.createGeneric,% Create instance of specialized .NET generic type
+%        NET.disableAutoRelease,% Lock .NET object representing RunTime Callable Wrapper (COM wrapper)
+%        NET.enableAutoRelease,% Unlock .NET object representing RunTime Callable Wrapper (COM wrapper)
+%        NET.GenericClass,% Represent parameterized generic type definitions
+%        NET.invokeGenericMethod,% Invoke generic method of object
+%        NET.isNETSupported,% Check for supported Microsoft .NET Framework
+%        NET.NetException,% Capture error information for .NET exception
+%        NET.setStaticProperty,% Static property or field name
+%        netcdf.abort,% Revert recent netCDF file definitions
+%        netcdf.close,% Close netCDF file
+%        netcdf.copyAtt,% Copy attribute to new location
+%        netcdf.create,% Create new NetCDF dataset
+%        netcdf.defDim,% Create netCDF dimension
+%        netcdf.defGrp,% Create group in NetCDF file
+%        netcdf.defVar,% Create NetCDF variable
+%        netcdf.defVarChunking,% Define chunking behavior for NetCDF variable
+%        netcdf.defVarDeflate,% Define compression parameters for NetCDF variable
+%        netcdf.defVarFill,% Define fill parameters for NetCDF variable
+%        netcdf.defVarFletcher32,% Define checksum parameters for NetCDF variable
+%        netcdf.delAtt,% Delete netCDF attribute
+%        netcdf.endDef,% End netCDF file define mode
+%        netcdf.getAtt,% Return netCDF attribute
+%        netcdf.getChunkCache,% Retrieve chunk cache settings for NetCDF library
+%        netcdf.getConstant,% Return numeric value of named constant
+%        netcdf.getConstantNames,% Return list of constants known to netCDF library
+%        netcdf.getVar,% Read data from NetCDF variable
+%        netcdf.inq,% Return information about netCDF file
+%        netcdf.inqAtt,% Return information about netCDF attribute
+%        netcdf.inqAttID,% Return ID of netCDF attribute
+%        netcdf.inqAttName,% Return name of netCDF attribute
+%        netcdf.inqDim,% Return netCDF dimension name and length
+%        netcdf.inqDimID,% Return dimension ID
+%        netcdf.inqDimIDs,% Retrieve list of dimension identifiers in group
+%        netcdf.inqFormat,% Determine format of NetCDF file
+%        netcdf.inqGrpName,% Retrieve name of group
+%        netcdf.inqGrpNameFull,% Complete pathname of group
+%        netcdf.inqGrpParent,% Retrieve ID of parent group.
+%        netcdf.inqGrps,% Retrieve array of child group IDs
+%        netcdf.inqLibVers,% Return NetCDF library version information
+%        netcdf.inqNcid,% Return ID of named group
+%        netcdf.inqUnlimDims,% Return list of unlimited dimensions in group
+%        netcdf.inqVar,% Information about variable
+%        netcdf.inqVarChunking,% Determine chunking settings for NetCDF variable
+%        netcdf.inqVarDeflate,% Determine compression settings for NetCDF variable
+%        netcdf.inqVarFill,% Determine values of fill parameters for NetCDF variable
+%        netcdf.inqVarFletcher32,% Fletcher32 checksum setting for NetCDF variable
+%        netcdf.inqVarID,% Return ID associated with variable name
+%        netcdf.inqVarIDs,% IDs of all variables in group
+%        netcdf.open,% Open NetCDF data source
+%        netcdf.putAtt,% Write netCDF attribute
+%        netcdf.putVar,% Write data to netCDF variable
+%        netcdf.reDef,% Put open netCDF file into define mode
+%        netcdf.renameAtt,% Change name of attribute
+%        netcdf.renameDim,% Change name of netCDF dimension
+%        netcdf.renameVar,% Change name of netCDF variable
+%        netcdf.setChunkCache,% Set default chunk cache settings for NetCDF library
+%        netcdf.setDefaultFormat,% Change default netCDF file format
+%        netcdf.setFill,% Set netCDF fill mode
+%        netcdf.sync,% Synchronize netCDF file to disk
         newline,% Create newline character
         newplot,% Determine where to draw graphics objects
         nextpow2,% Exponent of next higher power of 2
@@ -2963,7 +2942,7 @@
         sheetnames,% Get sheet names from spreadsheet file
         shg,% Show most recent graph window
         shiftdim,% Shift array dimensions
-        Short-circuit &&, ||,% Logical operations with short-circuiting
+        % Short-circuit &&, ||,% Logical operations with short-circuiting
         shortestpath,% Shortest path between two single nodes
         shortestpathtree,% Shortest path tree from node
         showplottool,% Show or hide figure plot tool
@@ -3175,7 +3154,7 @@
         true,% Logical 1 (true)
         try, catch,% Execute statements and catch resulting errors
         tscollection,% Create tscollection object
-        tsdata.event,% Create tsdata.event object
+%        tsdata.event,% Create tsdata.event object
         tsearchn,% N-D closest simplex search
         turningdist,% Compute turning distance between polyshape objects
         type,% Type in UI component
@@ -3369,32 +3348,50 @@
         zticks% Set or query z-axis tick values
     },
     deletekeywords=[5]{% Delete those that occur in other keyword lists
-        false,
-        NaN,
-        true,
-        %
-        error,
-        warning,
-        %
+        % See Keywords 1:
         break,
         case,
         catch,
-        classdef,
+        % classdef, see keywords[2]
         continue,
         else,
         elseif,
         end,
         for,
-        function,
-        global,
+        % function, see keywords[2]
+        % global, see keywords [4]
         if,
         otherwise,
         parfor,
-        persistent,
+        % persistent, see keywords[4]
         return,
         spmd,
         switch,
         try,
-        while%
+        while,%
+        %
+        %
+        % See Keywords 2:
+        classdef,
+        function,
+        %
+        %
+        % See Keywords 3:
+        false,
+        NaN,
+        true,
+        %
+        %
+        % See Keywords 4:
+        global,
+        persistent,
+        %
+        %
+        % See Keywords 6:
+        assert,
+        error,%
+        lastwarn,
+        onCleanup,
+        warning%
     },
 }
