@@ -412,6 +412,13 @@ For example, paragraph styles (vertical spacing between them, indentation \iecfe
 is configured globally.
 
 \section{References}
+\label{ch:references}
+
+This \textcolor{mRed}{\lcnamecref{ch:references}} is about referencing.
+Notice {\color{mRed}{\verb|\lcnamecref|}} in the previous sentence:
+it references (in \textbf{l}ower-\textbf{c}ase) the name of the passed label.
+If this \lcnamecref{ch:references} ever changes to something else (chapter, \dots),
+it is updated automatically.
 
 Note that using package \ctanpackage{cleveref}, we only ever issue
 \verb|\cref{<label>}| commands.
