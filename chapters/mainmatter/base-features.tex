@@ -3,8 +3,40 @@
 
 Let us first go through some of the base features offered by \LaTeX{} and used in
 this template.
+Before anything happens, the \TeX{} engine is chosen.
+This is the binary responsible for compiling the \LaTeX{} source code.
+If you have used \LaTeX{} before but never heard those terms before, you are most
+likely using \hologo{pdfLaTeX} as your engine.
+This is the go\-/to default for generating \abb{portable_document_format} output.
+Its most popular modern alternatives are \hologo{XeLaTeX} and \hologo{LuaLaTeX}.
+These two offer various new, shiny features, chief among which is Unicode
+support through the package \ctanpackage{unicode-math}, which builds onto
+\ctanpackage{fontspec} and extends it by capabilities for math fonts.
+More on that in \cref{ch:fonts}.
+
+\hologo{LuaLaTeX} is preferred over \hologo{XeLaTeX} for two reasons:
+\begin{enumerate}
+    \item \ctanpackage{contour}, a package that can do things like
+        \contour{black}{\textcolor{white}{this}}, works.
+        For an application of that, see \cref{fig:bitmap_tikz} on
+        \cpageref{fig:bitmap_tikz}.
+    \item \hologo{LuaLaTeX} allocates as much memory as it happens to need.
+        The ancient limitations of \TeX{} are easily reached by packages like
+        \ctanpackage{tikz} and \ctanpackage{pgfplots}.
+        Circumventing that either feels hacky, or actually is hacky.
+        \texttt{tikzexternalize} is a great module, but has a long list of caveats.
+        It solves a problem that should no longer exist in the first place.
+\end{enumerate}
+Using \hologo{LuaLaTeX}, you do not have to worry about any of that:
+hit compile, wait, done%
+\footnote{
+    The \emph{waiting} part might be a bit longer than what you might be used to
+    from \hologo{pdfLaTeX}.
+    So far, this is the only disadvantage I could find.
+}.
 
 \section{Fonts}
+\label{ch:fonts}
 
 Using high-quality fonts is one goal.
 This includes the fantastic
