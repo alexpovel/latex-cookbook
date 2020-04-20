@@ -33,7 +33,7 @@ also feature very broad support for all sorts of symbols and characters, as well
 shapes and weights and combinations thereof.
 The latter is demonstrated in \cref{tab:main_font_examples}.
 %
-\begin{table}
+\begin{table}\ContinuedFloat*
     \ttabbox{%
         % Brackets hold entry that will go into List of Tables (short form)
         \caption[Main/Roman Font Examples]{%
@@ -229,7 +229,7 @@ Importantly, and in contrast to most other free sans\-/serif fonts, it comes wit
 the bells and whistles required for stunts, see \cref{tab:sans_font_examples}.
 This even includes small\-/capitals support.
 
-\begin{table}
+\begin{table}\ContinuedFloat
     \ttabbox{%
         \caption[Sans-Serif Examples]{%
             Examples for font features offered by the sans-serif font%
@@ -275,9 +275,38 @@ At the time of writing (\DTMdate{2020-04-15})%
     \abb{international_organization_for_standardization} formatting.
 },
 Inconsolata has native regular and bold faces, but no italics.
-However, such a feature can be faked using \ctanpackage{unicode-math}, where the
-regular font is \emph{slanted} to give an italics\-/like result.
+However, such a feature can be faked using \ctanpackage{unicode-math}/%
+\ctanpackage{fontspec}, where the regular font is \emph{slanted} to give an
+italics\-/like result.
 Italics are a nice but uncritical feature for code listings, so this should be okay.
+See for yourself in \cref{tab:mono_font_examples}.
+
+\begin{table}\ContinuedFloat
+    \ttabbox{%
+        \caption[Monospaced Examples]{%
+            Examples for font features offered by the monospaced font.
+            The italics are indeed faked and not real glyphs, just slanted
+            regular shapes%
+        }%
+        \label{tab:mono_font_examples}
+    }{%
+        \ttfamily
+        \begin{tabular}{
+            @{}
+            l
+            l
+            @{}
+        }%
+            \toprule
+                Feature & Sample Text\\
+            \midrule
+                Regular & \sampletext\\
+                \textbf{Bold} & \textbf{\sampletext}\\
+                \textit{Italics} & \textit{\sampletext}\\
+            \bottomrule
+        \end{tabular}
+    }%
+\end{table}
 
 \section{Sectioning}
 \label{ch:sectioning}
