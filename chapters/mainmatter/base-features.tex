@@ -12,7 +12,7 @@ Its most popular modern alternatives are \hologo{XeLaTeX} and \hologo{LuaLaTeX}.
 These two offer various new, shiny features, chief among which is Unicode
 support through the package \ctanpackage{unicode-math}, which builds onto
 \ctanpackage{fontspec} and extends it by capabilities for math fonts.
-More on that in \cref{ch:fonts}.
+More on that in \cref{ch:fonts_text}.
 
 \hologo{LuaLaTeX} is preferred over \hologo{XeLaTeX} for two reasons:
 \begin{enumerate}
@@ -35,8 +35,8 @@ hit compile, wait, done%
     So far, this is the only disadvantage I could find.
 }.
 
-\section{Fonts}
-\label{ch:fonts}
+\section{Fonts and Text}
+\label{ch:fonts_text}
 
 Using high-quality fonts is one goal.
 This includes the fantastic
@@ -119,7 +119,7 @@ easy on the eyes and very readable.
 
 What often does not occur at first glance is that many documents use text and math fonts
 that are very different from one another.
-As far as I know, Microsoft's Word has usable math typesetting and sensible default
+As far as I know, Microsoft's \emph{Word} has usable math typesetting and sensible default
 fonts for that.
 Yet, it cannot do what dedicated, fully\-/fleshed text and math fonts
 --- different, but matched ---
@@ -127,11 +127,12 @@ can achieve.
 They provide a seamless transition, especially when using actual text in the math
 environment or vice versa, like when we go for \(x \to \infty\) and then also do
 \(\int_{1}^{2} y^2 \deriv{y}\) or maybe \(a^2 + b^2 = c^2\).
-All these inline-math elements looking pretty natural.
-If the fonts do not match, inline math sticks out like a sore thumb.
+All these inline math elements look perfectly natural.
+If instead the fonts did not match, inline math would stick out like a sore thumb.
 Toggle the colors in the class file (\texttt{*.cls}) to highlight each different
-font family to see all the differences (see the options for \ctanpackage{unicode-math}).
-Some more examples follow.
+font family to see all the differences (see the \verb|Color| option for
+\ctanpackage{unicode-math}).
+Some display-style math examples follow.
 \begin{gather}
         \sym{pressure}\symspec{volume}
         =
@@ -195,10 +196,11 @@ Some more examples follow.
         }
 \end{gather}
 
-\paragraph{Symbols}
-Note how the symbols in \cref{eq:glossaries_extra_example} are hyperlinks
-(leading to their definition in the glossary), courtesy of packages \ctanpackage{hyperref}
-and the powerful \ctanpackage{glossaries-extra}.
+\subsubsection{Symbols}
+
+Note how the symbols in equations are hyperlinks
+(leading to their definition in the glossary), courtesy of
+packages \ctanpackage{hyperref} and the powerful \ctanpackage{glossaries-extra}.
 Having not specified anything else, they take on whatever hyperlink color was specified
 in the preamble.
 In the final document, all links should be hidden, aka black.
@@ -208,12 +210,143 @@ Their only point is to let users know there is something clickable ---
 there is a good chance that is figured out anyway.
 If at all, use a dark green or blue tone.
 
-\paragraph{Math highlighting}
+\subsubsection{Math Highlighting}
+
 In a very unobtrusive yet also unambiguous way, we can highlight important results,
 as shown in \cref{eq:highlighted}.
 This feature is a natural part of \ctanpackage{tcolorbox},
 a very powerful package for anything color and boxes.
 Note that for print, the gray tones should probably be darkened.
+
+\subsubsection{Indices and Operators}
+
+Indices are typeset upright!
+They are text.
+Math output like \(x_{upper}\) is one of the most common mistakes.
+If text occurs in math mode, that is also actual text.
+Consider
+\begin{equation}\label{eq:stupid}
+    MEAN_{sample} \neq \num{2}\eqcomma{}
+\end{equation}
+which looks stupid.
+What \cref{eq:stupid} really says is \enquote{\(M \cdot E \cdot A \cdot N\)}:
+slanted characters are variables, and not specifying any operator implies
+multiplication.
+This example is pedantic, but it is very easy to imagine such an issue evolving
+into real ambiguity, which would then be a serious error.
+Since multiplication is implied by doing nothing, leaving out \verb|*| aka
+\verb|\cdot| altogether often looks best.
+
+In the preamble, use \verb|\DeclareMathOperator{\examplemean}{MEAN}|, then use
+\verb|\text| for the subscript:
+\begin{equation}\label{eq:eqend}
+    \examplemean_{\text{sample}} \neq \num{2} \eqend{}
+\end{equation}
+
+\subsubsection{Text-Flow}
+
+\Cref{eq:eqend} is part of the surrounding sentence.
+Math is just another written \enquote{language} (the only one understood around
+the globe!) which can and will be read as a natural part of the surrounding text.
+As such, it should contain punctuation marks.
+So that now, having considered that we have the amazing result of
+\begin{equation}
+    \num{1} \neq \num{2} \eqcomma{}
+\end{equation}
+we have achieved better overall reading flow, with commas where there would
+naturally be separations when reading the sentence out loud as a whole.
+Notice the small spaces \verb|\,| before the commas and dots in equations.
+They are convenient to avoid ambiguities.
+Implementing these as \verb|\eqcomma| and \verb|\eqend| ensures consistency.
+Additionally, these punctuations can then also be switched off globally if your
+requirements demand so.
+
+A second example often occurs when symbols are defined.
+Notice the difference between these:
+\begin{enumerate}
+    \item The density \sym{density} is defined in \cref{eq:density_definition_1}.
+        \begin{equation}\label{eq:density_definition_1}
+            \sym{density} \coloneq \sym{mass} / \sym{volume}
+        \end{equation}
+    \item \label{item:equation_nice} We can therefore define the density as
+        \begin{equation}
+            \sym{density} \coloneq \sym{mass} / \sym{volume} \eqend{}
+        \end{equation}
+\end{enumerate}
+The example in \cref{item:equation_nice}%
+\footnote{%
+    Items in lists can be labeled and referenced using \ctanpackage{enumitem} and
+    \ctanpackage{cleveref}.%
+}
+reads more naturally, is less clunky, there is less duplication of code and
+information and the reader does not have to jump around references.
+Nevertheless, embedding equations into the surrounding text is unfortunately
+somewhat subjective.
+
+\subsubsection{Physical Units}
+
+In the name of all that is holy, \emph{never} manually type out units, numbers
+or quantities yourself: use \ctanpackage{siunitx}.
+The package is an absolute must\-/have if there are any units to be typeset.
+It is also worth using if there are no units, but numerals.
+The latter can be typeset using the \verb|\num| command.
+It is capable of parsing number constructs:
+
+\begin{tabular}{%
+    l
+    @{ \textrightarrow{} }
+    l
+    l
+}
+    \verb|\num{1.0}| & \num{1.0} & \multirow{2}{*}{(Localisation)}\\
+    \verb|\num{1,0}| & \num{1,0} & \\
+    \verb|\num{1.2e3}| & \num{1.2e3} & \\
+    \verb|\num{1.2e-7}| & \num{1.2e-7} & \\
+    \verb|\num{-e7}| & \num{-e7} & \\
+    \verb|\num{3.2(9)}| & \num{3.2(9)} & (Uncertainty)\\
+    \verb|\num{300000000}| & \num{300000000} & (Group separation)\\
+\end{tabular}
+
+If the roman text font uses hanging numerals (like:
+% Safe-guard so example does not fail if OldStyle numbers are deactivated
+\IfFontFeatureActiveTF{Numbers=OldStyle}{%
+    % True branch: nothing required
+}{%
+    % False branch: turn on
+    % This is currently broken, see also https://tex.stackexchange.com/a/525603/120853.
+    % \addfontfeature{Numbers=OldStyle}%
+}%
+1234567890%
+\IfFontFeatureActiveTF{Numbers=OldStyle}{%
+    % True branch: nothing required
+}{%
+    % False branch: turn back off
+    % \addfontfeature{Numbers=Lining}%
+}%
+), but a stand\-/alone
+number needs to be typeset, \verb|\num| is also required.
+In this document, it will use the math font: \num{1234567890}.
+
+Physical units are output using \verb|\si|.
+It also has parsing capabilities:
+\begin{lstlisting}[
+    language={[LaTeX]TeX},
+    style=betweenpar,
+]
+    \si{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}
+\end{lstlisting}
+will print
+\si{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
+The mode in which units with negative exponents are displayed can be changed,
+\iecfeg{e.g.}\ fractions can be used:
+\si[per-mode=fraction]{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
+
+The \verb|\SI{<quantity>}{<unit>}| command essentially combines \verb|\num| and
+\verb|\si|, inserting a small space in between, for correct typesetting.
+No or full spaces are wrong and painful to read.
+
+There are also commands to print ranges: \SIrange{20}{50}{\meter}.
+Refer to the package documentation for more.
 
 \subsubsection{Chemistry}
 
@@ -656,6 +789,17 @@ This initially unintuitive approach has several critical advantages:
         In the first, it was stated what the author wants to \emph{see}, but only
         in the second one does it say what was \emph{meant}.
         It is painfully obvious why the latter approach is the correct one.
+        Another example is emphasized text.
+        Do \emph{emphasized} (produced from \verb|\emph|) and \textit{emphasized}
+        (\verb|\textit|) text look the same?
+        They certainly do\dots{} usually.
+
+        Yet, what is \emph{meant} is \emph{emphasis}; italic text is just what it
+        happens to look like now, but it is not the \emph{meaning}.
+        For example, we could later decide to redefine emphasized text to bold,
+        or colored.
+        If you previously did not differentiate strictly enough between
+        \verb|\emph| and \verb|\textit|, you are in for a bad time.
         This is a trap beginners unfortunately often fall into.
         Using \ctanpackage{glossaries-extra}, abstracted markup\-/commands can be
         taken to a whole next level, leveraging this core \LaTeX{} strength.
