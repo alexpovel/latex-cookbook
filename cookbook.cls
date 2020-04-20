@@ -704,6 +704,49 @@
 \addbibresource{bib/bibliography.bib}% *.bib file goes here
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Special Treatment for anything in \nocite{*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Provides a category/sub-bibliography where all entries that occur in the bib-
+% file(s) but were not actually cited occur. Kind of like a "Further Reading".
+
+% New heading
+\defbibheading{notcited}{%
+    \section*{%
+        \TransFurtherReadingTitle{}%
+    }%
+}%
+
+\defbibnote{further}{%
+    \textit{\TransFurtherReadingText{}}%
+}%
+
+% https://tex.stackexchange.com/a/280545/120853
+\DeclareBibliographyCategory{cited}
+\AtEveryCitekey{\addtocategory{cited}{\thefield{entrykey}}}
+
+% A header for when the bibliography is divided per-chapter:
+\defbibheading{subbibliography}{%
+    \section*{%
+        \Cref{refsegment:\therefsection\therefsegment}%
+    }%
+}%
+
+% https://tex.stackexchange.com/a/477525/120853
+\defbibenvironment{bibnonum}{
+        \list{%
+            %
+        }{%
+            \setlength{\leftmargin}{\bibhang}%
+            \setlength{\itemindent}{-\leftmargin}%
+            \setlength{\itemsep}{\bibitemsep}%
+            \setlength{\parsep}{\bibparsep}
+        }%
+    }%
+    {\endlist}%
+    {\item}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Arrays / Tables

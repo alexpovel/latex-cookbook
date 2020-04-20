@@ -2,9 +2,26 @@
 
 % \subimport{backmatter/}{}
 
-\label{ch:bibliography}
-\printbibliography% see biblatex package settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{*}% Add everything that has not yet been cited
 
+\label{ch:bibliography}
+\printbibliography[% Print the 'real' bibliography of actually cited references
+    category=cited,%
+]
+
+\printbibliography[%
+    notcategory=cited,%
+    heading=notcited,%
+    env=bibnonum,%
+    prenote=further,%
+]%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Index
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setglossarysection{chapter}
 \printunsrtindex[%
     style=bookindex,%
