@@ -2937,6 +2937,8 @@
 % Only for the purpose of demonstration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\definecolor{DarkLinkGreen}{RGB}{65, 107, 60}
+
 % Wrapper for links to CTAN, or elsewhere
 \newcommand*{\ctanpackage}[2][None]{%
     % Usage:
@@ -2949,7 +2951,7 @@
         \def\package@link{#1}%
     }%
     \expandafter\href\expandafter{\package@link}{%
-        \textcolor{green!50!black}{\texttt{\textbf{#2}}}%
+        \textcolor{DarkLinkGreen}{\texttt{\textbf{#2}}}%
     }%
 }%
 
