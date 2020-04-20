@@ -8,7 +8,8 @@
 # 5: xelatex, as specified by the $xelatex variable (second best)
 $pdf_mode = 4;
 
-# --shell-escape option (execution of code outside of latex) is required for the 'svg' package.
+# --shell-escape option (execution of code outside of latex) is required for the
+#'svg' package.
 # It converts raw SVG files to the PDF+PDF_TEX combo using InkScape.
 $lualatex = "lualatex --shell-escape";
 
@@ -33,10 +34,10 @@ add_cus_dep('aux', 'glstex', 0, 'run_bib2gls');
 # File from author from here: https://tex.stackexchange.com/a/401979/120853
 sub run_bib2gls {
     if ( $silent ) {
-    #    my $ret = system "bib2gls --silent --group '$_[0]'"; # Original version, probably for Linux
+    #    my $ret = system "bib2gls --silent --group '$_[0]'"; # Original version
         my $ret = system "bib2gls --silent --group $_[0]"; # Runs in PowerShell
     } else {
-    #    my $ret = system "bib2gls --group '$_[0]'"; # Original version, probably for Linux
+    #    my $ret = system "bib2gls --group '$_[0]'"; # Original version
         my $ret = system "bib2gls --group $_[0]"; # Runs in PowerShell
     };
 
