@@ -13,6 +13,23 @@ $pdf_mode = 4;
 # It converts raw SVG files to the PDF+PDF_TEX combo using InkScape.
 $lualatex = "lualatex --shell-escape";
 
+# option 2 is same as 1 (run biber when necessary), but also deletes the
+# regeneratable bbl-file in a clenaup (`latexmk -c`). Do not use if original
+# bib file is not available!
+$bibtex_use = 2;  # default: 1
+
+# Let latexmk know about generated files, so they can be used to detect if a
+# rerun is required, or be deleted in a cleanup.
+# loe: List of Examples (KOMAScript)
+# lol: List of Listings (listings package)
+push @generated_exts, 'loe', 'lol';
+
+# Also delete the *.glstex files from package glossaries-extra. Problem is,
+# that that package generates files of the form "basename-digit.glstex" if
+# multiple glossaries are present. Latexmk looks for "basename.glstex" and so
+# does not find those. For that purpose, use wildcard.
+$clean_ext = "%R-*.glstex";
+
 # Grabbed from latexmk CTAN distribution:
 # Implementing glossary with bib2gls and glossaries-extra, with the
 # log file (.glg) analyzed to get dependence on a .bib file.
