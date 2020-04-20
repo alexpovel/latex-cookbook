@@ -357,8 +357,13 @@ At least, tell the reader what the following hierarchical level contains for the
 Further, three numbered levels of hierarchy are enough.
 The numbering and even availability of sectioning commands depends on the used
 \verb|documentclass|.
-In \ctanpackage{koma-script} reports (\verb|scrreprt|), these are chapters, sections
-and subsections.
+In \ctanpackage{koma-script} articles (\verb|scrartcl|), these are sections,
+subsections and subsubsections.
+\ctanpackage{koma-script} reports (\verb|scrreprt|) and books (\verb|scrreprt|)
+extend this by parts and chapters, both of which numbered.
+Subsubsections will no longer be numbered.
+Trying to create a \verb|\part| or \verb|\chapter| in article classes will result
+in errors.
 
 \subsubsection{Deeper!}
 
