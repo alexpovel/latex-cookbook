@@ -157,23 +157,35 @@ Some more examples follow.
         }
         \label{eq:highlighted}
     \\
-        % These equations do not use \sym etc. of glossaries-extra.
-        % This is of course still possible, but very much discouraged.
-        \sum_{k = \num{0}}^{n}
+        \sum_{\sym{count} = \num{0}}^{\sym{component}}
             \begin{pmatrix}
-                n \\ k
+                \sym{count} \\ \sym{component}
             \end{pmatrix}
         =
-        \num{2}^{n}
+        \num{2}^{\sym{count}}
     \\
+        % This equation does not make sense.
         \brackets*{
-            M \fracderiv*{}{M} + \beta(g) \fracderiv*{}{g} + n\gamma
-        }G^{n}
+            \sym{abs_temperature}
+            \fracderiv*{%
+                %
+            }{%
+                \sym{abs_temperature}
+            }
+            +
+                \sym{ratio_of_specific_heats}\parens*{\sym{pressure}}
+                \fracderiv*{}{\sym{density}}
+            +
+                \sym{angle_one}
+        }
+        \sym{celsius_temperature}^{\sym{count}}
         \parens*{
-            x_{\num{1}}, x_{\num{2}}, \dots, x_{n}; M, g
-        } = 0
+            \sym{first_cart_coord}_{\num{1}},
+            \sym{first_cart_coord}_{\num{2}},
+            \dots, \sym{first_cart_coord}_{\sym{count}}
+        } = \num{0}
     \\
-        \sym{difference} \symspec{enthalpy}_{\text{change}}
+        \difference{\symspec{enthalpy}_{\text{change}}}
         =
         \nicefrac{\num{1}}{\num{2}}
         \parens*{
