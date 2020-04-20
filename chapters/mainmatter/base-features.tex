@@ -279,6 +279,72 @@ However, such a feature can be faked using \ctanpackage{unicode-math}, where the
 regular font is \emph{slanted} to give an italics\-/like result.
 Italics are a nice but uncritical feature for code listings, so this should be okay.
 
+\section{Sectioning}
+\label{ch:sectioning}
+
+% There should be content here
+
+\subsection{Explanation}
+\label{ch:sectioning_explanation}
+
+Between any two sectional commands (from \verb|\part| down), there always should be
+be at least \emph{some} content.
+Anything else looks off, \iecfeg{cf.}\ the direct transition between
+\cref{ch:sectioning,ch:sectioning_explanation}.
+At least, tell the reader what the following hierarchical level contains for them.
+
+Further, three numbered levels of hierarchy are enough.
+The numbering and even availability of sectioning commands depends on the used
+\verb|documentclass|.
+In \ctanpackage{koma-script} reports (\verb|scrreprt|), these are chapters, sections
+and subsections.
+
+\subsubsection{Deeper!}
+
+Deeper sectioning is fine, but it should not be numbered or occur in the table of
+contents.
+Notice how, without specifying anything, \ctanpackage{koma-script} abides by that
+automatically.
+This is despite using \verb|\subsubsection{Deeper!}| as opposed to \verb|\subsubsection*|,
+its explicitly unnumbered counterpart.
+
+Also notice how between \verb|\section{Sectioning}|, which produced \cref{ch:sectioning},
+and \verb|\subsubsection{Deeper!}|, there was no subsection.
+Usually, you would want a clean cascade with no jump in the hierarchy levels.
+If you catch yourself jumping, it is also a sign there might be something off with your
+actual content structure or thought process.
+That being said, it is absolutely okay to do; just be aware.
+
+\LaTeX{} has many ways where it does not let you do something easily, or where
+commands look off.
+\emph{Never fight \LaTeX{}} in that; you will lose, it will win.
+When something is awkward to do or requires a lot of manual labor, you are probably
+doing it wrong and there will be an easier way.
+Most often, that comes in the form of packages.
+Being a fully\-/fleshed programming language under the hood, \emph{any} repetition
+in \LaTeX{} should make you stop for a second and wonder about another way.
+That may lead to you discovering suboptimal approaches and code.
+Just as often, it will not lead anywhere and trying to force minimum code and
+maximum optimization will not be economical.
+After all, \LaTeX{} is a markup language.
+
+\paragraph{Paragraphs}
+They are a nice touch, introducing a new, distinct paragraph, idea or thought
+without being too loud about it.
+
+That being said, leave a blank line in the source code for regular paragraphs.
+Use either vertical spacing between paragraphs or indentation (like here).
+Do not use both!
+
+\noindent
+Each new train of thought should go into its own paragraph.
+This paragraph is not indented, as was intended by manually calling \verb|\noindent|.
+In regular text and documents, there are very few reasons that should ever occur.
+Again, let \LaTeX{} do its thing; if you find yourself typing \verb|\noindent|
+all the time, there will be something wrong.
+For example, paragraph styles (vertical spacing between them, indentation \iecfeg{etc.})
+is configured globally.
+
 \section{References}
 
 Note that using package \ctanpackage{cleveref}, we only ever issue
