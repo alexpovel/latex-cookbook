@@ -184,6 +184,231 @@ as shown in \cref{fig:sidecap}.
     }%
 \end{figure}
 
+\subsubsection{Large Floats}
+
+An example for a larger table is shown in \cref{tab:fuel_composition}.
+One key aspect there: the \verb|S| column\-/type, provided by \ctanpackage{siunitx}.
+It automatically applies \verb|\num| to each cell, which in turn allows easy
+printing of things like: \num{-3.23e-5}.
+Further, decimal places are accounted for and aligned by automatically.
+Use \verb|*x{y}| to print column-type \verb|y| (\iecfeg{i.e.}\ \verb|c|) \verb|x|
+times.
+No need for tedious repetition.
+
+\begin{landscape}
+    \begin{table}
+        \crefname{equation}{eq.}{eqs.}% Keep this change scoped to the environment
+        \Crefname{equation}{Eq.}{Eqs.}%
+        \footnotesize%
+        \ttabbox{%
+            \caption{%
+                Compositions and properties of fuels, as used in \Cref{eq:tikz_in_text}%
+            }%
+            \label{tab:fuel_composition}%
+        }{%
+            \begin{tabular}{
+                @{}
+                p{5em}
+                *7{S[table-format=1.4]}
+                S[table-format=4.0]
+                S[table-format=2.1]
+                @{}
+            }
+                \toprule
+                    Name &
+                        \multicolumn{7}{c}{{Mass fraction \(\sym{mass_fraction}\)}} &
+                        {\(\sym{density}\)} &
+                        {\(\sym{heating_value}\)}
+                    \\
+                    &
+                        \multicolumn{7}{c}{{[--]}} &
+                        \(\brackets*{\si{\kilogram\per\meter\cubed}}\) &
+                        \(\brackets*{\si{\mega\joule\per\kilogram}}\)
+                    \\
+                \cmidrule(lr){2-8}% truncate left and right
+                    &
+                        \chcpd{C} &
+                        \chcpd{H} &
+                        \chcpd{S} &
+                        \chcpd{O} &
+                        \chcpd{N} &
+                        \chcpd{H2O} &
+                        {Ash} & % Escape text from S-column using braces
+                        &
+                    \\
+                \midrule
+                    Diesel\mpfootnotemark[1] &
+                        0.8600 &
+                        0.1320 &
+                        0.0060 &
+                        \multicolumn{2}{c}{\num{0.0020}\mpfootnotemark[2]} &
+                        {n.a.} &
+                        {n.a.} &
+                        840 &
+                        42.7
+                    \\
+                    Oil EL\mpfootnotemark[1] &
+                        0.8570 &
+                        0.1310 &
+                        0.0100 &
+                        \multicolumn{2}{c}{\num{0.0020}\mpfootnotemark[2]} &
+                        {n.a.} &
+                        {n.a.} &
+                        840 &
+                        42.7
+                    \\
+                    Oil H\mpfootnotemark[1] &
+                        0.8490 &
+                        0.1060 &
+                        0.0350 &
+                        \multicolumn{2}{c}{\num{0.0100}\mpfootnotemark[2]} &
+                        {n.a.} &
+                        {n.a.} &
+                        980 &
+                        40.0
+                    \\
+                    \abb{marine_diesel_oil}\mpfootnotemark[3] &
+                        {n.a.} &
+                        {n.a.} &
+                        0.0150 &
+                        {n.a.} &
+                        {n.a.} &
+                        0.0030\mpfootnotemark[4] &
+                        0.0001 &
+                        900 &
+                        {n.a.}
+                    \\
+                    \abb{heavy_fuel_oil}\mpfootnotemark[5] &
+                        {n.a.} &
+                        {n.a.} &
+                        0.0350\mpfootnotemark[6] &
+                        {n.a.} &
+                        {n.a.} &
+                        0.0050\mpfootnotemark[4] &
+                        0.0015 &
+                        1010 &
+                        {n.a.}
+                    \\
+                \addlinespace
+                    Light\mpfootnotemark[7] &
+                        0.8600 &
+                        0.1320 &
+                        0.0060 &
+                        0.0010 &
+                        0.0010 &
+                        0 &
+                        0 &
+                        840 &
+                        {\Cref{eq:boie}}
+                    \\
+                    Medium\mpfootnotemark[7] & 
+                        0.8530 &
+                        0.1269 &
+                        0.0150 &
+                        0.0010 &
+                        0.0010 &
+                        0.0030 &
+                        0.0001 &
+                        900 &
+                        {\Cref{eq:boie}}
+                    \\
+                    Heavy\mpfootnotemark[7] &
+                        0.8460 &
+                        0.1025 &
+                        0.0350 &
+                        0.0050 &
+                        0.0050 &
+                        0.0050 &
+                        0.0015 &
+                        1010 &
+                        {\Cref{eq:boie}}
+                    \\
+                \bottomrule
+            \end{tabular}%
+            % Unfortunately, these have to be numbered manually.
+            % Float/table footnotes are a touchy topic, and this was chosen as the
+            % least worst approach out of the alternatives.
+            \footnotetext[1]{%
+                \cite[634]{baehr_thermodynamik:_2016}; see also
+                \cite[L70]{dubbel_taschenbuch_2007} and
+                \cite[97]{mollenhauer_handbuch_2007}.%
+            }%
+            \footnotetext[2]{%
+                Given as a sum
+                \(\sym{mass_fraction}_{\chcpd{O}} + \sym{mass_fraction}_{\chcpd{N}}\).%
+            }%
+            \footnotetext[3]{%
+                Max.\ values of specification \emph{DMB},
+                \cite{international_organization_for_standardization_iso_2017}.%
+            }%
+            \footnotetext[4]{%
+                Given as a volume fraction, assumed equal to mass fraction.%
+            }%
+            \footnotetext[5]{%
+                Max.\ values of specification \emph{RMK},
+                \cite{international_organization_for_standardization_iso_2017}.%
+            }%
+            \footnotetext[6]{%
+                \abb{int_mar_org} level prior to \num{2020}.%
+            }%
+            \footnotetext[7]{%
+                Derived, \emph{virtual} fuels.%
+            }%
+        }%
+    \end{table}%
+\end{landscape}
+
+\subsubsection{Table Style}
+
+In general, use the least ink possible to get your point across.
+Any more is only noise.
+This is especially true for tables.
+For this, compare \cref{tab:main_font_examples} with its not\-/so\-/blessed
+twin, \cref{tab:main_font_examples_ugly}:
+\begin{itemize}
+    \item do not use vertical lines in tables,
+    \item avoid double lines
+    \item if in doubt, left-align.
+        If there is no actual reason to center or right\-/align, refrain from it.
+\end{itemize}
+For more info, see the package \ctanpackage{booktabs}.
+
+\begin{table}
+    \ttabbox{%
+        \caption{%
+            Dreadful version of \cref{tab:main_font_examples}%
+        }%
+        \label{tab:main_font_examples_ugly}%
+    }{%
+        \begin{tabular}{
+            |
+            c
+            ||
+            c
+            |
+        }
+        \hline
+            \textit{Feature} & \textit{Sample Text}\\
+        \hline
+        \hline
+            Regular & \sampletext\\
+        \hline
+            \textbf{Bold} & \textbf{\sampletext}\\
+        \hline
+            \textit{Italics} & \textit{\sampletext}\\
+        \hline
+            \textbf{\textit{Bold Italics}} & \textbf{\textit{\sampletext}}\\
+        \hline
+            \textsc{Small Capitals} & \textsc{\sampletext}\\
+        \hline
+            \textbf{\textsc{Bold SC}} & \textbf{\textsc{\sampletext}}\\
+        \hline
+            \textit{\textsc{Italics SC}} & \textit{\textsc{\sampletext}}\\
+        \hline
+        \end{tabular}
+    }%
+\end{table}
+
 \subsubsection{Caption Positioning}
 
 Note that table captions (see for example \cref{tab:multiple_tables}) occur

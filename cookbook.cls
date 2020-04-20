@@ -2959,3 +2959,6 @@
 \newcommand*{\sampletext}{%
     The quick brown Fox jumps over the lazy Dog 13 times!%
 }
+
+% For demonstrating upright math operators
+\DeclareMathOperator{\examplemean}{MEAN}
