@@ -823,6 +823,43 @@ This initially unintuitive approach has several critical advantages:
         Alternatively, only the first occurrence can be printed.
 \end{enumerate}
 
+\subsection{bib2gls}
+
+\ctanpackage{bib2gls} is an external tool (of the same name as the package) that
+\ctanpackage{glossaries-extra} employs to convert external \texttt{*.bib} files with
+definitions for, for example, acronyms, into a \TeX{}\-/compatible format.
+During conversion, it also processes all the entries, like sorting them in whatever
+way you request.
+The sorting and filtering capabilities are very strong, and of course also Unicode
+compatible.
+A minimal \texttt{bib} file for acronyms can be as simple as:
+\begin{lstlisting}[
+    style=betweenpar,
+    language={[LaTeX]TeX}
+]
+@abbreviation{cont_int,
+    short={CI},
+    long={Continuous Integration},
+}
+\end{lstlisting}
+For concrete examples, see the files for this document at \texttt{bib/glossaries/}.
+There can be as many keys as required, with custom ones being easily created.
+Effectively, this is analogous to how bibliography entries are created.
+Thus, users of \LaTeX{} who are already familiar with that concept and format
+should have an easy time getting started with \ctanpackage{glossaries-extra}.
+Using it for mathematical symbols can look like:
+\begin{lstlisting}[
+    style=betweenpar,
+    language={[LaTeX]TeX}
+]
+@symbol{abs_temperature,
+    name={\ensuremath{T}},
+    description={absolute temperature},
+    group={roman},
+    unit={\si{\kelvin}},
+}
+\end{lstlisting}
+
 \begin{landscape}
     \section{Landscape}
 
