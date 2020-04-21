@@ -88,70 +88,7 @@ The basic tools for you to get you started.
 
 ## LaTeX
 
-LaTeX requires three things:
-
-1. of course, a source text file, ending in `.tex`. A minimal example is:
-
-   ```latex
-   \documentclass{scrartcl}
-   \begin{document}
-       Hello World!
-   \end{document}
-   ```
-
-   Note the usage of `scrartcl` over the standard `article`.
-   This is a *KOMAScript* class.
-   If you would like to know more, look below.
-   Otherwise, just use it everywhere and profit.
-
-2. a *distribution*, which are the compilers, packages and other stuff:
-
-   - *Compilers* translate high-level source code (see the first point) into a different "language".
-     In our case, the other language is PDF source code.
-     It is not human-readable and mostly gibberish, but a PDF viewer takes care of that.
-   - *Packages* are bundles of ready-made functionalities for LaTeX.
-     There are packages for basically everything.
-     The [Comprehensive TeX Archive Network (CTAN)](https://ctan.org/), a *package repository*,
-     contains basically all of them.
-
-   UNIX-based operating systems do well with [**TeXLive**](https://www.tug.org/texlive/),
-   which is available as a package for most distributions.
-   It is also available for Windows.
-   It has a yearly release schedule.
-   So there might be [bugs](https://tex.stackexchange.com/a/476742/120853) that don't get fixed
-   for a whole year.
-   Nevertheless, I can recommend it.
-
-   Another viable alternative is [**MiKTeX**](https://miktex.org/).
-   It has a rolling release model, aka updates to packages are published whenever they're deemed ready.
-   MiKTeX's GUI (*MiKTeX Console*) is pretty polished and I am using it successfully on Windows:
-
-   ![MiKTeX GUI on Windows](images/bitmaps/miktex_gui.png)
-
-   You should hit **Check for updates** at least yearly, rather biannually.
-   LaTeX is a slow world, in which files from the previous millennium might very well still compile.
-   However, a very large number of errors are caused by out-of-date packages.
-   For example, if your LaTeX distribution is ancient (anything older than, say, 3 years),
-   and you then compile a new file that installs a new package, you suddenly have that package
-   in its latest version, alongside all the old packages.
-   That will not go well long.
-
-3. an *editor*.
-
-   Here, you are free to do whatever you want.
-   I recommend [Visual Studio Code](https://code.visualstudio.com/), using its
-   [LaTeX Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop)
-   extension, which provides syntax highlighting, shortcuts and many other useful things.
-   VSCode is among the most state-of-the-art editors currently available.
-   Being usable for LaTeX is just a nice "side-effect" we can take advantage of.
-
-   For a more conventional, complete IDE (Integrated Development Environment),
-   try [TeXStudio](https://www.texstudio.org/).
-   Like [VSCode](https://github.com/microsoft/vscode),
-   it is also [open source](https://github.com/texstudio-org/texstudio).
-   TeXStudio will cater to 99% of your LaTeX needs.
-
-   If you like to live dangerously, you can even write your LaTeX in Notepad.
+Refer to the accompanying cookbook PDF file.
 
 ## git
 
@@ -225,11 +162,9 @@ The steps are as follows:
    piece of code.
    Alternatively, we can use a *tag* like `latest` and get `debian:latest`.
    That would also work just fine in most cases, and would get us the currently latest version.
-
 2. `LABEL` adds metadata to an image. It is pretty self-explanatory.
    Note that before Docker 1.6, this would have read `MAINTAINER <name>`, which has since
    been deprecated.
-
 3. `ENV` defines an environment variable, because `texlive-full`
    [will usually prompt for *Geographic Area*](https://stackoverflow.com/q/52108289).
    `DEBIAN_FRONTEND=noninteractive` suppresses this dialog creation,
@@ -237,7 +172,6 @@ The steps are as follows:
    This procedure is discouraged from in the
    [FAQ](https://docs.docker.com/engine/faq/#why-is-debian_frontendnoninteractive-discouraged-in-dockerfiles),
    but that shouldn't be relevant here.
-
 4. `RUN` executes the given command to construct the image.
    This can be all sorts of complicated magic, but we only `apt update` the package cache,
    which downloads package information from the respective sources.
@@ -245,6 +179,9 @@ The steps are as follows:
    since the build process has to be able to run autonomously) packages.
 
 #### Installed packages
+
+For more information on the LaTeX packages mentioned here, refer to the
+accompanying cookbook.
 
 1. `texlive-full` for a truly *full* LaTeX distribution.
    The resulting version of `TeXLive` (*e.g.* `2019`) depends on what is available in the
@@ -258,215 +195,23 @@ The steps are as follows:
    to install packages on an as-needed basis.
    It is quickly apparent how that gets out of hand fast:
    whenever we want to use a new package, we have to update the entire Docker image.
+   A middle ground is installing `texlive-most`
+   ([Arch repositories](https://www.archlinux.org/groups/x86_64/texlive-most/)), or
+   `texlive-latex-extra`
+   ([Debian repositories](https://tex.stackexchange.com/a/504566/120853)).
 2. `default-jre` for the `bib2gls` tool from the `glossaries-extra`
    [package](https://www.ctan.org/pkg/glossaries-extra?lang=de).
    `jre` stands for *Java Runtime Environment*, which is exactly what `bib2gls` needs.
-   `glossaries-extra` is the currently best and most modern approach to glossaries,
-   acronyms, lists of symbols, abbreviations and whatnot for LaTeX.
-   `bib2gls` is an external tool that it employs to convert external `*.bib` files with
-   definitions for, for example, acronyms, into a TeX-compatible format.
-   During conversion, it also processes all the entries, like sorting them in whatever
-   way you request.
-   A minimal `bib` file for acronyms can be as simple as:
-
-   ```latex
-   @abbreviation{cont_int,
-      short={CI},
-      long={Continuous Integration},
-    }
-   ```
-
-   See also [here](https://github.com/alexpovel/thesis_template/tree/master/glossaries).
-   Effectively, this is analogous to how bibliography entries are created.
-   Thus, users of LaTeX are already familiar with the concept and format, and should
-   have an easy time getting started with `glossaries-extra`.
-   I recommend also using it for mathematical symbols, like for example so:
-
-   ```latex
-   @symbol{abs_temperature,
-      name={\ensuremath{T}},
-      description={absolute temperature},
-      group={roman},
-      user1={\si{\kelvin}},
-   }
-   ```
-
 3. `inkscape` because the `svg` package needs it.
-   Including SVG files using (`lua`)`latex` is not very straightforward.
-   Using the [`svg`](https://ctan.org/pkg/svg?lang=en) package, the workflow is somewhat automated.
-   We keep just the original SVG files as the single source of truth, and leave the generation
-   of the `pdf` and accompanying `pdf_tex` file to the package.
-   It calls InkScape for converting the `svg` to `pdf` (or another format of choice),
-   and if the `svg` contains text to be included as LaTeX, a sidecar `pdf_tex` file is
-   generated (the default behaviour).
-   To call InkScape, it requires elevation, aka `--shell-escape`.
-   Once those files are generated, they can be treated as temporary junk and are always easily regenerated.
 
-   After years of experimentation, this seems like the best workflow.
-   The only laborious manual task left is placement of annotations onto the generated PDF
-   files (generated automatically by [`svg`](https://ctan.org/pkg/svg?lang=en) from the SVG source files).
-
-   This seems like the best deal: no text is left in the SVG files themselves.
-   Placing and debugging text in SVG files using the InkScape -> PDF+PDF_TEX route is *very*, *very* annoying.
-   This is because while InkScape offers text alignment operations (left, center, right)
-   that translate into the embedded PDF_TEX, the font cannot be known a priori while working on the SVG.
-   Neither font size (most importantly its height), nor any other font property can be assumed.
-   This also makes functions like "Resize page to drawing or selection" futile if text is
-   part of the outer elements of a drawing.
-
-   Wanting to change any text later on results in having to start InkScape instead of
-   just doing it in the TeX source.
-   The alternative is to place macros (`\newcommand*{}`) everywhere inside the original SVG
-   where content should later be placed.
-   These macros serve as labels, but are ugly, annoying, and remove the usability of the
-   plain, original SVG file (since we would first need to know what each macro stands for).
-
-   Using the `svg` package to generate plain, text-less PDFs and only later adding any
-   text/annotation in the TeX source itself seems the best of both worlds.
-   **It certainly allows both tools to do what they're good at, and no more**:
-   draw free-flowing vectors graphics with InkScape, then add text in LaTeX
-   (which can be done in `foreach` loops as well).
-   An example for this is this `tikzpicture`:
-
-   ```latex
-      \begin{tikzpicture}[
-          every node/.style={
-              font=\footnotesize
-          }
-      ]
-       \node[anchor=south west,inner sep=0] (image) at (0,0) {
-       % Specify \svgpath{} (like \graphicspath{} but for the svg package)
-       % in the preamble for ease-of-use.
-           \includesvg[width=0.8\textwidth]{compressor_rotating_stall}
-       };
-       \begin{scope}[x={(image.south east)},y={(image.north west)}]
-           \node[above, align=center] at (0.07,0.10) {%
-               \ctrw{next to}\\\ctrw{stall}\\\ctrw{\textbf{A}}%
-           };
-           \node[above, align=center] at (0.35,0.10) {%
-               \ctrw{stall}\\\ctrw{cell}\\\ctrw{\textbf{B}}%
-           };
-           \node[above, align=center] at (0.62,0.10) {%
-               \ctrw{stabilized}\\\ctrw{\textbf{C}}%
-           };
-
-           % All nodes on right side:
-           \foreach \x/\y/\ynode/\nodetext in {%
-               0.78/0.30/0.20/{Blade},%
-               0.95/0.35/0.40/{Rotor}%
-           }{%
-               \draw[annotationarrow] (\x,\y) -- (1.01,\ynode)
-                   node[align=left, right, text width=5em] {\nodetext};
-           }
-
-           % DEBUGGING COMMAND
-           % \debugtikzsvg
-       \end{scope}
-   \end{tikzpicture}
-   ```
-
-   which requires a preamble like this:
-
-   ```latex
-   \usepackage{hyperref}
-   \usepackage{siunitx}
-   \usepackage{tikz}
-       \usetikzlibrary{
-           arrows,
-           calc,
-       }
-       \tikzset{
-           annotationarrow/.style={%
-               % A style intended to point a line with a thick black dot at its end onto
-               % elements to give further explanations.
-               % Since we shorten the line START, any line using this style should originate
-               % from the place where the shortening is supposed to take place.
-               % Further explanation here:
-               % https://tex.stackexchange.com/a/11879/120853
-               % Simply call -* (or any other similar command) after annoationarrow if the
-               % direction should be inverted
-               *-,
-               shorten <=-(1.8pt + 1.4\pgflinewidth),%
-           },
-       }
-       % When placing nodes over included SVGs using Tikz, we require some help to debug the positions:
-       \newcommand*{\debugtikzsvg}{
-           % This has to be evoked within a \begin{scope}[x={(image.south east)},y={(image.north west)}]
-           % The image we invoke the grid "on top of" needs to be labelled "image"
-           \draw[help lines,xstep=0.02,ystep=0.02, opacity=0.5] (image.south west) grid (image.north east);
-           \draw[gray, thick, xstep=0.1,ystep=0.1, opacity=0.8] (image.south west) grid (image.north east);
-           %
-           \foreach \posfraction in {
-               0, 0.1, ...,1%
-           }{
-               \foreach \startpoint/\endpoint/\nodeorientation in {
-                   south west/south east/below,
-                   north west/north east/above,
-                   south east/north east/right,
-                   south west/north west/left%
-               }{
-                   \node[\nodeorientation, opacity=0.5]
-                       at ($(image.\startpoint)!\posfraction!(image.\endpoint)$) {
-                           \pgfmathparse{int(\posfraction*10)}\num{\pgfmathresult}
-                       };
-               }
-           }
-       }
-
-   \usepackage{contour}
-       \contourlength{0.1em}
-       \newcommand*{\ctrw}[1]{% Black text, white contour
-           \hypersetup{hidelinks}%
-           \contour{white}{\textcolor{black}{#1}}%
-       }%
-
-   \usepackage{svg}
-       % See also:
-       % https://tex.stackexchange.com/a/158612/120853. pdftexcmds package etc. no longer
-       % seems necessary; svg package documentation states that it is a dependency,
-       % but done automatically. https://tex.stackexchange.com/a/74693/120853
-
-       % Build failed on my system due to lack of the 'canberra' module, see for a fix:
-       % https://askubuntu.com/a/872397/978477
-
-       % Running the document to generate the PDF and PDF_TEX file from the original SVG
-       %  will require SHELL ESCAPE (--shell-escape).
-       % However, after the auxiliary images have been created, they only need to be input;
-       % shell-escape will no longer be required.
-       \svgpath{images/vectors/}
-       \svgsetup{
-           inkscapepath=svgsubdir,% Put into subdirectory of where original SVG was found
-           % In most cases, we include SVGs that contain no text, then add it in a
-           % tikzpicture overlay. Therefore, don't generate *.pdf_tex file:
-           inkscapelatex=false,
-       }
-   ```
-
-   The result can look like:
-
-   ![Example usage of `svg` package with `tikz`](images/bitmaps/svg_tikz_example.png)
-
-   To place the labels, there is a debug mode using `\debugtikz`:
-
-   ![Debuging of `svg` package with `tikz`](images/bitmaps/svg_tikz_example_debug.png)
-
-   All this while the base vector graphic file at
-   `images/vectors/compressor_rotating_stall.svg` contains no text at all:
-
-   ![Base vector graphic file](images/vectors/compressor_rotating_stall.svg)
-
-   This is very conveninent indeed, since we can now do everything in `tikz` and basically
-   never have to revisit the base SVG file, unless the *graphic itself* changes.
-   All the labels stay in the `tex` source and are therefore also manageable through `git`.
-   Lastly, the required PDFs and PDF_TEXs are only generated at build-time on the server,
-   and afterwards discarded.
+   Using that package, the required PDFs and PDF_TEXs are only generated at build-time
+   on the server, and afterwards discarded.
    If you work locally, they will be kept in `images/vectors/svk-inkscape/`, so that they
-   don't have to be regenerated every time.
-   This is somewhat important since **PDFs are binary and should never occur in a git repository**.
+   do not have to be regenerated each time.
+   This is somewhat important since **PDFs are binary and should not occur in git repositories**.
    Git can only accept PDFs as single blobs and cannot diff them properly.
-   If git cannot efficiently store only the *changes* between two versions of a file, like it
-   can with text-based ones, the repository might absolutely explode in size, since each
-   PDF revision will be stored at its full size.
+   If git cannot efficiently store only the *changes* between two versions of a file,
+   like it can with text-based ones, the repository might absolutely explode in size.
    That is not a proper usage of git.
    It works, but should be avoided.
 
@@ -475,7 +220,8 @@ The steps are as follows:
    So next to *Markdown* and *LaTeX*, a *third* markup language!
    We don't really care for that though, other than that it means that
    *SVGs are source-controllable (to an extent) through git*.
-   A nice bonus, further strengthening the argument of *only* using plain SVGs in the repository.
+   A nice bonus, further strengthening the argument of *only* using plain SVGs in the
+   repository.
 4. `gnuplot` for `contour gnuplot` commands for `addplot3` in `pgfplots`.
    So essentially, an external add-on for the magnificent `pgfplots` package.
    Being an external tool, `gnuplot` also requires `shell-escape`.
@@ -775,7 +521,7 @@ Hopefully, it spares you some despair.
   >
   > ends with
   >
-  > \input{spectra.data.tex}
+  > \\input{spectra.data.tex}
   >
   > which generates a missing file error if the package is used, the data file
   > is on ctan but it's misplaced in texlive as

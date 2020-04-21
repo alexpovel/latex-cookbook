@@ -71,6 +71,12 @@ These are mainly handled by the packages:
         An example for annotations (with loops) is shown in \cref{fig:bitmap_tikz}.
         All other graphics that are neither bitmaps nor Ti\textit{k}Z graphics are
         handled using the \ctanpackage{svg} approach.
+
+        All of this is very convenient indeed, since we can now do everything in
+        \LaTeX{} and \ctanpackage{tikz} and basically never have to revisit the base
+        \abb{scalable_vector_graphics} file, unless the graphic itself changes.
+        All the labels stay in the \LaTeX{} source and are therefore also manageable
+        through \texttt{git}.
     \item[\ctanpackage{floatrow}]
         A notable feature is the capability for captions the same width as the
         float they are attached to.
