@@ -545,6 +545,23 @@ For more Docker images for LaTeX, see:
 - [aergus/dockerfiles](https://github.com/aergus/dockerfiles)
 - [Building a LaTeX Docker image](https://gordonlesti.com/building-a-latex-docker-image/)
 
+#### Equivalent Windows Install
+
+To get the same, or at least a similar environment running on Windows,
+the elements can be installed individually:
+
+1. [MiKTeX](https://miktex.org/download); for a more closer match, install
+   [TeXLive](https://www.tug.org/texlive/windows.html) instead
+2. [Java Runtime Environment](https://www.java.com/en/download/)
+3. [InkScape](https://inkscape.org/release)
+4. [gnuplot](https://sourceforge.net/projects/gnuplot/files/latest/download)
+
+These are required to compile the LaTeX document.
+If InkScape and gnuplot ask to put their respective binaries into the `$PATH`
+environment variable, hit yes.
+If they do not, add the path yourself to the directory containing the binaries
+(`.exe`) in `Edit environment variables for your account -> Path -> Edit... -> New`.
+
 ### Enable CI Runner for the project
 
 To build anything, we need someone to build for us.
