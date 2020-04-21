@@ -2156,14 +2156,15 @@
     \DeclareSIUnit{\atmosphere}{atm}%
     \DeclareSIUnit{\partspermillion}{ppm}%
 
-    % TODO
     % Unit qualifiers, i.e. subscripts.
     % We already have a dedicated system (bib file with glossaries-extra) for subscripts
     % for symbols, so use those (just format, don't index) also for units here.
-    \DeclareSIQualifier{\normzustand}{\glsfmtname{sub.normzustand}}
-    \DeclareSIQualifier{\trockeneluft}{\glsfmtname{sub.trocken}\glsfmtname{sub.luft}}% for moist air context
-    \DeclareSIQualifier{\elektrisch}{\glsfmtname{sub.elektrisch}}
-    \DeclareSIQualifier{\lufttrocken}{lftr}% for fuel/air context
+    \DeclareSIQualifier{\dryair}{% for moist air context
+        \glsfmtname{sub.dry}\glsfmtname{sub.air}%
+    }
+    \DeclareSIQualifier{\water}{%
+        \glsfmtname{sub.water}%
+    }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

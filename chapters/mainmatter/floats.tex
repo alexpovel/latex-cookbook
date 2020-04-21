@@ -811,6 +811,251 @@ Plotting from a Ti\textit{k}Z function is demonstrated in
     }%
 \end{figure}
 
+\paragraph{Contour Plots}
+Contour plots are too much to handle for \ctanpackage{pgfplots} itself.
+This is owed to the limitations of the underlying \TeX{} engine.
+What the math and computation engine of \ctanpackage{pgfplots} does is amazing,
+but in the end, \TeX{} is a typesetting system, not a general\-/purpose programming
+language.
+However, \ctanpackage{pgfplots} has an option to delegate computations to the
+external \texttt{gnuplot} tool.
+In analogy to \ctanpackage{svg}, using it requires \texttt{gnuplot} itself to be
+installed and on the \verb|$PATH|.
+\Cref{fig:mollier_diagram} shows an example for a plot entirely specified in the
+\LaTeX{} source.
+All the functions required are defined using \ctanpackage{pgfplots} functionalities!
+\enquote{Only} the computation itself is outsourced to \texttt{gnuplot}.
+The resulting plot is two\-/dimensional, but the underlying logic is
+three\-/dimensional, where one dimension was reduced, forming contours.
+This is where the complexity resides.
+The entire plot is just 200 lines of code, with really only half that being
+lines that effectively do something useful.
+
+\begin{figure}
+    \ffigbox[\textwidth]{
+        \caption[%
+            \glsfmtname{name.richard_mollier} diagram for humid air as an example
+            for \texttt{gnuplot}%
+        ]{%
+            \name{richard_mollier} diagram for humid air as an example
+            for \texttt{gnuplot}.
+            The entire source code required (functions \iecfeg{etc.}) is in the
+            \LaTeX{} source%
+        }
+        \label{fig:mollier_diagram}
+    }{
+        \begin{tikzpicture}
+            % Moving the grid lines behind our annotation nodes.
+            % Else, the grid is drawn over the annotation text, which looks terrible.
+            % The layer set has to be called with 'set layers' later on.
+            % Code 'borrowed' from https://tex.stackexchange.com/a/456905/120853
+            \pgfplotsset{
+                /pgfplots/layers/Bowpark/.define layer set={
+                    axis background,axis grid,main,axis ticks,axis lines,axis tick labels,
+                    axis descriptions,axis foreground
+                }{/pgfplots/layers/standard},
+            }
+            \begin{axis}[
+                regularplot,
+                %
+                width=0.95\textwidth,
+                height=0.4\textheight,
+                %
+                set layers=Bowpark,
+                %
+                every axis title/.append style={%
+                    at={(0.5,1.1)},% Move above legend
+                    anchor=south,%
+                    font=\footnotesize%
+                },
+                %
+                xlabel={\glsdesc{sym.moisture_content}},
+                x unit={\glsunit{sym.moisture_content}},
+                ylabel={Temperature},
+                y unit={\degreeCelsius},
+                %
+                % Not displayed when viewing contour plot (view={0}{90}),
+                % but maybe useful for debugging when viewing the 3d surface plot
+                % at an angle
+                zlabel={\glsdesc{sym.relative_humidity}},
+                z unit={--},
+                %
+                title={% Print title depending on what ambient pressure was specified down below
+                    \pgfkeys{/pgf/fpu=true}% https://tex.stackexchange.com/a/36189/120853
+                    \pgfkeys{/pgf/fpu/output format=fixed}
+                    \pgfmathparse{AmbientPressure/1e5}
+                    %
+                    For \SI[round-mode=figures, round-precision=1]{\pgfmathresult}{\bar}
+                    air pressure.%
+                    %
+                    \pgfkeys{/pgf/fpu=false}
+                },
+                %
+                variable=MoistureContent,% New name for default 'x' variable for unambiguity
+                variable y=Temperature,% New name for default 'y' variable for unambiguity
+                domain=0:20,% Moisture content range in g per kg
+                domain y=-5:30,% Temperature range in degC
+                %
+                % Name space using 'contour/' to apply to all contour plots:
+                contour/contour label style={
+                    every node/.append style={text=black}
+                },
+                %
+                % Default is 70pt. High value pushes them off to one side (HACKY;
+                % see https://tex.stackexchange.com/q/443508/120853 and
+                % https://tex.stackexchange.com/q/88031/120853)
+                contour/label distance=10*70pt,
+                %
+                % point meta settings are not required for contour plotting.
+                % point meta min=0,% Starting z value for color map scale
+                % point meta max=1,% Ending z value for color map scale
+                %
+                view={0}{90},% View contour plot 'from above'
+                % view={90}{0},% Debugging
+                % view={0}{0},% Debugging
+                %
+                declare function={%
+                    % No empty lines allowed in here.
+                    % All equations for constant material constants like c_p.
+                    %
+                    AmbientPressure = 1e5;% Ambient, overall air pressure in Pascal
+                    %
+                    Buck(\Temperature) =
+                        % Units: T in degC, Water Vapour Pressure result according
+                        % to Buck in Pascal
+                        611.21 * exp(
+                            (18.678 - (\Temperature / 234.5) )
+                            *
+                            (\Temperature / (\Temperature + 257.14) )
+                        );
+                    %
+                    Relative_Humidity(\MoistureContent,\Temperature) =
+                        % Relative humidity phi as a fraction 0..1, with
+                        % T (temperature) in degC and x (moisture content) in g/kg
+                        AmbientPressure
+                        *
+                        \MoistureContent
+                        /
+                        (
+                            1000 * (
+                                Buck(\Temperature)
+                                *
+                                (\MoistureContent/1000 + 0.622)
+                            )
+                    );
+                    %
+                    Saturation_Moisture_Content(\Temperature) =
+                        % Moisture content at saturation (phi = 1), with T in degC
+                        0.622
+                        *
+                        Buck(\Temperature)
+                        /
+                        (
+                            AmbientPressure - Buck(\Temperature)
+                    );
+                    %
+                    Dry_Air_Enthalpy(\MoistureContent,\Temperature) =
+                        % Enthalpy of dry air with conditional expressions, so that
+                        % this is valid for both the unsaturated as well as 'foggy'
+                        % (moisture content above saturation, but temperatures above
+                        % freezing, so just vapour and liquid present) area
+                        1.0045 * \Temperature
+                        +
+                        min(
+                            (\MoistureContent/1000),
+                            Saturation_Moisture_Content(\Temperature)
+                        )
+                        *
+                        (
+                            1.86 * \Temperature + 2500
+                        )
+                        +
+                        max(
+                            0,
+                            (
+                                \MoistureContent/1000
+                                -
+                                Saturation_Moisture_Content(\Temperature)
+                            )
+                        )
+                        *
+                        4.19 * \Temperature;
+                },
+            ]
+                % Add the contour plots:
+                \addplot3+ [
+                    % surf,
+                    ultra thick,
+                    forget plot,% Required for legend to work
+                    contour gnuplot={
+                        levels={0.1, 0.5, 1},
+                        draw color=rdylbu5,
+                    },
+                ] {Relative_Humidity(MoistureContent, Temperature)};
+                \addlegendimage{color=rdylbu5, ultra thick}
+                \addlegendentry{Relative Humidity}
+                %
+                \addplot3+ [
+                    % surf,
+                    ultra thick,
+                    dashdotted,
+                    forget plot,
+                    contour gnuplot={
+                        levels={20, 40, 60},
+                        draw color=rdylbu2,
+                    },
+                ] {Dry_Air_Enthalpy(MoistureContent, Temperature)};
+                %
+                \addlegendimage{color=rdylbu2, ultra thick, dashdotted}
+                \addlegendentry{%
+                    Specific Enthalpy in \si{\kilo\joule\per\kilogram\dryair}%
+                }
+
+                % Add nodes and connect them. Connect the one we are currently
+                % drawing to the previous one.
+                % x and y coordinates are moisture content and temperature respectively
+                \foreach [count=\i, remember=\i as \previousi]
+                    \MoistureContent/\Temperature/\nodetext/\nodeorientation in {
+                        1.8/3/{Ambient}/right,
+                        1.8/27/{Preheated}/{above, text width=6em},
+                        8.0/11/{Moisturized}/right,
+                        8.0/26/{Inlet}/above,
+                        9.0/21/{Room = Outlet}/{below right}%
+                }{%
+                    % Use edef to control node expansion within axis environment.
+                    % Expand all stuff that is only present in the loop
+                    \edef\temp{\noexpand\coordinate (LABELDOT_\i) at
+                        (\MoistureContent, \Temperature);}
+                    \temp
+
+                    \edef\temp{\noexpand\node[
+                        \nodeorientation,
+                        align=center,
+                        fill=white,
+                        inner sep=1pt,
+                        rounded corners,
+                        outer sep=0.5em,
+                        font=\noexpand\small
+                    ] at (LABELDOT_\i) {\nodetext};}
+                    \temp
+
+                    % After the first one, start connecting backwards.
+                    \ifnum \i > 1
+                        \edef\temp{
+                            \noexpand\draw[
+                                *<-*,
+                                ultra thick,
+                                shorten <>={-(1.8pt + 1.4\pgflinewidth)}
+                            ] (LABELDOT_\i) -- (LABELDOT_\previousi);
+                        }
+                        \temp
+                    \fi
+                }
+            \end{axis}
+        \end{tikzpicture}
+    }
+\end{figure}
+
 \subsubsection{Importing CSV}
 
 Often, one wants to plot data from files.
