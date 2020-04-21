@@ -129,7 +129,7 @@
     \definecolor{HotFluid}{RGB}{255, 128, 128}% 255/128/128 is same as 'red!50'
 
     % Dark blue link color:
-    \definecolor{darklink}{HTML}{282368}%
+    \definecolor{darklink}{RGB}{48, 62, 116}%
 
     % From colorbrewer's RdYlBu: from red (1) to blue (6)
     \definecolor{rdylbu1}{RGB}{215,  48,  39}%
@@ -2178,7 +2178,7 @@
         % don't specify manually
         colorlinks=true,% No ugly frames, but still colored
         allcolors=darklink,%
-        hidelinks,% Toggle here!
+        % hidelinks,% Toggle here!
         plainpages=false,%
         pdfcreator={
             LaTeX with hyperref,
