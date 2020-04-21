@@ -1,10 +1,89 @@
 \chapter{Float Features}
 
 Examples for floats were already shown in \cref{fig:censorbox,tab:main_font_examples}.
-These are handled by the packages \ctanpackage{caption} and \ctanpackage{floatrow}.
-A notable feature is the capability for captions the same width as the float they are attached to.
-This tends to look much tighter and tidier, see
-\cref{fig:wide_caption,fig:tighter_caption} for a comparison.
+These are mainly handled by the packages:
+\begin{description}
+    \item[\ctanpackage{caption}]
+        The base package providing customizations for the caption text, for example
+        automatic ending periods, which can be toggled globally.
+    \item[\ctanpackage{svg}]
+        Including \abb{scalable_vector_graphics} files using \LaTeX{}, or in this
+        case \hologo{LuaLaTeX}, is not very straightforward.
+        In fact, it is anything but: \abb{scalable_vector_graphics} files cannot
+        be included directly at all and intermediate steps are needed.
+
+        Using the \ctanpackage{svg} package, the workflow is somewhat automated.
+        Only the original \abb{scalable_vector_graphics} files are kept as the
+        \abb{single_source_of_truth}, and the generation of the
+        \abb{portable_document_format} and accompanying \verb|.pdf_tex| files
+        are left to the package.
+        It calls InkScape for converting the \abb{scalable_vector_graphics} to
+        \abb{portable_document_format} (or another format of choice), and if the
+        \abb{scalable_vector_graphics} contains text to be included as \LaTeX{},
+        a sidecar \verb|.pdf_tex| file is generated (the default behavior).
+        To call InkScape, two requirements have to be met:
+        \begin{enumerate}
+            \item elevation aka \texttt{--shell-escape} is required to write
+                external files, and
+            \item InkScape has to be on the \verb|$PATH|, that means installed and
+                subsequently registered.
+                This is automatically done for Linux.
+                If it is not done automatically on Windows, navigate to
+                \emph{Edit the system environment variables} and add the directory
+                containing \texttt{inkscape.exe} to the variable.
+        \end{enumerate}
+        Once the files are generated, they can be treated as temporary junk and are
+        always easily regenerated from the source \abb{scalable_vector_graphics}.
+
+        After years of experimentation, this seems like the best workflow.
+        The only laborious manual task left is placement of annotations onto the
+        generated \abb{portable_document_format} files.
+        This seems like the best deal: no text is left in the
+        \abb{scalable_vector_graphics} files themselves.
+        Placing and debugging text in \abb{scalable_vector_graphics} files using
+        the InkScape \textrightarrow{} \verb|PDF+PDF_TEX| route is \emph{very, very}
+        annoying.
+        This is because while InkScape offers text alignment operations
+        (left, center, right) that translate into the embedded \verb|PDF_TEX|,
+        the font cannot be known a priori while working on the
+        \abb{scalable_vector_graphics}.
+        Neither font size (most importantly its height), nor any other font
+        property can be assumed.
+        This also makes functions like \emph{Resize page to drawing or selection}
+        futile if text is part of the outer elements of a drawing.
+
+        Wanting to change any text later on results in having to start InkScape
+        instead of just doing it conveniently in the \LaTeX{} source.
+        The alternative is to place macros (\verb|\newcommand*{}|) everywhere
+        inside the original \abb{scalable_vector_graphics}, where content should
+        later be placed.
+        These macros serve as labels, but are ugly, annoying, and remove the
+        usability of the plain, original \abb{scalable_vector_graphics} file
+        (since we would first need to know what each macro stands for).
+
+        Using the \ctanpackage{svg} package to generate plain, text\-/less
+        \abb{portable_document_format} and only later adding any
+        text or annotation in the \LaTeX{} source itself seems the best of both
+        worlds.
+        \textbf{It certainly allows both tools to do what they're good at, and no more}:
+        draw free\-/flowing vectors graphics with InkScape, then add text in
+        \LaTeX{} (which can be done in \verb|\foreach| loops as well).
+        An example for annotations (with loops) is shown in \cref{fig:bitmap_tikz}.
+        All other graphics that are neither bitmaps nor Ti\textit{k}Z graphics are
+        handled using the \ctanpackage{svg} approach.
+    \item[\ctanpackage{floatrow}]
+        A notable feature is the capability for captions the same width as the
+        float they are attached to.
+        This tends to look much tighter and tidier, see
+        \cref{fig:wide_caption,fig:tighter_caption} for a comparison.
+
+        Other features are automatic centering of floats, automatic positioning
+        of captions (tables on top, figures below, independent of where the
+        \verb|\caption| command occurs in the source), multiple floats and
+        captions on the side.
+        Depending on the aspect ratio of the image, positioning the caption besides
+        the figure can look (subjectively) pretty, see \cref{fig:sidecap}.
+\end{description}
 
 \begin{figure}\ContinuedFloat*% Floats can be "continued" across pages like this
     % Conventional figure-syntax

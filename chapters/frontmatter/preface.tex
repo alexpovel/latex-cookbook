@@ -1,0 +1,141 @@
+\addchap{Preface}
+
+This document is not a beginner guide.
+There is a wide choice of those out there already, both free and paid for.
+However, what is lacking is a collection of modern, or even at least current,
+best practices.
+If you scouted through package documentations and
+\href{https://tex.stackexchange.com/}{StackExchange}
+long enough, you would eventually get an idea of what is current, idiomatic \LaTeX{}
+and what is not.
+This is how I learned \LaTeX{} too, so I cannot recommend any useful beginner books.
+You might want to check out \href{https://www.overleaf.com/}{Overleaf} though,
+an online \LaTeX{} editor%
+\footnote{%
+    I do not recommend using online editors.
+    You are putting your hard work onto some remote, foreign server, relying on
+    their ongoing availability and forfeiting the chance of understanding \LaTeX{},
+    in case you have to continue locally.
+    Theses containing confidential material should also not be hosted externally.
+}
+with a large knowledge database.
+
+This document is an attempt at collecting best practices
+--- or at least, useful approaches ---
+and pointing out the old ones they could, and often should, replace.
+More than most other languages, the \LaTeX{} code in circulation world wide is
+quite aged.
+While that code does not necessarily get \emph{worse}, it also does not exactly
+age like cheese and wine would.
+
+\paragraph{Source Code}
+This document is meant to be read side\-/by\-/side with its source code.
+That is why there is almost no source code in the printed output itself.
+If you are curious how a certain output is achieved, navigate to the source code
+itself.
+This approach was chosen since, plainly, code does not lie, while annotations and
+comments might.
+So while the printed output will always remain true to its actual source code,
+duplicating that source code so it can be read in the printed output directly
+is just another vector for errors to creep in.
+
+\paragraph{Beginning Prerequisites}
+Since this document will probably still be read by people new to \LaTeX{}, there
+will be a short description on how to get started below.
+\LaTeX{} requires three things:
+\begin{enumerate}
+    \item of course, a source text file, ending in \texttt{.tex}.
+        A minimal example is:
+
+        \begin{lstlisting}[
+            style=betweenpar,
+            language={[LaTeX]TeX},
+        ]
+            \documentclass{scrartcl}
+            \begin{document}
+                Hello World!
+            \end{document}
+        \end{lstlisting}
+       Note the usage of \texttt{scrartcl} over the standard \texttt{article}.
+       This is a \ctanpackage{koma-script} document class.
+       If you would like to know more, more on that later.
+       Otherwise, just use it everywhere and profit.
+    \item a \emph{distribution}, which are the compilers, packages and other
+        goodies like fonts:
+        \begin{itemize}
+            \item \emph{Compilers} translate high\-/level source code (see the
+                first point) to a different \enquote{language}.
+                In our case, the other language is \abb{portable_document_format}
+                source code.
+                It is not human\-/readable and mostly gibberish, but a
+                \abb{portable_document_format} viewer takes care of that.
+            \item \emph{Packages} are bundles of ready\-/made functionalities for
+                \LaTeX{}.
+                There are packages for basically everything.
+                The \href{https://ctan.org/}{\abb{comprehensive_tex_archive_network}},
+                a \emph{package repository}, contains basically all of them.
+        \end{itemize}
+       UNIX-based operating systems do well with
+       \href{https://www.tug.org/texlive/}{TeXLive},
+       which is available as a package for most distributions.
+       It is also available for Windows.
+       It has a yearly release schedule.
+       So there might be \href{https://tex.stackexchange.com/a/476742/120853}{bugs}
+       that do not get fixed for a whole while.
+       Nevertheless, I can recommend it.
+
+       Another viable alternative is \href{https://miktex.org/}{MiKTeX}.
+       It has a rolling release model, aka updates to packages are published
+       whenever they are deemed ready.
+       MiKTeX's \abb{graphical_user_interface} (the \emph{MiKTeX Console}) is pretty
+       polished and usable, see \cref{fig:miktex_gui}.
+
+       \begin{figure}
+            \ffigbox[\FBwidth]{%
+                \caption[%
+                    % Do not use regular glossaries-commands in captions (or
+                    % section headers etc.): if they occur in the LoC/LoT etc.,
+                    % they will be expanded there already, which is unwanted.
+                    MiKTeX \glsfmtlong{abb.graphical_user_interface} on Windows%
+                ]{%
+                    MiKTeX \abb{graphical_user_interface} on Windows%
+                }%
+                \label{fig:miktex_gui}%
+            }{%
+                % Having issued \graphicspath globally, we do not have to specify
+                % the full path here. Not even a file extension is necessary.
+                \includegraphics[width=0.8\textwidth]{miktex_gui}
+            }
+       \end{figure}
+
+       You should hit that juicy \emph{Check for updates} at least yearly, rather
+       biannually.
+       \LaTeX{} is a slow world, in which files from the previous millennium might
+       very well still compile and look fine.
+       However, a very large share of errors are caused by out\-/of\-/date packages.
+       For example, if your \LaTeX{} distribution is ancient (anything older than,
+       say, three years), and you then compile a new file that installs a new
+       package, you suddenly have that package in its latest version, alongside
+       all the old packages.
+       That will not go well long.
+    \item of course, an \emph{editor}.
+
+       Here, you are free to do whatever you want.
+       I recommend \href{https://code.visualstudio.com/}{Visual Studio Code}, using its
+       \href{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}%
+       {\LaTeX{} Workshop} extension, which provides syntax highlighting, shortcuts
+       and many other useful things.
+       VSCode is among the most state\-/of\-/the\-/art editors currently available.
+       Being usable for \LaTeX{} is just a nice \enquote{side\-/effect} we can take
+       advantage of.
+
+       For a more conventional, complete \abb{integrated_development_environment},
+       try \href{https://www.texstudio.org/}{TeXStudio}.
+       Like VSCode, it is also
+       \href{https://github.com/texstudio-org/texstudio}{open source}.
+       TeXStudio will cater to \SI{99}{\percent} of your \LaTeX{} needs.
+
+       If you like to live dangerously, you can even write your \LaTeX{} in Notepad.
+        Vim is not mentioned here because its users will probably have skipped this
+        section\dots{}
+\end{enumerate}
