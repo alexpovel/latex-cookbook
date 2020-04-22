@@ -3,19 +3,31 @@ title: "LaTeX, GitLab and Continuous Integration"
 author: [Alex Povel]
 date: "2020"
 subject: "Presenting the advantages and a workflow using LaTeX and GitLab"
-keywords: [LaTeX, GitLab, CI, Markdown]
+keywords: [LaTeX, GitLab, CI, CD, Markdown]
 lang: "en"
 titlepage: true
 toc: true
 colorlinks: true
 ...
 
-# A Cookbook for LaTeX with git
+# A LaTeX Cookbook, git and Continuous Integration
 
-The `beamer` (a LaTeX `documentclass` for presentations) PDF document of this repository
-is supposed to explain the *Why*, as in *Why is using Git(Lab) for LaTeX (and other things) useful?*,
-while this README is supposed to dig into the *How*, as in *How can you get started with it?*.
+This [repository](https://collaborating.tuhh.de/cap7863/latex-git-cookbook)
+contains two documents:
 
+1. This README in Markdown format.
+   Using `pandoc` with the *Eisvogel* template (more on that later), it is converted
+   into a PDF and made available for download.
+
+   The README covers git and Continuous Integration.
+2. A [LaTeX document](cookbook.tex), usable as a cookbook (different "recipes" to
+   achieve various things in LaTeX) and also as a template.
+
+   The LaTeX Cookbook PDF covers LaTeX-specific topics.
+
+## git
+
+That being said, onto git.
 Eventually, following all the steps, a number of advantages will come to light:
 
 - [SSOT](https://en.wikipedia.org/wiki/Single_source_of_truth): a *Single Source Of Truth*
@@ -75,26 +87,59 @@ Eventually, following all the steps, a number of advantages will come to light:
   Therefore (provided that git is used correctly):
 
   1. Duplicate files are gone,
-  2. The art of creative file naming will finally be forgotten,
+  2. The art of cumbersome file naming will finally be forgotten,
   3. Old stuff can be safely deleted; this cleans up the working tree and makes it clear which files are no longer needed.
      Only the currently needed files are visible, the rest is history.
-- 
+- File versioning and the ability to exactly match outputs (PDFs) to the source code
+  that generated them.
+- Accelerated bug fixing through `git bisect`, a binary search algorithm that helps
+  pinpoint commits (stages of development) that introduced regressions.
+- Collaboration: each contributor has a version of the source on their local machine.
+  Adjustments are made there, and sent to a central, online repository if they are
+  considered ready to be published.
+  Git can also be used in a distributed fashion (its original strong suit), but we
+  assume a remote repository on GitLab.
 
-Advantages/Disadvantages
+  Developers can then also fetch the latest changes from the remote and incorporate
+  them into their local copy.
+- The remote repository also serves as a back-up solution.
+  So do all the distributed local copies.
+  At all points, there will be a workable copy somewhere.
+  In general, it is extremely hard to lose data using git.
 
-# Basics
+## Git(Lab) and Continuous Delivery
 
-The basic tools for you to get you started.
+GitLab is a platform to host git repositories.
+Projects on there can serve as git remotes.
+In this sense, it is like GitHub, the first large website to offer such a service.
+It is still the largest today.
+We use GitLab here because <https://collaborating.tuhh.de/> is an *instance* of
+GitLab and therefore freely available to university members.
 
-## LaTeX
+GitLab offers various features for each project.
+This includes a Wiki, an issue tracker and pull request management.
+Pull requests are requests from outside collaborators who have *forked* and
+subsequently worked on a project.
+Forking projects refers to creating a full copy of them in their own user space.
+As such, they can then work on it, or do whatever else they want.
+If for example they add a feature, their own copy is now ahead of the original by
+that feature.
+To incorporate the changes back to the original, the original repository's maintainers
+can be *requested* to *pull* in the changes.
+This way, anyone can collaborate and help, without ever interfering with the main
+development in the original.
 
-Refer to the accompanying cookbook PDF file.
-
-## git
-
-There is no *GitLab* (or *GitHub* for that matter) without *git*.
-
-## Git(Lab) and Continuous Integration
+**Continuous Delivery** refers to continuously shipping out the finished "product".
+In this case, these are the compiled PDFs.
+This is done using Docker containers.
+The advantages are that all collaborators no longer rely on their local toolchain,
+but on a unified, common one that was agreed upon.
+If LaTeX documents become very long, full compilation runs can take dozens of minutes.
+This is outsourced and silently done on the remote servers, if Continuous Delivery
+is used.
+As such, for example, every `git push` to the servers triggers a *pipeline* which
+compiles the PDF and offers it for download afterwards.
+The last part could be called *Continuous Deployment*, albeit a very basic version.
 
 ### Docker
 
@@ -293,7 +338,7 @@ environment variable, hit yes.
 If they do not, add the path yourself to the directory containing the binaries
 (`.exe`) in `Edit environment variables for your account -> Path -> Edit... -> New`.
 
-### Enable CI Runner for the project
+### Enable Runner for the project
 
 To build anything, we need someone to build for us.
 GitLab calls these build-servers *runners*.
@@ -427,7 +472,7 @@ https://collaborating.tuhh.de/%{project_path}/-/jobs/artifacts/dev/raw/<filename
 
 # Possible issues and pitfalls
 
-Many nights were lost over issues involving GitLab CI, but also plain LaTeX.
+Many nights were lost over issues involving GitLab CI/CD, but also plain LaTeX.
 Here is a non-exhaustive list --- a bit like a gallery of failure --- of the most common ones.
 Hopefully, it spares you some despair.
 
@@ -551,100 +596,3 @@ These are valid not only for LaTeX files, but most text-based source files:
   Suddenly, you would have to search for both versions to find all inline-math.
   So stay consistent. If you work on pre-existing documents, use the established style.
   If you change it, change it fully, and not just for newly added work.
-
-### LaTeX-specific hints
-
-- For the love of all that is holy, use [KOMA-Script](https://ctan.org/pkg/koma-script?lang=en).
-  There are only [two reasons](https://tex.stackexchange.com/a/73146/120853) why you would not,
-  both of which usually don't apply.
-  KOMAScript replaces the conventional `documentclass`es like so:
-  - `article` becomes `scrartcl`
-  - `report` becomes `scrreprt`
-  - `book` becomes `scrbook`
-  - there is also a `letter` class, that will make writing letters very easy.
-
-  KOMAScript will provide you with a very large host of tools and settings that work very
-  well indeed.
-  Those combine most options you would otherwise get from other packages into one convenient class.
-  Included are, among others:
-
-  - `scrlayer-scrpage` instead of `fancyhdr` for page style, header and footers etc.
-  - `tocbasic` to modify the Table of Contents and other lists
-  - `scrlttr2` for typesetting letters
-
-  The defaults of `KOMAScript` are also great (like using `a4paper` over `legal`),
-  so you can also get started without dealing with options or packages at all.
-- If you encounter either of the following:
-
-  ```latex
-  \usepackage{fontenc}
-  \usepackage{inputenc}
-  ```
-
-  then the file at hand is **outdated**.
-  Possibly not terribly so, but these two packages should at least not be used for *new* work.
-  They are [not required anymore](https://tex.stackexchange.com/q/412757/120853) in 2020,
-  using lualatex.
-- **Do not roll your own solutions --- use existing packages**.
-  The likelihood that there already exists a package for whatever problem you have at hand is quite high.
-  It ranges from the obvious, like [`biblatex` with `biber`](https://ctan.org/pkg/biblatex)
-  for a bibliography and [`siunitx`](https://ctan.org/pkg/siunitx) for physical units,
-  to the obscure, like packages for [Gregorian chant](https://ctan.org/pkg/gregoriotex)
-  or [drawing ducks](https://www.ctan.org/pkg/tikzducks).
-
-  A non-exhaustive list of problems that often occur but have excellent, existing solutions:
-
-  - **Modifying headers and footers, the Table of Contents (and other lists), chapter numbering and *much* more**:
-    [`KOMAScript` document classes and packages](https://ctan.org/pkg/koma-script).
-    This point is in bold since it is a biggie: a `documentclass` specification is mandatory in LaTeX.
-    By using it, you can do all of these things and more.
-    See also the first LaTeX-specific hint.
-
-    Especially for modifying the ToC and headers/footers, there are dozens of ugly, hacky
-    ways to achieve that.
-    `KOMAScript` does it frictionless.
-  - **referencing Figures, Tables and *whatever you want***: [`cleveref`](https://www.ctan.org/pkg/cleveref).
-    Also a biggie: it occurs in essentially all LaTeX documents
-    longer than a couple pages (which is one of the things LaTeX excels at after all).
-    `cleveref` allows you to simply write `\cref{<your label>}` and it will print the
-    correct type of what is being referenced (in your chosen language), followed by the
-    correct number, like *Figure 3.4*.
-    Plurals are also possible, like `\cref{label1,label2}`, that is a comma-separated list.
-    It will automatically print something like *Figures 3.4 to 3.8*.
-    Notice the correct plural.
-
-    For the labels, I recommend a schema similar to `fig:description_of_figure`,
-    `tab:description_of_table`, `eq:description_of_equation` and so forth.
-    This way, you will know from the label name what type you are dealing with.
-    Also works well with autocomplete.
-
-    Lastly, you can also define own labels/references for your custom numbered things.
-  - drawing (text) boxes, or highlighting equations with boxes:
-    [`tcolorbox`](https://www.ctan.org/pkg/tcolorbox) with its
-    [`\tcbhighmath` macro](https://tex.stackexchange.com/a/122952/120853).
-  - drawing plots: [`pgfplots`](https://ctan.org/pkg/pgfplots), which is based on Ti*k*Z.
-    Ti*k*Z is a general-purpose drawing framework for LaTeX.
-    As of writing this, the `pgfplots` manual has 571 pages, while `tikz` sits at 1318 (!).
-    Almost anything you would ever want to plot or draw is achievable with these two.
-  - creating a glossary: [`glossaries-extra`](https://www.ctan.org/pkg/glossaries-extra).
-  - creating a bibliography: [`biblatex`](https://ctan.org/pkg/biblatex).
-  - typesetting physical units: [`siunitx`](https://ctan.org/pkg/siunitx).
-  - always use [`microtype`](https://www.ctan.org/pkg/microtype) for fine-grained, professional-grade
-    typesetting improvements. I say *always* because I have yet to see it *not* work and *not*
-    improve (on a detailed level) the output document.
-    Just slap it into the preamble and call it a day.
-
-  Notice how all of these packages received updates within the last one to two years.
-  Having the latest and greatest is not super important in LaTeX,
-  since there is nothing security-related etc. to worry about.
-  But be mindful of old packages and avoid them as much as possible.
-  For example, old packages (think before 2010) are based on `pdflatex` and might not work
-  with `lualatex`.
-  This is not a reason to forfeit `lualatex` or even its fault!
-
-## Further reading
-
-There is a state-of-the-art (2019) LaTeX thesis template over [at GitHub](https://github.com/alexpovel/thesis_template).
-It has a long-ish README, explaining the rationale behind some LaTeX decisions.
-The template can serve as an inspiration for how modern LaTeX can look like.
-That LaTeX template and the Docker image were the basis for two books and a Master thesis.
