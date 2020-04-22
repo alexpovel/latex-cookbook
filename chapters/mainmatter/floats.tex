@@ -1130,7 +1130,7 @@ about indices or column numbers.
     }
 \end{figure}
 
-\subsection{Tikz and Text}
+\subsection{TikZ and Text}
 
 Ti\textit{k}Z content can also be intertwined with text using \verb|\tikzmark|.
 This is illustrated in \cref{eq:tikz_in_text}.
@@ -1367,15 +1367,19 @@ three\-/dimensional, curvy drawings.
 InkScape can detect edges and contrasts in bitmaps and replicate those lines in
 vector format (\texttt{Path > Trace Bitmap}).
 
-\section{Example boxes}
+\section{Example Boxes}
 
 As a special gimmick, there is an environment for examples (can also be renamed).
 It may be useless now, but you can alter it to suit your needs; the skeleton is
 there for you.
 It even has its own list, like the list of figures.
-For an example box, see \cref{ill:example}.
+For an example box, see \cref{ex:example}.
 
-\begin{example}{I am a useless box}\label{ill:example}
+\begin{example}[%
+    label={ex:example},%
+]{%
+    I am a useless box%
+}
     There can be pretty much any content in here.
     Math works --- as we can see,
     \begin{equation}
