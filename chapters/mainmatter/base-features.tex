@@ -188,10 +188,12 @@ Some display-style math examples follow.
         % This equation does not make sense.
         \brackets*{
             \sym{abs_temperature}
-            \fracderiv*{%
-                %
-            }{%
-                \sym{abs_temperature}
+            \cancelto{\num{0}}{
+                \fracderiv*{%
+                    %
+                }{%
+                    \sym{abs_temperature}
+                }
             }
             +
                 \sym{ratio_of_specific_heats}\parens*{\sym{pressure}}
@@ -215,6 +217,11 @@ Some display-style math examples follow.
             \sym{velocity}^{\num{2}}_{\text{entry}}
         }
 \end{gather}
+If these symbols are colored, it is because they are links and link coloring is on.
+This can be turned off (globally or for certain elements) in the options to
+\ctanpackage{hyperref}.
+If color is turned off, they are still hyperlinks.
+If even that is undesired, that can also be turned off in that package.
 
 \subsubsection{Symbols}
 
