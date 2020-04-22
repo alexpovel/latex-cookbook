@@ -244,23 +244,8 @@ accompanying cookbook.
       This is used by `pandoc` to convert SVGs when embedding them into the new PDF.
       This README itself contains such SVGs, it is therefore required.
 
-   The full chain in `bash` as used in the [GitLab CI config file](.gitlab-ci.yml) is then:
-
-   ```bash
-   PANDOC_TEMPLATE_URL=$(\
-       curl -s https://api.github.com/repos/Wandmalfarbe/pandoc-latex-template/releases/latest | \
-       grep "browser_download_url.*\.tar\.gz" | \
-       cut -d \" -f 4
-   )
-   # Download archive
-   wget $PANDOC_TEMPLATE_URL
-   # Unpack single file
-   tar -xf Eisvogel*.tar.gz eisvogel.tex
-   # Change that file's suffix to .latex
-   mv eisvogel.tex eisvogel.latex
-   # pandoc looks for template with .latex suffix in current dir
-   pandoc README.md --template eisvogel --number-sections -o README.pdf
-   ```
+   The full chain in `bash` can be seen in the [GitLab CI config file](.gitlab-ci.yml),
+   under the job name `get_pandoc_template`.
 
    Lastly, `pandoc` and its *Eisvogel* template draw
    [metadata from the YAML header](https://pandoc.org/MANUAL.html#metadata-variables).
@@ -279,9 +264,9 @@ accompanying cookbook.
 
    among other metadata variables.
    This info is detected and *not* rendered by many Markdown rendering engines.
-   However, GitLab sadly still picks it up.
-   So does *Eisvogel*, which uses it to fill the document with info,
-   *e.g.* the PDF header and footer.
+   However, GitLab still displays it.
+   *Eisvogel* uses it to fill the document with info, *e.g.* the PDF header and
+   footer.
 
 This concludes the Docker section.
 For more Docker images for LaTeX, see:
@@ -296,7 +281,7 @@ For more Docker images for LaTeX, see:
 To get the same, or at least a similar environment running on Windows,
 the elements can be installed individually:
 
-1. [MiKTeX](https://miktex.org/download); for a more closer match, install
+1. [MiKTeX](https://miktex.org/download); for a closer match to the Docker, install
    [TeXLive](https://www.tug.org/texlive/windows.html) instead
 2. [Java Runtime Environment](https://www.java.com/en/download/)
 3. [InkScape](https://inkscape.org/release)
@@ -314,7 +299,7 @@ To build anything, we need someone to build for us.
 GitLab calls these build-servers *runners*.
 Such a runner does not materialize out of thin air.
 Luckily, in the case of *collaborating.tuhh.de*, runner *tanis* is available to us.
-Enable it (him? her?) for the project on the [GitLab project page](.):
+Enable it (him? her?) for the project on the GitLab project homepage]:
 `Settings -> CI/CD -> Runners -> Enable Shared Runners`.
 Otherwise, the build process might get 'stuck'.
 
@@ -364,18 +349,18 @@ In the LaTeX preamble, we can then use
 ```latex
 \usepackage[pdfusetitle]{hyperref}% pdfusetitle reads from \author and \title
     \hypersetup{%
-        pdfsubject={Buch zur Vorlesung},%
         pdfcreator={LaTeX with hyperref (\GitVersion{}, \GitShortHash{})},
     }
 ```
 
 to get metadata like in the PDF above.
+Navigate to the `hyperref` line in the [class file](cookbook.cls) to the see
+current implementation.
 Note that in LaTeX, you likely used `\author{<author's name>}` and `\title{<document title>}`
 somewhere in the preamble to generate a title page.
 `hyperref`'s `pdfusetitle` option will use those values for the PDF metadata.
-`pdfsubject` is self-explanatory.
 Lastly, `pdfcreator` will fill the `Application` field we see above.
-However, `\GitVersion{}` and `\GitShortHash{}}` need to be filled.
+However, `\GitVersion{}` and `\GitShortHash{}}` need to be defined.
 These are defined earlier in the preamble:
 
 ```latex
@@ -390,53 +375,34 @@ Using the above definition, the fields will just show up as *not available* if f
 compiling locally ("at home").
 The server has a script employing `sed` (since we're using GNU/Linux there),
 specified in [.gitlab-ci.yml](.gitlab-ci.yml), that seeks `GitVersion` and `GitShortHash`
-and replaces whatever comes in the curly braces of those commands:
+and replaces whatever comes in the curly braces of those commands.
+See the `script` of the `replace_git_metadata` job in that file.
 
-```bash
-# Use `- |` for multi-line commands.
-
-# Declare associative (-A) array with predefined GitLab CI variables.
-# The keys correspond to the command names found in the LaTeX code:
-- |
-    declare -A GITINFO=(
-        [GitVersion]=$CI_COMMIT_REF_NAME
-        [GitShortHash]=$CI_COMMIT_SHORT_SHA
-    )
-
-# Iterate over array and replace the LaTeX commands,
-# e.g. \newcommand*{\GitVersion}{n.a.},
-# with
-# e.g. \newcommand*{\GitVersion}{v1.00}.
-# Use double quotes to enable variable expansion.
-# Employ and use capture group (\1) to replace current LaTeX command
-# (given by key in array) by corresponding value for that key.
-- |
-    for k in "${!GITINFO[@]}"
-        do
-            sed -i "s!\($k}{\).*}!\1${GITINFO[$k]}}!g" <filename>.tex
-        done
-```
-
-### Add 'PDF Download' Button
+### Add PDF Download Button
 
 On the top of the project page, we can add *badges*.
 That's how GitLab calls the small, clickable buttons.
-For *real* programmers, these might display code coverage and similar things.
+For *real* software developers, these might display code coverage and similar things.
 For, well... *us*, they can be used as a convenient way to download the built PDF.
-It can look like this (bottom left):
+It can look like this (center left):
 
 ![Screenshot of the PDF-Download button](images/bitmaps/pdf_download_button_gitlab.png)
 
 A little image (`svg` format) can be generated using [shields.io](https://shields.io/).
-That only needs to be done once, and if you want to reuse the existing one, here it is:
+That only needs to be done once, and if you want to reuse the existing ones, here they are:
 
-![shields.io PDF Download Badge](https://img.shields.io/badge/PDF-download-success)
+![shields.io Cookbook Download Badge](images/vectors/gitlab/Download-Cookbook-informational.svg)
+![shields.io README Download Badge](images/vectors/gitlab/Download-README-critical.svg)
+![shields.io PDF Download Badge](images/vectors/gitlab/Download-PDF-success.svg)
 
-Its URL is `https://img.shields.io/badge/PDF-download-success`.
-To add it to the project, go to:
+They have been embedded directly into the repository to not have to download them
+each time.
+They could also be embedded via their URL, for example
+<https://img.shields.io/badge/Cookbook-Download-informational.svg>.
+To add them to the project, go to:
 `Settings -> General -> Badges`.
-Give it a `Name`, enter the above URL for the `Badge image URL` (or do whatever you want here),
-and finally enter the `Link`.
+Give it a `Name`, enter the above file path or URL for the `Badge image URL`
+(or do whatever you want here), and finally enter the `Link`.
 This part is a bit tricky, since we need a dynamic URL that adapts to our path.
 For this, GitLab provides variables like `%{project_path}`.
 As such, the URL is (the hyphen in the middle is intentional):
@@ -558,7 +524,7 @@ Hopefully, it spares you some despair.
 
 These are valid not only for LaTeX files, but most text-based source files:
 
-- **For the love of God**, use `UTF-8` or higher for text encoding.
+- For the love of God, use `UTF-8` or higher for text encoding.
   Stop using `Windows 1252`, `Latin` etc.
   Existing files can be easily updated to UTF-8 without much danger for regression
   (*i.e.*, introducing errors).
@@ -573,10 +539,11 @@ These are valid not only for LaTeX files, but most text-based source files:
 - **Be consistent**. Even if you pull your own custom stuff, at least be consistent in doing so.
   This makes things predictable, the code will be easier to read, and also more easily
   changed programmatically.
-  GUN/Linux and by extension Windows using
+  GNU/Linux and by extension Windows using
   [Windows Subsystem for Linux](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)
   has a very wide range of tools that make search, and search-and-replace, and various other
   operations for plain text files easy.
+  The same is true for similar tools in IDEs.
   However, if the text is scattered and the style was mangled and fragmented into various
   sub-styles, this becomes very hard.
   For example, one person might use `$<math>$` for inline-LaTeX math, another the
