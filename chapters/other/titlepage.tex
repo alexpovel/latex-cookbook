@@ -11,12 +11,13 @@
     \setkomafont{subtitle}{\normalfont\normalsize\sffamily}
     \setkomafont{author}{\sffamily\bfseries}
     \setkomafont{publishers}{\sffamily}
+%
     % One same line as subtitle, so should look the same; inherit style:
     \setkomafont{date}{\usekomafont{subtitle}}
-
-    \newkomafont{documenttype}{\usekomafont{subtitle}\footnotesize}
-
-    \renewcommand{\maketitle}{
+%
+    \setkomafont{documenttype}{\usekomafont{subtitle}\footnotesize}
+%
+    \renewcommand{\maketitle}{%
         \begin{titlepage}
             \hfill%
             %
@@ -56,7 +57,7 @@
                 \vspace{0.2ex}% Also required for \vfill as something to 'fill against'
             \end{minipage}
         \end{titlepage}
-    }
+    }%
 }{%
     % Else: nothing; faking a 'case' environment
 }
@@ -68,11 +69,11 @@
     \setkomafont{author}{\scshape\Large}
     \setkomafont{date}{\normalfont\normalsize\sffamily}
     \setkomafont{publishers}{\scshape}
-    
-    % New font types:
+%
     % One same line as date, so should look the same; inherit style:
-    \newkomafont{documenttype}{\usekomafont{date}}
-    \renewcommand{\maketitle}{
+    \setkomafont{documenttype}{\usekomafont{date}}
+%
+    \renewcommand{\maketitle}{%
         \begin{titlepage}
             \hfill%
             %
@@ -108,7 +109,7 @@
                 \vspace{0.2ex}% Also required for \vfill as something to 'fill against'
             \end{minipage}
         \end{titlepage}
-    }
+    }%
 }{
     % Else: nothing; faking a 'case' environment
 }%

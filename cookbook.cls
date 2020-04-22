@@ -384,6 +384,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Define new font for the title page, so it is created once (\newkomafont)
+% and can later be set however often required (\setkomafont)
+\newkomafont{documenttype}{\usekomafont{subtitle}\footnotesize}
+
 % Get titlepage definition from an outside file
 \input{chapters/other/titlepage.tex}
 

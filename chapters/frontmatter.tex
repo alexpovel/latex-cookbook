@@ -12,8 +12,23 @@
 % until later. But you will be able to print the title page by printing page 'a', which
 % would otherwise overlap with page '1', aka the first actual text page.
 \pagenumbering{alph}
-\maketitle
+\maketitle% Print main title page
 \subimport{frontmatter/}{colophon}
+
+\makeatletter
+    % Switch titlepage style around
+    \ifdefstring{\cookbook@titlestyle}{book}{%
+        \renewcommand*{\cookbook@titlestyle}{thesis}%
+    }{%
+        \renewcommand*{\cookbook@titlestyle}{book}%
+    }
+    \subtitle{An alternative title page style}
+    %
+    % Run this file again, since it contains the \renewcommand definitions
+    \input{chapters/other/titlepage.tex}
+\makeatother
+
+\maketitle% Print alternative title page
 
 \frontmatter% In KOMAScript, resets pagenumber, uses Roman numerals etc.
 
