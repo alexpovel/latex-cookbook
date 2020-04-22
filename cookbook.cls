@@ -11,7 +11,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Refer to https://www.overleaf.com/learn/latex/Writing_your_own_class
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{cookbook}[2020/04/06 v1.0 cookbook class]
+\ProvidesClass{cookbook}[2020/04/22 v1.0 cookbook class]
 
 \newcommand*{\@baseclass}{scrbook}% Name of class this one is based on
 
