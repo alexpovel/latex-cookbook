@@ -1,5 +1,5 @@
 ---
-title: "LaTeX, GitLab and Continuous Integration"
+title: "LaTeX, GitLab and Continuous Delivery"
 author: [Alex Povel]
 date: "2020"
 subject: "Presenting the advantages and a workflow using LaTeX and GitLab"
@@ -10,7 +10,7 @@ toc: true
 colorlinks: true
 ...
 
-# A LaTeX Cookbook, git and Continuous Integration
+# A LaTeX Cookbook, git and Continuous Delivery
 
 This [repository](https://collaborating.tuhh.de/cap7863/latex-git-cookbook)
 contains two documents:
@@ -19,7 +19,7 @@ contains two documents:
    Using `pandoc` with the *Eisvogel* template (more on that later), it is converted
    into a PDF and made available for download.
 
-   The README covers git and Continuous Integration.
+   The README covers git and Continuous Delivery.
 2. A [LaTeX document](cookbook.tex), usable as a cookbook (different "recipes" to
    achieve various things in LaTeX) and also as a template.
 
