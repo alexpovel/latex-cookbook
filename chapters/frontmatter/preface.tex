@@ -72,10 +72,46 @@ will be a short description on how to get started below.
                 Hello World!
             \end{document}
         \end{lstlisting}
-       Note the usage of \texttt{scrartcl} over the standard \texttt{article}.
-       This is a \ctanpackage{koma-script} document class.
-       If you would like to know more, more on that later.
-       Otherwise, just use it everywhere and profit.
+        Note the usage of \texttt{scrartcl} over the standard \texttt{article}.
+        This is a \ctanpackage{koma-script} document class.
+        There are only \href{https://tex.stackexchange.com/a/73146/120853}{two reasons}
+        why you would not use that package, both of which usually do not apply.
+        \ctanpackage{koma-script} replaces the conventional \texttt{documentclass}
+        like so:
+
+        \begin{tabular}{
+            @{}
+            l
+            @{ \textrightarrow{} }
+            l
+            @{}
+        }
+            \texttt{article} & \texttt{scrartcl} \\
+            \texttt{report} & \texttt{scrreprt} \\
+            \texttt{book} & \texttt{scrbook}
+        \end{tabular}
+
+        There is also a \texttt{letter} class, making writing formal letters a walk
+        in the park.
+        \ctanpackage{komascript} will provide you with a very large host of tools
+        and settings that work very well indeed.
+        Those combine most options you would otherwise get from other packages into
+        one convenient class.
+        Included are, among others:
+        \begin{itemize}
+            \item \ctanpackage{scrlayer-scrpage} instead of \ctanpackage{fancyhdr} for
+                page styles, headers, footers \iecfeg{etc.},
+            \item \ctanpackage{tocbasic} to modify the Table of Contents and other lists,
+                and
+            \item \ctanpackage{scrlttr2} for typesetting letters.
+        \end{itemize}
+        If the document loads a \ctanpackage{koma-script} document class, these
+        packages are already available.
+        However, the \ctanpackage{koma-script} defaults are also great
+        (like using \texttt{a4paper} over \texttt{legal}),
+        so you can also get started without dealing with options or packages at all.
+        Just use it everywhere and profit.
+        A viable alternative is \ctanpackage{memoir}, though I never used that.
     \item a \emph{distribution}, which are the compilers, packages and other
         goodies like fonts:
         \begin{itemize}
