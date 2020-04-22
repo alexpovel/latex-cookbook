@@ -485,6 +485,108 @@ See for yourself in \cref{tab:mono_font_examples}.
     }%
 \end{table}
 
+\section{Language}
+
+Closely related to the previous \lcnamecref{ch:fonts_text} are the language features.
+Currently, there are two supported languages: English and German.
+See for yourself in the file responsible for the translations,
+\verb|cookbook-translations.sty|.
+It leverages the \verb|\providecaptionname{}| command from KOMA\-/Script.
+Given the name of that command, it is probably a misuse and not its purpose, but
+it worked better than its alternatives.
+
+The \ctanpackage{polyglossia} package does all the heavy lifting for this document.
+It is an alternative to the widespread \ctanpackage{babel} package.
+Note that \ctanpackage{polyglossia} requires the language to be passed to its
+\verb|\setdefaultlanguage{}| command.
+It will normally not work by just specifying a global document language.
+However, you can pass a global language to the \verb|language=| keyword in the
+options to \verb|\documentclass{cookbook}|, and it will be picked up correctly.
+
+The chosen language option will also be forwarded to various other packages, like
+\ctanpackage{enquote} for quotations and \ctanpackage{siunitx} for localization of
+numerals typesetting.
+\ctanpackage{polyglossia} will take care of all the hyphenation rules, so there
+should be no or very minimal need for manual \verb|\hyphenation{}| or \verb|\-|
+commands.
+
+The language can be switched dynamically, and all content will be adjusted, see
+\cref{tab:languages}.
+More languages can be added easily in the translations file.
+Note that the \verb|listing| type of \ctanpackage{cleveref} will only work with
+the main document language and is currently not able to be switched dynamically.
+\begin{table}
+    \ttabbox{%
+        \caption{%
+            Available languages and dynamic switching.
+            Note how the commands are language\-/dependent; no manual adjustments
+            necessary%
+        }%
+        \label{tab:languages}%
+    }{%
+        \footnotesize
+        \begin{tabular}{
+            @{}
+            *3{l}
+            p{0.15\linewidth}
+            p{0.25\linewidth}
+            @{}
+        }
+        \toprule
+            Language & Quotes & Numerals & Headers \iecfeg{etc.} & Hyphenation \\
+        \midrule
+            English &
+                % An alternative command is \textenglish, \textgerman etc.
+                % However, that command can break due to macro expansion stuff,
+                % if it contains macros and not just plain text.
+                \begin{english}\enquote{Quote!}\end{english} &
+                \begin{english}\SI{100.2}{\meter}\end{english} &
+                % polyglossia \begin{<language>} environment introduces empty line
+                % in paragraph column; remove it manually
+                \vspace{-\baselineskip}
+                \begin{english}
+                    \glossaryname{},
+                    \cref{fig:censorbox},
+                    \cref{tab:main_font_examples},
+                    \cref{ch:base-features}
+                \end{english} &
+                \vspace{-\baselineskip}
+                \begin{english}
+                    This is a random text intended to show of hyphenation and line
+                    endings in the respective language.
+                    It is therefore a bit longer, so hopefully some words will break
+                    at the word boundaries.
+                    This cannot be guaranteed however.
+                    So there is to hoping that this test shows off the hyphenation
+                    rules and capabilities put into place by \ctanpackage{polyglossia}.
+                \end{english}
+            \\
+            German &
+                \begin{german}\enquote{Zitat!}\end{german} &
+                \begin{german}\SI{100.2}{\meter}\end{german} &
+                \vspace{-\baselineskip}
+                \begin{german}
+                    \glossaryname{},
+                    \cref{fig:censorbox},
+                    \cref{tab:main_font_examples},
+                    \cref{ch:base-features}
+                \end{german} &
+                \vspace{-\baselineskip}
+                \begin{german}
+                    Dies ist ein zufälliger Text, der die Worttrennungsregeln und
+                    Satzenden der jeweiligen Sprache demonstrieren soll.
+                    Er ist daher etwas länger, sodass manche Wörter hoffentlich
+                    an den Seitenrändern gebrochen werden.
+                    Dies kann allerdings nicht garantiert werden.
+                    Wir können also nur hoffen, dass dieser Test die
+                    Silbentrennungsregeln und -fähigkeiten des \ctanpackage{polyglossia}
+                    Pakets.
+                \end{german}%
+            \\
+        \end{tabular}
+    }%
+\end{table}
+
 \section{Sectioning}
 \label{ch:sectioning}
 
