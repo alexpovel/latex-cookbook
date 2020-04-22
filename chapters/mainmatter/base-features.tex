@@ -115,6 +115,26 @@ For example:
 Notice the balanced line endings and low number of hyphenation;
 easy on the eyes and very readable.
 
+\paragraph{Old approach}
+The overwhelming majority of \LaTeX{} documents rely on the two lines
+\begin{lstlisting}[
+    style=betweenpar,
+    language={[LaTeX]TeX}
+]
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+\end{lstlisting}
+This approach is \enquote{outdated} and only required when using \hologo{pdfLaTeX}.
+Since this is what most people still do, the two packages are still required.
+However, these two packages should at least not be used for \emph{new} work anymore!
+Using \hologo{LuaLaTeX}, they are not required anymore:
+\begin{itemize}
+    \item input encoding is automatically UTF-8 (as it should be in 2020),
+    \item font encoding is also not required, since fully capable fonts are used,
+        which come with all the glyphs required.
+\end{itemize}
+The same is true for \hologo{XeLaTeX}.
+
 \subsection{Math}
 
 What often does not occur at first glance is that many documents use text and math fonts
