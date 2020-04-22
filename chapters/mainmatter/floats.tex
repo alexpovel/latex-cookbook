@@ -518,6 +518,7 @@ Packages \ctanpackage{tikz} and \ctanpackage{pgfplots} offer a vast array of fea
 A select few are presented here.
 
 \subsection{Drawing over Bitmaps}
+
 When having to rely on bitmaps, one might still want to add additional info.
 This can be done directly in \LaTeX{}, profiting from all the usual features.
 In the example here, this is of course the retaining of the text font, but also
@@ -604,6 +605,86 @@ on the graphic.
             environment%
         }
         \label{fig:bitmap_tikz}
+    }
+\end{figure}
+
+\subsection{Trees}
+
+Drawing trees is possible with \ctanpackage{forest}, see \cref{fig:tree}.
+It is a very easy package to get started with.
+Take a look at the source code.
+It is deceivingly simple, but also highly customizable.
+Note that the package is stand\-/alone, but uses Ti\textit{k}Z under the hood
+(like a lot of packages do).
+\begin{figure}
+    \ffigbox[\textwidth]{% forest does not work with \FBwidth (?)
+        \caption{Example for a tree}
+        \label{fig:tree}
+    }{
+        \footnotesize
+        \begin{forest}
+            forked edges,% Instead of direct connections, draw edges
+            for tree={%
+                    grow'=east,
+                    anchor=west,
+                    where level=0{}{calign=first},% works like {if}{else}
+                    %
+                    % Put all nodes of same level onto same tier also, aligning
+                    % them vertically:
+                    tier/.pgfmath=level(),
+                    %
+                    where level=1{font={\bfseries}}{},%
+                },%
+            % Decrease distance to only affect root-first level with s sep, see
+            % https://tex.stackexchange.com/a/188461/120853
+            [Overall Category, anchor=south, rotate=90, for children={s sep-=1em}
+                [Number One
+                    [At vero eos]
+                    [et accusamus]
+                    [et iusto]
+                ]
+                [Number Two
+                    [{odio dignissimos, ducimus}]% Escape commas
+                    [qui blanditiis]
+                    [praesentium]
+                    [voluptatum]
+                    [deleniti atque]
+                    [corrupti quos]
+                    [dolores et]
+                    [quas molestias]
+                ]
+                [Number Three
+                    [excepturi sint]
+                    [occaecati]
+                    [non provident]
+                    [similique]
+                    [sunt in culpa qui officia]
+                ]
+                [Number Four
+                    [deserunt]
+                    [mollitia
+                            [{animi, id est}]
+                            [laborum et]
+                    ]
+                ]
+                [Number Four
+                    [dolorum
+                        [fuga]
+                        [Et harum]
+                    ]
+                    [quidem
+                        [rerum facilis]
+                        [est et expedita]
+                    ]
+                ]
+                [distinctio
+                    [Nam libero]
+                    [tempore]
+                    [soluta nobis]
+                    [est eligendi]
+                ]
+            ]
+        \end{forest}
     }
 \end{figure}
 
