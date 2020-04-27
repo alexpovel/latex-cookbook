@@ -571,57 +571,60 @@ the main document language and is currently not able to be switched dynamically.
             p{0.25\linewidth}
             @{}
         }
-        \toprule
-            Language & Quotes & Numerals & Headers \iecfeg{etc.} & Hyphenation \\
-        \midrule
-            English &
-                % An alternative command is \textenglish, \textgerman etc.
-                % However, that command can break due to macro expansion stuff,
-                % if it contains macros and not just plain text.
-                \begin{english}\enquote{Quote!}\end{english} &
-                \begin{english}\SI{100.2}{\meter}\end{english} &
-                % polyglossia \begin{<language>} environment introduces empty line
-                % in paragraph column; remove it manually
-                \vspace{-\baselineskip}
-                \begin{english}
-                    \glossaryname{},
-                    \cref{fig:censorbox},
-                    \cref{tab:main_font_examples},
-                    \cref{ch:base-features}
-                \end{english} &
-                \vspace{-\baselineskip}
-                \begin{english}
-                    This is a random text intended to show of hyphenation and line
-                    endings in the respective language.
-                    It is therefore a bit longer, so hopefully some words will break
-                    at the word boundaries.
-                    This cannot be guaranteed however.
-                    So there is to hoping that this test shows off the hyphenation
-                    rules and capabilities put into place by \ctanpackage{polyglossia}.
-                \end{english}
-            \\
-            German &
-                \begin{german}\enquote{Zitat!}\end{german} &
-                \begin{german}\SI{100.2}{\meter}\end{german} &
-                \vspace{-\baselineskip}
-                \begin{german}
-                    \glossaryname{},
-                    \cref{fig:censorbox},
-                    \cref{tab:main_font_examples},
-                    \cref{ch:base-features}
-                \end{german} &
-                \vspace{-\baselineskip}
-                \begin{german}
-                    Dies ist ein zufälliger Text, der die Worttrennungsregeln und
-                    Satzenden der jeweiligen Sprache demonstrieren soll.
-                    Er ist daher etwas länger, sodass manche Wörter hoffentlich
-                    an den Seitenrändern gebrochen werden.
-                    Dies kann allerdings nicht garantiert werden.
-                    Wir können also nur hoffen, dass dieser Test die
-                    Silbentrennungsregeln und -fähigkeiten des \ctanpackage{polyglossia}
-                    Pakets.
-                \end{german}%
-            \\
+            \toprule
+                Language & Quotes & Numerals & Headers \iecfeg{etc.} & Hyphenation \\
+            \midrule
+                English &
+                    % An alternative command is \textenglish, \textgerman etc.
+                    % However, that command can break due to macro expansion stuff,
+                    % if it contains macros and not just plain text.
+                    \begin{english}\enquote{Quote!}\end{english} &
+                    \begin{english}\SI{100.2}{\meter}\end{english} &
+                    % polyglossia \begin{<language>} environment seems to introduce
+                    % empty lines in paragraph columns; remove them manually.
+                    \vspace{-\baselineskip}
+                    \begin{english}
+                        \glossaryname{},
+                        \cref{fig:censorbox},
+                        \cref{tab:main_font_examples},
+                        \cref{ch:base-features}
+                    \end{english} &
+                    \vspace{-\baselineskip}
+                    \begin{english}
+                        This is a random text intended to show of hyphenation and line
+                        endings in the respective language.
+                        It is therefore a bit longer, so hopefully some words will break
+                        at the word boundaries.
+                        This cannot be guaranteed however.
+                        So there is to hoping that this test shows off the hyphenation
+                        rules and capabilities put into place by
+                        \ctanpackage{polyglossia}.
+                    \end{english}
+                \\
+                German &
+                    \begin{german}\enquote{Zitat!}\end{german} &
+                    \begin{german}\SI{100.2}{\meter}\end{german} &
+                    \vspace{-\baselineskip}
+                    \begin{german}
+                        \glossaryname{},
+                        \cref{fig:censorbox},
+                        \cref{tab:main_font_examples},
+                        \cref{ch:base-features}
+                    \end{german} &
+                    \vspace{-\baselineskip}
+                    \begin{german}
+                        Dies ist ein zufälliger Text, der die Worttrennungsregeln und
+                        Satzenden der jeweiligen Sprache demonstrieren soll.
+                        Er ist daher etwas länger, sodass manche Wörter hoffentlich
+                        an den Seitenrändern gebrochen werden.
+                        Dies kann allerdings nicht garantiert werden.
+                        Wir können also nur hoffen, dass dieser Test die
+                        Silbentrennungsregeln und -fähigkeiten des
+                        \ctanpackage{polyglossia} Pakets.
+                    \end{german}%
+                    \vspace{-\baselineskip}
+                \\
+            \bottomrule
         \end{tabular}
     }%
 \end{table}
