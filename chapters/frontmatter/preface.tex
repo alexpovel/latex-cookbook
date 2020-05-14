@@ -23,7 +23,7 @@ with a large knowledge database.
 This document is an attempt at collecting best practices
 --- or at least, useful approaches ---
 and pointing out the old ones they could, and often should, replace.
-More than most other languages, the \LaTeX{} code in circulation world wide is
+More than most other languages, the \LaTeX{} code in circulation world\-/wide is
 quite aged.
 While that code does not necessarily get \emph{worse}, it also does not exactly
 age like cheese and wine would.
@@ -59,7 +59,8 @@ So while the printed output will always remain true to its actual source code,
 duplicating that source code so it can be read in the printed output directly
 is just another vector for errors to creep in.
 
-\paragraph{Beginning Prerequisites}
+\section*{Beginning Prerequisites}
+
 Since this document will probably still be read by people new to \LaTeX{}, there
 will be a short description on how to get started below.
 \LaTeX{} requires three things:
@@ -195,3 +196,95 @@ will be a short description on how to get started below.
         Vim is not mentioned here because its users will probably have skipped this
         section\dots{}
 \end{enumerate}
+
+\subsection*{Compiling this document}
+
+This document leverages many more advanced and demanding packages.
+In this context, \emph{demanding} means that they sometimes need outside tools,
+since \hologo{LuaLaTeX} aka plain \TeX{} were insufficient for their implementation.
+This is most prevalent in packages that need sorting functionalities.
+Therefore, compiling this document is a bit more involved than a simple call to
+\texttt{pdflatex}.
+To make it work for everyone, a Docker container is made available.
+It includes all the tools required.
+For more info, see the
+\href{https://collaborating.tuhh.de/cap7863/latex-git-cookbook/-/blob/master/README.md}{README}
+for the repository.
+
+Outside tools are required for
+\begin{enumerate}
+    \item \ctanpackage{glossaries-extra}: requires the outside tool
+        \ctanpackage{bib2gls}, see \cref{ch:bib2gls}.
+    \item \ctanpackage{biblatex}: requires the outside tool \ctanpackage{biber},
+        see \cref{ch:bibliography}.
+\end{enumerate}
+If you have a proper \LaTeX{} distribution, \texttt{bib2gls} and \texttt{biber}
+will already be available as commands.
+However, for everything to work, the following has to be installed:
+\begin{itemize}
+    \item \texttt{bib2gls} requires a Java Runtime Environment, which is
+        \href{https://www.java.com/en/download/}{freely available for personal use},
+    \item the \ctanpackage{svg} package requires the outside program
+        \href{https://inkscape.org/}{InkScape}, which also has to be on your
+        \texttt{\$PATH},
+    \item using \texttt{contour gnuplot} commands with \ctanpackage{pgfplots} requires
+        \href{http://www.gnuplot.info/download.html}{gnuplot} to be on the \texttt{\$PATH}.
+\end{itemize}
+
+To compile the entire document from scratch, install these things manually.
+To never worry about installing and keeping things in order manually, use the provided
+Docker container.
+
+\paragraph{Compilation}
+With the prerequisites done, the compilation itself can start.
+For it, call:
+\begin{enumerate}
+    \item \texttt{lualatex}
+    \item \texttt{biber}
+    \item \texttt{bib2gls}
+    \item \texttt{lualatex}
+    \item \texttt{lualatex}
+\end{enumerate}
+This should get all the references right, set up the bibliography and the glossaries,
+which in turn fills out any missing (\texttt{??}) entries.
+I say \emph{should} because I never ran through this chain myself.
+Instead, there is the \texttt{latexmk} tool to ease all this painful labour.
+\texttt{latexmk} automates \LaTeX{} compilation by detecting all the required
+steps and then running them as often as required.
+It requires Perl.
+Linux users will already have it available, Windows users may grab
+\href{http://strawberryperl.com/}{Strawberry Perl}.
+
+Once that is done, the entire document can be compiled by simply calling
+\texttt{latexmk}.
+You do not even have to provide a \texttt{*.tex} file argument.
+By default, \texttt{latexmk} will simply compile all found \texttt{*.tex} files.
+The core ingredient to this magic process is the \texttt{.latexmkrc} configuration file.
+You can find it in the repository root directory.
+It is tailored to this document and does not need to be touched if the compilation
+process itself has not changed.
+It also contains some more insights to the entire process.
+
+\texttt{latexmk} is great because it figures out most things by itself and enjoys
+wide\-/spread acceptance and adoption.
+As such, chances are your \LaTeX{} editor either supports or outright relies on it
+already.
+
+Having walked through all this manually, hopefully using the prepared Docker image
+instead makes more sense now.
+Taking a look at \texttt{.gitlab-ci.yml} in the project root, we can see how easy it
+can be:
+run Docker container, call \texttt{latexmk}.
+That is it!
+It is guaranteed to work for everyone, because the Docker container (that is, the
+virtual machine) will be identical for all users.
+It is independent of local \LaTeX{} installations and all their quirks.
+It will continue to work forever (the underlying software versions are fixed) and the
+generated output will be identical for everyone.
+
+If all of this is embedded into a pipeline on GitLab, your documents are built whenever
+you \texttt{git push} to the remote server.
+It does not get simpler; the downside is of course the lengthier setup, but all of that
+is explained in the
+\href{https://collaborating.tuhh.de/cap7863/latex-git-cookbook/-/blob/master/README.md}{README},
+The repository itself is a live demonstration!
