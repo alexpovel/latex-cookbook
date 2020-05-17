@@ -2,6 +2,10 @@
 # Label svg_fix deals with mismatch between InkScape 1.0 and
 # svg package 2.02e. On CTAN, 2.02f is available to support InkScape 1.0,
 # but current Debian TeXLive does not have it.
+# Difference between `latest` and `svg_fix` images is
+# running `tlmgr install svg`, aka installing the package manually
+# and therefore getting the latest version (svg 2.02f).
+# Remove this once Debian repos have caught up.
 image: alexpovel/latex:svg_fix
 
 # Define some stages so to get rid of 'Test' as default:
