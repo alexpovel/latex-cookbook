@@ -201,11 +201,14 @@ will be a short description on how to get started below.
 
 This document leverages many more advanced and demanding packages.
 In this context, \emph{demanding} means that they sometimes need outside tools,
-since \hologo{LuaLaTeX} aka plain \TeX{} were insufficient for their implementation.
+since \hologo{LuaLaTeX} and/or plain \TeX{} would have been insufficient for their
+implementations.
 This is most prevalent in packages that need sorting functionalities.
-Therefore, compiling this document is a bit more involved than a simple call to
-\texttt{pdflatex}.
-To make it work for everyone, a Docker container is made available.
+Therefore, compiling this document is a bit more involved than simply calling
+\texttt{pdflatex}, the currently most common way of compiling \LaTeX{}.
+To make it work for everyone, a
+\href{https://hub.docker.com/repository/docker/alexpovel/latex}{Docker image}
+is provided.
 It includes all the tools required.
 For more info, see the
 \href{https://collaborating.tuhh.de/cap7863/latex-git-cookbook/-/blob/master/README.md}{README}
@@ -214,26 +217,39 @@ for the repository.
 Outside tools are required for
 \begin{enumerate}
     \item \ctanpackage{glossaries-extra}: requires the outside tool
-        \ctanpackage{bib2gls}, see \cref{ch:bib2gls}.
+        \ctanpackage{bib2gls}, see \cref{ch:bib2gls}, which in turn requires
+        a Java Runtime Environment.
     \item \ctanpackage{biblatex}: requires the outside tool \ctanpackage{biber},
         see \cref{ch:bibliography}.
+    \item \ctanpackage{svg}: requires the outside program
+        \href{https://inkscape.org/}{InkScape}.
+        Examples for that package's main command, \texttt{\includesvg}, are
+        \cref{fig:wide_caption,fig:tighter_caption,fig:multiple_floats,fig:sidecap,fig:inside_float}.
+    \item Using \texttt{contour gnuplot} commands with \ctanpackage{pgfplots}, see
+        \cref{fig:mollier_diagram}, requires
+        \href{http://www.gnuplot.info/download.html}{gnuplot}.
 \end{enumerate}
+
+\paragraph{Required Installations}
 If you have a proper \LaTeX{} distribution, \texttt{bib2gls} and \texttt{biber}
-will already be available as commands.
-However, for everything to work, the following has to be installed:
-\begin{itemize}
+will already be available as commands and ready to be invoked.
+The latter means that they are on your \texttt{\$PATH}, \iecfeg{i.e.}\ the path to
+the respective binaries are part of the \texttt{\$PATH} environment variable.
+
+In summary, for everything to work, the following has to be installed:
+\begin{enumerate}
     \item \texttt{bib2gls} requires a Java Runtime Environment, which is
         \href{https://www.java.com/en/download/}{freely available for personal use},
-    \item the \ctanpackage{svg} package requires the outside program
-        \href{https://inkscape.org/}{InkScape}, which also has to be on your
-        \texttt{\$PATH},
-    \item using \texttt{contour gnuplot} commands with \ctanpackage{pgfplots} requires
-        \href{http://www.gnuplot.info/download.html}{gnuplot} to be on the \texttt{\$PATH}.
-\end{itemize}
+    \item \href{https://inkscape.org/}{InkScape},
+    \item \href{http://www.gnuplot.info/download.html}{gnuplot}
+\end{enumerate}
+For more info, refer to the
+\href{https://collaborating.tuhh.de/cap7863/latex-git-cookbook#installed-packages}{README section}
+dealing with this.
 
-To compile the entire document from scratch, install these things manually.
+To compile the entire document from scratch, install those things manually.
 To never worry about installing and keeping things in order manually, use the provided
-Docker container.
+Docker image.
 
 \paragraph{Compilation}
 With the prerequisites done, the compilation itself can start.
@@ -245,13 +261,13 @@ For it, call:
     \item \texttt{lualatex}
     \item \texttt{lualatex}
 \end{enumerate}
-This should get all the references right, set up the bibliography and the glossaries,
-which in turn fills out any missing (\texttt{??}) entries.
-I say \emph{should} because I never ran through this chain myself.
-Instead, there is the \texttt{latexmk} tool to ease all this painful labour.
+This should get all the references right and set up the bibliography as well as the
+glossaries, which in turn fills out any missing (shown as \texttt{??}) entries.
+I say \emph{should} because I never actually ran this chain myself.
+Instead, there is the \textbf{\texttt{latexmk}} tool to ease all this painful labour.
 \texttt{latexmk} automates \LaTeX{} compilation by detecting all the required
 steps and then running them as often as required.
-It requires Perl.
+It requires \textbf{Perl}.
 Linux users will already have it available, Windows users may grab
 \href{http://strawberryperl.com/}{Strawberry Perl}.
 
@@ -267,6 +283,8 @@ It also contains some more insights to the entire process.
 
 \texttt{latexmk} is great because it figures out most things by itself and enjoys
 wide\-/spread acceptance and adoption.
+If it does not figure out everything from the get\-/go, it is easily customized,
+like for this document.
 As such, chances are your \LaTeX{} editor either supports or outright relies on it
 already.
 
@@ -277,14 +295,14 @@ can be:
 run Docker container, call \texttt{latexmk}.
 That is it!
 It is guaranteed to work for everyone, because the Docker container (that is, the
-virtual machine) will be identical for all users.
+virtual build environment) will be identical for all users.
 It is independent of local \LaTeX{} installations and all their quirks.
-It will continue to work forever (the underlying software versions are fixed) and the
-generated output will be identical for everyone.
+It will continue to work forever (the underlying software versions are well\-/constrained)
+and the generated output will be identical across the board.
 
 If all of this is embedded into a pipeline on GitLab, your documents are built whenever
-you \texttt{git push} to the remote server.
+you \texttt{git push} to the remote server (or whenever you configure it to).
 It does not get simpler; the downside is of course the lengthier setup, but all of that
 is explained in the
 \href{https://collaborating.tuhh.de/cap7863/latex-git-cookbook/-/blob/master/README.md}{README}.
-Also, the repository itself is a live demonstration!
+Also, the repository itself is a live demonstration where everything is set up already!
