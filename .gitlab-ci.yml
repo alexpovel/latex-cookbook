@@ -1,5 +1,8 @@
 # Image from dockerhub per default. Specify full path to use a different image.
-image: alexpovel/latex
+# Label svg_fix deals with mismatch between InkScape 1.0 and
+# svg package 2.02e. On CTAN, 2.02f is available to support InkScape 1.0,
+# but current Debian TeXLive does not have it.
+image: alexpovel/latex:svg_fix
 
 # Define some stages so to get rid of 'Test' as default:
 stages:
