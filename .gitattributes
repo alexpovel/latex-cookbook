@@ -1,2 +1,7 @@
+# GitLab uses the Rouge Ruby gem; for available languages, see:
+# https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers
+#
 .latexmkrc gitlab-language=perl
+# bib -> latex does not help much, since it is also not valid latex, but at
+# least highlights comments (%) correctly
 *.bib gitlab-language=latex
