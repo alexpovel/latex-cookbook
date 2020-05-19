@@ -144,19 +144,32 @@ The last part could be called *Continuous Deployment*, albeit a very basic versi
 ### Docker
 
 Docker is a tool providing so-called *containers*.
-These containers are light-weight virtual machines,
-providing isolated environments for applications to run in.
-They are created from corresponding *images*.
+These containers provide isolated, well-defined environments for applications to run in.
+They are created from *running* corresponding Docker *images*.
 These images are in turn generated using scripts, so-called *Dockerfiles*.
 
-In summary, we create a `Dockerfile` with instructions on how the image should look like.
+In summary, we create a `Dockerfile` containing instructions on how the image should
+look like.
+As a baseline, these instructions often rely on a Debian distribution.
+As such, all the usual Debian/Linux tools can be accessed.
 The image is then built accordingly, resulting in a large-ish file that contains an
-executable virtual machine.
-For example, if we install a complete `TeXLive` distribution, the image will be more than
-5 Gigabytes in size.
+executable environment.
+For example, if we install a comprehensive `TeXLive` distribution, the image will be
+more than 2 GB in size.
 Once the image is created, it can be run, creating the container.
-We can then enter the container and use it like a normal (in this case Linux) machine,
-for example to compile our `tex` files.
+We can then enter the container and use it like a pretty normal (in this case Linux)
+machine, for example to compile our `tex` files.
+Single commands can also be executed.
+For example, to compile `cookbook.tex` in PowerShell when the `alexpovel/latex` image
+is available after [installing Docker](https://docs.docker.com/docker-for-windows/install/)
+and getting the image (`docker pull alexpovel/latex`), run:
+
+```powershell
+docker run --rm -v ${PWD}:/docs --workdir /docs alexpovel/latex latexmk
+```
+
+Done!
+**For this to work, you do not have to have anything installed on your machine, only Docker**.
 
 One concrete workflow to employ this chain is to have a Dockerfile repository on GitHub,
 [like this one](https://github.com/alexpovel/latex-extras-docker).
@@ -171,159 +184,20 @@ yielding a live *container*.
 On every `git push` (that is, on every change) in the GitHub repo, this image is rebuilt.
 Given the size of `TeXLive`, this takes about on hour.
 
-The above [example Dockerfile](https://github.com/alexpovel/latex-extras-docker/blob/master/Dockerfile)
-(that Dockerfile is used to compile this very README to PDF via `pandoc`, as explained later)
-can look like this:
-
-```dockerfile
-FROM debian:bullseye
-
-LABEL maintainer="Alex Povel"
-
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get update -y \
-  && apt-get install -y \
-    texlive-full \
-    default-jre \
-    inkscape \
-    gnuplot \
-    pandoc \
-    curl \
-    wget \
-    librsvg2-bin
-```
-
-The steps are as follows:
-
-1. `FROM` pulls a [*base image*](https://hub.docker.com/search/?type=image&category=base),
-   in this case a certain version of Debian (`bullseye`, Debian 11).
-   This version will still be the same ten years from now,
-   allowing for tight control over the build environment.
-   Things are compiled in this fixed version, eliminating issues of incompatibilities across
-   machines *forever*.
-   No longer will you have to seek out that one coworker with that specific installation of
-   a software that is the only remaining survivor still capable of compiling this one ancient
-   piece of code.
-   Alternatively, we can use a *tag* like `latest` and get `debian:latest`.
-   That would also work just fine in most cases, and would get us the currently latest version.
-2. `LABEL` adds metadata to an image. It is pretty self-explanatory.
-   Note that before Docker 1.6, this would have read `MAINTAINER <name>`, which has since
-   been deprecated.
-3. `ENV` defines an environment variable, because `texlive-full`
-   [will usually prompt for *Geographic Area*](https://stackoverflow.com/q/52108289).
-   `DEBIAN_FRONTEND=noninteractive` suppresses this dialog creation,
-   to which we would be unable to respond in a Docker building process (which is why it then fails).
-   This procedure is discouraged from in the
-   [FAQ](https://docs.docker.com/engine/faq/#why-is-debian_frontendnoninteractive-discouraged-in-dockerfiles),
-   but that shouldn't be relevant here.
-4. `RUN` executes the given command to construct the image.
-   This can be all sorts of complicated magic, but we only `apt update` the package cache,
-   which downloads package information from the respective sources.
-   Afterwards, `install` (automatically agree to prompts with 'yes' using `-y`,
-   since the build process has to be able to run autonomously) packages.
+Refer to the
+[Dockerfile itself](https://github.com/alexpovel/latex-extras-docker/blob/master/Dockerfile)
+(that Dockerfile is used to compile this very README to PDF via `pandoc`)
+for more details.
 
 #### Installed packages
 
-For more information on the LaTeX packages mentioned here, refer to the
-accompanying cookbook.
-
-1. `texlive-full` for a truly *full* LaTeX distribution.
-   The resulting version of `TeXLive` (*e.g.* `2019`) depends on what is available in the
-   package repositories of the operating system.
-   For `debian:bullseye`, [we get TeXLive 2019](https://packages.debian.org/bullseye/texlive-full).
-   A full distribution includes Arabic, Chinese and many other fonts and supporting packages
-   that we are exceedingly unlikely to ever need.
-   However, the alternative is to only install the currently needed packages.
-   This would mean to only get `texlive-base` and use `tlmgr`,
-   the [package manager of TeXLive](https://www.tug.org/texlive/pkginstall.html),
-   to install packages on an as-needed basis.
-   It is quickly apparent how that gets out of hand fast:
-   whenever we want to use a new package, we have to update the entire Docker image.
-   A middle ground is installing `texlive-most`
-   ([Arch repositories](https://www.archlinux.org/groups/x86_64/texlive-most/)), or
-   `texlive-latex-extra`
-   ([Debian repositories](https://tex.stackexchange.com/a/504566/120853)).
-2. `default-jre` for the `bib2gls` tool from the `glossaries-extra`
-   [package](https://www.ctan.org/pkg/glossaries-extra?lang=de).
-   `jre` stands for *Java Runtime Environment*, which is exactly what `bib2gls` needs.
-3. `inkscape` because the `svg` package needs it.
-
-   Using that package, the required PDFs and PDF_TEXs are only generated at build-time
-   on the server, and afterwards discarded.
-   If you work locally, they will be kept in `images/vectors/svk-inkscape/`, so that they
-   do not have to be regenerated each time.
-   This is somewhat important since **PDFs are binary and should not occur in git repositories**.
-   Git can only accept PDFs as single blobs and cannot diff them properly.
-   If git cannot efficiently store only the *changes* between two versions of a file,
-   like it can with text-based ones, the repository might absolutely explode in size.
-   That is not a proper usage of git.
-   It works, but should be avoided.
-
-   Neatly, SVGs are text-based (try it out yourself: open an SVG file in a text editor).
-   They are `XML` files, *extensible markup language*.
-   So next to *Markdown* and *LaTeX*, a *third* markup language!
-   We don't really care for that though, other than that it means that
-   *SVGs are source-controllable (to an extent) through git*.
-   A nice bonus, further strengthening the argument of *only* using plain SVGs in the
-   repository.
-4. `gnuplot` for `contour gnuplot` commands for `addplot3` in `pgfplots`.
-   So essentially, an external add-on for the magnificent `pgfplots` package.
-   Being an external tool, `gnuplot` also requires `shell-escape`.
-5. `pandoc` is a very convenient, universal markup converter.
-   For example, it can convert Markdown (like this very [README](README.md)) to PDF via LaTeX:
-
-   ```bash
-   pandoc README.md -o README.pdf
-   ```
-
-   The default output is usable, but not very pretty.
-   This is where *templates* come into play.
-   A very tidy and well-made such template is [*Eisvogel*](https://github.com/Wandmalfarbe/pandoc-latex-template).
-   Its installation is not via a package, so we have to download the archive and unpack it.
-   For this, we additionally require:
-
-   1. `curl` to transfer data from a server,
-   2. `wget` to download,
-   3. `librsvg2-bin` for the `rsvg-convert` tool.
-      This is used by `pandoc` to convert SVGs when embedding them into the new PDF.
-      This README itself contains such SVGs, it is therefore required.
-
-   The full chain in `bash` can be seen in the [GitLab CI config file](.gitlab-ci.yml),
-   under the job name `get_pandoc_template`.
-
-   Lastly, `pandoc` and its *Eisvogel* template draw
-   [metadata from the YAML header](https://pandoc.org/MANUAL.html#metadata-variables).
-   In this very README, the Markdown version has metadata in the form:
-
-   ```yaml
-   ---
-   title: "Title"
-   author: [Author]
-   date: "YYYY-MM-DD"
-   subject: "Subject"
-   keywords: [Keyword1, Keyword2]
-   lang: "en"
-   ...
-   ```
-
-   among other metadata variables.
-   This info is detected and *not* rendered by many Markdown rendering engines.
-   However, GitLab still displays it.
-   *Eisvogel* uses it to fill the document with info, *e.g.* the PDF header and
-   footer.
-
-This concludes the Docker section.
-For more Docker images for LaTeX, see:
-
-- [blang/latex-docker](https://github.com/blang/latex-docker)
-- [Daxten/java-latex-docker](https://github.com/Daxten/java-latex-docker)
-- [aergus/dockerfiles](https://github.com/aergus/dockerfiles)
-- [Building a LaTeX Docker image](https://gordonlesti.com/building-a-latex-docker-image/)
+For more information on the LaTeX packages mentioned
+[in the Dockerfile repository](https://github.com/alexpovel/latex-extras-docker),
+refer to the accompanying LaTeX cookbook.
 
 #### Equivalent Windows Install
 
-To get the same, or at least a similar environment running on Windows,
+To get the same, or at least a very similar environment running on Windows,
 the elements can be installed individually:
 
 1. [MiKTeX](https://miktex.org/download); for a closer match to the Docker, install
@@ -344,16 +218,17 @@ To build anything, we need someone to build for us.
 GitLab calls these build-servers *runners*.
 Such a runner does not materialize out of thin air.
 Luckily, in the case of *collaborating.tuhh.de*, runner *tanis* is available to us.
-Enable it (him? her?) for the project on the GitLab project homepage]:
+Enable it (him? her?) for the project on the GitLab project homepage:
 `Settings -> CI/CD -> Runners -> Enable Shared Runners`.
-Otherwise, the build process might get 'stuck'.
+Otherwise, the build process will get 'stuck' indefinitely.
 
 ### Add git info to PDF metadata
 
 After retrieving a built PDF, it might get lost in the nether.
 That is, the downloader loses track of what commit it belongs to, or even what release.
 This is circumvented by injecting the git SHA into the PDF metadata.
-In git, every object is uniquely identified by its hash (SHA):
+In git, every object is uniquely identified by its hash
+([SHA256](https://stackoverflow.com/a/28792805/11477374)):
 
 ```text
 412ba291b6980ab21f912b5cdf01a13c6268d0ed
@@ -365,7 +240,7 @@ It is convenient to abbreviate the full SHA to a short version:
 412ba291
 ```
 
-Since a collision of even short hashes is impossible for our modest uses,
+Since a collision of even short hashes is essentially impossible in most use cases,
 we can uniquely identify states of the project by this short SHA.
 This is why commands like `git show 412ba291` work (try it out; the SHA exists in this repository!).
 (As a side note: GitLab picks up on those hashes automatically, as shown in
@@ -379,7 +254,7 @@ It can look like this (in Adobe Reader, evoke file properties with `CTRL + D`):
 But how do we get it there?
 
 We have a chicken-and-egg problem:
-if we want to insert the *current* SHA into the *current* PDF, we can't.
+if we want to insert the *current* SHA into the *current* source files, we can't.
 While building the *current* PDF, we can only know the SHA of the *previous* commit.
 **But**, fear not, for GitLab has you covered:
 
