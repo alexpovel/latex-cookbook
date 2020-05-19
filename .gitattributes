@@ -1,0 +1,2 @@
+.latexmkrc gitlab-language=perl
+*.bib gitlab-language=latex
