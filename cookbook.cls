@@ -68,7 +68,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Translations for somewhat automatic internationalization
-\RequirePackage{cookbook-translations}
+\input{lib/translations.tex}
 
 \RequirePackage{scrhack}% Fixes for packages incompatible with KOMA features
 
@@ -169,7 +169,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Custom package with style/language definitions:
-\RequirePackage{listings-languages}
+\input{lib/listings-languages.tex}
 
 % Colors for escaped, normal LaTeX in code environments
 \newcommand*{\phstring}[1]{%
