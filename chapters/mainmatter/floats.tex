@@ -1179,12 +1179,12 @@ Only the underlying data format is best followed strictly in
     % Currently, the xlabel alignment is off using dateplots, so revert to plain
     % old methods for now.
     \pgfplotstableread[row sep=\\]{%
-        Year, Value1, Value2, Value3, Value4, Value5, Value6, Value7\\%
-        2020-02-01, 50,  1,  5, 10, 15, 2, 17\\%
-        2020-03-04, 40,  2,  4, 10, 10, 2, 32\\%
-        2020-05-02, 30,  3,  3, 10, 15, 2, 37\\%
-        2020-05-28, 20,  4,  2, 10, 10, 2, 52\\%
-        2020-06-14, 10,  5,  1, 10, 15, 2, 57\\%
+        Date, Apples, Bananas, Peaches, Kiwis, Skunks, Grapes, Lemons\\%
+        2020-02-01, 50, 1, 17, 10, 15, 2, 5\\%
+        2020-03-04, 40, 2, 32, 10, 10, 2, 4\\%
+        2020-05-02, 30, 3, 37, 10, 15, 2, 3\\%
+        2020-05-28, 20, 4, 52, 10, 10, 2, 2\\%
+        2020-06-14, 10, 5, 57, 10, 15, 2, 1\\%
     }{\examplepfgtable}%
     %
     \ffigbox[\FBwidth]{
@@ -1192,7 +1192,11 @@ Only the underlying data format is best followed strictly in
             Example automatic timeseries plot.
             Note the automatic spacing\-/out according to the actual time deltas,
             and the automatic conversion of timestamps to human\-/friendly versions,
-            to whatever specification the author chooses%
+            to whatever specification the author chooses.
+            Also note the colors: here, \emph{distinction} is important and a
+            \emph{qualitative} palette is chosen.
+            A \emph{sequential} or a \emph{diverging} palette would have been
+            less suited (some would say plain wrong)%
         }%
         \label{fig:example_timeseries_plot}%
     }{%
@@ -1217,16 +1221,17 @@ Only the underlying data format is best followed strictly in
                     ymin=0,% Cuts off data otherwise
                     ylabel={Share},
                     y unit={\percent},
-                    xlabel={Date},
+                    xlabel={Date of purchase},
                     legend style={font=\scriptsize},%
                     % nodes near coords,% uncomment for numeric labels
                     cycle list/Set2-7,
                     every axis plot/.append style={fill},% https://tex.stackexchange.com/a/317684/120853
                 ]
-                \foreach \i in {1, ..., 7}{%
-                    \addplot+ table [y=Value\i] {\examplepfgtable};
+                \foreach \columnname in {Apples, Bananas, Peaches, Kiwis, Skunks, Grapes, Lemons}{%
+                    \addplot+ table [y=\columnname] {\examplepfgtable};
                 }
-                \legend{Value1, Value2, Value3, Value4, Value5, Value6, Value7}
+                % Legend manually; \addlegenentry per \foreach loop is very error-prone
+                \legend{Apples, Bananas, Peaches, Kiwis, Skunks, Grapes, Lemons}
             \end{axis}
         \end{tikzpicture}
     }
@@ -1395,9 +1400,10 @@ For example, a small file structure diagram:
 \end{center}
 Note how \verb|tikzpicture| environments do not have to be contained in floats.
 
-A second Ti\textit{k}Z example is shown in \cref{fig:tikz_diagram}.
+More Ti\textit{k}Z examples are shown in
+\cref{fig:tikz_control_diagram,fig:tikz_circuit_example,fig:tikz_threedimensional_example}.
 
-\begin{figure}
+\begin{figure}\ContinuedFloat*
     \ffigbox[0.95\linewidth]{%
         \begin{tikzpicture}[%
             every path/.style={thick},%https://tex.stackexchange.com/a/302931/120853
@@ -1522,10 +1528,319 @@ A second Ti\textit{k}Z example is shown in \cref{fig:tikz_diagram}.
             Wastegate implementation in a feedback\-/loop in MATLAB/Simulink
             as an example for a Ti\textit{k}Z diagram%
         }%
-        \label{fig:tikz_diagram}%
+        \label{fig:tikz_control_diagram}%
     }%
 \end{figure}
 
+\begin{figure}\ContinuedFloat
+    \fcapside[\FBwidth]{
+        \caption{Example for the \texttt{circuits.ee.IEC} Ti\textit{k}Z library}
+        \label{fig:tikz_circuit_example}
+    }{
+        \begin{tikzpicture}[
+                circuit ee IEC,% As loaded by the lib of the same name
+                % every circuit symbol/.style={thick},
+            ]
+            \pgfmathsetmacro{\circuitwidth}{4}
+            \pgfmathsetmacro{\circuitheight}{2}
+            % Try to close manually, we cannot 'cycle'
+            % https://tex.stackexchange.com/q/33294/120853
+            \draw (0,0) -- node[contact] (CONTACT_LEFT) {} (0,\circuitheight)
+                to [resistor={name={RESISTOR}, info={\sym{electrical_resistance}}}]
+                    node[%
+                        current direction,
+                        pos=0.9,
+                        label={[name=ELECTRIC_CURRENT_LABEL]above:{\(\sym{electric_current}\)}}
+                    ] {}
+                (\circuitwidth,\circuitheight) -- node[contact] (CONTACT_RIGHT) {}
+                (\circuitwidth,0) to [battery] (0,0);
+
+            \draw[<->, shorten <>=0.7em] (CONTACT_LEFT) -- (CONTACT_RIGHT)
+                node[arrowlabel] {\(\sym{voltage}\)};
+
+            \node[
+                fit={(RESISTOR)(ELECTRIC_CURRENT_LABEL)(CONTACT_LEFT)(CONTACT_RIGHT)},
+                inner sep=1em,
+                draw,
+                dashed
+            ] (BOUNDARY) {};
+
+            % The following draws a label directly onto the node border.
+            % Cannot really be done with supplying a 'label' directly to the node
+            % BOUNDARY (?)
+            \node[fill=white, font={\small}] at (BOUNDARY.north) {Boundary};
+        \end{tikzpicture}
+    }
+\end{figure}
+
+\begin{figure}\ContinuedFloat
+    \fcapside[\FBwidth]{
+        \caption{%
+            Example for a three\-/dimensional Ti\textit{k}Z drawing using the
+            \texttt{3d} library%
+        }
+        \label{fig:tikz_threedimensional_example}
+    }{
+        \tdplotsetmaincoords{110}{-12}% View angle
+        \begin{tikzpicture}[tdplot_main_coords]
+            % Debugging coordinate system:
+            % \draw (0,0,0) -- (1,0,0) node[right] {\(x\)};
+            % \draw (0,0,0) -- (0,1,0) node[left] {\(y\)};
+            % \draw (0,0,0) -- (0,0,1) node[above] {\(z\)};
+
+            % Base measurements. Default unit is centimeter
+            \pgfmathsetmacro{\plateheight}{0.2}
+            \pgfmathsetmacro{\platewidth}{4}
+            \pgfmathsetmacro{\platedepth}{3}
+            % Stretch how arrows are distanced from the plate:
+            \pgfmathsetmacro{\arrowdistance}{2.5}
+
+            % Bottom arrow:
+            \begin{scope}[canvas is xy plane at z=-\plateheight/\arrowdistance]
+                \draw[flowarrow={4em}{0.2em}, solid] (-\platewidth*0.25,\platedepth*0.5)
+                    node[left] {\(\flow{\sym{mass}}_{2}''\)}
+                    --
+                    (\platewidth*1.25,\platedepth*0.5)
+                    node[right] {\(\flow{\sym{mass}}_{2}'\)};
+            \end{scope}
+
+            % Top surface:
+            \begin{scope}[canvas is xy plane at z=\plateheight]
+                \draw[wall] (0,0) rectangle (\platewidth,\platedepth)
+                    node[midway] {\ctrw{\(\sym{area}\)}};
+            \end{scope}
+            % Right surface:
+            \begin{scope}[canvas is yz plane at x=\platewidth]
+                \draw[wall] (0,0) rectangle (\platedepth,\plateheight);
+            \end{scope}
+            % Front surface:
+            \begin{scope}[canvas is xz plane at y=\platedepth]
+                \draw[wall] (0,0) rectangle (\platewidth,\plateheight);
+
+                \foreach [count=\i] \posfraction in {0.2, 0.4, ..., 0.8}{%
+                    \draw[->, dashed, thick] (\posfraction*\platewidth, \plateheight*2)
+                    --
+                    (\posfraction*\platewidth, -2*\plateheight) coordinate[below] (ARROW_\i);
+                }
+            \end{scope}
+
+            % Top arrow:
+            \begin{scope}[canvas is xy plane at z=\plateheight*\arrowdistance]
+                \draw[flowarrow={4em}{0.2em}, solid] (\platewidth*1.25,\platedepth*0.5)
+                    node[right] {\(\flow{\sym{mass}}_{1}''\)}
+                    --
+                    (-\platewidth*0.25,\platedepth*0.5)
+                    node[left] {\(\flow{\sym{mass}}_{1}'\)};
+            \end{scope}
+
+            % Manually set arrow label here:
+            \node at ($(ARROW_1)!0.5!(ARROW_4)$) {\(\flow{\sym{volume}}\)};
+        \end{tikzpicture}
+    }
+\end{figure}
+
+\paragraph{Included shapes}
+This repository includes custom\-/made shapes for thermodynamic applications.
+These can be used like many other Ti\textit{k}Z elements, for example by
+positioning them somewhere on the canvas, connecting them to other elements,
+rotating them \iecfeg{etc}.
+In that sense, they work like usual Ti\textit{k}Z elements (just buggier\dots{}).
+There are a couple of advantages:
+\begin{enumerate}
+    \item unified looks: no more drawing these in InkScape, where they come out
+        slightly dissimilar every time,
+    \item tight integration with Ti\textit{k}Z, allowing to use all its other
+        features,
+    \item very fast generation of drawings once some familiarity is gained;
+        with InkScape or other outside tools, one can also become fast, but it is
+        hard to beat a \LaTeX{}\-/internal approach.
+\end{enumerate}
+Examples are shown in
+\cref{fig:tikz_thermodynamic_drawing,fig:tikz_thermodynamics_radiators}.
+Refer to their source code to see how more or less easily they are created.
+
+\begin{figure}\ContinuedFloat*
+    \ffigbox[\FBwidth]{
+        \caption{%
+            Example for a thermodynamic device drawing using Ti\textit{k}Z.
+            It relies heavily on the custom\-/made library of shapes%
+        }
+        \label{fig:tikz_thermodynamic_drawing}
+    }{
+        \begin{tikzpicture}[
+            thisshaft/.style={
+                line width=3pt
+            },
+            every label/.style={
+                font=\footnotesize
+            },
+            every node/.style={
+                font=\footnotesize
+            }
+        ]
+            % The main circle itself:
+            % Note that when rotating shapes, the label positions also rotate and get mixed up.
+            \draw (0,0) --
+                node[midway, valve, sloped, label=left:Throttle] (VALVE) {} (0,2.5) --
+                node[midway, heat exchanger, rotate=180, label=above:Condenser] (CONDENSER) {} (5,2.5) --
+                (5,0)
+                node[midway, compressor, label=above:Compressor, rotate=180] (COMPRESSOR) {} --
+                node[midway, heat exchanger, label=above:Evaporator] (EVAPORATOR) {}
+                cycle;
+
+            % Engine on right of compressor:
+            \draw[thisshaft] (COMPRESSOR) -- ++ (2,0)
+                node [right, rectangle, draw, thin] (ENGINE) {Engine}
+                    coordinate[midway] (SHAFT_MIDDLE);
+
+            % Shift down by 7pt (shaft line width is 3pt) and also specify that as a radius
+            \draw[->] ([yshift=-7pt]SHAFT_MIDDLE) arc (290:60:7pt);
+
+            \foreach [count=\i] \xcomponent/\ycomponent/\orientation in {
+                COMPRESSOR/EVAPORATOR/right,
+                COMPRESSOR/CONDENSER/right,
+                VALVE/CONDENSER/left,
+                VALVE/EVAPORATOR/left%
+            }{
+                \node[
+                    origindot,
+                    label={[name={NUMBER_\i}]\orientation:{\num{\i}}}
+                ] at (\xcomponent|-\ycomponent) {};
+            }
+
+            \draw[<-] (EVAPORATOR) -- ++ (0,-0.8)
+                node[at end, below, align=center]
+                    {supplied heat} coordinate[near start] (LOWER_BOUNDARY);
+
+            \draw[->] (CONDENSER) -- ++ (0,1.2) coordinate[pos=0.6] (UPPER_BOUNDARY)
+                node[at end, above, align=center]
+                    {heat discharge} coordinate[near start] (A);
+
+            % Drawings around engine
+            \draw[->, dashdotted] (ENGINE) |-
+                node[very near end, right, fill=white] {excess engine heat} (A);
+            \draw[<-] (ENGINE) -- ++ (1.3,0) node[right, align=left]
+                {Electricity,\\gas} coordinate[midway] (RIGHT_BOUNDARY);
+
+            % Fit a rectangle around the relevant parts:
+            \node[
+                fit={(UPPER_BOUNDARY)(LOWER_BOUNDARY)(RIGHT_BOUNDARY)(VALVE)(NUMBER_3)(NUMBER_4)},
+                draw,
+                dashed
+            ] (COP_BOUNDARY) {};
+
+            % COP area labels.
+            \node[fill=white, left] at ([xshift=-2em]COP_BOUNDARY.north east)
+                {\glsxtrshort{abb.coefficient_of_performance}-Boundary};
+        \end{tikzpicture}
+    }
+\end{figure}
+
+\begin{figure}\ContinuedFloat
+    \tikzset{
+        thispipe/.style={rounded corners=0.5},
+        node distance=1em,
+        every node/.style={font=\small}
+    }
+    \ffigbox[\FBwidth]{%
+        \caption{Example Ti\textit{k}Z shapes}
+        \label{fig:tikz_thermodynamics_radiators}
+    }{%
+        \begin{tikzpicture}
+            \pgfmathsetmacro{\gridspread}{2.2}
+            \pgfmathsetmacro{\numberofrows}{3}
+            \pgfmathsetmacro{\numberofcolumns}{3}
+            % Extension by which the pipes expand to the left, out of the radiators:
+            \pgfmathsetmacro{\pipeextension}{1}
+
+            \foreach [remember=\x as \prevx] \x in {1, 2, ..., \numberofcolumns}{
+                    \foreach [remember=\y as \prevy] \y in {1, 2, ..., \numberofrows}{
+                            \node[radiator] at (\x*\gridspread, 0.7*\y*\gridspread) (RADIATOR_\x_\y) {};
+
+                            % Draw the radiators with pipes sticking out:
+                            % \ifnum doesn't have elseif, so nest if
+                            \ifnum \x = 1
+                                \draw[thispipe] (RADIATOR_\x_\y.upper entry) -- ++
+                                    (-\pipeextension, 0) node[midway, control valve] {}
+                                    node[at end, origindot] (UPPER_PIPE_END_\x_\y) {};
+                                \draw[thispipe] (RADIATOR_\x_\y.lower entry) --
+                                    (RADIATOR_\x_\y.lower entry-|UPPER_PIPE_END_\x_\y)
+                                    node[at end, origindot] (LOWER_PIPE_END_\x_\y) {};
+                                % Connect the two pipe ends:
+                                \draw[thispipe] (UPPER_PIPE_END_\x_\y) -- (LOWER_PIPE_END_\x_\y);
+                            \else
+                                \ifnum \x = 2
+                                    \draw[thispipe] (RADIATOR_\x_\y.upper entry) -- ++
+                                        (-0.4*\pipeextension, 0)
+                                        node[at end, threeway valve, rotate=-90] (THREEWAY_VALVE_\x_\y) {};
+                                    \draw[thispipe] (RADIATOR_\x_\y.lower entry) --
+                                        (RADIATOR_\x_\y.lower entry-|THREEWAY_VALVE_\x_\y.south)
+                                        node[at end, origindot] (LOWER_PIPE_END_\x_\y) {};
+                                    % Connect valve to lower pipe end:
+                                    \draw[thispipe] (THREEWAY_VALVE_\x_\y.south) --
+                                        (LOWER_PIPE_END_\x_\y);
+                                    % Create an alias for this row, since pipe end is now at threeway valve north input.
+                                    % This way, we can use it like the other ones at the bottom.
+                                    \coordinate (UPPER_PIPE_END_\x_\y) at (THREEWAY_VALVE_\x_\y.north);
+                                \else% In all other cases, so the rows after the second to the right
+                                    % Upper radiator entry to the left:
+                                    \draw[thispipe] (RADIATOR_\x_\y.upper entry) -- ++
+                                        (-0.2*\pipeextension, 0) coordinate[at end] (UPPER_PIPE_END_\x_\y);
+                                    % Lower radiator entry to the left:
+                                    \draw[thispipe] (RADIATOR_\x_\y.lower entry) --
+                                        (RADIATOR_\x_\y.lower entry-|UPPER_PIPE_END_\x_\y)
+                                            coordinate[at end] (LOWER_PIPE_END_\x_\y);
+                                \fi
+                            \fi
+                            % After the first row, connect radiator pipes to the previous ones:
+                            \ifnum \y > 1
+                                \draw (UPPER_PIPE_END_\x_\prevy) -- (LOWER_PIPE_END_\x_\y);
+                            \fi
+                        }
+                }
+
+            \pic[below left=0em and 3em of LOWER_PIPE_END_1_1, scale=0.3, pic text={Boiler}]
+                (BOILER) {boiler};
+
+            % Helper coordinates because perpendicularity operator (-| or |-) seems to have trouble in conjunction with calculated nodes ($ $)
+            \coordinate (BOILERTOP) at ($(BOILER.before top)!0.5!(BOILER.after top)$);
+            % Pipe from boiler straight up, until criteration is met:
+            \draw[thispipe] (BOILERTOP) --
+                ([yshift=1.5em]BOILERTOP|-UPPER_PIPE_END_1_\numberofrows)
+                coordinate[at end] (BOILER_OUT_PIPE_END)
+                node[pos=0.2, pump] {};
+
+            \foreach \x in {1, 2, ..., \numberofcolumns}{
+                    % Connect end of boiler vertical pipe to each radiator column:
+                    \draw[thispipe] (BOILER_OUT_PIPE_END) -|
+                        (UPPER_PIPE_END_\x_\numberofrows);
+                    % Connect bottom row lower pipes to boiler:
+                    \draw[thispipe, ->] (LOWER_PIPE_END_\x_1) |- (BOILER.east);
+                }
+
+            % Helper coords to make calc etc work reliably
+            \coordinate (B) at (BOILER.east-|LOWER_PIPE_END_1_1);
+            \coordinate (EQUALIZING_TANK_PIPE_POSITION) at ($(B)!0.5!(BOILER.east)$);
+
+            % Set it above horizontal middle of boiler and start of first row.
+            \draw (EQUALIZING_TANK_PIPE_POSITION) -- ++ (0, 2em) node[equalizing tank] {};
+
+            % 'Air discharged (Lufttopf)' at top
+            \draw[thispipe] (BOILER_OUT_PIPE_END) -- ++ (0, 0.5em)
+                node[
+                    at end,
+                    rectangle,
+                    draw,
+                    minimum width=1em,
+                    minimum height=1.5em,
+                    anchor=south,
+                    label=right:{Air Discharge}
+                ] (AIR_DISCHARGE) {};
+            \draw[thispipe, ->] (AIR_DISCHARGE.north) -- ++ (0, 0.75em) -|
+                ([shift={(0.5em, 0.75em)}]AIR_DISCHARGE.east);
+        \end{tikzpicture}
+    }
+\end{figure}
 
 \subsection{InkScape}
 
