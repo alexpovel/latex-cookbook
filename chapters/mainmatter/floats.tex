@@ -1143,6 +1143,96 @@ lines that effectively do something useful.
     }
 \end{figure}
 
+
+\paragraph{Time-series}
+Time-series plots are straightforward to implement.
+\ctanpackage{pgfplots}, using its \texttt{dateplot} library, can automatically parse
+and plot dates.
+For this to work best and most reliably, dates and times should be in
+\abb{international_organization_for_standardization} 8601 format:
+\begin{center}
+    \texttt{YYYY-MM-DDThh:mm:ss\phantom{Z}}:% \phantom for budget alignment
+
+    \texttt{2020-05-19T12:15:31Z},
+\end{center}
+where \texttt{Z} is time\-/zone information and \texttt{T} is an arbitrary, but
+fixed separator.
+It can also be a simple space.
+Use just the date \emph{or} time part when appropriate.
+
+This format is unambiguous and understood worldwide as well as, most importantly here,
+by computers.
+No extra string and date parsing is required, it will just work in a lot of cases,
+not only for \ctanpackage{pgfplots} in this case.
+Further, it is often the standard output format of measurement equipment anyway,
+so there is not even a need to modify those.
+
+An example is shown in \cref{fig:example_timeseries_plot}.
+Note how the actually displayed date/time format can be modified and made human\-/readable
+freely.
+Only the underlying data format is best followed strictly in
+\abb{international_organization_for_standardization} 8601 format.
+
+\begin{figure}
+    % Data is small enough to not require a separate CSV file, put it here.
+    % Specify date as YYYY-MM-DD for pgfplots to recognize it as date data automatically.
+    % Currently, the xlabel alignment is off using dateplots, so revert to plain
+    % old methods for now.
+    \pgfplotstableread[row sep=\\]{%
+        Year, Value1, Value2, Value3, Value4, Value5, Value6, Value7\\%
+        2020-02-01, 50,  1,  5, 10, 15, 2, 17\\%
+        2020-03-04, 40,  2,  4, 10, 10, 2, 32\\%
+        2020-05-02, 30,  3,  3, 10, 15, 2, 37\\%
+        2020-05-28, 20,  4,  2, 10, 10, 2, 52\\%
+        2020-06-14, 10,  5,  1, 10, 15, 2, 57\\%
+    }{\examplepfgtable}%
+    %
+    \ffigbox[\FBwidth]{
+        \caption[Example automatic timeseries plot]{
+            Example automatic timeseries plot.
+            Note the automatic spacing\-/out according to the actual time deltas,
+            and the automatic conversion of timestamps to human\-/friendly versions,
+            to whatever specification the author chooses%
+        }%
+        \label{fig:example_timeseries_plot}%
+    }{%
+        \begin{tikzpicture}
+            \begin{axis}[%
+                    regularplot,
+                    width=0.9\textwidth,
+                    height=0.3\textheight,
+                    ybar stacked,
+                    xtick=data,% xticks at data points, not uniformly
+                    % Use next line for manual labels from table; get from {<table>}{<column>}
+                    % xticklabels from table={\examplepfgtable}{year},
+                    %
+                    % If using date data in the table (of the form YYYY-MM-DD):
+                    date coordinates in=x,
+                    %
+                    % Customize display here; macros automatically defined/grabbed
+                    % by pgfplots:
+                    xticklabel={\day.\month.\year},
+                    %
+                    xticklabel style={rotate=45,anchor=north east},
+                    ymin=0,% Cuts off data otherwise
+                    ylabel={Share},
+                    y unit={\percent},
+                    xlabel={Date},
+                    legend style={font=\scriptsize},%
+                    % nodes near coords,% uncomment for numeric labels
+                    cycle list/Set2-7,
+                    every axis plot/.append style={fill},% https://tex.stackexchange.com/a/317684/120853
+                ]
+                \foreach \i in {1, ..., 7}{%
+                    \addplot+ table [y=Value\i] {\examplepfgtable};
+                }
+                \legend{Value1, Value2, Value3, Value4, Value5, Value6, Value7}
+            \end{axis}
+        \end{tikzpicture}
+    }
+\end{figure}
+
+
 \subsubsection{Importing CSV}
 
 Often, one wants to plot data from files.
