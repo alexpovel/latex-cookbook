@@ -1692,6 +1692,19 @@
     % Create the rest manually.
     \newglossary*{subscripts}{\TransSubscripts{}}%
 
+    % For example, in the case of symbols, there are three groups: roman, greek and
+    % other.
+    % If the 'other' sub-glossary is used (it provides the built-ins like
+    % \mean, \vect, \deriv, ...) but is NOT supposed to be printed in the PDF glossary,
+    % it is assigned to the following glossary type.
+    % The glossary is printed using \printunsrtglossary with a `type=<entry type>`
+    % keyword specified, which would also print the 'other' entries, since they are of
+    % type 'symbols' as well. Only by assigning a different type altogether is this
+    % circumvented. This does not impact using the commands and the defined entries using
+    % \sym{<entry name>}, since that is provided by the 'label-prefix', not the 'type'.
+    % Analogue procedures apply to all glossaries.
+    \newglossary*{notprinted}{Non-printed entries}% Title never occurs anyway!
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % New Glossary 'fields'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
