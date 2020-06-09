@@ -1810,7 +1810,7 @@
         % 'Heat Capacity' first etc.:
         sort-suffix=description,
         label-prefix={\symprefix},
-        type=symbols,
+        type=symbols,% Change this to 'notprinted' to omit printing in the glossary
         category={same as type},
         selection={all},
         group={roman},
@@ -1825,7 +1825,7 @@
         % 'Heat Capacity' first etc.:
         sort-suffix=description,
         label-prefix={\symprefix},
-        type=symbols,
+        type=symbols,% Change this to 'notprinted' to omit printing in the glossary
         category={same as type},
         selection={all},
         group={greek},
@@ -1840,7 +1840,7 @@
         % 'Heat Capacity' first etc.:
         sort-suffix=description,
         label-prefix={\symprefix},
-        type=symbols,
+        type=symbols,% Change this to 'notprinted' to omit printing in the glossary
         category={same as type},
         selection={all},
         group={other},
