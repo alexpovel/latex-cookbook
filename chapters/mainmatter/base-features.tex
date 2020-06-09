@@ -1050,6 +1050,7 @@ This initially unintuitive approach has several critical advantages:
         Alternatively, only the first occurrence can be printed.
 \end{enumerate}
 
+\paragraph{Available Commands}
 \ctanpackage{glossaries-extra} is already heavily leveraged for this document.
 Take a look around the source code for all the details.
 For starters, there are a couple of predefined \texttt{*.bib} files, showcased in
@@ -1118,6 +1119,21 @@ defined as \verb|@symbol{<entry name> ...| in \texttt{subscripts.bib}.
         }
     }%
 \end{table}
+
+\paragraph{Modifying Print Output}
+To use glossary entries but not print them in a glossary, comment out the entire
+relevant \verb|\printunsrtglossary| macro where appropriate.
+For the index, the relevant command is \verb|\printunsrtindex|.
+Some glossary categories, like \emph{Symbols}, have sub\-/categories, like \emph{Roman},
+\emph{Greek} and \emph{Other}.
+To omit printing a single sub\-/category in the glossaries (but still allow their use
+in the document%
+\footnote{
+    The \emph{Other} symbol entries are required for the provided built\-/in math
+    macros, see \cref{tab:predefined_math_macros}, to work!%
+}%
+), refer to the \texttt{notprinted} type and the instructions found in the \texttt{*.cls}
+file.
 
 \subsection{bib2gls}
 \label{ch:bib2gls}
