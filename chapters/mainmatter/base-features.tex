@@ -971,7 +971,7 @@ It is used for:
 \end{itemize}
 
 In the case of symbols, this means the source now relies on \verb|\sym{<label>}|
-commands.
+commands, see also \cref{tab:available_bib_files}.
 For example, equations no longer read \verb|E = mc^{2}|, but instead
 \begin{verbatim}
     \sym{energy} = \sym{mass}\sym{velocity}^{2}
@@ -1049,6 +1049,75 @@ This initially unintuitive approach has several critical advantages:
         page numbers of occurrences of a symbol.
         Alternatively, only the first occurrence can be printed.
 \end{enumerate}
+
+\ctanpackage{glossaries-extra} is already heavily leveraged for this document.
+Take a look around the source code for all the details.
+For starters, there are a couple of predefined \texttt{*.bib} files, showcased in
+\cref{tab:available_bib_files}.
+Note that using entries with commands like \verb|\sym{<entry name>}| is independent
+of the entry type used in the \texttt{*.bib} file.
+For example, subscripts are invoked using \verb|\sub{<entry name>}| despite being
+defined as \verb|@symbol{<entry name> ...| in \texttt{subscripts.bib}.
+
+\begin{table}
+    \ttabbox{%
+        % Brackets hold entry that will go into List of Tables (short form)
+        \caption[Predefined glossaries]{%
+            Predefined glossaries with their respective \texttt{*.bib} files,
+            invoking commands and list occurrence in the document%
+        }%
+        % Use a string like 'tab:' to help with organization and auto-complete
+        % when reffing
+        \label{tab:available_bib_files}
+    }{%
+        \small
+        \begin{tabular}{
+            % @{<value>} specifies the column separator;
+            % Use @{} to remove white space from sides (empty value)
+            @{}
+            *3{l}% If no other significant reason, left-align
+            @{}
+        }
+            \toprule
+                Name (\texttt{.bib}) & Command & Listed in / Description \\
+            \midrule
+                % \nameref is courtesy of the nameref package, which is part of
+                % hyperref. It references the target by name, e.g. Chapter name.
+                % However, that does not work very well for generated chapter names.
+                \texttt{terms} & \texttt{\textbackslash idx} & Index \textrightarrow{} Terms \\
+                \texttt{names} & \texttt{\textbackslash name} & Index \textrightarrow{} Names \\
+            \addlinespace
+                \texttt{roman} &
+                    \texttt{\textbackslash sym} &
+                    \nameref{ch:glossary} \textrightarrow{} Symbols \textrightarrow{} Roman \\
+                \texttt{greek} &
+                    \texttt{\textbackslash sym} &
+                    \nameref{ch:glossary} \textrightarrow{} Symbols \textrightarrow{} Greek \\
+                \texttt{other} &
+                    \texttt{\textbackslash sym} &
+                    \nameref{ch:glossary} \textrightarrow{} Symbols \textrightarrow{} Other \\
+            \addlinespace
+                \texttt{subscripts} &
+                    \texttt{\textbackslash sub} &
+                    \nameref{ch:glossary} \textrightarrow{} Subscripts \\
+            \addlinespace
+                \texttt{constants}\mpfootnotemark[1] &
+                    \texttt{\textbackslash cons} &
+                    \nameref{ch:glossary} \textrightarrow{} Numbers \\
+            \addlinespace
+                \texttt{abbreviations} &
+                    \texttt{\textbackslash abb} &
+                    \nameref{ch:glossary} \textrightarrow{} Acronyms \\
+            \bottomrule
+        \end{tabular}
+        \footnotetext[1]{%
+            Constants like \cons{pi} are toy examples for this document.
+            However, this glossary section is very convenient to share assumptions
+            and used constants in a clear and concise way in one central place,
+            aiding reproducibility and overall document integrity.%
+        }
+    }%
+\end{table}
 
 \subsection{bib2gls}
 \label{ch:bib2gls}
