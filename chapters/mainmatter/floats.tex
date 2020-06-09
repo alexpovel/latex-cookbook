@@ -69,7 +69,7 @@ These are mainly handled by the packages:
         draw free\-/flowing vectors graphics with InkScape, then add text in
         \LaTeX{} (which can be done in \verb|\foreach| loops as well).
         An example for annotations (with loops) is shown in \cref{fig:bitmap_tikz}.
-        All other graphics that are neither bitmaps nor Ti\textit{k}Z graphics are
+        All other graphics that are neither bitmaps nor \idx{tikz} graphics are
         handled using the \ctanpackage{svg} approach.
 
         All of this is very convenient indeed, since we can now do everything in
@@ -601,7 +601,7 @@ on the graphic.
         \end{subfloatrow}
     }{%
         \caption{%
-            Drawing over a bitmap graphic using Ti\textit{k}Z in a vertical sub\-/figure
+            Drawing over a bitmap graphic using \idx{tikz} in a vertical sub\-/figure
             environment%
         }
         \label{fig:bitmap_tikz}
@@ -614,7 +614,7 @@ Drawing trees is possible with \ctanpackage{forest}, see \cref{fig:tree}.
 It is a very easy package to get started with.
 Take a look at the source code.
 It is deceivingly simple, but also highly customizable.
-Note that the package is stand\-/alone, but uses Ti\textit{k}Z under the hood
+Note that the package is stand\-/alone, but uses \idx{tikz} under the hood
 (like a lot of packages do).
 \begin{figure}
     \ffigbox[\textwidth]{% forest does not work with \FBwidth (?)
@@ -707,7 +707,7 @@ a lot of time.
 This is already taken care of for this document.
 As such, a plot from existing \texttt{*.csv} data can be set up in a handful of
 lines using one of the built-in styles, like \texttt{regularplot}.
-Plotting from a Ti\textit{k}Z function is demonstrated in
+Plotting from a \idx{tikz} function is demonstrated in
 \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte}.
 
 \tikzset{
@@ -1308,7 +1308,7 @@ about indices or column numbers.
 
 \subsection{TikZ and Text}
 
-Ti\textit{k}Z content can also be intertwined with text using \verb|\tikzmark|.
+\idx{tikz} content can also be intertwined with text using \verb|\tikzmark|.
 This is illustrated in \cref{eq:tikz_in_text}.
 Note that this procedure needs two compilation runs, since the label positions
 need to be written to an auxiliary file first.
@@ -1376,9 +1376,9 @@ need to be written to an auxiliary file first.
 
 \subsection{Regular TikZ pictures}
 
-Ti\textit{k}Z really is not meant for arbitrary graphics.
+\idx{tikz} really is not meant for arbitrary graphics.
 The more free\-/form images shown in this document were created using InkScape.
-Still, \enquote{drawing} in Ti\textit{k}Z is much preferred and easier when the
+Still, \enquote{drawing} in \idx{tikz} is much preferred and easier when the
 images are somewhat programmatic, aka there are straight corners, edges and turns,
 equal distances, and everything is a bit \enquote{block-like}, repetitive.
 For example, a small file structure diagram:
@@ -1400,7 +1400,7 @@ For example, a small file structure diagram:
 \end{center}
 Note how \verb|tikzpicture| environments do not have to be contained in floats.
 
-More Ti\textit{k}Z examples are shown in
+More \idx{tikz} examples are shown in
 \cref{fig:tikz_control_diagram,fig:tikz_circuit_example,fig:tikz_threedimensional_example}.
 
 \begin{figure}\ContinuedFloat*
@@ -1529,7 +1529,7 @@ More Ti\textit{k}Z examples are shown in
             % for a good macro to print "MATLAB/Simulink" (not used here since it
             % it wouldn't be used much at all)
             Wastegate implementation in a feedback\-/loop in MATLAB/Simulink
-            as an example for a Ti\textit{k}Z diagram%
+            as an example for a \idx{tikz} diagram%
         }%
         \label{fig:tikz_control_diagram}%
     }%
@@ -1537,7 +1537,7 @@ More Ti\textit{k}Z examples are shown in
 
 \begin{figure}\ContinuedFloat
     \fcapside[\FBwidth]{
-        \caption{Example for the \texttt{circuits.ee.IEC} Ti\textit{k}Z library}
+        \caption{Example for the \texttt{circuits.ee.IEC} \idx{tikz} library}
         \label{fig:tikz_circuit_example}
     }{
         \begin{tikzpicture}[
@@ -1579,7 +1579,7 @@ More Ti\textit{k}Z examples are shown in
 \begin{figure}\ContinuedFloat
     \fcapside[\FBwidth]{
         \caption{%
-            Example for a three\-/dimensional Ti\textit{k}Z drawing using the
+            Example for a three\-/dimensional \idx{tikz} drawing using the
             \texttt{3d} library%
         }
         \label{fig:tikz_threedimensional_example}
@@ -1644,15 +1644,15 @@ More Ti\textit{k}Z examples are shown in
 
 \paragraph{Included shapes}
 This repository includes custom\-/made shapes for thermodynamic applications.
-These can be used like many other Ti\textit{k}Z elements, for example by
+These can be used like many other \idx{tikz} elements, for example by
 positioning them somewhere on the canvas, connecting them to other elements,
 rotating them \iecfeg{etc}.
-In that sense, they work like usual Ti\textit{k}Z elements (just buggier\dots{}).
+In that sense, they work like usual \idx{tikz} elements (just buggier\dots{}).
 There are a couple of advantages:
 \begin{enumerate}
     \item unified looks: no more drawing these in InkScape, where they come out
         slightly dissimilar every time,
-    \item tight integration with Ti\textit{k}Z, allowing to use all its other
+    \item tight integration with \idx{tikz}, allowing to use all its other
         features,
     \item very fast generation of drawings once some familiarity is gained;
         with InkScape or other outside tools, one can also become fast, but it is
@@ -1665,7 +1665,7 @@ Refer to their source code to see how more or less easily they are created.
 \begin{figure}\ContinuedFloat*
     \ffigbox[\FBwidth]{
         \caption{%
-            Example for a thermodynamic device drawing using Ti\textit{k}Z.
+            Example for a thermodynamic device drawing using \idx{tikz}.
             It relies heavily on the custom\-/made library of shapes%
         }
         \label{fig:tikz_thermodynamic_drawing}
@@ -1746,7 +1746,7 @@ Refer to their source code to see how more or less easily they are created.
         every node/.style={font=\small}
     }
     \ffigbox[\FBwidth]{%
-        \caption{Example Ti\textit{k}Z shapes}
+        \caption{Example \idx{tikz} shapes}
         \label{fig:tikz_thermodynamics_radiators}
     }{%
         \begin{tikzpicture}
@@ -1847,7 +1847,7 @@ Refer to their source code to see how more or less easily they are created.
 
 \subsection{InkScape}
 
-Having seen what Ti\textit{k}Z is good at,
+Having seen what \idx{tikz} is good at,
 \cref{fig:tighter_caption,fig:multiple_floats,fig:sidecap}
 are good examples for when InkScape might be the better choice:
 three\-/dimensional, curvy drawings.

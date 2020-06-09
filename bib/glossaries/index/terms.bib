@@ -1,0 +1,19 @@
+% Encoding: UTF-8
+
+In bib files, there are no comment characters (%).
+However, any entry outside the regular (at)type{...} syntax is ignored.
+This makes regular text "comments".
+Further, bib2gls supports '%' as a comment character.
+
+The labels cannot contain UTF-8 characters and must stay ASCII.
+If such a word occurs, we must provide the name field separately and escape UTF-8.
+Provide plural fields just in case they are ever required.
+
+@index{latex_package,
+    name={\LaTeX{} package},
+    plural={\LaTeX{} packages},
+}
+@index{tikz,
+    name={Ti\textit{k}Z},
+    parent={latex_package},
+}
