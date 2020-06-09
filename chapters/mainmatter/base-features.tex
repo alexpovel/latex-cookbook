@@ -223,6 +223,88 @@ This can be turned off (globally or for certain elements) in the options to
 If color is turned off, they are still hyperlinks.
 If even that is undesired, that can also be turned off in that package.
 
+\subsubsection{Predefined Macros}
+
+The \ctanpackage{physics} package has some
+\href{https://tex.stackexchange.com/q/471532/120853}{issues},
+and as such, this document relies on a couple custom macros in place of it, see
+\cref{tab:predefined_math_macros}.
+
+\begin{table}
+    \ttabbox{%
+        \caption[Predefined math macros]{%
+            Predefined math macros.
+            Refer to the source code for help on the syntax.
+            For derivatives, the starred macros yield partial derivatives%
+        }%
+        \label{tab:predefined_math_macros}
+    }{%
+        \renewcommand*{\arraystretch}{1.8}% For the fracs, increase spacing (local effect)
+        \small
+        \begin{tabular}{%
+            @{}
+            l
+            l
+            @{}
+        }
+            % floatrow cannot be used with \verb, or even \texttt and escaped special
+            % characters, see "Limitations" in floatrow docs.
+            % As a consequence, use normal names and refer the reader to the source
+            % code.
+            \toprule
+                Name & Examples \\
+            \midrule
+                Mean & \(\mean{\sym{density}}\), \(\mean{\sym{area}}\) \\
+                Logarithmic Mean & \(\logmean{\sym{density}}\), \(\logmean{\sym{area}}\) \\
+                Flow & \(\flow{\sym{mass}}\), \(\flow{\sym{enthalpy}}\) \\
+                Delta & \(\difference{\sym{volume}}\), \(\difference{\symspec{enthalpy}}\) \\
+                Nabla Operator &
+                    \(
+                        \nablaoperator{\sym{first_cart_coord}},
+                        \nablaoperator[3]{\sym{first_cart_coord}}
+                    \) \\
+                Vectors & \(\vect{\sym{first_cart_coord}}\), \(\vect{A}\) \\
+            \addlinespace
+                Derivatives &
+                    \(
+                        \deriv{\sym{mass}},
+                        \deriv[2]{\sym{first_cart_coord}},
+                        \deriv*{\sym{mass}},
+                        \deriv*[2]{\sym{first_cart_coord}}
+                    \) \\
+                Fractional Deriv. &
+                    \(
+                        \fracderiv{\sym{voltage}}{\sym{time}},
+                        \fracderiv[2]{\sym{second_cart_coord}}{\sym{first_cart_coord}},
+                        \fracderiv*{\sym{voltage}}{\sym{time}},
+                        \fracderiv*[2]{\sym{second_cart_coord}}{\sym{first_cart_coord}},
+                        \fracderiv{\symspec{enthalpy}}{\sym{abs_temperature}},
+                        \fracderiv[2]{\symspec{enthalpy}}{\sym{abs_temperature}},
+                        \fracderiv*{\symspec{enthalpy}}{\sym{abs_temperature}},
+                        \fracderiv*[2]{\symspec{enthalpy}}{\sym{abs_temperature}}
+                    \) \\
+                Time Deriv.\mpfootnotemark[1] &
+                    \(
+                        \timederiv{\sym{voltage}},
+                        \timederiv[2]{\sym{second_cart_coord}},
+                        \timederiv*{\sym{voltage}},
+                        \timederiv*[2]{\sym{first_cart_coord}}
+                    \) \\
+                Positional Deriv.\mpfootnotemark[1] &
+                    \(
+                        \posderiv{\sym{volume}},
+                        \posderiv[2]{\sym{velocity}},
+                        \posderiv*{\sym{volume}},
+                        \posderiv*[2]{\sym{velocity}}
+                    \) \\
+            \bottomrule
+        \end{tabular}
+        \footnotetext[1]{%
+            As a shortcut version of fractional derivatives.%
+        }%
+    }
+\end{table}
+
 \subsubsection{Symbols}
 
 Note how the symbols in equations are hyperlinks
