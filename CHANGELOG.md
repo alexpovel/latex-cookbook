@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Nothing
 
+## [1.1.1] - 2020-06-09
+
+### Added
+
+- Entry `Mach` in `names.bib` (d0d5683). Was previously removed, but is required.
+
 ## [1.1.0] - 2020-06-09
 
 ### Added
