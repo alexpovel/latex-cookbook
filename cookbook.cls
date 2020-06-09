@@ -2315,20 +2315,20 @@
 
 % Time derivative
 \newcommand*{\timederiv}[2][]{%
-    \fracderiv[#1]{#2}{\gls{sym.zeit}}%
+    \fracderiv[#1]{#2}{\gls{sym.time}}%
 }%
 % Partial Time derivative
 \WithSuffix\newcommand\timederiv*[2][]{%
-    \fracderiv*[#1]{#2}{\gls{sym.zeit}}%
+    \fracderiv*[#1]{#2}{\gls{sym.time}}%
 }
 
 % Positional derivative
 \newcommand*{\posderiv}[2][]{%
-    \fracderiv[#1]{#2}{\gls{sym.x}}%
+    \fracderiv[#1]{#2}{\gls{sym.first_cart_coord}}%
 }
 % Partial Positional derivative
 \WithSuffix\newcommand\posderiv*[2][]{%
-    \fracderiv*[#1]{#2}{\gls{sym.x}}%
+    \fracderiv*[#1]{#2}{\gls{sym.first_cart_coord}}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

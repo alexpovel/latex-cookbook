@@ -79,6 +79,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Coordinates etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REQUIRED for built-in \posderiv to work:
 @symbol{first_cart_coord,
     name={\ensuremath{x}},
     description={First Cartesian coordinate (length)},
@@ -103,6 +104,12 @@
     name={\ensuremath{A}},
     description={Area},
     unit={\si{\meter\squared}},
+}
+% REQUIRED for built-in \timederiv to work:
+@symbol{time,
+    name={\ensuremath{t}},
+    description={Time},
+    unit={\si{\second}},
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Electrical

@@ -1,5 +1,10 @@
-% Math operators
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Math Operators:
+% REQUIRED for the built-in macros
+% to work (\deriv, \vect etc.)!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 @entry{derivative,
     name={\derivativefmt{\symbolplaceholder}},
     description={infinitesimal change in \symbolplaceholder},
@@ -17,6 +22,26 @@
 }
 @entry{flow,
     name={\flowfmt{\symbolplaceholder}},
-    description={\symbolplaceholder{} as a flowing quantity},
+    description={\symbolplaceholder{} as a flow quantity},
     unit={\si{\symbolplaceholder\per\second}},
+}
+@entry{nabla,
+    name={\nablaoperatorfmt{\symbolplaceholder}},
+    description={Vector of partial derivatives (Nabla operator) of \symbolplaceholder},
+    unit={--},
+}
+@entry{mean,
+    name={\meanfmt{\symbolplaceholder}},
+    description={Arithmetic mean of \symbolplaceholder{}},
+    unit={\symbolplaceholder},
+}
+@entry{logmean,
+    name={\logmeanfmt{\symbolplaceholder}},
+    description={Logarithmic mean of \symbolplaceholder{}},
+    unit={\symbolplaceholder},
+}
+@entry{vector,
+    name={\ensuremath{\vectfmt{x}}},
+    description={Vector},
+    unit={--},
 }
