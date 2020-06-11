@@ -12,6 +12,8 @@ colorlinks: true
 
 # A LaTeX Cookbook, git and Continuous Delivery
 
+> [Remember, a few hours of trial and error can save you several minutes of looking at the README.](https://twitter.com/iamdevloper/status/1060067235316809729)
+
 This [repository](https://collaborating.tuhh.de/cap7863/latex-git-cookbook)
 contains two documents:
 
