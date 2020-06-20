@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Nothing
+### Added
+
+- Showcase for multiple lines with contours in TikZ overlay (ae4ad39)
 
 ## [1.1.1] - 2020-06-09
 
