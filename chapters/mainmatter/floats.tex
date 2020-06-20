@@ -553,6 +553,14 @@ on the graphic.
                             \node at (\x,\y) {\ctrw{\nodetext}};
                         }
 
+                        % \ctrw{} cannot deal with linebreaks contained inside of it,
+                        % so it has to be applied manually each time.
+                        \node[align=left, right] at (0.02, 0.50) {%
+                            \ctrw{Multiple lines}\\%
+                            \ctrw{with manual}\\%
+                            \ctrw{linebreaks!}%
+                        };%
+
                         \draw[annotationarrow] (0.75,0.45) -- (1.05,0.50)
                             node[align=left, right, text width=5em] {An annotation!};
 
@@ -585,6 +593,14 @@ on the graphic.
                         }{
                             \node at (\x,\y) {\ctrw{\nodetext}};
                         }
+
+                        % \ctrw{} cannot deal with linebreaks contained inside of it,
+                        % so it has to be applied manually each time.
+                        \node[align=left, right] at (0.02, 0.50) {%
+                            \ctrw{Multiple lines}\\%
+                            \ctrw{with manual}\\%
+                            \ctrw{linebreaks!}%
+                        };%
 
                         \draw[annotationarrow] (0.75,0.45) -- (1.05,0.50)
                             node[align=left, right, text width=5em] {An annotation!};
