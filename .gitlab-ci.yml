@@ -78,6 +78,7 @@ compile_pandoc:
         - 'sed -i "s~\(^date: \)\".*\"~\1\"$(date +"%B %-d, %Y")\"~" README.md'
         # pandoc looks for template with .latex suffix in current dir
         # Use lualatex for Unicode support
-        - pandoc README.md \
+        - |
+            pandoc README.md \
             --template eisvogel --pdf-engine=lualatex --number-sections \
             -o README.pdf
