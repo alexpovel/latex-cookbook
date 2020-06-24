@@ -35,24 +35,13 @@ replace_git_metadata:
     artifacts:
         paths:
             - "*.cls"
-    # Try to fix this notorious issue
-    # (ERROR: Job failed (system failure): Error: No such container: <container_id>):
-    # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4450
-    # As of 2020-04-13, Steve Azzopardi commented that it should be fixed from GitLab
-    # version 12.10.
-    #
-    # This is the FIRST job of the entire pipeline, so retry once here
-    # (has always worked with one retry so far), no need later on
-    retry:
-        max: 1
-        when: runner_system_failure
 
 compile_latex:
+    stage: pdf_building
     script:
         # No *.tex-file given as argument to latexmk: run on all *.tex-files found in root.
         # Configure latexmk tool using '.latexmkrc' in project root.
         - latexmk
-    stage: pdf_building
     artifacts:
         # artifacts.zip is renamed to current tag/branch:
         name: "$CI_COMMIT_REF_NAME"
@@ -67,6 +56,7 @@ compile_latex:
         - replace_git_metadata
 
 compile_pandoc:
+    stage: pdf_building
     script:
         # Replace date metadata with current date.
         # Escape because of colon in script command.
@@ -74,7 +64,6 @@ compile_pandoc:
         # pandoc looks for template with .latex suffix in current dir
         # Use lualatex for Unicode support
         - pandoc README.md --template eisvogel --pdf-engine=lualatex --number-sections -o README.pdf
-    stage: pdf_building
     artifacts:
         name: "$CI_COMMIT_REF_NAME"
         paths:
