@@ -1,5 +1,29 @@
-# Image from dockerhub per default. Specify full path to use a different image.
-image: alexpovel/latex
+# Applies to all jobs, can be overridden in each
+default:
+    # Image from dockerhub per default. Specify full path to use a different image.
+    image: alexpovel/latex
+    # `retry` tries to fix this notorious issue
+    # (ERROR: Job failed (system failure): Error: No such container: <container_id>):
+    # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4450
+    # As of 2020-04-13, Steve Azzopardi commented that it should be fixed from GitLab
+    # version 12.10.
+    #
+    # Needs to be implemented for later jobs too, since those can apparently
+    # still fail even though preceding stages have pulled successfully.
+    retry:
+        max: 1
+        when: runner_system_failure
+    # LaTeX and pandoc stages both provide PDFs:
+    artifacts:
+        # artifacts.zip is renamed to current tag/branch:
+        name: "$CI_COMMIT_REF_NAME"
+        paths:
+            # Return all found *.pdf-files using wildcard.
+            # For example, a thesis and the accompanying presentation.
+            - "*.pdf"
+    # Run job 'only' if it fulfills certain criteria:
+    # only:
+        # - tags
 
 # Define some stages so to get rid of 'Test' as default:
 stages:
@@ -33,6 +57,7 @@ replace_git_metadata:
                 done
     # Hand the processed *.cls file(s) to the next stage:
     artifacts:
+        # Overrides default
         paths:
             - "*.cls"
 
@@ -42,16 +67,6 @@ compile_latex:
         # No *.tex-file given as argument to latexmk: run on all *.tex-files found in root.
         # Configure latexmk tool using '.latexmkrc' in project root.
         - latexmk
-    artifacts:
-        # artifacts.zip is renamed to current tag/branch:
-        name: "$CI_COMMIT_REF_NAME"
-        paths:
-            # Return all found *.pdf-files using wildcard.
-            # For example, a thesis and the accompanying presentation.
-            - "*.pdf"
-    # Run job 'only' if it fulfills certain criteria:
-    # only:
-        # - tags
     dependencies:
         - replace_git_metadata
 
@@ -63,8 +78,6 @@ compile_pandoc:
         - 'sed -i "s~\(^date: \)\".*\"~\1\"$(date +"%B %-d, %Y")\"~" README.md'
         # pandoc looks for template with .latex suffix in current dir
         # Use lualatex for Unicode support
-        - pandoc README.md --template eisvogel --pdf-engine=lualatex --number-sections -o README.pdf
-    artifacts:
-        name: "$CI_COMMIT_REF_NAME"
-        paths:
-            - "*.pdf"
+        - pandoc README.md \
+            --template eisvogel --pdf-engine=lualatex --number-sections \
+            -o README.pdf
