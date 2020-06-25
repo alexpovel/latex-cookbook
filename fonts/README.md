@@ -101,3 +101,15 @@ The choice falls to `lualatex` and is quite easy:
 
 These two reasons are easily enough to choose `lualatex` over `xelatex`.
 I don't have more reasons anyway, since otherwise, the programs are quite identical.
+
+## Licenses
+
+As of 2020-06-25, there are four font subdirectories, each containing the fonts and their
+licenses:
+
+- [sans](sans/): The custom license requires written permission by the author to be
+  distributed (which is probably technically is by virtue of being included in and publicly
+  downloadable from this repo). That permission is attached to the directory.
+- [roman](roman/): These are licensed so that a complete, unmodified distribution is okay.
+- [mono](mono/): Same as for roman.
+- [other](other/): Sane as for roman.
