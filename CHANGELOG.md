@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Showcase for multiple lines with contours in TikZ overlay (ae4ad39)
+- Hint for the `glossaries-extra` *Beginner's Guide* (d8b7fb4)
 
 ## [1.1.1] - 2020-06-09
 
