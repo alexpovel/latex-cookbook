@@ -609,6 +609,11 @@ Hopefully, it spares you some despair.
   So, it is still in active discussion.
   It seems to have to do with caching.
   There does not seem to be a solution yet.
+
+  **This should be fixed now** (at least, ever since the fix was applied, the issue
+  no longer occurred), see
+  [here](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/commit/1af548f726cc9f18b0e001dd21940f0131ecff60).
+  This relies on the `retry` keyword in GitLab CI.
 - When using package [`fontspec`](https://ctan.org/pkg/fontspec)
   (or its derivative [`unicode-math`](https://ctan.org/pkg/unicode-math)),
   compilation fails with
