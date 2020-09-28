@@ -14,22 +14,32 @@ colorlinks: true
 
 > [Remember, a few hours of trial and error can save you several minutes of looking at the README.](https://twitter.com/iamdevloper/status/1060067235316809729)
 
-This [repository](https://collaborating.tuhh.de/cap7863/latex-git-cookbook)
+This [repository](https://collaborating.tuhh.de/alex/latex-git-cookbook)
 contains two documents:
 
 1. This README in Markdown format.
    Using `pandoc` with the *Eisvogel* template (more on that later), it is converted
-   into a PDF and made available for download.
+   into a PDF and made available for download (see also the
+   [badge](https://docs.gitlab.com/ee/user/project/badges.html) on top of the
+   [project homepage](https://collaborating.tuhh.de/alex/latex-git-cookbook)):
 
-   The README covers git and Continuous Delivery.
+   [![Download README](images/vectors/gitlab/Download-README-critical.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/README.pdf?job=compile_pandoc)
+
+   **The README covers git and Continuous Delivery, using Docker.**
 2. A [LaTeX document](cookbook.tex), usable as a cookbook (different "recipes" to
    achieve various things in LaTeX) and also as a template.
 
    The LaTeX Cookbook PDF covers LaTeX-specific topics.
+   It is also available for download:
+
+   [![Download PDF](images/vectors/gitlab/Download-Cookbook-informational.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=compile_latex)
 
 ## git
 
-That being said, onto git.
+That being said, onto [git](https://thenewstack.io/tutorial-git-for-absolutely-everyone/).
+This README will not be exhaustive; there are numerous great tools to learn git out
+there.
+This is just a brief introduction.
 Eventually, following all the steps, a number of advantages will come to light:
 
 - [SSOT](https://en.wikipedia.org/wiki/Single_source_of_truth): a *Single Source Of Truth*
@@ -81,7 +91,7 @@ Eventually, following all the steps, a number of advantages will come to light:
   Git works best (some would say only) on text-based files, but it can deal with images, PDFs *etc.*, too.
 
   The history and everything else git needs is contained in its `.git` directory, which is hidden on both Linux and Windows.
-  Everything else in `directory`, so in this case `a.txt`, `Important-Document.pdf` and `Properly-Named-Invoice.docx`, are accessible as usual.
+  Everything else in `directory`, so in this case `a.txt`, `Important-Document.pdf` and `Properly-Named-Invoice.docx`, is accessible as usual.
   **There is no difference to how you would normally work with these files.**
   They are on your local disk.
   Together, they are called the *working tree*.
@@ -91,7 +101,7 @@ Eventually, following all the steps, a number of advantages will come to light:
   1. Duplicate files are gone,
   2. The art of cumbersome file naming will finally be forgotten,
   3. Old stuff can be safely deleted; this cleans up the working tree and makes it clear which files are no longer needed.
-     Only the currently needed files are visible, the rest is history.
+     Only the currently needed files are visible, the rest is (retrievable!) history.
 - File versioning and the ability to exactly match outputs (PDFs) to the source code
   that generated them.
 - Accelerated bug fixing through `git bisect`, a binary search algorithm that helps
@@ -100,29 +110,126 @@ Eventually, following all the steps, a number of advantages will come to light:
   Adjustments are made there, and sent to a central, online repository if they are
   considered ready to be published.
   Git can also be used in a distributed fashion (its original strong suit), but we
-  assume a remote repository on GitLab.
-
+  assume a remote repository on GitLab (which is very much similar to GitHub).
   Developers can then also fetch the latest changes from the remote and incorporate
   them into their local copy.
+
+  Do not confuse GitHub, GitLab and others with the tool itself, git.
+  Microsoft's GitHub is not synonymous to git.
+  A crude, mostly wrong analogy would be: OneDrive is the platform you do collaboration,
+  version control and sharing on.
+  This is like GitHub (GitLab, ...).
+  Office programs like Microsoft Word are used to create original content.
+  This is like source code, as created in some editor of your choice.
+  Word's built-in revision history, in conjunction with the *process* of naming files,
+  for example `2020-05-13_Invoice_John-Doe-Comments_Final.docx`
+  ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) oh yeah baby),
+  would be git.
+  It "only" does the version control, but is not a *platform* for source code.
 - The remote repository also serves as a back-up solution.
   So do all the distributed local copies.
-  At all points, there will be a workable copy somewhere.
-  In general, it is extremely hard to lose data using git.
+  At all points, there will be a workable copy *somewhere*.
+  In general, git makes losing data extremely hard.
+  **If**, or rather *when*, you *do* get into a fight with git about merging, pulling,
+  rebasing, conflicts and the like, think of it as git protecting you and your work.
+  Often, the reason for git "misbehaving" and making a scene is because it flat-out
+  refuses to conduct an operation that would destroy unsaved changes.
+  In the long run, this behavior is the desired one, as opposed to losing unsaved
+  (in the git-lingo: uncommitted) data.
+
+### Getting Started
+
+Download for [Windows here](https://git-scm.com/download/win).
+Install it and spam *Next* without reading the installation and warning prompts,
+as you always do.
+
+For Linux, `apt update && apt install git` or whatever.
+You likely have it available already.
+
+Then, somewhere on your machine:
+
+```bash
+# Create empty directory
+$ mkdir test
+# Go there
+$ cd test
+# Set up your git credentials; this will show as the 'Author' of your work
+$ git config --global user.name "Foo Bar"
+$ git config --global user.email "foo@bar.com"
+# Initialize an empty git repository
+$ git init
+Initialized empty Git repository in ...
+# Create some dummy file
+$ echo "Hello World!" > test.txt
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        test.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+# Do as we are told, like good boys:
+$ git add .
+# There is now a change! The file is ready to be committed, aka "saved" into
+# the history.
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   test.txt
+$ git commit -m "Initial file!"
+[master (root-commit) 3aaded0] Initial file!
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 test.txt
+# Have a look at the history up to here:
+$ git log --patch
+commit 3aaded0365524e9c0cf7c3bc3cb72e1e993def74 (HEAD -> master)
+Author: Foo Bar <foo@bar.com>
+Date:   Mon Sep 28 15:29:25 2020 +0200
+
+    Initial file!
+
+diff --git a/test.txt b/test.txt
+new file mode 100644
+index 0000000..de39eb0
+Binary files /dev/null and b/test.txt differ
+```
+
+And that is the gist of it.
+Next, you would want to create a project on GitLab or similar and connect that to
+your local repository.
+You can then sync changes between the two, enabling collaboration (or a bunch of other
+advantages if you keep to yourself).
+
+There are numerous **git GUIs** available.
+They are great at visualizing the commit history (which can get convoluted, if
+you're doing it wrong), but also offer all the regular CLI functionality in GUI form.
+I have nothing to recommend here and am going to distract from this fact using this
+pretty git GUI image:
+
+[![git GUI](images/bitmaps/readme/yancy-min-842ofHC6MaI-unsplash.jpg)](https://unsplash.com/photos/842ofHC6MaI)
 
 ## Git(Lab) and Continuous Delivery
 
 GitLab is a platform to host git repositories.
 Projects on there can serve as git remotes.
-In this sense, it is like GitHub, the first large website to offer such a service.
-It is still the largest today.
+As mentioned, in this sense, it is like Microsoft's GitHub, the first large website
+to offer such a service (still by far the largest today).
 We use GitLab here because <https://collaborating.tuhh.de/> is an *instance* of
 GitLab and therefore freely available to university members.
 
 GitLab offers various features for each project.
 This includes a Wiki, an issue tracker and pull request management.
-Pull requests are requests from outside collaborators who have *forked* and
-subsequently worked on a project.
-Forking projects refers to creating a full copy of them in their own user space.
+Pull requests (PRs for short; GitLab calls these *Merge Requests*) are requests from
+outside collaborators who have *forked* and subsequently worked on a project.
+Forking projects refers to creating a full copy of the project in the own user space of
+collaborators.
 As such, they can then work on it, or do whatever else they want.
 If for example they add a feature, their own copy is now ahead of the original by
 that feature.
@@ -133,54 +240,163 @@ development in the original.
 
 **Continuous Delivery** refers to continuously shipping out the finished "product".
 In this case, these are the compiled PDFs.
-This is done using Docker containers.
-The advantages are that all collaborators no longer rely on their local toolchain,
-but on a unified, common one that was agreed upon.
-If LaTeX documents become very long, full compilation runs can take dozens of minutes.
-This is outsourced and silently done on the remote servers, if Continuous Delivery
-is used.
-As such, for example, every `git push` to the servers triggers a *pipeline* which
-compiles the PDF and offers it for download afterwards.
-The last part could be called *Continuous Deployment*, albeit a very basic version.
+This is done with the help of so-called *Docker containers*.
+The advantages are:
+
+- collaborators no longer rely on their local tool chain, but on a unified, common,
+  agreed-upon one.
+  It is (usually) guaranteed to work and leads to the same, reproducible, predictable
+  results for everyone.
+
+  Docker (also usable locally, not only on the GitLab platform) helps reproduce results:
+  - across space: results from coworkers in your office or from half-way across the globe.
+
+     You no longer rely on some obscure, specific machine that happens to be the only
+     one on which compilation (PDF production) works.
+  - across time: if fixed versions are specified, Docker images allow programs, processes
+    pipelines etc. from many years ago to run.
+- If LaTeX documents become very long, full compilation runs can take dozens of minutes.
+  This is outsourced and silently done on the remote servers, if Continuous Delivery
+  is used.
+  As such, for example, every `git push` to the servers triggers a
+  [*pipeline*](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/pipelines)
+  which compiles the PDF and offers it for download afterwards.
+  The last part could be called *Continuous Deployment*, albeit a very basic version.
 
 ### Docker
 
-Docker is a tool providing so-called *containers*.
+Docker is a tool providing so-called *containers* (though wrong, think of them as
+light-weight virtual machines).
 These containers provide isolated, well-defined environments for applications to run in.
 They are created from *running* corresponding Docker *images*.
 These images are in turn generated using scripts, so-called *Dockerfiles*.
 
-In summary, we create a `Dockerfile` containing instructions on how the image should
-look like.
-As a baseline, these instructions often rely on a Debian distribution.
-As such, all the usual Debian/Linux tools can be accessed.
-The image is then built accordingly, resulting in a large-ish file that contains an
-executable environment.
-For example, if we install a comprehensive `TeXLive` distribution, the image will be
-more than 2 GB in size.
-Once the image is created, it can be run, creating the container.
-We can then enter the container and use it like a pretty normal (in this case Linux)
-machine, for example to compile our `tex` files.
-Single commands can also be executed.
-For example, to compile `cookbook.tex` in PowerShell when the `alexpovel/latex` image
-is available after [installing Docker](https://docs.docker.com/docker-for-windows/install/)
-and getting the image (`docker pull alexpovel/latex`), run:
+In summary:
 
-```powershell
-docker run --rm -v ${PWD}:/docs --workdir /docs alexpovel/latex latexmk
-```
+1. a **`Dockerfile` text document** is created, containing instructions on how the image should
+   look like (like what stuff to install, what to copy where, ...).
 
-Done!
-**For this to work, you do not have to have anything installed on your machine, only Docker**.
+   As a baseline, these instructions often rely on a Debian distribution.
+   As such, all the usual Debian/Linux tools can be accessed, like `bash`.
+
+   An (unrelated) [example Dockerfile](https://github.com/alexpovel/random_python/blob/master/music-converter/Dockerfile)
+   can look like:
+
+   ```Dockerfile
+   # Dockerfile
+
+   # Get the latest Debian Slim with Python installed
+   FROM python:slim
+
+   # Update the Debian package repositories and install a Debian package.
+   # Agree to installation automatically (`-y`)!
+   # This is required because Dockerfiles need to run without user interaction.
+   RUN apt-get update && apt-get install -y ffmpeg
+
+   # Copy a file from the building host into the image
+   COPY requirements.txt .
+
+   # Run some shell command, as you would in a normal sh/bash environment.
+   # This is a Python-specific command to install Python packages according to some
+   # requirements.
+   RUN pip install -r requirements.txt
+
+   # Copy more stuff!
+   COPY music-converter/ music-converter/
+
+   # This will be the command the image executes if run.
+   # It runs this command as a process and terminates as soon as the process ends
+   # (successfully or otherwise).
+   # Docker is not like a virtual machine: it is intended to run *one* process, then
+   # die. If you need to run it again, just create a new container (instance of a
+   # Docker image). Treat containers as *cattle*, not as a *pet*. The
+   # container-recreation process is light-weight, fast and the way to go.
+   #
+   # Of course, this does not stop anyone from running one *long-running* process
+   # (as in infinity, `while True`-style). This is still a good use-case for Docker
+   # (as are most things!). An example for this is a webserver.
+   ENTRYPOINT [ "python", "-m", "music-converter", "/in", "--destination", "/out" ]
+   ```
+
+   The Dockerfile this project uses for LaTeX stuff is
+   [here](https://github.com/alexpovel/latex-extras-docker/blob/master/Dockerfile).
+   It is not as simple, so not as suited for an example.
+
+2. The **image** is then built accordingly, resulting in a large-ish file that contains an
+   executable environment.
+   For example, if we install a comprehensive `TeXLive` distribution, the image will be
+   more than 2 GB in size.
+
+   This Docker image can be distributed.
+   In fact, there is [Docker Hub](https://hub.docker.com/), which exists for just this
+   purpose.
+   If you just instruct to run an image called e.g. `alexpovel/latex`, without
+   specifying a full URL to somewhere, Docker will look on the Hub for an image of that
+   name (and find it [here](https://hub.docker.com/r/alexpovel/latex)).
+   All participants of a project will pull their image from their, and everyone will
+   be on the same page (alternatively, you can build the image from the Dockerfile).
+
+   For example, the LaTeX environment for this project requires a whole bunch of
+   setting-up.
+   This can take hours to read up upon, understand, explain, implement and getting to
+   run.
+   In some cases, it will be **impossible** if some required part of a project conflicts
+   with a pre-existing thing on your computer.
+   For example, project *A* requires `perl` in version `6.9.0`, but project *B* requires
+   version `4.2.0`.
+   This is what Docker is all about: **isolation**.
+   Whatever is present on your system does not matter, only the Docker image/container
+   contents are relevant.
+
+   If project member *X* has version `6.6.6` and they proclaim
+   ["*works for me*"](https://web.archive.org/web/20200928142058/https://events.ccc.de/2016/11/22/hello-this-is-33c3-works-for-me/),
+   but you have `1.3.37` and it *doesn't*, and you both cannot change your versions for
+   some other reason... tough luck.
+   This is what Docker is for.
+
+   Further, if you for example specify `FROM python:3.8.6` as your *base image*, aka
+   provided a so-called *tag* of `3.8.6`, it will be that tag in ten years' time still.
+   As such, you nailed the version your process takes place in and requires.
+   Once set up, this will run on virtually any computer running Docker, be it your
+   laptop now or whatever your machine is in ten years.
+   This is especially important for the reproducibility of research.
+3. Once the image is created, it can be run, **creating a container**.
+   We can then enter the container and use it like a pretty normal (usually Linux)
+   machine, for example to compile our `tex` files.
+   Other, single commands can also be executed.
+   For example, to compile `cookbook.tex` in PowerShell when the `alexpovel/latex` image
+   is available after [installing Docker](https://docs.docker.com/docker-for-windows/install/)
+   and getting the image (`docker pull alexpovel/latex`), run:
+
+   ```powershell
+   docker run --rm --volume ${PWD}:/docs --workdir /docs alexpovel/latex latexmk
+   ```
+
+   Done!
+
+   In the above command, `--rm` removes the container once its process finishes;
+   `--volume` gives access to your current working directory (`${PWD}`) as `/docs`
+   **inside** the container.
+   Any process can then see the contents of your `$PWD` in `/docs` and work on them.
+   Lastly, `--workdir` sets the directory in which to, well, work in.
+   The image is `alexpovel/latex` and the command to execute is `latexmk`.
+
+   The latter is a recipe-like tool that automates LaTeX document compilation by running
+   `lualatex`, `biber` and whatever else required for compilation as many times as
+   needed for proper PDF output (so references like `??` in the PDF are resolved).
+   It does this by detecting that auxiliary files no longer change (steady-state).
+   The tool is configured using a [config file](.latexmkrc), which is tailor-made for
+   this template.
+
+   **For this to work, you do not have to have anything installed on your machine, only Docker**.
 
 One concrete workflow to employ this chain is to have a Dockerfile repository on GitHub,
 [like this one](https://github.com/alexpovel/latex-extras-docker).
-GitHub integrates with [DockerHub](https://hub.docker.com/), the official service provided
-by Docker themselves.
+GitHub then integrates with [DockerHub](https://hub.docker.com/).
 It allows users to share images.
 As such, there is an image called
 [alexpovel/latex](https://hub.docker.com/repository/docker/alexpovel/latex)
-on Dockerhub.
+on DockerHub.
 This *image* was built using the above GitHub *Dockerfile* and can be downloaded and run,
 yielding a live *container*.
 On every `git push` (that is, on every change) in the GitHub repo, this image is rebuilt.
@@ -203,10 +419,21 @@ To get the same, or at least a very similar environment running on Windows,
 the elements can be installed individually:
 
 1. [MiKTeX](https://miktex.org/download); for a closer match to the Docker, install
-   [TeXLive](https://www.tug.org/texlive/windows.html) instead
-2. [Java Runtime Environment](https://www.java.com/en/download/)
-3. [InkScape](https://inkscape.org/release)
-4. [gnuplot](https://sourceforge.net/projects/gnuplot/files/latest/download)
+   [TeXLive](https://www.tug.org/texlive/windows.html) instead:
+   for a LaTeX distribution with the `lualatex`, `biber`, `bib2gls`, `latexmk` etc.
+   programs, as well as all LaTeX packages.
+2. [Java Runtime Environment](https://www.java.com/en/download/):
+   for [`bib2gls`](https://ctan.org/pkg/bib2gls), which is in turn used by
+   [`glossaries-extra`](https://ctan.org/pkg/glossaries-extra).
+3. [InkScape](https://inkscape.org/release):
+   for the [`svg`](https://ctan.org/pkg/svg) package to convert SVGs automatically
+   (absolutely none of the `PDF/PDF_TEX` nonsense anymore!)
+4. [gnuplot](https://sourceforge.net/projects/gnuplot/files/latest/download):
+   for [`pgfplots`](https://ctan.org/pkg/pgfplots) to generate contour plots.
+5. [Perl](http://strawberryperl.com/):
+   for [`latexmk`](https://mg.readthedocs.io/latexmk.html) to work
+
+(see how annoying, manual and laborious this list is? ... use [Docker](#docker)!)
 
 These are required to compile the LaTeX document.
 If InkScape and gnuplot ask to put their respective binaries into the `$PATH`
@@ -216,10 +443,10 @@ If they do not, add the path yourself to the directory containing the binaries
 
 ### Enable Runner for the project
 
-To build anything, we need someone to build for us.
+To build anything, we need someone to build *for* us.
 GitLab calls these build-servers *runners*.
 Such a runner does not materialize out of thin air.
-Luckily, in the case of *collaborating.tuhh.de*, runner *tanis* is available to us.
+Luckily, in the case of *collaborating.tuhh.de*, runner `tanis` is available to us.
 Enable it (him? her?) for the project on the GitLab project homepage:
 `Settings -> CI/CD -> Runners -> Enable Shared Runners`.
 Otherwise, the build process will get 'stuck' indefinitely.
@@ -229,7 +456,14 @@ Otherwise, the build process will get 'stuck' indefinitely.
 After retrieving a built PDF, it might get lost in the nether.
 That is, the downloader loses track of what commit it belongs to, or even what release.
 This is circumvented by injecting the git SHA into the PDF metadata.
-In git, every object is uniquely identified by its hash
+This allows you to freely hand out PDFs to people, for example for proof-reading or
+to editors of journals.
+You will be able to associate and pinpoint their remarks to a specific, reproducible
+version of the document.
+Note though that such a revision process is (much, much) better done using Pull Requests,
+provided the other party uses git and GitLab.
+
+To identify versions in git, every object is uniquely identified by its hash
 ([SHA256](https://stackoverflow.com/a/28792805/11477374)):
 
 ```text
@@ -246,13 +480,15 @@ Since a collision of even short hashes is essentially impossible in most use cas
 we can uniquely identify states of the project by this short SHA.
 This is why commands like `git show 412ba291` work (try it out; the SHA exists in this repository!).
 (As a side note: GitLab picks up on those hashes automatically, as shown in
-[commit `ccedcda0`](https://collaborating.tuhh.de/cap7863/gitlab-and-latex-ci-presentation/-/commit/ccedcda05d0dd1bb200126aebdaf241d4ecb695d).)
+[commit `ccedcda0`](https://collaborating.tuhh.de/alex/gitlab-and-latex-ci-presentation/-/commit/ccedcda05d0dd1bb200126aebdaf241d4ecb695d).)
 So if we have this SHA available in the PDF, never again will there be confusion about versions.
 The PDF will be be assignable to an exact commit.
 It can look like this (in Adobe Reader, evoke file properties with `CTRL + D`):
 
-![git SHA in PDF metadata](images/bitmaps/git_sha_in_pdf_metadata.png)
+![git SHA in PDF metadata](images/bitmaps/readme/git_sha_in_pdf_metadata.png)
 
+Using this approach, it is hidden and will not show up in print.
+You can of course also add the info to the document itself, so that it will be printed.
 But how do we get it there?
 
 We have a chicken-and-egg problem:
@@ -308,7 +544,7 @@ For *real* software developers, these might display code coverage and similar th
 For, well... *us*, they can be used as a convenient way to download the built PDF.
 It can look like this (center left):
 
-![Screenshot of the PDF-Download button](images/bitmaps/pdf_download_button_gitlab.png)
+![Screenshot of the PDF-Download button](images/bitmaps/readme/pdf_download_button_gitlab.png)
 
 A little image (`svg` format) can be generated using [shields.io](https://shields.io/).
 That only needs to be done once, and if you want to reuse the existing ones, here they are:
@@ -363,7 +599,7 @@ Hopefully, it spares you some despair.
   Since, after we ensured the [image](.gitlab-ci.yml#L2) indeed exists, know that cannot be the case,
   we *Retry* the job from the job page's top right corner:
 
-  ![GitLab Job Retry button](images/bitmaps/gitlab_error-job-failed-no-such-container_retry.png)
+  ![GitLab Job Retry button](images/bitmaps/readme/gitlab_error-job-failed-no-such-container_retry.png)
 
   It should work afterwards (it never failed to restart after retrying for me).
   This will happen once in a while for some reason, perhaps caching.

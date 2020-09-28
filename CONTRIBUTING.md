@@ -15,7 +15,7 @@ Chances are that what you seek is already possible with the (many) included pack
 and only an example in the cookbook showing how to do it (but no change to the `*.cls`
 file) is needed.
 
-## Developing Environment
+## Development Environment
 
 The environment for compilation is taken care of by the Docker image as specified in
 [the CI config file](.gitlab-ci.yml) (search for the `image` name on
