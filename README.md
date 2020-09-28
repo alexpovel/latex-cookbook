@@ -282,7 +282,7 @@ In summary:
    An (unrelated) [example Dockerfile](https://github.com/alexpovel/random_python/blob/master/music-converter/Dockerfile)
    can look like:
 
-   ```Dockerfile
+   ```dockerfile
    # Dockerfile
 
    # Get the latest Debian Slim with Python installed
