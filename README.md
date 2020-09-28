@@ -211,9 +211,9 @@ There are numerous **git GUIs** available.
 They are great at visualizing the commit history (which can get convoluted, if
 you're doing it wrong), but also offer all the regular CLI functionality in GUI form.
 I have nothing to recommend here and am going to distract from this fact using this
-pretty git GUI image:
+pretty git GUI image from [here](https://unsplash.com/photos/842ofHC6MaI):
 
-[![git GUI](images/bitmaps/readme/yancy-min-842ofHC6MaI-unsplash.jpg)](https://unsplash.com/photos/842ofHC6MaI)
+![git GUI](images/bitmaps/readme/yancy-min-842ofHC6MaI-unsplash.jpg)
 
 ## Git(Lab) and Continuous Delivery
 
