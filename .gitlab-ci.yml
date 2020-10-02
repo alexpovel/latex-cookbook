@@ -27,11 +27,11 @@ default:
 
 # Define some stages so to get rid of 'Test' as default:
 stages:
-    - preparation
-    - pdf_building
+    - prepare
+    - build
 
-replace_git_metadata:
-    stage: preparation
+insert_git_metadata:
+    stage: prepare
     script:
         # Declare associative (-A) array with predefined GitLab CI variables.
         # The keys correspond to the command names found in the LaTeX code:
@@ -59,19 +59,25 @@ replace_git_metadata:
     artifacts:
         # Overrides default
         paths:
+            # Hand over the modified file, otherwise the depending stage only gets the
+            # default non-modified one.
             - "*.cls"
+    needs: []
 
-compile_latex:
-    stage: pdf_building
+build_latex:
+    stage: build
     script:
         # No *.tex-file given as argument to latexmk: run on all *.tex-files found in root.
         # Configure latexmk tool using '.latexmkrc' in project root.
         - latexmk
+    # 'dependencies' vs 'needs' is not yet clear, it is not broadly documented currently
     dependencies:
-        - replace_git_metadata
+        - insert_git_metadata
+    needs:
+        - insert_git_metadata
 
-compile_pandoc:
-    stage: pdf_building
+build_pandoc:
+    stage: build
     script:
         # Replace date metadata with current date.
         # Escape because of colon in script command.
@@ -82,3 +88,7 @@ compile_pandoc:
             pandoc README.md \
             --template eisvogel --pdf-engine=lualatex --number-sections \
             -o README.pdf
+    # Despite being in a later stage, specifying that this particular jobs 'needs'
+    # no other job allows it run immediately, leading to concurrent running of stages
+    # which would otherwise run serially, speeding up the pipeline
+    needs: []
