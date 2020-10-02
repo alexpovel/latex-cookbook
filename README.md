@@ -23,7 +23,7 @@ contains two documents:
    [badge](https://docs.gitlab.com/ee/user/project/badges.html) on top of the
    [project homepage](https://collaborating.tuhh.de/alex/latex-git-cookbook)):
 
-   [![Download README](images/vectors/gitlab/Download-README-critical.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/README.pdf?job=compile_pandoc)
+   [![Download README](images/vectors/gitlab/Download-README-critical.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/README.pdf?job=build_pandoc)
 
    **The README covers git and Continuous Delivery, using Docker.**
 2. A [LaTeX document](cookbook.tex), usable as a cookbook (different "recipes" to
@@ -32,7 +32,7 @@ contains two documents:
    The LaTeX Cookbook PDF covers LaTeX-specific topics.
    It is also available for download:
 
-   [![Download PDF](images/vectors/gitlab/Download-Cookbook-informational.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=compile_latex)
+   [![Download PDF](images/vectors/gitlab/Download-Cookbook-informational.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=build_latex)
 
 ## git
 
@@ -566,7 +566,7 @@ For this, GitLab provides variables like `%{project_path}`.
 As such, the URL is (the hyphen in the middle is intentional):
 
 ```bash
-https://collaborating.tuhh.de/%{project_path}/-/jobs/artifacts/%{default_branch}/raw/<filename>.pdf?job=compile_pdf
+https://collaborating.tuhh.de/%{project_path}/-/jobs/artifacts/%{default_branch}/raw/<filename>.pdf?job=build_pdf
 ```
 
 The `project_path` is clear, the `default_branch` is just `master`.
@@ -580,7 +580,7 @@ not with every commit.
 For example, you can do your continuous business on a `dev` branch and then add a second button,
 
 ```bash
-https://collaborating.tuhh.de/%{project_path}/-/jobs/artifacts/dev/raw/<filename>.pdf?job=compile_pdf
+https://collaborating.tuhh.de/%{project_path}/-/jobs/artifacts/dev/raw/<filename>.pdf?job=build_pdf
 ```
 
 # Possible issues and pitfalls
