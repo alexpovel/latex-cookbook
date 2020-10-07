@@ -1,7 +1,12 @@
 # Applies to all jobs, can be overridden in each
 default:
-    # Image from dockerhub per default. Specify full path to use a different image.
-    image: alexpovel/latex
+    image:
+        # Image from dockerhub per default. Specify full path to use a different image.
+        name: alexpovel/latex
+        # Override any entrypoint back to a naked shell so that job `script`s can be
+        # executed normally.
+        # See also: https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#overriding-the-entrypoint-of-an-image
+        entrypoint: [ "" ]
     # `retry` tries to fix this notorious issue
     # (ERROR: Job failed (system failure): Error: No such container: <container_id>):
     # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4450
