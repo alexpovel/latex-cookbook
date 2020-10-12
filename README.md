@@ -268,8 +268,9 @@ The advantages are:
 Docker is a tool providing so-called *containers* (though wrong, think of them as
 light-weight virtual machines).
 These containers provide isolated, well-defined environments for applications to run in.
-They are created from *running* corresponding Docker *images*.
-These images are in turn generated using scripts, so-called *Dockerfiles*.
+They are created from executing corresponding Docker *images*.
+These images are in turn generated using a script-like list of instructions,
+so-called [*Dockerfiles*](https://docs.docker.com/engine/reference/builder/).
 
 In summary:
 
@@ -324,7 +325,7 @@ In summary:
 
 2. The **image** is then built accordingly, resulting in a large-ish file that contains an
    executable environment.
-   For example, if we install a comprehensive `TeXLive` distribution, the image will be
+   For example, if we install a comprehensive `TeXLive` distribution, the image can be
    more than 2 GB in size.
 
    This Docker image can be distributed.
@@ -333,7 +334,7 @@ In summary:
    If you just instruct to run an image called e.g. `alexpovel/latex`, without
    specifying a full URL to somewhere, Docker will look on the Hub for an image of that
    name (and find it [here](https://hub.docker.com/r/alexpovel/latex)).
-   All participants of a project will pull their image from their, and everyone will
+   All participants of a project can pull images from there, and everyone will
    be on the same page (alternatively, you can build the image from the Dockerfile).
 
    For example, the LaTeX environment for this project requires a whole bunch of
@@ -341,7 +342,7 @@ In summary:
    This can take hours to read up upon, understand, explain, implement and getting to
    run.
    In some cases, it will be **impossible** if some required part of a project conflicts
-   with a pre-existing thing on your computer.
+   with a pre-existing condition on your machine.
    For example, project *A* requires `perl` in version `6.9.0`, but project *B* requires
    version `4.2.0`.
    This is what Docker is all about: **isolation**.
@@ -366,28 +367,16 @@ In summary:
    Other, single commands can also be executed.
    For example, to compile `cookbook.tex` in PowerShell when the `alexpovel/latex` image
    is available after [installing Docker](https://docs.docker.com/docker-for-windows/install/)
-   and getting the image (`docker pull alexpovel/latex`), run:
+   and getting the image (`docker pull alexpovel/latex` -- if you don't run this beforehand,
+   it will be downloaded automatically when it is missing), run:
 
    ```powershell
-   docker run --rm --volume ${PWD}:/docs --workdir /docs alexpovel/latex latexmk
+   docker run --rm --volume ${PWD}:/tex alexpovel/latex
    ```
 
    Done!
-
-   In the above command, `--rm` removes the container once its process finishes;
-   `--volume` gives access to your current working directory (`${PWD}`) as `/docs`
-   **inside** the container.
-   Any process can then see the contents of your `$PWD` in `/docs` and work on them.
-   Lastly, `--workdir` sets the directory in which to, well, work in.
-   The image is `alexpovel/latex` and the command to execute is `latexmk`.
-
-   The latter is a recipe-like tool that automates LaTeX document compilation by running
-   `lualatex`, `biber` and whatever else required for compilation as many times as
-   needed for proper PDF output (so references like `??` in the PDF are resolved).
-   It does this by detecting that auxiliary files no longer change (steady-state).
-   The tool is configured using a [config file](.latexmkrc), which is tailor-made for
-   this template.
-
+   For more info, especially the details of the above command, see
+   [here](https://github.com/alexpovel/latex-extras-docker/blob/master/README.md#quick-intro).
    **For this to work, you do not have to have anything installed on your machine, only Docker**.
 
 One concrete workflow to employ this chain is to have a Dockerfile repository on GitHub,
