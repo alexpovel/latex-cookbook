@@ -1323,6 +1323,35 @@ about indices or column numbers.
     }
 \end{figure}
 
+\subsubsection{Using MATLAB2Ti\textit{k}Z}
+
+\href{https://github.com/matlab2tikz/matlab2tikz}{MATLAB2Ti\textit{k}Z} is a tool to
+convert MATLAB figures to \LaTeX{}, see \cref{fig:matlab2tikz}.
+Notice that by default, it exports using whitespace (tabs) as column separators,
+which might differ from what you set as a global option in \verb|\pgfplotstableset|.
+
+\begin{figure}
+    \ffigbox[\FBwidth]{%
+        \caption[%
+            A vanilla \href{https://github.com/matlab2tikz/matlab2tikz}{MATLAB2Ti\textit{k}Z}
+            example%
+        ]{%
+            A vanilla \href{https://github.com/matlab2tikz/matlab2tikz}{MATLAB2Ti\textit{k}Z}
+            example, imported here without changes except those to allow successful compilation
+            (see commit \texttt{56556a0}: set \texttt{table/col sep=space}).
+            While it works, the style created in MATLAB conflicts with the local one,
+            and you miss out on many useful features, like \ctanpackage{siunitx} or
+            \ctanpackage{glossaries-extra}.
+            A more frictionless approach is to export plain-text (CSV) data from MATLAB,
+            and import it into \LaTeX{}, see \cref{fig:diffuser}%
+        }%
+        \label{fig:matlab2tikz}%
+    }{%
+        % Can't use `subimport', since import is not from any child directory.
+        \import{data/}{matlab2tikz_table_example}
+    }
+\end{figure}
+
 \subsection{TikZ and Text}
 
 \idx{tikz} content can also be intertwined with text using \verb|\tikzmark|.
