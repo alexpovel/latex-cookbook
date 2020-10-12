@@ -589,6 +589,34 @@ Many nights were lost over issues involving GitLab CI/CD, but also plain LaTeX.
 Here is a non-exhaustive list --- a bit like a gallery of failure --- of the most common ones.
 Hopefully, it spares you some despair.
 
+- You run into [a similar error as](https://tex.stackexchange.com/q/233583/120853):
+
+  ```plaintext
+  ! Package pgfplots Error: Sorry, the requested column number '1' in table 'dat.
+  csv' does not exist!? Please verify you used the correct index 0 <= i < N..
+  ```
+
+  This can happen if you use `pgfplotstable` for plotting from tabular data, be it
+  inline or from an outside file.
+  If you use [`matlab2tikz`](https://github.com/matlab2tikz/matlab2tikz), you might also
+  run into the above error, since it potentially uses inline tables.
+
+  In the [class file](cookbook.cls#983), there is a line reading:
+
+  ```tex
+  \pgfplotstableset{col sep=comma}% If ALL files/tables are comma-separated
+  ```
+
+  This is a *global* default for all tables, assuming that they are comma-separated.
+  The default is whitespace, which `matlab2tikz` uses, hence it breaks.
+  You can override the column separator either in the above global option, or manually
+  for each plot:
+
+  ```tex
+  % See https://tex.stackexchange.com/a/251245/120853
+  \addplot3[surf] table [col sep=comma] {dat.csv};
+  ```
+
 - The job is working on `Pulling docker image` [`link to docker image`](.gitlab-ci.yml#L2)
   for a while, and finally fails with
 
