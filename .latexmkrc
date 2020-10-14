@@ -26,9 +26,17 @@ $pdf_mode = 4;
 # This setting is potentially annoying when debugging/editing, but highly desirable
 # in the CI pipeline, where such a warning should result in a failed pipeline, since the
 # final document is incomplete/corrupted.
-$warnings_as_errors = 1;
+#
+# However, I could not eradicate all warnings, so that `latexmk` currently fails with
+# this option enabled.
+# Specifically, `microtype` fails together with `fontawesome`/`fontawesome5`, see:
+# https://tex.stackexchange.com/a/547514/120853
+# The fix in that answer did not help.
+# Setting `verbose=silent` to mute `microtype` warnings did not work.
+# Switching between `fontawesome` and `fontawesome5` did not help.
+$warnings_as_errors = 0;
 
-# Show used CPU time
+# Show used CPU time. Looks like: https://tex.stackexchange.com/a/312224/120853
 $show_time = 1;
 
 # --shell-escape option (execution of code outside of latex) is required for the
