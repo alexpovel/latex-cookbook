@@ -14,18 +14,21 @@ support through the package \ctanpackage{unicode-math}, which builds onto
 \ctanpackage{fontspec} and extends it by capabilities for math fonts.
 More on that in \cref{ch:fonts_text}.
 
-\hologo{LuaLaTeX} is preferred over \hologo{XeLaTeX} for two reasons:
+\hologo{LuaLaTeX} is preferred over \hologo{XeLaTeX} for the following reasons:
 \begin{enumerate}
     \item \ctanpackage{contour}, a package that can do things like
         \contour{black}{\textcolor{white}{this}}, works.
         For an application of that, see \cref{fig:bitmap_tikz} on
         \cpageref{fig:bitmap_tikz}.
+        Getting \ctanpackage{contour} to work on \hologo{XeLaTeX} is somewhat impossible.
     \item \hologo{LuaLaTeX} allocates as much memory as it happens to need.
         The ancient limitations of \TeX{} are easily reached by packages like
         \ctanpackage{tikz} and \ctanpackage{pgfplots}.
         Circumventing that either feels hacky, or actually is hacky.
         \texttt{tikzexternalize} is a great module, but has a long list of caveats.
         It solves a problem that should no longer exist in the first place.
+    \item The fantastic \ctanpackage{microtype} package has a number of unavailable
+        functionalities when using \hologo{XeLaTeX}.
 \end{enumerate}
 Using \hologo{LuaLaTeX}, you do not have to worry about any of that:
 hit compile, wait, done%
