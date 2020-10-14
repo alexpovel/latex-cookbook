@@ -303,13 +303,10 @@
     % Color=LightCyan4,% Toggle color for debugging (should be xcolor name)
 ]{texgyrepagella}%
 
-% See https://tex.stackexchange.com/a/176322/120853
-% FontAwesome simply calls the FontAwesome font family, so provide a path to our
-% provided font file here.
-\defaultfontfeatures[FontAwesome]{%
-    Path=fonts/other/,
-}
-\RequirePackage{fontawesome}% High-quality Unicode vector web symbols
+% Looking at CTAN, `fontawesome5' looks much more recent and packs many more symbols
+% in comparison to `fontawesome'.
+% It ships with its own font files, so no need to specify here.
+\RequirePackage{fontawesome5}% High-quality Unicode vector web symbols
 
 % Wrapper for "i.e.", "e.g.", "c.f.", "etc.", etc.
 % Call this command as "The animals, \iecfeg{e.g.}\ an elephant, are..."

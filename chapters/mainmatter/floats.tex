@@ -1437,11 +1437,12 @@ For example, a small file structure diagram:
             every node/.style={draw=black,thick,anchor=west,fill=g5},
             font=\ttfamily,%
         ]%
-            \node {\faFileO{} parent.py}
-            child { node {\faFileO{} constants.py}}
-            child { node {\faFileO{} parameters.py}}
-            child { node {\faFileO{} handling.py}}
-            child { node {\faFileO{} performance\_maps.py}};
+            % `[regular]` optional arg gives outlined symbol, as opposed to `solid`
+            \node {\faIcon[regular]{file-code} parent.py}
+            child { node {\faIcon[regular]{file-code} constants.py}}
+            child { node {\faIcon[regular]{file-code} parameters.py}}
+            child { node {\faIcon[regular]{file-code} handling.py}}
+            child { node {\faIcon[regular]{file-code} performance\_maps.py}};
     \end{tikzpicture}
 \end{center}
 Note how \verb|tikzpicture| environments do not have to be contained in floats.

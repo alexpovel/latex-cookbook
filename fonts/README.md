@@ -104,14 +104,13 @@ I don't have more reasons anyway, since otherwise, the programs are quite identi
 
 ## Licenses
 
-As of 2020-06-25, there are four font subdirectories, each containing the fonts and their
+As of 2020-06-25, there are these font subdirectories, each containing the fonts and their
 licenses:
 
-- [sans](sans/): The custom license requires written permission by the author to be
+1. [sans](sans/): The custom license requires written permission by the author to be
   distributed (which it probably technically is by virtue of being included in and publicly
   downloadable from this repo). That permission is attached to the directory.
-- [roman](roman/): These are licensed so that a complete, unmodified distribution is okay.
-- [mono](mono/): Same as for roman.
-- [other](other/): Sane as for roman.
+2. [roman](roman/): These are licensed so that a complete, unmodified distribution is okay.
+3. [mono](mono/): Same as for roman.
 
 For more info, refer to the exact licenses.
