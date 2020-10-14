@@ -72,9 +72,13 @@ insert_git_metadata:
 build_latex:
     stage: build
     script:
+        # For debugging: show commands that will be used for compilation, as configured
+        # after reading all found config (RC) files.
+        - latexmk --commands
         # No *.tex-file given as argument to latexmk: run on all *.tex-files found in root.
         # Configure latexmk tool using '.latexmkrc' in project root.
-        - latexmk
+        # After the run, display the relevant rules (for debugging).
+        - latexmk --rules
     # 'dependencies' vs 'needs' is not yet clear, it is not broadly documented currently
     dependencies:
         - insert_git_metadata
