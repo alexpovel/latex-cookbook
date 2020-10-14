@@ -1,4 +1,15 @@
-# PERL latexmk config file
+#!/bin/env perl
+
+# Shebang is only to get syntax highlighting right across GitLab, GitHub and IDEs.
+# This file is not meant to be run, but read by `latexmk`.
+
+# ======================================================================================
+# Perl `latexmk` configuration file
+# ======================================================================================
+
+# ======================================================================================
+# PDF Generation/Building/Compilation
+# ======================================================================================
 
 # PDF-generating modes are:
 # 1: pdflatex, as specified by $pdflatex variable (still largely in use)
