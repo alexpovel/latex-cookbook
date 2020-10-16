@@ -7,17 +7,6 @@ default:
         # executed normally.
         # See also: https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#overriding-the-entrypoint-of-an-image
         entrypoint: [ "" ]
-    # `retry` tries to fix this notorious issue
-    # (ERROR: Job failed (system failure): Error: No such container: <container_id>):
-    # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4450
-    # As of 2020-04-13, Steve Azzopardi commented that it should be fixed from GitLab
-    # version 12.10.
-    #
-    # Needs to be implemented for later jobs too, since those can apparently
-    # still fail even though preceding stages have pulled successfully.
-    retry:
-        max: 1
-        when: runner_system_failure
     # LaTeX and pandoc stages both provide PDFs:
     artifacts:
         # artifacts.zip is renamed to current tag/branch:
