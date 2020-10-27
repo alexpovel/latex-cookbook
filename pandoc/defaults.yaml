@@ -1,0 +1,40 @@
+# Instead of command-line options, configure pandoc here and point it to this file.
+# See also: https://pandoc.org/MANUAL.html#default-files
+
+# -------------------------------------------------------------------------------------
+# Basics
+# -------------------------------------------------------------------------------------
+# lualatex for Unicode and all the other good stuff. Better than xelatex and pdflatex.
+pdf-engine: lualatex
+
+# When calling `pandoc` from this project's root using `--defaults=subdir/defaults.yaml`,
+# the filter filters are resolved in relation to where `pandoc` is called, NOT relative
+# to the `defaults.yaml` file.
+# The same is true for metadata files.
+# Therefore, keep this ugly hack (specifying paths relative to project root dir)
+# until https://github.com/jgm/pandoc/issues/5982 is resolved:
+metadata-file: pandoc/metadata.yaml
+
+# Custom filter programs modify the document (pandoc AST) before it is written out:
+filters:
+  - pandoc/promote-headers.lua
+
+# -------------------------------------------------------------------------------------
+# Style
+# -------------------------------------------------------------------------------------
+# Core pandoc options, see https://pandoc.org/MANUAL.html#default-files:
+table-of-contents: true
+number-sections: true
+
+template: eisvogel
+variables:
+  # These are used by the Eisvogel pandoc template, i.e. not by core pandoc itself.
+  # See also https://github.com/Wandmalfarbe/pandoc-latex-template#custom-template-variables
+  titlepage: true
+  colorlinks: true
+  lang: "en"
+# -------------------------------------------------------------------------------------
+# Other
+# -------------------------------------------------------------------------------------
+# ERROR, WARNING, INFO:
+verbosity: INFO

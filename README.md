@@ -1,15 +1,3 @@
----
-title: "LaTeX, GitLab and Continuous Delivery"
-author: [Alex Povel]
-date: "2020"
-subject: "Presenting the advantages and a workflow using LaTeX and GitLab"
-keywords: [LaTeX, GitLab, CI, CD, Markdown]
-lang: "en"
-titlepage: true
-toc: true
-colorlinks: true
-...
-
 # A LaTeX Cookbook, git and Continuous Delivery
 
 > [Remember, a few hours of trial and error can save you several minutes of looking at the README.](https://twitter.com/iamdevloper/status/1060067235316809729)
