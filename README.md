@@ -572,7 +572,7 @@ For example, you can do your continuous business on a `dev` branch and then add 
 https://collaborating.tuhh.de/%{project_path}/-/jobs/artifacts/dev/raw/<filename>.pdf?job=build_pdf
 ```
 
-# Possible issues and pitfalls
+## Possible issues and pitfalls
 
 Many nights were lost over issues involving GitLab CI/CD, but also plain LaTeX.
 Here is a non-exhaustive list --- a bit like a gallery of failure --- of the most common ones.
@@ -727,9 +727,9 @@ Hopefully, it spares you some despair.
     If suddenly every entry showed up in the printed document despite *not* being
     referenced (be it a glossary or a bibliography item), chaos would ensue.
 
-# Appendix
+## Appendix
 
-## Hints for source files
+### Hints for source files
 
 These are valid not only for LaTeX files, but most text-based source files:
 
