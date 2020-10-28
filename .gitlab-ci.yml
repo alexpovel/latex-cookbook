@@ -24,9 +24,6 @@ stages:
     - prepare
     - build
 
-variables:
-  README_BASENAME: "README"
-
 insert_git_metadata:
     stage: prepare
     script:
@@ -87,6 +84,8 @@ build_latex:
 
 build_pandoc:
     stage: build
+    variables:
+        README_BASENAME: "README"
     script:
         # Provide dynamic metadata for the date. All other settings are in the `defaults`
         # file.
