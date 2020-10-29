@@ -7,10 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2020-10-29
+
 ### Added
 
 - Showcase for multiple lines with contours in TikZ overlay (ae4ad39)
 - Hint for the `glossaries-extra` *Beginner's Guide* (d8b7fb4)
+- Written permission (license) to use and distribute the [Fontin Sans](https://www.fontsquirrel.com/fonts/fontin-sans)
+  font (cf79ee4)
+- Summary for font licenses (0372475)
+- Contributing guideline (56c4eac)
+- README info on git and Docker (fa228b7)
+- A `matlab2tikz` exported plot example (86dac19, c3e9b09)
+- `YAML`-based configs for pandoc (cb39706)
+- Proper check for the used TeX engine (de2a293)
+
+### Changed
+
+- Fontawesome implementation, away from the `fontawesome` package to the more
+  modern `fontawesome5` (8df784e)
+- Insertion of git metadata into the document (PDF metadata or into the printed text
+  directly): now based on Lua (6d0cd7e)
+- Also adjusted the README according to the new Lua implementation (ed946b8)
 
 ## [1.1.1] - 2020-06-09
 
