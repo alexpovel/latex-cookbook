@@ -13,6 +13,12 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{cookbook}[2020-06-09 v1.1.1 cookbook class]
 
+% Fail early and give useful information on the required engine.
+% This helps users who do not read the documentation beforehand, by promoting the
+% requirement from some statement in the docs to actual code that errors out.
+\RequirePackage{iftex}
+\RequireLuaTeX{}
+
 \newcommand*{\@baseclass}{scrbook}% Name of class this one is based on
 
 % If option 'language' is not given at all, use initialization 'english' as a fallback.
