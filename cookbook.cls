@@ -357,7 +357,7 @@
 % https://www.overleaf.com/learn/latex/Articles/An_Introduction_to_LuaTeX_(Part_2):_Understanding_%5Cdirectlua
 % ). Just execute an outside, proper file.
 \directlua{%
-    dofile("lua/envvar_newcommands.lua")
+    dofile("lib/lua/envvar_newcommands.lua")
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
