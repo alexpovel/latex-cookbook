@@ -35,16 +35,16 @@
                 \\
             \TransCompiledOn{} & \textbf{\DTMnow{}}\\
         \addlinespace
-            % Expand Argument first, else we print \GitVersion etc. literally.
+            % Expand Argument first, else we print \GitRefName etc. literally.
             % Then wrap into special command to escape chars (like underscores):
-            Git Version &
+            Git Ref.\ Name &
                 \texttt{\textbf{%
-                    \expandafter\EscWrapper\expandafter{\GitVersion}%
+                    \expandafter\EscWrapper\expandafter{\GitRefName}%
                 }}
                 \\
-            Git Hash &
+            Git Short SHA &
                 \texttt{%
-                    \expandafter\EscWrapper\expandafter{\GitShortHash}%
+                    \expandafter\EscWrapper\expandafter{\GitShortSHA}%
                 }
                 \\
         \addlinespace

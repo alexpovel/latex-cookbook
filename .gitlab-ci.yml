@@ -31,14 +31,14 @@ insert_git_metadata:
         # The keys correspond to the command names found in the LaTeX code:
         - |
             declare -A GITINFO=(
-                [GitVersion]=$CI_COMMIT_REF_NAME
-                [GitShortHash]=$CI_COMMIT_SHORT_SHA
+                [GitRefName]=$CI_COMMIT_REF_NAME
+                [GitShortSHA]=$CI_COMMIT_SHORT_SHA
             )
 
         # Iterate over array and replace the LaTeX commands,
-        # e.g. \newcommand*{\GitVersion}{n.a.},
+        # e.g. \newcommand*{\GitRefName}{n.a.},
         # with
-        # e.g. \newcommand*{\GitVersion}{v1.00}.
+        # e.g. \newcommand*{\GitRefName}{v1.00}.
         # Use double quotes to enable variable expansion.
         # Employ and use capture group \1 to replace current LaTeX command
         # (given by key in array) by corresponding value for that key.

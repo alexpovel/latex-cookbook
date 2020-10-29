@@ -484,7 +484,7 @@ In the LaTeX preamble, we can then use
 ```latex
 \usepackage[pdfusetitle]{hyperref}% pdfusetitle reads from \author and \title
     \hypersetup{%
-        pdfcreator={LaTeX with hyperref (\GitVersion{}, \GitShortHash{})},
+        pdfcreator={LaTeX with hyperref (\GitRefName{}, \GitShortSHA{})},
     }
 ```
 
@@ -495,12 +495,12 @@ Note that in LaTeX, you likely used `\author{<author's name>}` and `\title{<docu
 somewhere in the preamble to generate a title page.
 `hyperref`'s `pdfusetitle` option will use those values for the PDF metadata.
 Lastly, `pdfcreator` will fill the `Application` field we see above.
-However, `\GitVersion{}` and `\GitShortHash{}}` need to be defined.
+However, `\GitRefName{}` and `\GitShortSHA{}}` need to be defined.
 These are defined earlier in the preamble:
 
 ```latex
-\newcommand*{\GitVersion}{n.a.}
-\newcommand*{\GitShortHash}{n.a.}
+\newcommand*{\GitRefName}{n.a.}
+\newcommand*{\GitShortSHA}{n.a.}
 ```
 
 (Side note: use the [starred variant of `newcommand`](https://tex.stackexchange.com/a/1057/120853),
@@ -509,7 +509,7 @@ unless you need paragraph breaks, which is mostly not the case).
 Using the above definition, the fields will just show up as *not available* if for example
 compiling locally ("at home").
 The server has a script employing `sed` (since we're using GNU/Linux there),
-specified in [.gitlab-ci.yml](.gitlab-ci.yml), that seeks `GitVersion` and `GitShortHash`
+specified in [.gitlab-ci.yml](.gitlab-ci.yml), that seeks `GitRefName` and `GitShortSHA`
 and replaces whatever comes in the curly braces of those commands.
 See the `script` of the `replace_git_metadata` job in that file.
 

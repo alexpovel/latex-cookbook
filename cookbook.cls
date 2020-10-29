@@ -354,8 +354,8 @@
 % These are inserted into the PDF metadata.
 % In the build process, the defaults should be replaced by the respective,
 % current values (see gitlab-ci.yml / your CI script for this)
-\newcommand*{\GitVersion}{n.a.}
-\newcommand*{\GitShortHash}{n.a.}
+\newcommand*{\GitRefName}{n.a.}
+\newcommand*{\GitShortSHA}{n.a.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1617,7 +1617,7 @@
             LaTeX with hyperref,
             glossaries-extra/bib2gls
             and biblatex/biber
-            [\GitVersion{}@\GitShortHash{}]
+            [\GitRefName{}@\GitShortSHA{}]
         },
         bookmarksnumbered=true,%
         % Default opening of the document in supported PDF viewers:
