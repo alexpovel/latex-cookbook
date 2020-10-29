@@ -4,6 +4,9 @@
 -- See also:
 -- https://github.com/jgm/pandoc/issues/5615
 
+-- Stop linters from complaining about missing variable:
+local pandoc = require("pandoc")
+
 local title
 
 -- Promote all headers by one level. Set title from level 1 headers,
