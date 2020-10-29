@@ -1646,8 +1646,7 @@
     % In this case, ... is \relax, removing the macro definition.
     % It will no longer occur in PDF commands.
     % See also:
-    % https://www.overleaf.com/learn/latex/Articles/How_does_%5Cexpandafter_work:
-    % _A_detailed_study_of_consecutive_%5Cexpandafter_commands
+    % https://www.overleaf.com/learn/latex/Articles/How_does_%5Cexpandafter_work:_A_detailed_study_of_consecutive_%5Cexpandafter_commands
     % and
     % TUGboat, Volume 9, 1988, No. 1: Macros: A Tutorial on \expandafter by
     % Stephan v. Bechtolsheim.
