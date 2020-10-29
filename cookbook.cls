@@ -351,11 +351,14 @@
 % https://tex.stackexchange.com/a/350583/120853
 \StrSubstitute{\shortbanner}{\detokenize{LuaTeX}}{\hologo{LuaTeX}}[\prettybanner]
 
-% These are inserted into the PDF metadata.
-% In the build process, the defaults should be replaced by the respective,
-% current values (see gitlab-ci.yml / your CI script for this)
-\newcommand*{\GitRefName}{n.a.}
-\newcommand*{\GitShortSHA}{n.a.}
+% Generate some control sequences which contain metadata, which can be inserted e.g.
+% into the PDF metadata (e.g. to have the exact git commit SHA of a build).
+% Do not use Lua code in `\directlua`, way too annoying with all the escaping (see:
+% https://www.overleaf.com/learn/latex/Articles/An_Introduction_to_LuaTeX_(Part_2):_Understanding_%5Cdirectlua
+% ). Just execute an outside, proper file.
+\directlua{%
+    dofile("lua/envvar_newcommands.lua")
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

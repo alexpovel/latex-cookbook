@@ -4,11 +4,6 @@
 \thispagestyle{empty}
 \vspace*{\fill}
 
-% Use URL as wrapper to escape special chars in tags, mainly underscores like "Fix_It"
-% \urlstyle takes rm, tt etc.
-% https://tex.stackexchange.com/a/20891/120853
-\DeclareUrlCommand{\EscWrapper}{\urlstyle{tt}}
-
 \begingroup% Keep changes local to this group
     \hypersetup{hidelinks}
     \color{g2}
@@ -35,18 +30,8 @@
                 \\
             \TransCompiledOn{} & \textbf{\DTMnow{}}\\
         \addlinespace
-            % Expand Argument first, else we print \GitRefName etc. literally.
-            % Then wrap into special command to escape chars (like underscores):
-            Git Ref.\ Name &
-                \texttt{\textbf{%
-                    \expandafter\EscWrapper\expandafter{\GitRefName}%
-                }}
-                \\
-            Git Short SHA &
-                \texttt{%
-                    \expandafter\EscWrapper\expandafter{\GitShortSHA}%
-                }
-                \\
+            Git Version & \texttt{\textbf{\GitRefName{}}} \\
+            Git Hash & \texttt{\GitShortSHA{}} \\
         \addlinespace
             Engine & \prettybanner{}\\
             \LaTeX{} Version & \hologo{\fmtname} (\fmtversion)\\

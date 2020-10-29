@@ -19,53 +19,6 @@ default:
     # only:
         # - tags
 
-# Define some stages so to get rid of 'Test' as default:
-stages:
-    - prepare
-    - build
-
-insert_git_metadata:
-    stage: prepare
-    script:
-        # Declare associative (-A) array with predefined GitLab CI variables.
-        # The keys correspond to the command names found in the LaTeX code:
-        - |
-            declare -A GITINFO=(
-                [GitRefName]=$CI_COMMIT_REF_NAME
-                [GitShortSHA]=$CI_COMMIT_SHORT_SHA
-            )
-
-        # Iterate over array and replace the LaTeX commands,
-        # e.g. \newcommand*{\GitRefName}{n.a.},
-        # with
-        # e.g. \newcommand*{\GitRefName}{v1.00}.
-        # Use double quotes to enable variable expansion.
-        # Employ and use capture group \1 to replace current LaTeX command
-        # (given by key in array) by corresponding value for that key.
-        # Run on all class files (cls) found. Only do it once (no global option to sed),
-        # for safety: the relevant \newcommand should only occur once.
-        # Checking with `grep` is simpler/clearer than using sed's `q` option.
-        - |
-            for k in "${!GITINFO[@]}"
-                do
-                    grep --silent "${k}" *.cls || \
-                        { \
-                            echo "Failed to find (and therefore replace) '${k}'." && \
-                            exit 1; \
-                        };
-                    sed --in-place "s~\(newcommand\*{\\\\$k}\){.*}~\1{${GITINFO[$k]}}~" *.cls
-                done
-    # Hand the processed *.cls file(s) to the next stage:
-    artifacts:
-        # Overrides default
-        paths:
-            # Hand over the modified file, otherwise the depending stage only gets the
-            # default non-modified one.
-            - "*.cls"
-    needs: []
-    # This *shouldn't* fail, but failure is not catastrophic:
-    allow_failure: true
-
 build_latex:
     stage: build
     script:
@@ -77,10 +30,6 @@ build_latex:
         # Configure latexmk tool using '.latexmkrc' in project root.
         # After the run, display the relevant rules (for debugging).
         - latexmk --rules
-    needs:
-        - job: insert_git_metadata
-          # Also get that job's artifacts (like what `dependencies` used to do):
-          artifacts: true
 
 build_pandoc:
     stage: build
@@ -95,7 +44,3 @@ build_pandoc:
                 --metadata=date:$(date --iso-8601) \
                 --output=${README_BASENAME}.pdf \
                 ${README_BASENAME}.md
-    # Despite being in a later stage, specifying that this particular jobs 'needs'
-    # no other job allows it run immediately, leading to concurrent running of stages
-    # which would otherwise run serially, speeding up the pipeline
-    needs: []
