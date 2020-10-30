@@ -30,7 +30,7 @@ local macros_to_envvars = {
 
 for macro_name, env_var in pairs(macros_to_envvars) do
     local content = os.getenv(env_var)
-    if content == nil then
+    if content == nil or content == "" then
         content = missing
     end
     --[[
