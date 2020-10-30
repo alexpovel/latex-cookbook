@@ -36,12 +36,11 @@ for macro_name, env_var in pairs(macros_to_envvars) do
     --[[
         The `content` can contain unprintable characters, like underscores in git branch
         names. Towards this end, use detokenize in the macro itself, which will make all
-        characters printable (assigns category code 12). Use `\string` to escape the
-        backslashes so they make it into the Lua interpreter intact. See also:
+        characters printable (assigns category code 12). See also:
         https://www.overleaf.com/learn/latex/Articles/An_Introduction_to_LuaTeX_(Part_2):_Understanding_%5Cdirectlua
     --]]
     local escaped_content = "\\detokenize{"..content.."}"
 
-    --  Set a macro, like `\newcommand`, see also: https://tex.stackexchange.com/a/450892/120853
+    --  Set a macro (`\newcommand`) see also: https://tex.stackexchange.com/a/450892/120853
     token.set_macro(macro_name, escaped_content)
 end
