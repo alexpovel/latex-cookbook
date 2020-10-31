@@ -7,7 +7,7 @@
 # The following are "special targets", see:
 # https://www.gnu.org/software/make/manual/html_node/Special-Targets.html#Special-Targets
 # A phony target: not a file, just some routine.
-.PHONY: clean mostlyclean preflight
+.PHONY: all clean mostlyclean tex preflight
 
 # =====================================================================================
 # Set variables, executables and their flags
@@ -45,15 +45,18 @@ endif
 # =====================================================================================
 # =====================================================================================
 
-# Produce all found tex files, but only the README.md (not CHANGELOG.md etc.):
-SRC := $(wildcard *.tex) README.md
+# Produce all found tex files.
+tex_sources = $(wildcard *.tex)
+tex_pdfs := $(tex_sources:.tex=.pdf)
 
 # First rule is what is run by default if just using `make` with no arguments.
 # It is the 'goal': https://www.gnu.org/software/make/manual/html_node/Goals.html.
 # The name `all` is just a convention.
 # Change suffix of multiple different extensions (.tex, .md), to the same suffix (.pdf).
 # See also: https://stackoverflow.com/a/33926814
-all: preflight $(addsuffix .pdf, $(basename $(SRC)))
+all: preflight tex README.pdf
+# A rule for only LaTeX files:
+tex: $(tex_pdfs)
 
 # =====================================================================================
 # Rules for file building
