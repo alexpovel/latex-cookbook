@@ -124,3 +124,5 @@ mostlyclean:
 clean: mostlyclean
 	@echo "Removing all files ignored by git (.gitignore)..."
 	@git clean --force -xd
+	@echo "Removing pandoc template..."
+	@sudo $(RM) $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE)
