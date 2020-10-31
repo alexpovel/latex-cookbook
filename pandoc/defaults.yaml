@@ -37,4 +37,4 @@ variables:
 # Other
 # -------------------------------------------------------------------------------------
 # ERROR, WARNING, INFO:
-verbosity: INFO
+verbosity: WARNING
