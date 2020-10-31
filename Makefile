@@ -96,8 +96,7 @@ $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE):
 		"https://github.com/Wandmalfarbe/pandoc-latex-template/releases/latest/download/${EISVOGEL_ARCHIVE}"
 	@echo "Extracting $(EISVOGEL_ARCHIVE)..."
 	@tar --extract --file=${EISVOGEL_ARCHIVE} eisvogel.tex
-	@echo "Moving template to $@. This is required for make to work reliably but \
-		requires sudo privileges."
+	@echo "Moving template to $@. This is required for make to work reliably but requires sudo privileges."
 	@sudo mv eisvogel.tex $@
 
 # =====================================================================================
