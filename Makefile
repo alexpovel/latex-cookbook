@@ -15,8 +15,7 @@
 
 # Configure latexmk tool using '.latexmkrc' in project root, not in here.
 LATEXMK = latexmk
-# After the run, display the relevant rules (for debugging).
-LATEXMK_FLAGS = --rules
+LATEXMK_FLAGS =
 
 PANDOC = pandoc
 # For pandoc, provide dynamic metadata for the date. Git short SHA works both in CI and
@@ -33,6 +32,8 @@ PANDOC_FLAGS = \
 ifdef CI
 	# pandoc is quiet by default
 	PANDOC_FLAGS += --verbose
+	# After the run, display the relevant rules (for debugging)
+	LATEXMK_FLAGS += --rules
 else
 	# latexmk is verbose by default
 	LATEXMK_FLAGS += --quiet
