@@ -31,6 +31,9 @@ preflight:
     # Preflight checks are relevant, but we are interested in how exactly later jobs
     # error out if preflight fails. Therefore, allow failure.
     allow_failure: true
+    inherit:
+        # Do not inherit artifacts, this stage has none.
+        default: [image]
 
 build_latex:
     stage: build
