@@ -18,11 +18,9 @@ LATEXMK = latexmk
 LATEXMK_FLAGS =
 
 PANDOC = pandoc
-# For pandoc, provide dynamic metadata for the date. Git short SHA works both in CI and
-# locally. All other settings are in the `defaults` file.
-PANDOC_FLAGS = \
-		--defaults=pandoc/defaults.yaml \
-		--metadata=date:"$(shell date --iso-8601) ($(shell git rev-parse --short HEAD))"
+# For pandoc, provide dynamic metadata for the date (see below). Git short SHA works
+# both in CI and locally. All other settings are in the `defaults` file.
+PANDOC_FLAGS = --defaults=pandoc/defaults.yaml
 
 # GitLab CI defines variables that we can check for. This allows us to detect if we're
 # in a CI scenario.
@@ -30,14 +28,18 @@ PANDOC_FLAGS = \
 # https://www.gnu.org/software/make/manual/html_node/Conditional-Syntax.html#Conditional-Syntax
 # https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
 ifdef CI
+	GIT_SHORT_SHA = $$CI_COMMIT_SHORT_SHA
 	# pandoc is quiet by default
 	PANDOC_FLAGS += --verbose
 	# After the run, display the relevant rules (for debugging)
 	LATEXMK_FLAGS += --rules
 else
 	# latexmk is verbose by default
+	GIT_SHORT_SHA = $(shell git rev-parse --short HEAD)
 	LATEXMK_FLAGS += --quiet
 endif
+
+PANDOC_FLAGS += --metadata=date:"$(shell date --iso-8601) ($(GIT_SHORT_SHA))"
 
 # =====================================================================================
 # =====================================================================================
