@@ -6,6 +6,11 @@ default:
         # Override any entrypoint back to a naked shell so that job `script`s can be
         # executed normally.
         # See also: https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#overriding-the-entrypoint-of-an-image
+        # Cannot use `make` as ENTRYPOINT even if all scripts used it: runner expects an
+        # entrypoint that accepts shell scripts ("the runner expects that the image has
+        # no entrypoint or that the entrypoint is prepared to start a shell command. ")
+        # See also:
+        # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#overriding-the-entrypoint-of-an-image
         entrypoint: [ "" ]
     # LaTeX and pandoc stages both provide PDFs:
     artifacts:
@@ -19,28 +24,20 @@ default:
     # only:
         # - tags
 
+preflight:
+    stage: .pre
+    script:
+        - make preflight
+    # Preflight checks are relevant, but we are interested in how exactly later jobs
+    # error out if preflight fails. Therefore, allow failure.
+    allow_failure: true
+
 build_latex:
     stage: build
     script:
-        # For debugging: show commands that will be used for compilation, as configured
-        # after reading all found config (RC) files.
-        # Looks like: https://tex.stackexchange.com/a/311753/120853
-        - latexmk --commands
-        # No *.tex-file given as argument to latexmk: run on all *.tex-files found in root.
-        # Configure latexmk tool using '.latexmkrc' in project root.
-        # After the run, display the relevant rules (for debugging).
-        - latexmk --rules
+        - make tex
 
 build_pandoc:
     stage: build
-    variables:
-        README_BASENAME: "README"
     script:
-        # Provide dynamic metadata for the date. All other settings are in the `defaults`
-        # file.
-        - |
-            pandoc \
-                --defaults=pandoc/defaults.yaml \
-                --metadata=date:$(date --iso-8601) \
-                --output=${README_BASENAME}.pdf \
-                ${README_BASENAME}.md
+        - make README.pdf
