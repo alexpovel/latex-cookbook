@@ -76,21 +76,21 @@ tex: $(tex_pdfs)
 # Just sets up an implicit rule to specify how to get from prerequisite to target,
 # called whever `make` detects it needs to do so. No need to specify things manually.
 %.pdf: %.tex
-	$(info Running $(LATEXMK)...)
+	$(info Running $(LATEXMK) to build $@...)
 	@$(LATEXMK) $(LATEXMK_FLAGS) $<
 
-PANDOC_TEMPLATE = $(strip $(shell grep "^template:" pandoc/defaults.yaml | cut --delimiter=":" --field=2))
+PANDOC_TEMPLATE = $(strip $(shell grep "^template:" pandoc/defaults.yaml | cut --delimiter=":" --field=2)).latex
 PANDOC_TEMPLATE_DIR = /usr/share/pandoc/data/templates
 
-%.pdf: %.md $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE).latex
-	$(info Running $(PANDOC)...)
+%.pdf: %.md $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE)
+	$(info Running $(PANDOC) to build $@...)
 	@$(PANDOC) $(PANDOC_FLAGS) --output=$@ $<
 
 EISVOGEL_ARCHIVE = Eisvogel.tar.gz
 
 # The `$(info ...)` function gives out-of-order logging, while `echo` works with the
 # `wget` progress display.
-$(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE).latex:
+$(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE):
 	@echo "Template not found at $@, downloading..."
 	@wget --quiet --show-progress --no-clobber \
 		"https://github.com/Wandmalfarbe/pandoc-latex-template/releases/latest/download/${EISVOGEL_ARCHIVE}"
