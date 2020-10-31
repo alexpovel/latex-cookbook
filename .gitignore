@@ -1,6 +1,6 @@
-## Generated PDF is not suitable for Git. We get our compiled PDF via CI anyway.
-
-*.pdf
+# Generated PDF is not suitable for Git. We get our compiled PDF via CI.
+# Only ignore root level PDF, since images/vectors might be in PDF format.
+/*.pdf
 
 # Testing environment
 testing.tex
@@ -19,7 +19,7 @@ dirty_directory/
 *contourtmp*
 
 # Automatically generated files by svg package:
-images/vectors/svg-inkscape
+**/svg-inkscape/*
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
