@@ -13,8 +13,10 @@
 # Set variables, executables and their flags
 # =====================================================================================
 
+# Configure latexmk tool using '.latexmkrc' in project root, not in here.
 LATEXMK = latexmk
-LATEXMK_FLAGS =
+# After the run, display the relevant rules (for debugging).
+LATEXMK_FLAGS = --rules
 
 PANDOC = pandoc
 # For pandoc, provide dynamic metadata for the date. Git short SHA works both in CI and
@@ -95,13 +97,15 @@ $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE).latex:
 	@sudo mv eisvogel.tex $@
 
 # =====================================================================================
-# Help users install programs required for compilation.
+# Help users install programs required for compilation and help debug.
 # =====================================================================================
 preflight:
 	@echo "Checking presence of required libraries..."
 	@ldconfig --print-cache | grep --silent "librsvg" || \
 		(echo "librsvg missing: required by pandoc to convert files containing SVGs."; exit 69)
 	@echo "Libraries OK."
+# Output looks like: https://tex.stackexchange.com/a/311753/120853
+	@$(LATEXMK) --commands
 
 clean:
 	@echo "Removing generated and auxiliary files of all found TeX files..."
