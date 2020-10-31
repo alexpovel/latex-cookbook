@@ -17,11 +17,11 @@ LATEXMK = latexmk
 LATEXMK_FLAGS =
 
 PANDOC = pandoc
-# For pandoc, provide dynamic metadata for the date. All other settings are in the
-# `defaults` file.
+# For pandoc, provide dynamic metadata for the date. Git short SHA works both in CI and
+# locally. All other settings are in the `defaults` file.
 PANDOC_FLAGS = \
 		--defaults=pandoc/defaults.yaml \
-		--metadata=date:$(shell date --iso-8601)
+		--metadata=date:"$(shell date --iso-8601) ($(shell git rev-parse --short HEAD))"
 
 # GitLab CI defines variables that we can check for. This allows us to detect if we're
 # in a CI scenario.
