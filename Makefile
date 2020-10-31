@@ -85,23 +85,23 @@ EISVOGEL_ARCHIVE = Eisvogel.tar.gz
 # The `$(info ...)` function gives out-of-order logging, while `echo` works with the
 # `wget` progress display.
 $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE).latex:
-	@echo Template not found at $@, downloading...
+	@echo "Template not found at $@, downloading..."
 	@wget --quiet --show-progress --no-clobber \
 		"https://github.com/Wandmalfarbe/pandoc-latex-template/releases/latest/download/${EISVOGEL_ARCHIVE}"
-	@echo Extracting $(EISVOGEL_ARCHIVE)...
+	@echo "Extracting $(EISVOGEL_ARCHIVE)..."
 	@tar --extract --file=${EISVOGEL_ARCHIVE} eisvogel.tex
-	@echo Moving template to $@. This is required for make to work reliably but \
-		requires sudo privileges.
+	@echo "Moving template to $@. This is required for make to work reliably but \
+		requires sudo privileges."
 	@sudo mv eisvogel.tex $@
 
 # =====================================================================================
 # Help users install programs required for compilation.
 # =====================================================================================
 preflight:
-	@echo Checking presence of required libraries...
+	@echo "Checking presence of required libraries..."
 	@ldconfig --print-cache | grep --silent "librsvg" || \
 		(echo "librsvg missing: required by pandoc to convert files containing SVGs."; exit 69)
-	@echo Libraries OK.
+	@echo "Libraries OK."
 
 clean:
 	@echo "Removing generated and auxiliary files of all found TeX files..."
