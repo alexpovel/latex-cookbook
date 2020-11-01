@@ -1,9 +1,11 @@
 --[[
     The following import is not required since in LuaTeX's `\directlua` environment,
-    `token` is already available. However, this is nice to keep linters from complaining
-    about an undefined variable.
+    `token` etc. is already available. However, this is nice to keep linters from
+    complaining about an undefined variable.
 --]]
 local token = require("token")
+local texio = require("texio")
+local status = require("status")
 
 --[[
     Trying to incorporate dynamic values into certain newcommand macros. Their
@@ -20,19 +22,57 @@ local token = require("token")
     LuaTeX provides excellent access to TeX, making this implementation much easier.
 --]]
 
-local missing = "n.a."
+local function get_cmd_stdout(cmd)
+    -- See: https://stackoverflow.com/a/326715/11477374
+    local fh = assert(io.popen(cmd))
+    local first_line = assert(fh:read())
+    fh:close()
+    return first_line
+end
 
---  Environment variables as used e.g. in GitLab CI:
-local macros_to_envvars = {
-    GitRefName = "CI_COMMIT_REF_NAME",
-    GitShortSHA = "CI_COMMIT_SHORT_SHA",
+-- Environment variables as used e.g. in GitLab CI.
+-- Otherwise, e.g. when developing locally, use commands as a fallback.
+local macro_content_sources = {
+    GitRefName = {
+        env = "CI_COMMIT_REF_NAME",
+        cmd = "git rev-parse --abbrev-ref HEAD",
+    },
+    GitShortSHA = {
+        env = "CI_COMMIT_SHORT_SHA",
+        cmd = "git rev-parse --short HEAD",
+    },
 }
 
-for macro_name, env_var in pairs(macros_to_envvars) do
-    local content = os.getenv(env_var)
-    if content == nil or content == "" then
-        content = missing
+for macro_name, content_sources in pairs(macro_content_sources) do
+    -- Default: check for environment variable:
+    local env = content_sources.env
+    local cmd = content_sources.cmd
+    local content = "n.a."  -- Default value
+    local env_content = os.getenv(env)
+
+    if env_content and env_content ~= "" then  -- Empty string evaluates to true
+        texio.write_nl("Found and will be using environment variable '"..env.."'.")
+        content = env_content
+    else
+        texio.write_nl("Environment variable '"..env.."' undefined or empty, trying fallback command.")
+        -- luatex reference for shell escape:
+        -- "0 means disabled, 1 means anything is permitted, and 2 is restricted"
+        if status.shell_escape == 1 then
+            local cmd_success, cmd_stdout = pcall(get_cmd_stdout, cmd)
+            if cmd_success then
+                texio.write_nl("Fallback command '"..cmd.."' succeeded.")
+                content = cmd_stdout
+            else
+                texio.write_nl("Fallback command '"..cmd.."' unsuccessful.")
+            end
+        else
+            texio.write_nl("shell-escape is disabled, cannot use fallback command.")
+        end
     end
+
+    -- Shouldn't happen, would be programmer error, therefore assert Python-style
+    assert(content, "Content not defined (neither success nor fallback present)")
+
     --[[
         The `content` can contain unprintable characters, like underscores in git branch
         names. Towards this end, use detokenize in the macro itself, which will make all
@@ -41,6 +81,7 @@ for macro_name, env_var in pairs(macros_to_envvars) do
     --]]
     local escaped_content = "\\detokenize{"..content.."}"
 
+    texio.write_nl("Providing new macro '"..macro_name.."' with contents: '"..escaped_content.."'.")
     --  Set a macro (`\newcommand`) see also: https://tex.stackexchange.com/a/450892/120853
     token.set_macro(macro_name, escaped_content)
 end
