@@ -23,6 +23,12 @@ default:
     # Run job 'only' if it fulfills certain criteria (BETTER: use `rules`):
     # only:
         # - tags
+    before_script:
+    # Make sure to clean any PDFs that might have crept in via the cache, forcing a
+    # remake at least once (otherwise, no remake might occur).
+    # It would be better to exclude the PDFs from the cache in the first place. This is
+    # not available yet, see: https://gitlab.com/gitlab-org/gitlab/-/issues/220017#note_440142507
+      - make clean-pdf
 
 preflight:
     stage: .pre
