@@ -1616,11 +1616,11 @@
         allcolors=darklink,%
         % hidelinks,% Toggle here!
         plainpages=false,%
-        pdfcreator={
+        pdfcreator={%
             LaTeX with hyperref,
             glossaries-extra/bib2gls
             and biblatex/biber
-            [\GitRefName{}@\GitShortSHA{}]
+            [\GitRefName{}@\GitShortSHA{}]%
         },
         bookmarksnumbered=true,%
         % Default opening of the document in supported PDF viewers:
