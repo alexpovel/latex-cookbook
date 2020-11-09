@@ -259,6 +259,8 @@ and as such, this document relies on a couple custom macros in place of it, see
             \midrule
                 Mean & \(\mean{\sym{density}}\), \(\mean{\sym{area}}\) \\
                 Logarithmic Mean & \(\logmean{\sym{density}}\), \(\logmean{\sym{area}}\) \\
+                % The starred variant scales automatically:
+                Absolute\mpfootnotemark[1] & \(\abs*{\sym{density}}\), \(\abs*{\sym{area}}\), \(\abs*{\frac{\sym{area}^{2}}{\sym{area}^{3}}}\) \\
                 Flow & \(\flow{\sym{mass}}\), \(\flow{\sym{enthalpy}}\) \\
                 Delta & \(\difference{\sym{volume}}\), \(\difference{\symspec{enthalpy}}\) \\
                 Nabla Operator &
@@ -286,23 +288,55 @@ and as such, this document relies on a couple custom macros in place of it, see
                         \fracderiv*{\symspec{enthalpy}}{\sym{abs_temperature}},
                         \fracderiv*[2]{\symspec{enthalpy}}{\sym{abs_temperature}}
                     \) \\
-                Time Deriv.\mpfootnotemark[1] &
+                Time Deriv.\mpfootnotemark[2] &
                     \(
                         \timederiv{\sym{voltage}},
                         \timederiv[2]{\sym{second_cart_coord}},
                         \timederiv*{\sym{voltage}},
                         \timederiv*[2]{\sym{first_cart_coord}}
                     \) \\
-                Positional Deriv.\mpfootnotemark[1] &
+                Positional Deriv.\mpfootnotemark[2] &
                     \(
                         \posderiv{\sym{volume}},
                         \posderiv[2]{\sym{velocity}},
                         \posderiv*{\sym{volume}},
                         \posderiv*[2]{\sym{velocity}}
                     \) \\
+            \addlinespace
+                % The starred variant scales automatically. The non-starred version
+                % does not scale.
+                % Supply the optional argument for manual control of the size, e.g.
+                % `\abs[\Bigg]{\frac{a}{b}}`, should this ever be needed.
+                Parentheses\mpfootnotemark[1] &
+                    \(
+                        \parens*{x},
+                        \parens*{x_{2}},
+                        \parens*{x^{2}},
+                        \parens*{\frac{x}{y}},
+                        \parens*{\frac{x^{2}}{y^{3}}}
+                    \) \\
+                Brackets\mpfootnotemark[1] &
+                    \(
+                        \brackets*{x},
+                        \brackets*{x_{2}},
+                        \brackets*{x^{2}},
+                        \brackets*{\frac{x}{y}},
+                        \brackets*{\frac{x^{2}}{y^{3}}}
+                    \) \\
+                Braces\mpfootnotemark[1] &
+                    \(
+                        \braces*{x},
+                        \braces*{x_{2}},
+                        \braces*{x^{2}},
+                        \braces*{\frac{x}{y}},
+                        \braces*{\frac{x^{2}}{y^{3}}}
+                    \) \\
             \bottomrule
         \end{tabular}
         \footnotetext[1]{%
+            These scale automatically according to their content, using \ctanpackage{mathtools}.%
+        }%
+        \footnotetext[2]{%
             As a shortcut version of fractional derivatives.%
         }%
     }

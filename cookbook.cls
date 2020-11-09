@@ -105,6 +105,7 @@
     % also scales the delimiters automatically, using \left and \right.
     \DeclarePairedDelimiter{\parens}{(}{)}
     \DeclarePairedDelimiter{\brackets}{[}{]}
+    \DeclarePairedDelimiter{\braces}{\{}{\}}
     \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}% Absolute value
 
 % For a 'cases' environment that also supports equation numbering,
