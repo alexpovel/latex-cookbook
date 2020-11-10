@@ -1617,6 +1617,20 @@
         allcolors=darklink,%
         % hidelinks,% Toggle here!
         plainpages=false,%
+        pdfsubject={%
+            Comprehensive LaTeX template with examples for theses, books
+            and more, employing the 'latest and greatest'.
+        },
+        pdfkeywords={%
+            latex,%
+            template,%
+            modern,%
+            thesis,%
+            phd,%
+            master,%
+            bachelor,%
+            best_practices,%
+        },
         pdfcreator={%
             LaTeX with hyperref,
             glossaries-extra/bib2gls
@@ -1626,8 +1640,6 @@
         bookmarksnumbered=true,%
         % Default opening of the document in supported PDF viewers:
         pdfpagelayout=TwoPageRight,
-        % pdfsubject={},%
-        % pdfkeywords={},%
         pdfdisplaydoctitle,% https://tex.stackexchange.com/a/435434/120853
     }%
 
