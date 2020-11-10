@@ -20,7 +20,7 @@
 FS = ":.*?\#"
 
 help: # List available targets on this project. First one shown is the default.
-	@grep --extended-regexp "\w+$(FS) .*" $(MAKEFILE_LIST) | \
+	@grep --extended-regexp --no-filename "\w+$(FS) .*" $(MAKEFILE_LIST) | \
 		awk --field-separator="$(FS)" '{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 # =====================================================================================
