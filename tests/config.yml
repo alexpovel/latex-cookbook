@@ -1,0 +1,26 @@
+metadata:
+  encryption: null  # why tho
+  pdf_version: "1.5"  # Versions are strings, not floats (see semantic versioning)
+
+pages:
+  n_min: 1
+  n_max: null  # Null will ignore this boundary
+  papersize:
+    # This is either a mapping of <name>.pdf to <allowed papersize>, or one value for
+    # *all* PDFs, for example: `papersize: "a4"`.
+    # Possible values: https://papersize.readthedocs.io/en/latest/#papersize.parse_papersize
+    cookbook: "a5"
+    README: "a4"
+
+file:
+  # File sizes in human-readable format, or null to ignore.
+  min_size: "100K"  # Some rough minimum, maybe useful to detect corrupted files
+  max_size: "5M"
+  bookmarks: true  # Check if those are present
+  # For age, d, h, m and s (or null to skip test) are available. Order matters.
+  # Could be useful to detect old files that crept, e.g. from a cache.
+  max_age: "10m"
+
+content:
+  required_strings: null
+  profanity_allowed: false

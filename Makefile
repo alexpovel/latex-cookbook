@@ -7,20 +7,36 @@
 # The following are "special targets", see:
 # https://www.gnu.org/software/make/manual/html_node/Special-Targets.html#Special-Targets
 # A phony target: not a file, just some routine.
-.PHONY: all clean mostlyclean clean-aux clean-pdf tex preflight
+.PHONY: all clean mostlyclean clean.aux clean.pdf tex preflight test test-self test-pdfs help
 
 # =====================================================================================
-# Set variables, executables and their flags
+# Helper tool, adjusted from:
+# https://medium.com/@exustash/three-good-practices-for-better-ci-cd-makefiles-5b93452e4cc3
+# Allows to annotate targets with regular comments and have a summary printed by calling
+# `make help`.
 # =====================================================================================
+
+# Note escaping of comment char #
+FS = ":.*?\#"
+
+help: # List available targets on this project. First one shown is the default.
+	@grep --extended-regexp "\w+$(FS) .*" $(MAKEFILE_LIST) | \
+		awk --field-separator="$(FS)" '{printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+# =====================================================================================
+# Set variables, executables and their flags.
+# =====================================================================================
+
+# Common flags go here:
 
 # Configure latexmk tool using '.latexmkrc' in project root, not in here.
-LATEXMK = latexmk
 LATEXMK_FLAGS =
 
-PANDOC = pandoc
 # For pandoc, provide dynamic metadata for the date (see below). Git short SHA works
 # both in CI and locally. All other settings are in the `defaults` file.
 PANDOC_FLAGS = --defaults=pandoc/defaults.yaml
+
+# Flags depending on CI/Local go here:
 
 # GitLab CI defines variables that we can check for. This allows us to detect if we're
 # in a CI scenario.
@@ -28,14 +44,24 @@ PANDOC_FLAGS = --defaults=pandoc/defaults.yaml
 # https://www.gnu.org/software/make/manual/html_node/Conditional-Syntax.html#Conditional-Syntax
 # https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
 ifdef CI
+	# In container, run commands directly:
+	LATEXMK = latexmk
+	PANDOC = pandoc
+	#
 	GIT_SHORT_SHA = $$CI_COMMIT_SHORT_SHA
 	# pandoc is quiet by default
 	PANDOC_FLAGS += --verbose
 	# After the run, display the relevant rules (for debugging)
 	LATEXMK_FLAGS += --rules
 else
-	# latexmk is verbose by default
+	DOCKER_RUN = docker run --rm --volume ${PWD}:/tex
+	DOCKER_IMAGE = alexpovel/latex
+	#
+	LATEXMK = $(DOCKER_RUN) --entrypoint="latexmk" $(DOCKER_IMAGE)
+	PANDOC = $(DOCKER_RUN) --entrypoint="pandoc" $(DOCKER_IMAGE)
+	# No supporting Docker image available yet:
 	GIT_SHORT_SHA = $(shell git rev-parse --short HEAD)
+	# latexmk is verbose by default:
 	LATEXMK_FLAGS += --quiet
 endif
 
@@ -56,9 +82,9 @@ tex_pdfs := $(tex_sources:.tex=.pdf)
 # The name `all` is just a convention.
 # Change suffix of multiple different extensions (.tex, .md), to the same suffix (.pdf).
 # See also: https://stackoverflow.com/a/33926814
-all: preflight tex README.pdf
+all: preflight tex README.pdf test  # Performs preflight checks, then builds and tests all PDFs.
 # A rule for only LaTeX files:
-tex: $(tex_pdfs)
+tex: $(tex_pdfs)  # Builds all *.tex files into PDFs.
 
 # =====================================================================================
 # Rules for file building
@@ -77,14 +103,14 @@ tex: $(tex_pdfs)
 # https://www.gnu.org/software/make/manual/html_node/Pattern-Rules.html,
 # Just sets up an implicit rule to specify how to get from prerequisite to target,
 # called whever `make` detects it needs to do so. No need to specify things manually.
-%.pdf: %.tex
+%.pdf: %.tex  # Allows to build any PDF from a corresponding *.tex file.
 	$(info Running $(LATEXMK) to build $@...)
 	@$(LATEXMK) $(LATEXMK_FLAGS) $<
 
 PANDOC_TEMPLATE = $(strip $(shell grep "^template:" pandoc/defaults.yaml | cut --delimiter=":" --field=2)).latex
 PANDOC_TEMPLATE_DIR = /usr/share/pandoc/data/templates
 
-%.pdf: %.md $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE)
+%.pdf: %.md $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE)  # Allows to build any PDF from a corresponding *.md file.
 	$(info Running $(PANDOC) to build $@...)
 	@$(PANDOC) $(PANDOC_FLAGS) --output=$@ $<
 
@@ -104,7 +130,7 @@ $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE):
 # =====================================================================================
 # Help users install programs required for compilation and help debug.
 # =====================================================================================
-preflight:
+preflight:  # Performs checks to ensure prerequisites for compilation are met.
 	@echo "Checking presence of required libraries..."
 	@ldconfig --print-cache | grep --silent "librsvg" || \
 		(echo "librsvg missing: required by pandoc to convert files containing SVGs."; exit 69)
@@ -112,21 +138,41 @@ preflight:
 # Output looks like: https://tex.stackexchange.com/a/311753/120853
 	@$(LATEXMK) --commands
 
-clean-aux:
+# =====================================================================================
+# Testing.
+# =====================================================================================
+
+test: test-self test-pdfs  # Runs all tests.
+	@echo "All tests passed."
+
+TESTS_DIR = tests
+
+# Delegate to subdirectory and run the Makefile found there.
+# Important for compatibility with CI config.
+test-self:  # Runs tests on the tests themselves.
+	@$(MAKE) --directory=$(TESTS_DIR) test-self
+
+test-pdfs:  # Runs tests on found PDFs.
+	@$(MAKE) --directory=$(TESTS_DIR) test-pdfs
+
+# =====================================================================================
+# Cleanup jobs.
+# =====================================================================================
+clean-aux:  # Cleans LaTeX's auxiliary files.
 	@echo "Removing auxiliary files of all found TeX files..."
 	@$(LATEXMK) -c $(LATEXMK_FLAGS)
 
-clean-pdf:
+clean-pdf:  # Cleans all found PDFs.
 	@echo "Removing all PDF files:"
 	@ls *.pdf 2>/dev/null || echo "No files to remove."
 	@$(RM) *.pdf
 
 # For target name, see: https://www.gnu.org/prep/standards/html_node/Standard-Targets.html
-mostlyclean: clean-aux clean-pdf
+mostlyclean: clean.aux clean.pdf  # Runs clean.{aux,pdf}, then cleans more.
 	@echo "Removing downloaded pandoc archive, if any..."
 	@$(RM) $(EISVOGEL_ARCHIVE)
 
-clean: mostlyclean
+clean: mostlyclean  # Runs all other clean jobs, then cleans absolutely everything.
 	@echo "Removing all files ignored by git (.gitignore)..."
 	@echo "For safety, this is done interactively:"
 	@git clean -xd --interactive
