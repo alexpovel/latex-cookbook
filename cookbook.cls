@@ -106,7 +106,6 @@
     \DeclarePairedDelimiter{\parens}{(}{)}
     \DeclarePairedDelimiter{\brackets}{[}{]}
     \DeclarePairedDelimiter{\braces}{\{}{\}}
-    \DeclarePairedDelimiter{\abs}{\lvert}{\rvert}% Absolute value
 
 % For a 'cases' environment that also supports equation numbering,
 % https://tex.stackexchange.com/a/180910/120853
@@ -2222,6 +2221,11 @@
 % Logarithmic mean
 \newcommand*{\logmeanfmt}[1]{\ensuremath{\tilde{#1}}}
 \newcommand*{\logmean}[1]{\glsdisp{sym.logmean}{\logmeanfmt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Absolute value
+\DeclarePairedDelimiter{\absfmt}{\lvert}{\rvert}% Absolute value
+\newcommand*{\abs}[1]{\glsdisp{sym.abs}{\ensuremath{\absfmt*{#1}}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Dotted symbol for flows
