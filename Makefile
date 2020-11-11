@@ -7,7 +7,7 @@
 # The following are "special targets", see:
 # https://www.gnu.org/software/make/manual/html_node/Special-Targets.html#Special-Targets
 # A phony target: not a file, just some routine.
-.PHONY: all clean mostlyclean clean.aux clean.pdf tex preflight test test-self test-pdfs help
+.PHONY: all clean mostlyclean clean.aux clean.pdf tex preflight help
 
 # =====================================================================================
 # Helper tool, adjusted from:
@@ -142,18 +142,7 @@ preflight:  # Performs checks to ensure prerequisites for compilation are met.
 # Testing.
 # =====================================================================================
 
-test: test-self test-pdfs  # Runs all tests.
-	@echo "All tests passed."
-
-TESTS_DIR = tests
-
-# Delegate to subdirectory and run the Makefile found there.
-# Important for compatibility with CI config.
-test-self:  # Runs tests on the tests themselves.
-	@$(MAKE) --directory=$(TESTS_DIR) test-self
-
-test-pdfs:  # Runs tests on found PDFs.
-	@$(MAKE) --directory=$(TESTS_DIR) test-pdfs
+include tests/Makefile
 
 # =====================================================================================
 # Cleanup jobs.
