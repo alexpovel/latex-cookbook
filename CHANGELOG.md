@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2020-11-11
+
+### Added
+
+- Python-based tests for the produced PDFs (1746e4e).
+  This allows the user to automatically run a test suite against the produced PDFs,
+  for example checking for page count, metadata and much more.
+- Makefiles for the [root](Makefile) and [tests](tests/Makefile) directories, while
+  also swapping all CI routines over to use `make` (b4a9881).
+  This allows for local as well as CI use using the same commands, and reduces coupling
+  with the CI engine.
+- Caching of files in CI, for much faster pipelines (while introducing some issues) (28aea76).
+- Showcase and fixing of `\abs` macro for absolute values (4d0c6ff, bb11b72).
+
+### Changed
+
+- Git metadata display in the colophon (7c59cbe).
+
 ## [1.2.0] - 2020-10-29
 
 ### Added
