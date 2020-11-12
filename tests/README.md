@@ -3,6 +3,12 @@
 This sub-project contains Python-based code for testing the PDF output produced by
 earlier CI stages, or by you locally.
 
+The desired properties of the PDFs under test (by default, all PDFs in the project root),
+are configured in the [tests config file](config.yml).
+Once that is done to your liking, [set up the testing framework](#setup) and [run](#running)
+the tests (or don't and use CI instead, where everything is done for you already and
+Just Works™).
+
 This is helpful to check for basic stuff.
 A more involved approach is shown [here](https://blog.martisak.se/2020/05/16/latex-test-cases/).
 This includes checking for publisher-specific requirements, allowing us to detect errors
