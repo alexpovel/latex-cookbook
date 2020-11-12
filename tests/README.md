@@ -20,19 +20,21 @@ The project uses [poetry](https://python-poetry.org/docs/#installation) for depe
 management.
 Once you have it installed according to their documentation, it is very easy to pull in
 the dependencies of this project.
-In the directory containing [the `poetry` config file](poetry-config), run
+In the directory containing [the `poetry` config file](pyproject.toml), run
 
 ```bash
 poetry install
 ```
 
+This will pull the precise requirements needed from the [lock file](poetry.lock).
+Otherwise, it uses the config file.
 That's it... almost.
 
 ### Python itself
 
 You will also need a suitable Python interpreter, aka Python version.
 This is "Python itself".
-If your system's Python *is* compatible with what is listed in the [config](poetry-config),
+If your system's Python *is* compatible with what is listed in the [config](pyproject.toml),
 you do not need to do anything.
 The easiest way to test this is to just run:
 
@@ -64,6 +66,25 @@ using `pyenv`, if any.
 Any sub-commands or flags after `pytest` are courtesy of `pytest`, not `poetry`.
 There, you can for example specify which tests to run.
 
+### Makefile
+
+Otherwise, the testing procedure is tucked away and made accessible via the [Makefile](Makefile).
+It requires you to have [GNU `make`](https://www.gnu.org/software/make/) installed.
+If you are on Linux you might already have it, since a lot of development workflows rely
+on it.
+The tests can then be run using:
+
+```bash
+make test
+```
+
+or any of the other *targets* in that Makefile:
+
+```bash
+make test-self
+make test-pdfs
+```
+
 ## Troubleshooting
 
 - This project uses [`profanity-check`](https://pypi.org/project/profanity-check/).
@@ -91,5 +112,3 @@ This is true even for the most modern tools like Office 2019 with an Acrobat Pro
 "backend", where there's arguably a *lot* of genuine business demand (and therefore, $$)
 for such a feature.
 Still, no dice yet.
-
-[poetry-config]: pyproject.toml
