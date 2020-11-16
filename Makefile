@@ -7,7 +7,7 @@
 # The following are "special targets", see:
 # https://www.gnu.org/software/make/manual/html_node/Special-Targets.html#Special-Targets
 # A phony target: not a file, just some routine.
-.PHONY: all clean mostlyclean clean.aux clean.pdf tex preflight help
+.PHONY: all clean mostlyclean clean-aux clean-pdf tex preflight help
 
 # =====================================================================================
 # Helper tool, adjusted from:
@@ -157,7 +157,7 @@ clean-pdf:  # Cleans all found PDFs.
 	@$(RM) *.pdf
 
 # For target name, see: https://www.gnu.org/prep/standards/html_node/Standard-Targets.html
-mostlyclean: clean.aux clean.pdf  # Runs clean.{aux,pdf}, then cleans more.
+mostlyclean: clean-aux clean-pdf  # Runs clean-{aux,pdf}, then cleans more.
 	@echo "Removing downloaded pandoc archive, if any..."
 	@$(RM) $(EISVOGEL_ARCHIVE)
 
