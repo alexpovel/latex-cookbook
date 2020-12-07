@@ -1961,91 +1961,167 @@
 
     \newcommand*{\glshdrfont}[1]{\textbf{#1}} % Font for gls table heads
 
-    % To print symbols:
+    \newglossarystyle{custom-base}{
+        % A simple style subsequent, custom-defined styles will have in common.
+        \setglossarystyle{long-name-desc-loc}
+        \renewcommand*{\glossaryheader}{}% Remove it
+    }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Symbols
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    % Standard base style, without page list
     \newglossarystyle{symbunitlong}{% https://tex.stackexchange.com/a/269571/120853
         % Base new style on existing one. This is quite important, since it implements
         % all otherwise missing but maybe required commands,
         % like \glsgroupskip if --group option is used for bib2gls
-        \setglossarystyle{long-name-desc-loc}
-
-        \renewcommand*{\glossaryheader}{}% Remove it
-
-        \renewenvironment{theglossary}{%
-            % Use Longtabu over longtable, the latter caused inexplicable issues with
-            % 'Column widths have changed, rerun Latex'
-            \begin{longtabu}{%
-                r%
-                p{0.5\linewidth}%
-                p{\glspagelistwidth}%
-                l%
-            }%
-        }{%
-            \end{longtabu}%
-        }%
+        \setglossarystyle{custom-base}
 
         \renewcommand*{\glsgroupskip}{\addlinespace\addlinespace}%
 
-        \renewcommand*{\glsgroupheading}[1]{%
-            \glshdrfont{\glsgetgrouptitle{##1}} &
-            \glshdrfont{\descriptionname} &
-            \glshdrfont{\pagelistname} &
-            \glshdrfont{\TransUnit{}}
-            \tabularnewline
-        }%
+        % This command is taken from the source code, I hope I am not abusing it:
+        \ifglsnonumberlist
+            % User requested NO location list/number list/page list to be printed, so
+            % remove those columns.
+            \renewenvironment{theglossary}{%
+                % Use Longtabu over longtable, the latter caused inexplicable issues with
+                % 'Column widths have changed, rerun Latex'
+                \begin{longtabu}{%
+                    r%
+                    p{0.5\linewidth}%
+                    l%
+                }%
+            }{%
+                \end{longtabu}%
+            }%
 
-        \renewcommand*{\glossentry}[2]{%
-            \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
-            \glossentrydesc{##1}\glspostdescription &
-            ##2 &
-            % Use glsentryunit to access entry, NOT glsunit,
-            % https://tex.stackexchange.com/a/281772/120853:
-            \glsentryunit{##1}
-            \tabularnewline
-        }
+            \renewcommand*{\glsgroupheading}[1]{%
+                \glshdrfont{\glsgetgrouptitle{##1}} &
+                \glshdrfont{\descriptionname} &
+                \glshdrfont{\TransUnit{}}
+                \tabularnewline
+            }%
+
+            \renewcommand*{\glossentry}[2]{%
+                \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+                \glossentrydesc{##1}\glspostdescription &
+                % Use glsentryunit to access entry, NOT glsunit,
+                % https://tex.stackexchange.com/a/281772/120853:
+                \glsentryunit{##1}
+                \tabularnewline
+            }
+        \else
+            \renewenvironment{theglossary}{% Redefine this, overwriting the base style
+                \begin{longtabu}{%
+                    r%
+                    p{0.5\linewidth}%
+                    p{\glspagelistwidth}%
+                    l%
+                }%
+            }{%
+                \end{longtabu}%
+            }%
+
+            \renewcommand*{\glsgroupheading}[1]{%
+                \glshdrfont{\glsgetgrouptitle{##1}} &
+                \glshdrfont{\descriptionname} &
+                \glshdrfont{\pagelistname} &
+                \glshdrfont{\TransUnit{}}
+                \tabularnewline
+            }%
+
+            \renewcommand*{\glossentry}[2]{%
+                \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+                \glossentrydesc{##1}\glspostdescription &
+                ##2 &
+                % Use glsentryunit to access entry, NOT glsunit,
+                % https://tex.stackexchange.com/a/281772/120853:
+                \glsentryunit{##1}
+                \tabularnewline
+            }
+        \fi
     }
 
-    % To print constants, as in physical constants with values and unit:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Numbers.
+% To print constants, as in physical constants with values and unit.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \newglossarystyle{numberlong}{% https://tex.stackexchange.com/a/269571/120853
         % Base new style on existing one. This is quite important, since it implements
         % all otherwise missing but maybe required commands, like
         % \glsgroupskip if --group option is used for bib2gls
-        \setglossarystyle{long-name-desc-loc}
+        \setglossarystyle{custom-base}
 
-        \renewcommand*{\glossaryheader}{}% Remove it
-
-        \renewenvironment{theglossary}{
-            % Use Longtabu over longtable, the latter caused inexplicable issues with
-            % 'Column widths have changed, rerun Latex'
-            \begin{longtabu}{%
-                r%
-                p{0.3\linewidth}%
-                r%
-                @{\;}%
-                l%
-                p{\glspagelistwidth}%
+        % This command is taken from the source code, I hope I am not abusing it:
+        \ifglsnonumberlist
+        % User requested NO location list/number list/page list to be printed, so
+        % remove those columns.
+            \renewenvironment{theglossary}{
+                % Use Longtabu over longtable, the latter caused inexplicable issues with
+                % 'Column widths have changed, rerun Latex'
+                \begin{longtabu}{%
+                    r%
+                    p{0.3\linewidth}%
+                    r%
+                    @{\;}%
+                    l%
+                }%
+            }{%
+                \end{longtabu}%
             }%
-        }{%
-            \end{longtabu}%
-        }%
 
-        \renewcommand*{\glossaryheader}[1]{%
-            \glshdrfont{\symbolname} &
-            \glshdrfont{\descriptionname} &
-            \multicolumn{2}{l}{{\glshdrfont{\TransPhysicalQuantity{}}}} &
-            \glshdrfont{\pagelistname}
-            \tabularnewline
-        }%
+            \renewcommand*{\glossaryheader}[1]{%
+                \glshdrfont{\symbolname} &
+                \glshdrfont{\descriptionname} &
+                \multicolumn{2}{l}{{\glshdrfont{\TransPhysicalQuantity{}}}}
+                \tabularnewline
+            }%
 
-        \renewcommand*{\glossentry}[2]{%
-            \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
-            \glossentrydesc{##1}\glspostdescription &
-            \glsentryvalue{##1} &
-            % Use glsentryunit to access entry, NOT glsunit,
-            % https://tex.stackexchange.com/a/281772/120853:
-            \glsentryunit{##1} &
-            ##2
-            \tabularnewline
-        }%
+            \renewcommand*{\glossentry}[2]{%
+                \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+                \glossentrydesc{##1}\glspostdescription &
+                \glsentryvalue{##1} &
+                % Use glsentryunit to access entry, NOT glsunit,
+                % https://tex.stackexchange.com/a/281772/120853:
+                \glsentryunit{##1}
+                \tabularnewline
+            }%
+        \else
+            \renewenvironment{theglossary}{
+                % Use Longtabu over longtable, the latter caused inexplicable issues with
+                % 'Column widths have changed, rerun Latex'
+                \begin{longtabu}{%
+                    r%
+                    p{0.3\linewidth}%
+                    r%
+                    @{\;}%
+                    l%
+                    p{\glspagelistwidth}%
+                }%
+            }{%
+                \end{longtabu}%
+            }%
+
+            \renewcommand*{\glossaryheader}[1]{%
+                \glshdrfont{\symbolname} &
+                \glshdrfont{\descriptionname} &
+                \multicolumn{2}{l}{{\glshdrfont{\TransPhysicalQuantity{}}}} &
+                \glshdrfont{\pagelistname}
+                \tabularnewline
+            }%
+
+            \renewcommand*{\glossentry}[2]{%
+                \glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}} &
+                \glossentrydesc{##1}\glspostdescription &
+                \glsentryvalue{##1} &
+                % Use glsentryunit to access entry, NOT glsunit,
+                % https://tex.stackexchange.com/a/281772/120853:
+                \glsentryunit{##1} &
+                ##2
+                \tabularnewline
+            }%
+        \fi
     }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

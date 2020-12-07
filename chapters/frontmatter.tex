@@ -77,6 +77,45 @@
     style=long3colheader,
 ]
 
+\addchap{\glossaryname{} without page lists}%
+
+\emph{
+    The following styles do not contain page lists of the entries' occurrences,
+    leading to a cleaner, more concise look.
+    Refer to the source code on how to achieve this (which options and styles to use).
+}
+
+% For all sorts of styles, see also
+% https://www.dickimaw-books.com/gallery/glossaries-styles/
+
+% Simply pass the `nonumberlist` parameter where desired/required:
+\printunsrtglossary[
+    type=symbols,
+    style=symbunitlong,
+    nonumberlist,
+]
+\printunsrtglossary[
+    type=numbers,
+    style=numberlong,
+    nonumberlist,
+]
+\printunsrtglossary[
+    type=subscripts,
+    style=mcolalttree,
+    nonumberlist,
+]
+\printunsrtglossary[
+    type=abbreviations,
+    % If `nonumberlist` is passed, the `long3colheader` style simply leaves the
+    % corresponding table cells *empty* (leading to an entirely empty column), but does
+    % not actually remove the column. So use a different, but equivalent style
+    % altogether:
+    style=longheader,
+    % The `longheader` style prints the page list behind the description, just not in a
+    % separate column. So also explicitly suppress the generation of that:
+    nonumberlist,
+]
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \listoffigures%
 
