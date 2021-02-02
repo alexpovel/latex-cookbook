@@ -62,6 +62,10 @@ set_tex_cmds("--shell-escape --synctex=1 %O %S");
 # bib file is not available!
 $bibtex_use = 2;  # default: 1
 
+# Change default `biber` call, help catch errors faster/clearer. See
+# https://web.archive.org/web/20200526101657/https://www.semipol.de/2018/06/12/latex-best-practices.html#database-entries
+$biber = "biber --validate-datamodel %O %S";
+
 # ======================================================================================
 # Auxiliary Files
 # ======================================================================================
