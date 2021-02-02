@@ -1,372 +1,331 @@
-\chapter{Code Listings}
+\chapter{Code Syntax Highlighting}
 \label{ch:code-listings}
 
-To properly typeset code in \LaTeX{}, we use the package \ctanpackage{listings}.
-There is a much more powerful alternative in \ctanpackage{minted}.
-But with great power comes great dependencies: \ctanpackage{minted} relies on
-Python, and calls in outside help for syntax highlighting using Python's
+To properly typeset code in \LaTeX{}, we use the \ctanpackage{minted} package.
+It relies on Python, and calls in outside help for syntax highlighting using Python's
 \texttt{pygments} package.
-While that is a great package, the process requires \texttt{--shell-escape} to
-compile, and of course Python.
-For broad usage and compatibility, that is not suitable.
-Lastly, what really broke the deal (for now), is that \ctanpackage{minted} is
-incompatible with \ctanpackage{floatrow}, which we use a lot \autocite{egreg_minted_2017}.
-Therefore, \ctanpackage{listings} it is.
-
-However, the latter does not come with rich support for either Python or
-Modelica.
-Support for Python 3 syntax and its numerous built-ins was therefore added manually.
-\Citeauthor{winkler_modelica-toolslistings-modelica_2020} provide a configuration
-for Modelica syntax highlighting \autocite{winkler_modelica-toolslistings-modelica_2020}.
-Lastly, the built-in support of MATLAB was manually extended to include all
-(as of version 2020a) over 2500 base functions, as listed by \citeauthor{mathworks_matlab_2020}
-\autocite{mathworks_matlab_2020}.
-It also includes all \emph{keywords} as returned by running \texttt{iskeyword} in
-the MATLAB prompt.
-
-The available languages have to be given as environment options to the \texttt{lstlisting}
-environment in the form: \texttt{language={[<dialect>]<language>}}.
-Note the braces around the argument if a \emph{dialect} is used, which is required for
-escaping the brackets.
-Since \ctanpackage{listings} already defines Python and MATLAB, but not Modelica, the
-new capabilities are only available as a dialect for the first two:
-\begin{description}
-    \item[Python:] \texttt{language=\{[3]Python\}},
-    \item[MATLAB:] \texttt{language=\{[Custom]MATLAB\}},
-    \item[Modelica:] \texttt{language=Modelica}.
-\end{description}
+As such, it requires \texttt{--shell-escape} to compile, and of course Python.
+The latter can be a pain in the buttocks to set up; Docker usage is especially useful here.
+Since \texttt{pygments} has nothing to do with \LaTeX{} (whose ecosystem is a sad mess),
+but is instead a regular old Python package, chances are the language of your choice is
+not only available but also well\-/supported!%
+\footnote{%
+    For example, \ctanpackage{listings}, the inferior alternative to \ctanpackage{minted},
+    still had no Python 3 support (only basic 2) in 2020, at the time of originally writing this.
+    At that point, Python 3 was over 10 years old already and Python 2 was end-of-life.
+}
 
 \paragraph{Color Scheme}
 Note how the color scheme is the same throughout languages.
-The idea is that keywords of similar importance or status are highlighted uniformly.
-For example, there are keywords responsible for class and function definitions in most
-(all?) object\-/oriented languages.
+The idea is that keywords of similar importance, status or semantics are highlighted uniformly.
+For example, keywords for class and function definitions, like \mintinline{python}{class}
+for Python or \mintinline{matlab}{classdef} for MATLAB.%
+\footnote{%
+    Notice how these keywords were created using an \emph{inline} listing, like:
+    \mintinline{python}{y = [file_patterns[x] for x in ["send", "help"]]}.
+}
 Another example are error\-/handling and -throwing keywords, which many languages
 offer.
 All these different types should be identified and treated equally.
-For this template, the groundwork for the three \enquote{new} languages is already done.
+\ctanpackage{minted} is a widely used package and knows about a lot of languages.
+You can check it out at
+\begin{center}
+    \url{https://pygments.org/demo/}.
+\end{center}
 
-If the current colors are not to your liking (that is, remind you of an
-\emph{angry fruit salad}) they can easily be changed.
-This is possible without having to deal with the mapping of keywords (for example
-\lstinline[language={[3]Python}]|class| for Python or
-\lstinline[language={[Custom]Matlab}]|classdef| for MATLAB)%
-\footnote{%
-    Notice how these keywords were created using an \emph{inline} listing, like:
-    \lstinline[language={[3]Python}]|y = [file_patterns[x] for x in ["send", "help"]]|.
-}
-into types (in this case, some sort of \enquote{class definition}\-/type).
-The \ctanpackage{listings} package does this numerically and just numbers groups of
-keywords, so there is no need to name them.
-These keyword groups only change when the language itself changes.
+If the current colors are not to your liking they can be changed easily using
+\ctanpackage{minted}'s \texttt{style} option.
+Refer to the comments in the source code on how to see available styles.
 
 \paragraph{References}
 Individual code lines can also be referenced.
-For example, we find a \lstinline[language={[3]Python}]|return| statement on
-\cref{line:python_return} in \cref{lst:float_example}.
-
-The following examples are not always complete or functioning, they are only supposed
-to showcase the available syntax highlighting.
+For example, we find a \mintinline{python}{return} statement on
+% NOTE: referencing single "minted" lines *CANNOT* be done with cleveref, unfortunately.
+% See: https://tex.stackexchange.com/q/132420/120853 . A plain old `ref` does the trick.
+line \ref{line:python_return} in \cref{lst:float_example}.
+That line is also highlighted, using \ctanpackage{minted}'s \texttt{highlightlines} option.
 
 \section{Python}
-
-The demonstrations in this chapter are done using Python, since the modifications to
-\ctanpackage{listings} were focused on that.
-There are examples for the other two mentioned languages later.
-One feature is a code snippet style called \texttt{betweenpar}, looking like:
-\begin{lstlisting}[%
-    style=betweenpar,%
-]
-    def get_nonempty_line(
-        lines: Iterable[str],
-        last: bool = True
-    ) -> str:
-        if last:
-            lines = reversed(lines)
-        return next(line for line in lines if line.rstrip())
-\end{lstlisting}
-It is intended for small samples of code that flow into the surrounding text.
+The following examples are not always complete or functioning, they are only supposed
+to showcase the available syntax highlighting.
+The base style looks like:
+\begin{minted}{python}
+def get_nonempty_line(
+    lines: Iterable[str],
+    last: bool = True
+) -> str:
+    if last:
+        lines = reversed(lines)
+    return next(line for line in lines if line.rstrip())
+\end{minted}
+It is intended for (small) samples of code that flow into the surrounding text.
 A second feature are code listings as regular floats, as demonstrated in
 \cref{lst:float_example}.
 As floats, they behave like any other figure, table \iecfeg{etc}.
 
-\begin{lstlisting}[
-    float,
-    caption={%
+\begin{listing}
+    \begin{minted}[highlightlines={24}]{python}
+import json
+import logging.config
+from pathlib import Path
+
+from resources.helpers import path_relative_to_caller_file
+
+¬\phstring{\LaTeX{} can go in here: \(\sum_{i = 1}^{n} a + \frac{\pi}{2} \)}¬
+
+def set_up_logging(logger_name: str) -> logging.Logger:
+    """Set up a logging configuration."""
+    config_filepath = path_relative_to_caller_file("logger.json")  # same directory
+
+    try:
+        with open(config_filepath) as config_file:
+            config: dict = json.load(config_file)
+        logging.config.dictConfig(config)
+    except FileNotFoundError:
+        logging.basicConfig(
+            level=logging.INFO, format="[%(asctime)s: %(levelname)s] %(message)s"
+        )
+        logging.warning(f"Using fallback: no logging config found at {config_filepath}")
+        logger_name = __name__
+
+    return logging.getLogger(logger_name) ¬\label{line:python_return}¬
+    \end{minted}
+    \caption{%
         This is a caption.
         Listings cannot be overly long since floats do not page-break% No period here!
-    },
-    label={lst:float_example},
-]
-    import json
-    import logging.config
-    from pathlib import Path
+    }
+    \label{lst:float_example}
+\end{listing}
 
-    from resources.helpers import path_relative_to_caller_file
+The third example showcases breaking across pages, probably best suited for an appendix:
+\begin{minted}{python}
+def ansi_escaped_string( ¬\phnote{A random reference: \cref{fig:censorbox}}¬
+    string: str,
+    *,
+    effects: Union[List[str], None] = None,
+    foreground_color: Union[str, None] = None,
+    background_color: Union[str, None] = None,
+    bright_fg: bool = False,
+    bright_bg: bool = False,
+) -> str:
+    """Provides a human-readable interface to escape strings for terminal output.
 
-    ¬\phstring{\LaTeX{} can go in here: \(\sum_{i = 1}^{n} a + \frac{\pi}{2} \)}¬
+    Using ANSI escape characters, the appearance of terminal output can be changed. The
+    escape chracters are numerical and impossible to remember. Also, they require
+    special starting and ending sequences. This function makes accessing that easier.
 
+    Args:
+        string: The input string to be escaped and altered.
+        effects: The different effects to apply, e.g. underlined.
+        foreground_color: The foreground, that is text color.
+        background_color: The background color (appears as a colored block).
+        bright_fg: Toggle whatever color was given for the foreground to be bright.
+        bright_bg: Toggle whatever color was given for the background to be bright.
 
-    def set_up_logging(logger_name: str) -> logging.Logger:
-        """Set up a logging configuration."""
-        config_filepath = path_relative_to_caller_file("logger.json")  # same directory
+    Returns:
+        A string with requested ANSI escape characters inserted around the input string.
+    """
 
-        try:
-            with open(config_filepath) as config_file:
-                config: dict = json.load(config_file)
-            logging.config.dictConfig(config)
-        except FileNotFoundError:
-            logging.basicConfig(
-                level=logging.INFO, format="[%(asctime)s: %(levelname)s] %(message)s"
-            )
-            logging.warning(f"Using fallback: no logging config found at {config_filepath}")
-            logger_name = __name__
+    def pad_sgr_sequence(sgr_sequence: str = "") -> str:
+        """Pads an SGR sequence with starting and end parts.
 
-        return logging.getLogger(logger_name) ¬\label{line:python_return}¬
-\end{lstlisting}
+        To 'Select Graphic Rendition' (SGR) to set the appearance of the following
+        terminal output, the CSI is called as:
+        CSI n m
+        So, 'm' is the character ending the sequence. 'n' is a string of parameters, see
+        dict below.
 
-Lastly, you can use the base \texttt{lstlisting} environment for more elaborate,
-possibly very long code listings.
-These can be broken across pages and are probably best suited for the appendix.
-\begin{lstlisting}
-    def ansi_escaped_string( ¬\phnote{A random reference: \cref{fig:censorbox}}¬
-        string: str,
-        *,
-        effects: Union[List[str], None] = None,
-        foreground_color: Union[str, None] = None,
-        background_color: Union[str, None] = None,
-        bright_fg: bool = False,
-        bright_bg: bool = False,
-    ) -> str:
-        """Provides a human-readable interface to escape strings for terminal output.
-    
-        Using ANSI escape characters, the appearance of terminal output can be changed. The
-        escape chracters are numerical and impossible to remember. Also, they require
-        special starting and ending sequences. This function makes accessing that easier.
-    
         Args:
-            string: The input string to be escaped and altered.
-            effects: The different effects to apply, e.g. underlined.
-            foreground_color: The foreground, that is text color.
-            background_color: The background color (appears as a colored block).
-            bright_fg: Toggle whatever color was given for the foreground to be bright.
-            bright_bg: Toggle whatever color was given for the background to be bright.
-    
+            sgr_sequence: Sequence of SGR codes to be padded.
         Returns:
-            A string with requested ANSI escape characters inserted around the input string.
+            Padded SGR sequence.
         """
-    
-        def pad_sgr_sequence(sgr_sequence: str = "") -> str:
-            """Pads an SGR sequence with starting and end parts.
-    
-            To 'Select Graphic Rendition' (SGR) to set the appearance of the following
-            terminal output, the CSI is called as:
-            CSI n m
-            So, 'm' is the character ending the sequence. 'n' is a string of parameters, see
-            dict below.
-    
-            Args:
-                sgr_sequence: Sequence of SGR codes to be padded.
-            Returns:
-                Padded SGR sequence.
-            """
-            control_sequence_introducer = "\x1B["  # hexadecimal '1B'
-            select_graphic_rendition_end = "m"  # Ending character for SGR
-            return control_sequence_introducer + sgr_sequence + select_graphic_rendition_end
-    
-        # Implement more as required, see
-        # https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters.
-        sgr_parameters = {
-            "underlined": 4,
-        }
-    
-        sgr_foregrounds = {  # Base hardcoded mapping, all others can be derived
-            "black": 30,
-            "red": 31,
-            "green": 32,
-            "yellow": 33,
-            "blue": 34, ¬\phnum{\(30 + 4\)}¬
-            "magenta": 35,
-            "cyan": 36,
-            "white": 37,
-        }
-    
-        # These offsets convert foreground colors to background or bright color codes, see
-        # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
-        bright_offset = 60
-        background_offset = 10
-    
-        if bright_fg:
-            sgr_foregrounds = {
-                color: value + bright_offset for color, value in sgr_foregrounds.items()
-            }
-    
-        if bright_bg:
-            background_offset += bright_offset
-    
-        sgr_backgrounds = {
-            color: value + background_offset for color, value in sgr_foregrounds.items()
-        }
-    
-        # Chain various parameters, e.g. 'ESC[30;47m' to get white on black, if 30 and 47
-        # were requested. Note, no ending semicolon. Collect codes in a list first.
-        sgr_sequence_elements: List[int] = []
-    
-        if effects is not None:
-            for sgr_effect in effects:
-                try:
-                    sgr_sequence_elements.append(sgr_parameters[sgr_effect])
-                except KeyError:
-                    raise NotImplementedError(
-                        f"Requested effect '{sgr_effect}' not available."
-                    )
-        if foreground_color is not None:
-            try:
-                sgr_sequence_elements.append(sgr_foregrounds[foreground_color])
-            except KeyError:
-                raise NotImplementedError(
-                    f"Requested foreground color '{foreground_color}' not available."
-                )
-        if background_color is not None:
-            try:
-                sgr_sequence_elements.append(sgr_backgrounds[background_color])
-            except KeyError:
-                raise NotImplementedError(
-                    f"Requested background color '{background_color}' not available."
-                )
-    
-        # To .join() list, all elements need to be strings
-        sgr_sequence: str = ";".join(str(sgr_code) for sgr_code in sgr_sequence_elements)
-    
-        reset_all_sgr = pad_sgr_sequence()  # Without parameters: reset all attributes
-        sgr_start = pad_sgr_sequence(sgr_sequence)
-        return sgr_start + string + reset_all_sgr
-\end{lstlisting}
+        control_sequence_introducer = "\x1B["  # hexadecimal '1B'
+        select_graphic_rendition_end = "m"  # Ending character for SGR
+        return control_sequence_introducer + sgr_sequence + select_graphic_rendition_end
 
+    # Implement more as required, see
+    # https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters.
+    sgr_parameters = {
+        "underlined": 4,
+    }
+
+    sgr_foregrounds = {  # Base hardcoded mapping, all others can be derived
+        "black": 30,
+        "red": 31,
+        "green": 32,
+        "yellow": 33,
+        "blue": 34, ¬\phnum{\(30 + 4\)}¬
+        "magenta": 35,
+        "cyan": 36,
+        "white": 37,
+    }
+
+    # These offsets convert foreground colors to background or bright color codes, see
+    # https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+    bright_offset = 60
+    background_offset = 10
+
+    if bright_fg:
+        sgr_foregrounds = {
+            color: value + bright_offset for color, value in sgr_foregrounds.items()
+        }
+
+    if bright_bg:
+        background_offset += bright_offset
+
+    sgr_backgrounds = {
+        color: value + background_offset for color, value in sgr_foregrounds.items()
+    }
+
+    # Chain various parameters, e.g. 'ESC[30;47m' to get white on black, if 30 and 47
+    # were requested. Note, no ending semicolon. Collect codes in a list first.
+    sgr_sequence_elements: List[int] = []
+
+    if effects is not None:
+        for sgr_effect in effects:
+            try:
+                sgr_sequence_elements.append(sgr_parameters[sgr_effect])
+            except KeyError:
+                raise NotImplementedError(
+                    f"Requested effect '{sgr_effect}' not available."
+                )
+    if foreground_color is not None:
+        try:
+            sgr_sequence_elements.append(sgr_foregrounds[foreground_color])
+        except KeyError:
+            raise NotImplementedError(
+                f"Requested foreground color '{foreground_color}' not available."
+            )
+    if background_color is not None:
+        try:
+            sgr_sequence_elements.append(sgr_backgrounds[background_color])
+        except KeyError:
+            raise NotImplementedError(
+                f"Requested background color '{background_color}' not available."
+            )
+
+    # To .join() list, all elements need to be strings
+    sgr_sequence: str = ";".join(str(sgr_code) for sgr_code in sgr_sequence_elements)
+
+    reset_all_sgr = pad_sgr_sequence()  # Without parameters: reset all attributes
+    sgr_start = pad_sgr_sequence(sgr_sequence)
+    return sgr_start + string + reset_all_sgr
+\end{minted}
 
 \section{MATLAB}
 
-This section contains example code for MATLAB, for example in the following,
-\texttt{betweenpar}\-/styled block.
-
-\begin{lstlisting}[%
-    style=betweenpar,%
-    language={[Custom]Matlab},%
-]
-    %{
-        Universal Gas Constant for SIMULINK.
-    %}
-    R_m = Simulink.Parameter;
-        R_m.Value = 8.3144598;
-        R_m.Description = 'universal gas constant';
-        R_m.DocUnits = 'J/(mol*K)';
-\end{lstlisting}
-
-\begin{lstlisting}[%
-    float,%
-    language={[Custom]Matlab},%
-    caption={%
-        [A class definition in MATLAB]%
-        A class definition in MATLAB, from \cite{mathworks_create_2020}%
-    },%
-    label={lst:matlab_class_definition},%
-]
-    classdef BasicClass
-        properties
-            Value {mustBeNumeric}
-        end
-        methods
-            function r = roundOff(obj)
-                r = round([obj.Value],2);
-            end
-            function r = multiplyBy(obj,n)
-                r = [obj.Value] * n;
-            end
-        end
-    end
-\end{lstlisting}
-
+This section contains example code for MATLAB, for example:
+\begin{minted}{matlab}
+%{
+    Universal Gas Constant for SIMULINK.
+%}
+R_m = Simulink.Parameter;
+    R_m.Value = 8.3144598;
+    R_m.Description = 'universal gas constant';
+    R_m.DocUnits = 'J/(mol*K)';
+\end{minted}
 Of course, floats (see \cref{lst:matlab_class_definition}) are available as well.
-So are longer sections:
+So are longer sections, like the following.
 
-\begin{lstlisting}[
-    language={[Custom]Matlab}
-]
-    fullfilepath = mfilename('fullpath');
-    [filepath, filename, ~] = fileparts(fullfilepath);
-
-    %% Begin Dialogue
-    %{
-    Extract Data from user-specified input. Can be either a File that is run
-    (an *.m-file), variables in the Base Workspace or existing data from a
-    previous run (a *.MAT-file). All variables are expected to be in Table
-    format, which is the data type best suited for this work. Therefore, we
-    force it. No funny business with dynamically named variables or naked
-    matrices allowed.
-    %}
-    pass_data = questdlg({'Would you like to pass existing machine data?', ...
-        'Its data would be used to compute your request.', ...
-        ['Regardless, note that data is expected to be in ',...
-        'Tables named ''', dflt.comp, ''' and ''', dflt.turb, '''.'], '',...
-        'If you choose no, existing values are used.'}, ...
-        'Machine Data Prompt', btnFF, btnWS, btnNo, btnFF);
-
-    switch pass_data
-        case btnFF
-            prompt = {'File name containing the Tables:', ...
-                'Compressor Table name in that file:',...
-                'Turbine Table name in that file:'};
-            title = 'Machine Data Input';
-            dims = [1 50];
-            definput = {dflt.filename.data, dflt.comp, dflt.turb};
-            machine_data_file = inputdlg(prompt, title, dims, definput);
-            if isempty(machine_data_file)
-                fprintf('[%s] You left the dialogue and function.\n',...
-                    datestr(now));
-                return
-            end
-            run(machine_data_file{1});%spills file contents into funcWS
-        case btnWS
-            prompt = {'Base Workspace Compressor Table name:',...
-                    'Base Workspace Turbine Table name:'};
-            title = 'Machine Data Input';
-            dims = [1 50];
-            definput = {dflt.comp, dflt.turb};
-            machine_data_ws = inputdlg(prompt, title, dims, definput);
-            if isempty(machine_data_ws)
-                fprintf('[%s] You left the dialogue and function.\n',...
-                    datestr(now));
-                return
-            end
-        case btnNo
-            boxNo = msgbox(['Looking for stats in ''', dflt.filename.stats, ...
-                '''.'], 'Using Existing Data', 'help');
-            waitfor(boxNo);
-            try
-                stats = load(dflt.filename.stats);
-                stats = stats.stats;
-            catch ME
-                switch ME.identifier
-                    case 'MATLAB:load:couldNotReadFile'
-                        warning(['File ''', dflt.filename.stats, ''' not ',...
-                            'found in search path. Make sure it has been ',...
-                            'generated in a previous run or created ',...
-                            'manually. Resorting to hard-coded data ',...
-                            'for now.']);
-                            a_b = 200.89;
-                            x_c = 0.0012;
-                            f_g = 10.0;
-                    otherwise
-                        rethrow(ME);
-                end
-            end
-        case ''
-            fprintf('[%s] You left the dialogue and function.\n',datestr(now));
-            return
-        otherwise%Only gets here if buttons are misconfigured
-            error('This option is not coded, should not get here.');
+\begin{listing}
+    \begin{minted}{matlab}
+classdef BasicClass
+    properties
+        Value {mustBeNumeric}
     end
-\end{lstlisting}
+    methods
+        function r = roundOff(obj)
+            r = round([obj.Value],2);
+        end
+        function r = multiplyBy(obj,n)
+            r = [obj.Value] * n;
+        end
+    end
+end
+    \end{minted}
+    \caption[A class definition in MATLAB]{%
+        A class definition in MATLAB, from \cite{mathworks_create_2020}%
+    }
+    \label{lst:matlab_class_definition}
+\end{listing}
+
+\begin{minted}{matlab}
+fullfilepath = mfilename('fullpath');
+[filepath, filename, ~] = fileparts(fullfilepath);
+
+%% Begin Dialogue
+%{
+Extract Data from user-specified input. Can be either a File that is run
+(an *.m-file), variables in the Base Workspace or existing data from a
+previous run (a *.MAT-file). All variables are expected to be in Table
+format, which is the data type best suited for this work. Therefore, we
+force it. No funny business with dynamically named variables or naked
+matrices allowed.
+%}
+pass_data = questdlg({'Would you like to pass existing machine data?', ...
+    'Its data would be used to compute your request.', ...
+    ['Regardless, note that data is expected to be in ',...
+    'Tables named ''', dflt.comp, ''' and ''', dflt.turb, '''.'], '',...
+    'If you choose no, existing values are used.'}, ...
+    'Machine Data Prompt', btnFF, btnWS, btnNo, btnFF);
+
+switch pass_data
+    case btnFF
+        prompt = {'File name containing the Tables:', ...
+            'Compressor Table name in that file:',...
+            'Turbine Table name in that file:'};
+        title = 'Machine Data Input';
+        dims = [1 50];
+        definput = {dflt.filename.data, dflt.comp, dflt.turb};
+        machine_data_file = inputdlg(prompt, title, dims, definput);
+        if isempty(machine_data_file)
+            fprintf('[%s] You left the dialogue and function.\n',...
+                datestr(now));
+            return
+        end
+        run(machine_data_file{1});%spills file contents into funcWS
+    case btnWS
+        prompt = {'Base Workspace Compressor Table name:',...
+                'Base Workspace Turbine Table name:'};
+        title = 'Machine Data Input';
+        dims = [1 50];
+        definput = {dflt.comp, dflt.turb};
+        machine_data_ws = inputdlg(prompt, title, dims, definput);
+        if isempty(machine_data_ws)
+            fprintf('[%s] You left the dialogue and function.\n',...
+                datestr(now));
+            return
+        end
+    case btnNo
+        boxNo = msgbox(['Looking for stats in ''', dflt.filename.stats, ...
+            '''.'], 'Using Existing Data', 'help');
+        waitfor(boxNo);
+        try
+            stats = load(dflt.filename.stats);
+            stats = stats.stats;
+        catch ME
+            switch ME.identifier
+                case 'MATLAB:load:couldNotReadFile'
+                    warning(['File ''', dflt.filename.stats, ''' not ',...
+                        'found in search path. Make sure it has been ',...
+                        'generated in a previous run or created ',...
+                        'manually. Resorting to hard-coded data ',...
+                        'for now.']);
+                        a_b = 200.89;
+                        x_c = 0.0012;
+                        f_g = 10.0;
+                otherwise
+                    rethrow(ME);
+            end
+        end
+    case ''
+        fprintf('[%s] You left the dialogue and function.\n',datestr(now));
+        return
+    otherwise%Only gets here if buttons are misconfigured
+        error('This option is not coded, should not get here.');
+end
+\end{minted}
 
 \subsection{MATLAB/Simulink icons}
 
@@ -396,56 +355,62 @@ Naturally, floating and all other environments and styles are also available for
 Modelica.
 The syntax highlighting for a few basic code samples \autocite{wikipedia_modelica_2020} looks like:
 
-\begin{lstlisting}[
-    language=Modelica,%
-]
-    x := 2 + y;
-    x + y = 3 * z;
+\begin{minted}{modelica}
+x := 2 + y;
+x + y = 3 * z;
 
-    model FirstOrder
-        parameter Real c=1 "Time constant";
-        Real x (start=10) "An unknown";
-    equation
-        der(x) = -c*x "A first order differential equation";
-    end FirstOrder;
+model FirstOrder
+    parameter Real c=1 "Time constant";
+    Real x (start=10) "An unknown";
+equation
+    der(x) = -c*x "A first order differential equation";
+end FirstOrder;
 
-    type Voltage = Real(quantity="ElectricalPotential", unit="V");
-    type Current = Real(quantity="ElectricalCurrent", unit="A");
+type Voltage = Real(quantity="ElectricalPotential", unit="V");
+type Current = Real(quantity="ElectricalCurrent", unit="A");
 
-    connector Pin "Electrical pin"
-        Voltage      v "Potential at the pin";
-        flow Current i "Current flowing into the component";
-    end Pin;
+connector Pin "Electrical pin"
+    Voltage      v "Potential at the pin";
+    flow Current i "Current flowing into the component";
+end Pin;
 
-    model Capacitor
-        parameter Capacitance C;
-        Voltage u "Voltage drop between pin_p and pin_n";
-        Pin pin_p, pin_n;
-    equation
-        0 = pin_p.i + pin_n.i;
-        u = pin_p.v - pin_n.v;
-        C * der(u) = pin_p.i;
-    end Capacitor;
+model Capacitor
+    parameter Capacitance C;
+    Voltage u "Voltage drop between pin_p and pin_n";
+    Pin pin_p, pin_n;
+equation
+    0 = pin_p.i + pin_n.i;
+    u = pin_p.v - pin_n.v;
+    C * der(u) = pin_p.i;
+end Capacitor;
 
-    model SignalVoltage
-        "Generic voltage source using the input signal as source voltage"
-        Interfaces.PositivePin p;
-        Interfaces.NegativePin n;
-        Modelica.Blocks.Interfaces.RealInput v(unit="V") 
-            "Voltage between pin p and n (= p.v - n.v) as input signal";
-        SI.Current i "Current flowing from pin p to pin n";
-    equation
-        v = p.v - n.v;
-        0 = p.i + n.i;
-        i = p.i;
-    end SignalVoltage;
+model SignalVoltage
+    "Generic voltage source using the input signal as source voltage"
+    Interfaces.PositivePin p;
+    Interfaces.NegativePin n;
+    Modelica.Blocks.Interfaces.RealInput v(unit="V")
+        "Voltage between pin p and n (= p.v - n.v) as input signal";
+    SI.Current i "Current flowing from pin p to pin n";
+equation
+    v = p.v - n.v;
+    0 = p.i + n.i;
+    i = p.i;
+end SignalVoltage;
 
-    model Circuit
-        Capacitor C1(C=1e-4) "A Capacitor instance from the model above";
-        Capacitor C2(C=1e-5) "A Capacitor instance from the model above";
-            ...
-    equation
-        connect(C1.pin_p, C2.pin_n);
-            ...
-    end Circuit;
-\end{lstlisting}
+model Circuit
+    Capacitor C1(C=1e-4) "A Capacitor instance from the model above";
+    Capacitor C2(C=1e-5) "A Capacitor instance from the model above";
+        ...
+equation
+    connect(C1.pin_p, C2.pin_n);
+        ...
+end Circuit;
+\end{minted}
+
+% The following is currently broken for some reason: `inputminted` simply prints the
+% last encountered block again instead of the file contents. Sad.
+% \section{Lua}
+
+% Files can also be read into \LaTeX{} directly.
+% For example, the following is some current Lua code \emph{used for this very document}:
+% \inputminted{lua}{./lib/lua/envvar_newcommands.lua}
