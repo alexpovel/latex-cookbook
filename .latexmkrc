@@ -73,7 +73,7 @@ $biber = "biber --validate-datamodel %O %S";
 # Let latexmk know about generated files, so they can be used to detect if a
 # rerun is required, or be deleted in a cleanup.
 # loe: List of Examples (KOMAScript)
-# lol: List of Listings (listings package)
+# lol: List of Listings (`listings` and `minted` packages)
 # run.xml: biber runs
 # glg: glossaries log
 # glstex: generated from glossaries-extra

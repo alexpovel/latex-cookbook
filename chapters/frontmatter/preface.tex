@@ -68,15 +68,12 @@ will be a short description on how to get started below.
     \item of course, a source text file, ending in \texttt{.tex}.
         A minimal example is:
 
-        \begin{lstlisting}[
-            style=betweenpar,
-            language={[LaTeX]TeX},
-        ]
-            \documentclass{scrartcl}
-            \begin{document}
-                Hello World!
-            \end{document}
-        \end{lstlisting}
+        \begin{minted}[linenos=false]{latex}
+\documentclass{scrartcl}
+\begin{document}
+    Hello World!
+\end{document}
+        \end{minted}
         Note the usage of \texttt{scrartcl} over the standard \texttt{article}.
         This is a \ctanpackage{koma-script} document class.
         There are only \href{https://tex.stackexchange.com/a/73146/120853}{two reasons}

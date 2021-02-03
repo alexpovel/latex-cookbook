@@ -174,8 +174,71 @@
 % Typeset code snippets
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Custom package with style/language definitions:
-\input{lib/listings-languages.tex}
+% minted is a Python-based syntax highlighter and therefore much, much more powerful
+% than anything LaTeX-built-in
+\RequirePackage[%
+    % `minted` uses the `float` package to provide the `[H]` float position specifier.
+    % Sadly, the `float` package is incompatible with `floatrow`, which we make heavy
+    % use of. Luckily, we can use `minted` with the `newfloat` package instead, fixing
+    % all those otherwise breaking issues.
+    % See https://tex.stackexchange.com/a/378588/120853
+    newfloat=true,%
+]{minted}
+
+\setminted{% Global `minted` aka code syntax highlighting options
+    % If code is indented in the LaTeX source, this is reflected in the print.
+    % This option automatically removes as much whitespace as the first line of a listing
+    % is indented by (NOTE: DOESN'T CURRENTLY SEEM TO WORK...)
+    autogobble=true,
+    %
+    % Assuming the code to be displayed is written at 80-90 characters per line,
+    % \footnotesize makes sure it fits onto one line (roughly).
+    fontsize=\footnotesize,
+    %
+    breaklines=true,
+    breakanywhere=false, % default "false"; could be ugly, only use if required
+    breakbytokenanywhere=true, % Breaks tokens on non-spaces too
+    %
+    % Regular LaTeX can occur in these (on UK Keyboard: SHIFT+`).
+    % Otherwise, you'll have to copy-paste this whenever needed.
+    % The problem is that the escapechar has to be quite exotic so it never occurs
+    % in source code.
+    escapeinside=¬¬,
+    %
+    frame=leftline, % leftline pulls it together visually quite nicely
+    framerule=1pt, % default is 0.4pt
+    rulecolor=\color{g3},
+    %
+    numbers=left,
+    numberfirstline=true, % Always color the first line despite `stepnumber` setting
+    stepnumber=5, % Interval of line numbering
+    numbersep=2pt, % Horizontal distance between line number and line
+    %
+    % Used highlighting style, see https://pygments.org/demo/#try or `python -m pygments -L`
+    % For colorful output, I like:
+    % `paraiso-light` (prob. too light for print), `manni`, `tango`, `lovelace`
+    % For grayscale:
+    % `algol`
+    style=manni,
+}
+
+\setmintedinline{% Overwrite `\setminted` settings
+    fontsize=auto,% Reset to surrounding font size so its fits into the text flow
+}
+
+% In code environments, to be able to copy from the PDF (despite that not being a good
+% idea usually), we want the line numbers to not be part of the selection.
+% This command prints them, but renders the actual copied content empty,
+% on supported readers like Adobe Acrobat.
+\RequirePackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
+
+\newcommand*{\emptyaccsupp}[1]{%
+    \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
+}%
+
+\renewcommand*{\theFancyVerbLine}{ % Redefine how line numbers are printed
+    \textcolor{g3}{\ttfamily\tiny\emptyaccsupp{\arabic{FancyVerbLine}}}
+}
 
 % Colors for escaped, normal LaTeX in code environments
 \newcommand*{\phstring}[1]{%
@@ -192,11 +255,6 @@
         \hypersetup{allcolors=cOrange}% If references occur in here
         \textbf{\textcolor{cOrange}{#1}}%
     }%
-}%
-
-\lstset{% Global settings
-    style=base,
-    language={[3]Python},% global default; put most likely encountered language
 }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -669,10 +727,6 @@
     labelsep=slash,%
     labelfont={sf,bf},%
     list=off,% list=off removes subfigures from LoF
-}%
-
-\captionsetup[lstlisting]{%
-    width={\dimexpr1\linewidth-0.24\linewidth},% Manual, a bit hacky
 }%
 
 % Change counter from Arabic number to letter:
@@ -2149,9 +2203,6 @@
     \crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
     \Crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
     \creflabelformat{chemreac}{#2\textbf{R}#1#3}% No (1), but 1, aka remove parentheses
-
-    % Note that there is also a \crefname redefinition for listings,
-    % later in the document
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
