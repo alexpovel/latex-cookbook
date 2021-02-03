@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2021-02-03
+
+### Added
+
+- Option to suppress printing of pages list in the glossaries (b75d3d1)
+- GitLab description templates (7038798)
+
+### Changed
+
+- Syntax highlighting now uses `minted` instead of `listings`, a backwards-incompatible change (19fbd87)
+- Documentation now stresses Docker usage over manual "labour" (6843a2b)
+
+### Removed
+
+- Previous, custom-made `listings` language definitions; these are covered much better by `pygments`, aka `minted` (19fbd87)
+
 ## [2.0.0] - 2020-11-11
 
 ### Added
