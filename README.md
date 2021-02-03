@@ -13,11 +13,12 @@ contains two documents:
 
    [![Download README](images/vectors/gitlab/Download-README-critical.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/README.pdf?job=build_pandoc)
 
-   **The README covers git and Continuous Delivery, using Docker.**
+   **The README covers git and Continuous Delivery.**
 2. A [LaTeX document](cookbook.tex), usable as a cookbook (different "recipes" to
    achieve various things in LaTeX) and also as a template.
 
-   The LaTeX Cookbook PDF covers LaTeX-specific topics.
+   The LaTeX Cookbook PDF covers LaTeX-specific topics and instruction on compiling the
+   LaTeX source using Docker.
    It is also available for download:
 
    [![Download PDF](images/vectors/gitlab/Download-Cookbook-informational.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=build_latex)
@@ -203,7 +204,7 @@ pretty git GUI image from [here](https://unsplash.com/photos/842ofHC6MaI):
 
 ![git GUI](images/bitmaps/readme/yancy-min-842ofHC6MaI-unsplash.jpg)
 
-## Git(Lab) and Continuous Delivery
+### Git(Lab) and Continuous Delivery
 
 GitLab is a platform to host git repositories.
 Projects on there can serve as git remotes.
@@ -251,122 +252,6 @@ The advantages are:
   which compiles the PDF and offers it for download afterwards.
   The last part could be called *Continuous Deployment*, albeit a very basic version.
 
-### Docker
-
-Docker is a tool providing so-called *containers* (though wrong, think of them as
-light-weight virtual machines).
-These containers provide isolated, well-defined environments for applications to run in.
-They are created from executing corresponding Docker *images*.
-These images are in turn generated using a script-like list of instructions,
-so-called [*Dockerfiles*](https://docs.docker.com/engine/reference/builder/).
-
-In summary:
-
-1. a **`Dockerfile` text document** is created, containing instructions on how the image should
-   look like (like what stuff to install, what to copy where, ...).
-
-   As a baseline, these instructions often rely on a Debian distribution.
-   As such, all the usual Debian/Linux tools can be accessed, like `bash`.
-
-   An (unrelated) [example Dockerfile](https://github.com/alexpovel/random_python/blob/master/music-converter/Dockerfile)
-   can look like:
-
-   ```dockerfile
-   # Dockerfile
-
-   # Get the latest Debian Slim with Python installed
-   FROM python:slim
-
-   # Update the Debian package repositories and install a Debian package.
-   # Agree to installation automatically (`-y`)!
-   # This is required because Dockerfiles need to run without user interaction.
-   RUN apt-get update && apt-get install -y ffmpeg
-
-   # Copy a file from the building host into the image
-   COPY requirements.txt .
-
-   # Run some shell command, as you would in a normal sh/bash environment.
-   # This is a Python-specific command to install Python packages according to some
-   # requirements.
-   RUN pip install -r requirements.txt
-
-   # Copy more stuff!
-   COPY music-converter/ music-converter/
-
-   # This will be the command the image executes if run.
-   # It runs this command as a process and terminates as soon as the process ends
-   # (successfully or otherwise).
-   # Docker is not like a virtual machine: it is intended to run *one* process, then
-   # die. If you need to run it again, just create a new container (instance of a
-   # Docker image). Treat containers as *cattle*, not as a *pet*. The
-   # container-recreation process is light-weight, fast and the way to go.
-   #
-   # Of course, this does not stop anyone from running one *long-running* process
-   # (as in infinity, `while True`-style). This is still a good use-case for Docker
-   # (as are most things!). An example for this is a webserver.
-   ENTRYPOINT [ "python", "-m", "music-converter", "/in", "--destination", "/out" ]
-   ```
-
-   The Dockerfile this project uses for LaTeX stuff is
-   [here](https://github.com/alexpovel/latex-extras-docker/blob/master/Dockerfile).
-   It is not as simple, so not as suited for an example.
-
-2. The **image** is then built accordingly, resulting in a large-ish file that contains an
-   executable environment.
-   For example, if we install a comprehensive `TeXLive` distribution, the image can be
-   more than 2 GB in size.
-
-   This Docker image can be distributed.
-   In fact, there is [Docker Hub](https://hub.docker.com/), which exists for just this
-   purpose.
-   If you just instruct to run an image called e.g. `alexpovel/latex`, without
-   specifying a full URL to somewhere, Docker will look on the Hub for an image of that
-   name (and find it [here](https://hub.docker.com/r/alexpovel/latex)).
-   All participants of a project can pull images from there, and everyone will
-   be on the same page (alternatively, you can build the image from the Dockerfile).
-
-   For example, the LaTeX environment for this project requires a whole bunch of
-   setting-up.
-   This can take hours to read up upon, understand, explain, implement and getting to
-   run.
-   In some cases, it will be **impossible** if some required part of a project conflicts
-   with a pre-existing condition on your machine.
-   For example, project *A* requires `perl` in version `6.9.0`, but project *B* requires
-   version `4.2.0`.
-   This is what Docker is all about: **isolation**.
-   Whatever is present on your system does not matter, only the Docker image/container
-   contents are relevant.
-
-   If project member *X* has version `6.6.6` and they proclaim
-   ["*works for me*"](https://web.archive.org/web/20200928142058/https://events.ccc.de/2016/11/22/hello-this-is-33c3-works-for-me/),
-   but you have `1.3.37` and it *doesn't*, and you both cannot change your versions for
-   some other reason... tough luck.
-   This is what Docker is for.
-
-   Further, if you for example specify `FROM python:3.8.6` as your *base image*, aka
-   provided a so-called *tag* of `3.8.6`, it will be that tag in ten years' time still.
-   As such, you nailed the version your process takes place in and requires.
-   Once set up, this will run on virtually any computer running Docker, be it your
-   laptop now or whatever your machine is in ten years.
-   This is especially important for the reproducibility of research.
-3. Once the image is created, it can be run, **creating a container**.
-   We can then enter the container and use it like a pretty normal (usually Linux)
-   machine, for example to compile our `tex` files.
-   Other, single commands can also be executed.
-   For example, to compile `cookbook.tex` in PowerShell when the `alexpovel/latex` image
-   is available after [installing Docker](https://docs.docker.com/docker-for-windows/install/)
-   and getting the image (`docker pull alexpovel/latex` -- if you don't run this beforehand,
-   it will be downloaded automatically when it is missing), run:
-
-   ```powershell
-   docker run --rm --volume ${PWD}:/tex alexpovel/latex
-   ```
-
-   Done!
-   For more info, especially the details of the above command, see
-   [here](https://github.com/alexpovel/latex-extras-docker/blob/master/README.md#quick-intro).
-   **For this to work, you do not have to have anything installed on your machine, only Docker**.
-
 One concrete workflow to employ this chain is to have a Dockerfile repository on GitHub,
 [like this one](https://github.com/alexpovel/latex-extras-docker).
 GitHub then integrates with [DockerHub](https://hub.docker.com/).
@@ -384,41 +269,7 @@ Refer to the
 (that Dockerfile is used to compile this very README to PDF via `pandoc`)
 for more details.
 
-#### Installed packages
-
-For more information on the LaTeX packages mentioned
-[in the Dockerfile repository](https://github.com/alexpovel/latex-extras-docker),
-refer to the accompanying LaTeX cookbook.
-
-#### Equivalent Windows Install
-
-To get the same, or at least a very similar environment running on Windows,
-the elements can be installed individually:
-
-1. [MiKTeX](https://miktex.org/download); for a closer match to the Docker, install
-   [TeXLive](https://www.tug.org/texlive/windows.html) instead:
-   for a LaTeX distribution with the `lualatex`, `biber`, `bib2gls`, `latexmk` etc.
-   programs, as well as all LaTeX packages.
-2. [Java Runtime Environment](https://www.java.com/en/download/):
-   for [`bib2gls`](https://ctan.org/pkg/bib2gls), which is in turn used by
-   [`glossaries-extra`](https://ctan.org/pkg/glossaries-extra).
-3. [InkScape](https://inkscape.org/release):
-   for the [`svg`](https://ctan.org/pkg/svg) package to convert SVGs automatically
-   (absolutely none of the `PDF/PDF_TEX` nonsense anymore!)
-4. [gnuplot](https://sourceforge.net/projects/gnuplot/files/latest/download):
-   for [`pgfplots`](https://ctan.org/pkg/pgfplots) to generate contour plots.
-5. [Perl](http://strawberryperl.com/):
-   for [`latexmk`](https://mg.readthedocs.io/latexmk.html) to work
-
-(see how annoying, manual and laborious this list is? ... use [Docker](#docker)!)
-
-These are required to compile the LaTeX document.
-If InkScape and gnuplot ask to put their respective binaries into the `$PATH`
-environment variable, hit yes.
-If they do not, add the path yourself to the directory containing the binaries
-(`.exe`) in `Edit environment variables for your account -> Path -> Edit... -> New`.
-
-### Enable Runner for the project
+#### Enable Runner for the project
 
 To build anything, we need someone to build *for* us.
 GitLab calls these build-servers *runners*.
@@ -428,7 +279,7 @@ Enable it (him? her?) for the project on the GitLab project homepage:
 `Settings -> CI/CD -> Runners -> Enable Shared Runners`.
 Otherwise, the build process will get 'stuck' indefinitely.
 
-### Add git info to PDF metadata
+#### Add git info to PDF metadata
 
 After retrieving a built PDF, it might get lost in the nether.
 That is, the downloader loses track of what commit it belongs to, or even what release.
@@ -512,7 +363,7 @@ then turned into macros/control sequences (`\newcommand`) of a given name using
 `token.set_macro(<string> csname, <string> content)`, see the [LuaTeX reference](http://mirrors.ctan.org/systems/doc/luatex/luatex.pdf)
 on all the included Lua functionality provided by LuaTeX, on top of regular Lua.
 
-### Add PDF Download Button
+#### Add PDF Download Button
 
 On the top of the project page, we can add *badges*.
 That's how GitLab calls the small, clickable buttons.

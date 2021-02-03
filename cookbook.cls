@@ -1627,6 +1627,8 @@
         math-micro=\text{µ},% https://tex.stackexchange.com/a/54915/120853
         text-micro=µ,
         per-mode=symbol,
+        %
+        binary-units, % Allow "GB" for gigabyte etc., which isn't strictly SI but useful
     }%
     % Second setup step, with locales. See also
     % https://tex.stackexchange.com/a/46979/120853

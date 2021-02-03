@@ -1,0 +1,299 @@
+\chapter{Usage}
+
+This document \enquote{requires}%
+\footnote{
+    It does not \emph{technically} require Docker, but I hope to convince you that
+    the non\-/Docker, manual way is the way of the dodo and a big no\-/no.
+}
+\href{https://www.docker.com/}{Docker}.
+On a high level, Docker allows to prepare specific software bundles, tailor\-/made for
+whatever application the bundle author desires.
+Other users can then use these software bundles for their own projects.
+The bundles are well\-/defined and can be distributed and run very easily.
+The more complex and demanding the required software, the higher the benefit of using such bundles.
+The driving design principle and primary use case for these bundles is \emph{isolation}.
+Whatever you do with the bundles, it happens in isolation from your host system.
+This allows a user to have, for example, arbitrary Python versions at their disposal,
+whereas a local system installation can only ever offer a single version.
+
+For a \LaTeX{} document, the one at hand here is pretty complex.
+This is owed to the many used packages and outside tooling.
+Outside tooling (programs other than \LaTeX{} called from within \LaTeX{}) is quite
+prevalent in \LaTeX{}, since it itself is so limited.%
+\footnote{
+    For example, when writing Python, you would not call Perl or JavaScript from within it,
+    because whatever they can do, Python can.
+    The same analogy does \emph{not} hold for \LaTeX{}: base \LaTeX{} can do surprisingly
+    little, even though \TeX{} is technically Turing\-/complete.
+}
+Let us look at the outside tooling used for this document.
+
+\section{Outside tools and special packages}
+
+This section highlights the pain points of \emph{not} using Docker.
+If you are already familiar and need no convincing, skip to \cref{ch:using-docker}.
+For this document, outside tools are required for:
+\begin{enumerate}
+    \item \ctanpackage{glossaries-extra}: requires the outside tool
+        \ctanpackage{bib2gls}, see \cref{ch:bib2gls}, which in turn requires
+        a Java Runtime Environment.
+    \item \ctanpackage{biblatex}: requires the outside tool \ctanpackage{biber},
+        see \cref{ch:bibliography_rationale}.
+    \item \ctanpackage{svg}: requires the outside program
+        \href{https://inkscape.org/}{InkScape}.
+        Examples for that package's main command, \verb|\includesvg|, are
+        \cref{fig:wide_caption,fig:tighter_caption,fig:multiple_floats,fig:sidecap,fig:inside_float}.
+    \item Using \texttt{contour gnuplot} commands with \ctanpackage{pgfplots}, see
+        \cref{fig:mollier_diagram}, requires
+        \href{http://www.gnuplot.info/download.html}{gnuplot}.
+    \item Syntax highlighting for source code, see \cref{ch:code-listings},
+        is done through \ctanpackage{minted}.
+        It requires \href{https://www.python.org/}{Python} (built into virtually all Linux
+        distributions but needs to be installed on Windows) with its
+        \href{https://pypi.org/project/Pygments/}{pygments} package installed.
+        That package does the heavy lifting and \ctanpackage{minted} inserts the result
+        into your \LaTeX{} document.
+\end{enumerate}
+
+If you have a proper \LaTeX{} distribution, \texttt{bib2gls} and \texttt{biber}
+will already be available as commands and ready to be invoked.
+The latter means that they are on your \texttt{\$PATH}, \iecfeg{i.e.}\ the paths to
+the respective binaries are part of the \texttt{PATH} environment variable.
+\emph{All other stuff, you have to install manually}.
+
+You will have to install and keep everything else updated by hand.
+What if one of the dependencies of this document conflicts with something you have already
+installed on your system?
+What if that conflict is not resolvable?
+You would be unable to use this document.
+This is where Docker comes into play.
+You outsource all this setting\-/up to someone who already bundled all that stuff together.
+Docker calls these \enquote{bundles} \emph{images}.
+There is a Docker image \emph{tailor\-/made} for this document:
+\begin{center}
+    \href{https://hub.docker.com/r/alexpovel/latex}{alexpovel/latex}.
+\end{center}
+It is guaranteed to function correctly for this document, since the author maintains both
+in parallel.
+There will never be a mismatch.
+If maintenance ceases, it will cease for both components at the same time, hence it will
+still continue to work, just not get updated anymore.
+
+\section{Using Docker}
+\label{ch:using-docker}
+
+Instead of all of the above, \textbf{only one installation is required}: Docker.
+You can get it from
+\begin{center}
+    \url{https://docs.docker.com/get-docker/} .
+\end{center}
+\emph{You don't even need a \LaTeX{} distribution}.
+All you need is an editor to edit the files in, see \cref{ch:editor}.
+Once you want to compile, open a terminal, navigate to your directory and run
+\begin{minted}[linenos=false]{powershell}
+    docker run --rm --volume ${PWD}:/tex alexpovel/latex
+\end{minted}
+for PowerShell or
+\begin{minted}[linenos=false]{shell}
+    docker run --rm --volume $(pwd):/tex alexpovel/latex
+\end{minted}
+for bash.
+That's it!
+
+The command consists of:
+\begin{itemize}
+    \item The \texttt{--rm} option, which removes the run container after you are done
+        (containers are \enquote{instances} of images).
+        This is generally desired, since containers are ephemeral and should be treated as such.
+        Do not keep containers around, simply create new ones!
+        If you need adjustments, adjust the image, not the container, then create new containers
+        from that adjusted image.
+    \item The \texttt{--volume} option makes the current directory (\texttt{pwd})
+        available \emph{inside} the running container, at the \texttt{/tex} destination path.
+        The \LaTeX{} process needs your files to work with.
+        Without this option, the container would be \enquote{naked}, with no way of
+        accessing your files.
+    \item The final argument to \texttt{docker run} is the image to be run, in this case
+        \texttt{alexpovel/latex}, which will look for that name on
+        \href{https://hub.docker.com/}{DockerHub}.
+\end{itemize}
+
+Ideally, the command can be registered as the \enquote{compilation} command of your
+editor.
+That way, you just hit the compile button and will be using Docker in the background,
+with no changes to your workflow.
+
+\subsection{Compilation steps}
+
+You are probably used to running \texttt{pdflatex} or similar on your source files,
+as many times as needed.
+So where does that step happen in the above \texttt{docker} command?
+
+The Docker approach uses the \textbf{\texttt{latexmk}} tool to ease all the painful labour
+of running chains of \texttt{pdflatex}, \texttt{biber} \iecfeg{etc}.\ manually.
+\texttt{latexmk} automates \LaTeX{} compilation by detecting all the required
+steps and then running them as often as required.
+It requires \textbf{Perl}.
+Linux users will already have it available, Windows users may grab
+\href{http://strawberryperl.com/}{Strawberry Perl}.
+As such, this document's processing pipeline \emph{as a whole} requires Perl,
+although it is technically not required for document compilation only.
+
+Once Perl is installed (of course, the Docker image already contains it),
+the entire document can be compiled by \textbf{simply calling \texttt{latexmk}}.
+You do not even have to provide a \texttt{*.tex} file argument.
+By default, \texttt{latexmk} will simply compile all found \texttt{*.tex} files.
+The core ingredient to this magic process is the \texttt{.latexmkrc} configuration file.
+You can find it in the repository root directory.
+It is tailored to this document and does not need to be touched if the compilation
+process itself has not changed.
+It also contains some more insights to the entire process.
+
+\texttt{latexmk} is great because it figures out most things by itself and enjoys
+wide\-/spread acceptance and adoption.
+If it does not figure out everything from the get\-/go, it is easily customized,
+like for this document.
+
+Having walked through all this manually, hopefully using the prepared Docker image
+instead makes more sense now.
+It is guaranteed to work for everyone, because the Docker container (that is, the
+virtual build environment) will be identical for all users.
+It is independent of local \LaTeX{} installations and all their quirks.
+As such, it simply and forever does away with the entire, huge class of
+\begin{displayquote}[Everyone, at some point]
+    But it works on my machine!
+\end{displayquote}
+Good riddance to that.
+
+If all of this is embedded into a pipeline on GitLab, your documents are built whenever
+you \texttt{git push} to the remote server (or whenever you configure it to).
+It does not get simpler; the downside is of course the lengthier setup, but all of that
+is explained in the
+\href{https://collaborating.tuhh.de/alex/latex-git-cookbook/-/blob/master/README.md}{README}.
+Also, the repository itself is a live demonstration where everything is set up already!
+
+\subsection{More on Docker}
+
+You do not need to know of the entire chain of how Docker images are created and run.
+Only consuming the final image has all the benefits with little effort.
+However, the process is not complex:
+\begin{enumerate}
+    \item A \textbf{\texttt{Dockerfile} text document} is created, containing instructions on how the image should look like (like what stuff to install, what to copy where, ...).
+
+        As a baseline, these instructions often rely on a Debian distribution.
+        As such, all the usual Debian/Linux tools can be accessed, like \texttt{bash}.
+
+        An (unrelated)
+        \href{https://github.com/alexpovel/random_python/blob/master/music-converter/Dockerfile}{example Dockerfile}
+        can look like:
+
+        \begin{minted}{dockerfile}
+# Get the latest Debian Slim with Python installed
+FROM python:slim
+
+# Update the Debian package repositories and install a Debian package.
+# Agree to installation automatically (`-y`)!
+# This is required because Dockerfiles need to run without user interaction.
+RUN apt-get update && apt-get install -y ffmpeg
+
+# Copy a file from the building host into the image
+COPY requirements.txt .
+
+# Run some shell command, as you would in a normal sh/bash environment.
+# This is a Python-specific command to install Python packages according to some
+# requirements.
+RUN pip install -r requirements.txt
+
+# Copy more stuff!
+COPY music-converter/ music-converter/
+
+# This will be the command the image executes if run.
+# It runs this command as a process and terminates as soon as the process ends
+# (successfully or otherwise).
+# Docker is not like a virtual machine: it is intended to run *one* process, then
+# die. If you need to run it again, just create a new container (instance of a
+# Docker image). Treat containers as *cattle*, not as a *pet*. The
+# container-recreation process is light-weight, fast and the way to go.
+#
+# Of course, this does not stop anyone from running one *long-running* process
+# (as in infinity, `while True`-style). This is still a good use-case for Docker
+# (as are most things!). An example for this is a webserver.
+ENTRYPOINT [ "python", "-m", "music-converter", "/in", "--destination", "/out" ]
+        \end{minted}
+
+        The Dockerfile this project uses for LaTeX stuff is here:
+        \begin{center}
+            \url{https://github.com/alexpovel/latex-extras-docker/blob/master/Dockerfile}
+        \end{center}
+        It is not as simple, so not as suited for an example.
+        Its length gives you an idea of the setup required to compile this \LaTeX{} document.
+        All of that complexity is of no concern to you when using Docker!
+        Of course, such an image also works for much simpler documents.
+
+        If you require custom additions, you can always inherit from existing base images:
+        \begin{minted}{dockerfile}
+FROM alexpovel/latex
+
+# ... Your stuff goes here ...
+        \end{minted}
+    \item The \textbf{image} is then built according to the \texttt{Dockerfile} instructions,
+        resulting in a large\-/ish file that contains an executable environment.
+        For example, if we install a comprehensive TeXLive distribution, the image can be
+        more than \SI{2}{\giga\byte} in size.
+        Note that you will never interact with that \enquote{file} directly.
+        Docker manages it for you, and all interaction occurs through the \texttt{docker} command.
+
+        The Docker image can be distributed.
+        If you just instruct to run an image called \iecfeg{e.g.} \texttt{alexpovel/latex}, without
+        specifying a full URL to somewhere, Docker will look on its Hub for an image of that
+        name (and find it \href{https://hub.docker.com/r/alexpovel/latex}{here}).
+        Anyone can pull (public) images from there, and everyone will
+        be on the same page (alternatively, you can build the image from the Dockerfile).
+
+        For example, as stated, the \LaTeX{} environment for this project requires a whole bunch of setting\-/up.
+        This can take more than an afternoon to read up upon, understand, implement and getting to run.
+        In some cases, it will be impossible if some required part of a project conflicts
+        with a pre\-/existing condition on your machine.
+        For example, suppose project \emph{A} requires Perl in version \texttt{6.9.0},
+        but project \emph{B} requires version \texttt{4.2.0}.
+        This is what Docker is all about: isolation.
+        Whatever is present on your system does not matter, only the Docker image/container
+        contents are relevant.
+
+        Further, if you for example specify \mintinline{dockerfile}{FROM python:3.8.6}
+        as your base image, aka provided a so\-/called tag of \texttt{3.8.6}, it will be that tag in ten years' time still.
+        As such, you nailed the version your process takes place in and requires.
+        Once set up, this will run on virtually any computer running Docker, be it your
+        laptop now or whatever your machine is in ten years.
+        This is especially important for the reproducibility of research.
+    \item Once the image is created, it can be run, \textbf{creating a container}.
+        We can then enter the container and use it like a pretty normal (usually Linux)
+        machine, for example to compile our \LaTeX{} files.
+        Other, single commands can also be executed.
+
+        The proper way is to run one container \emph{per process}.
+        If that process (\iecfeg{e.g.}\ \texttt{latexmk}) finishes, the container exits.
+        A new process then requires a new container.
+\end{enumerate}
+
+\subsection{Editor}
+\label{ch:editor}
+
+You are free to do whatever you want.
+However, a garbage editor can substantially hamstring your work.
+For example, please do not use Notepad++.
+It is a fantastic little program but unsuitable for any serious, longer work.
+
+The author uses and dearly recommends \href{https://code.visualstudio.com/}{Visual Studio Code},
+using its
+\href{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}{\LaTeX{} Workshop} extension, which provides syntax highlighting, shortcuts and many other useful things.
+VSCode is among the most state\-/of\-/the\-/art editors currently available.
+Being usable for \LaTeX{} is just a nice \enquote{side\-/effect} we can take
+advantage of.
+It is open\-/source and therefore also has a privacy\-/respecting alternative fork, \emph{VSCodium}.
+
+For a more conventional, complete \abb{integrated_development_environment},
+try \href{https://www.texstudio.org/}{TeXStudio}.
+Like VSCode, it is also
+\href{https://github.com/texstudio-org/texstudio}{open source}.
+TeXStudio will cater to \SI{99}{\percent} of your \LaTeX{} needs, but nothing else (Markdown, \dots{}).
