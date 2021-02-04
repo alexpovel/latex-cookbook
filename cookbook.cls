@@ -185,84 +185,84 @@
     newfloat=true,%
 ]{minted}
 
-\setminted{% Global `minted` aka code syntax highlighting options
-    % If code is indented in the LaTeX source, this is reflected in the print.
-    % This option automatically removes as much whitespace as the first line of a listing
-    % is indented by (NOTE: DOESN'T CURRENTLY SEEM TO WORK...)
-    autogobble=true,
-    %
-    % Assuming the code to be displayed is written at 80-90 characters per line,
-    % \footnotesize makes sure it fits onto one line (roughly).
-    fontsize=\footnotesize,
-    %
-    breaklines=true,
-    breakanywhere=false, % default "false"; could be ugly, only use if required
-    breakbytokenanywhere=true, % Breaks tokens on non-spaces too
-    %
-    % Regular LaTeX can occur in these (on UK Keyboard: SHIFT+`).
-    % Otherwise, you'll have to copy-paste this whenever needed.
-    % The problem is that the escapechar has to be quite exotic so it never occurs
-    % in source code.
-    escapeinside=¬¬,
-    %
-    frame=leftline, % leftline pulls it together visually quite nicely
-    framerule=1pt, % default is 0.4pt
-    rulecolor=\color{g3},
-    %
-    numbers=left,
-    numberfirstline=true, % Always color the first line despite `stepnumber` setting
-    stepnumber=5, % Interval of line numbering
-    numbersep=2pt, % Horizontal distance between line number and line
-    %
-    % Used highlighting style, see https://pygments.org/demo/#try or `python -m pygments -L`
-    % For colorful output, I like:
-    % `paraiso-light` (prob. too light for print), `manni`, `tango`, `lovelace`
-    % For grayscale:
-    % `algol`
-    style=manni,
-}
+    \setminted{% Global `minted` aka code syntax highlighting options
+        % If code is indented in the LaTeX source, this is reflected in the print.
+        % This option automatically removes as much whitespace as the first line of a listing
+        % is indented by (NOTE: DOESN'T CURRENTLY SEEM TO WORK...)
+        autogobble=true,
+        %
+        % Assuming the code to be displayed is written at 80-90 characters per line,
+        % \footnotesize makes sure it fits onto one line (roughly).
+        fontsize=\footnotesize,
+        %
+        breaklines=true,
+        breakanywhere=false, % default "false"; could be ugly, only use if required
+        breakbytokenanywhere=true, % Breaks tokens on non-spaces too
+        %
+        % Regular LaTeX can occur in these (on UK Keyboard: SHIFT+`).
+        % Otherwise, you'll have to copy-paste this whenever needed.
+        % The problem is that the escapechar has to be quite exotic so it never occurs
+        % in source code.
+        escapeinside=¬¬,
+        %
+        frame=leftline, % leftline pulls it together visually quite nicely
+        framerule=1pt, % default is 0.4pt
+        rulecolor=\color{g3},
+        %
+        numbers=left,
+        numberfirstline=true, % Always color the first line despite `stepnumber` setting
+        stepnumber=5, % Interval of line numbering
+        numbersep=2pt, % Horizontal distance between line number and line
+        %
+        % Used highlighting style, see https://pygments.org/demo/#try or `python -m pygments -L`
+        % For colorful output, I like:
+        % `paraiso-light` (prob. too light for print), `manni`, `tango`, `lovelace`
+        % For grayscale:
+        % `algol`
+        style=manni,
+    }
 
-\setmintedinline{% Overwrite `\setminted` settings
-    fontsize=auto,% Reset to surrounding font size so its fits into the text flow
-}
+    \setmintedinline{% Overwrite `\setminted` settings
+        fontsize=auto,% Reset to surrounding font size so its fits into the text flow
+    }
 
-% Set up the floating environment, e.g. what is says in the caption of floats:
-\SetupFloatingEnvironment{listing}{% Requires `newfloat` usage
-    name=\TransListing{},
-    listname=\TransListOfListings{},
-}
-% Setup for referencing the floats correctly is done in `cleveref` settings!
+    % Set up the floating environment, e.g. what is says in the caption of floats:
+    \SetupFloatingEnvironment{listing}{% Requires `newfloat` usage
+        name=\TransListing{},
+        listname=\TransListOfListings{},
+    }
+    % Setup for referencing the floats correctly is done in `cleveref` settings!
 
-% In code environments, to be able to copy from the PDF (despite that not being a good
-% idea usually), we want the line numbers to not be part of the selection.
-% This command prints them, but renders the actual copied content empty,
-% on supported readers like Adobe Acrobat.
-\RequirePackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
+    % In code environments, to be able to copy from the PDF (despite that not being a good
+    % idea usually), we want the line numbers to not be part of the selection.
+    % This command prints them, but renders the actual copied content empty,
+    % on supported readers like Adobe Acrobat.
+    \RequirePackage{accsupp}% https://tex.stackexchange.com/a/57160/120853
 
-\newcommand*{\emptyaccsupp}[1]{%
-    \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
-}%
-
-\renewcommand*{\theFancyVerbLine}{ % Redefine how line numbers are printed
-    \textcolor{g3}{\ttfamily\tiny\emptyaccsupp{\arabic{FancyVerbLine}}}
-}
-
-% Colors for escaped, normal LaTeX in code environments
-\newcommand*{\phstring}[1]{%
-    \textcolor{cRed}{#1}%
-}%
-\newcommand*{\phnum}[1]{%
-    \textcolor{cBlue}{#1}%
-}%
-\newcommand*{\phother}[1]{%
-    \textcolor{cGreen}{#1}%
-}%
-\newcommand*{\phnote}[1]{%
-    {%
-        \hypersetup{allcolors=cOrange}% If references occur in here
-        \textbf{\textcolor{cOrange}{#1}}%
+    \newcommand*{\emptyaccsupp}[1]{%
+        \BeginAccSupp{ActualText={}}#1\EndAccSupp{}%
     }%
-}%
+
+    \renewcommand*{\theFancyVerbLine}{ % Redefine how line numbers are printed
+        \textcolor{g3}{\ttfamily\tiny\emptyaccsupp{\arabic{FancyVerbLine}}}
+    }
+
+    % Colors for escaped, normal LaTeX in code environments
+    \newcommand*{\phstring}[1]{%
+        \textcolor{cRed}{#1}%
+    }%
+    \newcommand*{\phnum}[1]{%
+        \textcolor{cBlue}{#1}%
+    }%
+    \newcommand*{\phother}[1]{%
+        \textcolor{cGreen}{#1}%
+    }%
+    \newcommand*{\phnote}[1]{%
+        {%
+            \hypersetup{allcolors=cOrange}% If references occur in here
+            \textbf{\textcolor{cOrange}{#1}}%
+        }%
+    }%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % TODO notes in the PDF
