@@ -996,10 +996,13 @@ want to give the beginner's guide a shot.
 In a format similar to normal bibliographies, all glossary entries are now managed
 using \texttt{*.bib} files.
 Each entry is processed by \ctanpackage{bib2gls} and put into an auxiliary file.
-From it, it reads and inserts all contents when \verb|\gls| and its many siblings
-are used.
+From it, \ctanpackage{glossaries-extra} reads and inserts all contents when \verb|\gls|
+and its many sibling commands are used.
 The framework for all of that, also printing of the glossary and nomenclature,
 is already taken care of for this document.
+In addition to printing the glossaries, they are also added to the table of contents.
+This behavior can be toggled using the \texttt{toc} package option flag,
+see the source code for more info.
 
 Traditionally, glossary packages are used for abbreviations.
 However, using \ctanpackage{glossaries-extra} this can be kicked into top gear.

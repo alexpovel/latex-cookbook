@@ -1755,7 +1755,8 @@
     abbreviations,% Regular abbreviations/acronyms
     symbols,% Physical symbols
     index,% A regular book index at the end
-    numbers% constants like Pi
+    numbers,% constants like Pi
+    toc=true,% Toggle inclusion in Table of Contents
 ]{glossaries-extra}% Also see https://tex.stackexchange.com/q/477658/120853
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
