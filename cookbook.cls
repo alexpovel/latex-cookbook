@@ -226,6 +226,13 @@
     fontsize=auto,% Reset to surrounding font size so its fits into the text flow
 }
 
+% Set up the floating environment, e.g. what is says in the caption of floats:
+\SetupFloatingEnvironment{listing}{% Requires `newfloat` usage
+    name=\TransListing{},
+    listname=\TransListOfListings{},
+}
+% Setup for referencing the floats correctly is done in `cleveref` settings!
+
 % In code environments, to be able to copy from the PDF (despite that not being a good
 % idea usually), we want the line numbers to not be part of the selection.
 % This command prints them, but renders the actual copied content empty,
@@ -2206,6 +2213,15 @@
     \crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
     \Crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
     \creflabelformat{chemreac}{#2\textbf{R}#1#3}% No (1), but 1, aka remove parentheses
+
+    % Code listings, see `minted` package.
+    % Introduce a new <type> called `code`, then make the (existing) counter `listing`
+    % use it by aliasing. Modifying `listing` directly with `\crefname{listing}...`
+    % did not work! See also
+    % https://tex.stackexchange.com/a/310355/120853
+    \crefname{code}{\TransListing{}}{\TransListings{}}
+    \Crefname{code}{\TransListing{}}{\TransListings{}}
+    \crefalias{listing}{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

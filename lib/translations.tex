@@ -143,12 +143,14 @@
 \providecaptionname{english}{\TransListOfIllustrations}{List of Illustrations}
 \providecaptionname{german}{\TransListOfIllustrations}{Illustrationsverzeichnis}
 
-% Instead of providing a translation \Trans command here, just override commands
-% from listings package directly
-\providecaptionname{english}{\lstlistingname}{Code Listing}
-\providecaptionname{german}{\lstlistingname}{Code}
-\providecaptionname{english}{\lstlistlistingname}{List of Code}
-\providecaptionname{german}{\lstlistlistingname}{Codeverzeichnis}
+\providecaptionname{english}{\TransListing}{Code Listing}
+\providecaptionname{english}{\TransListings}{Code Listings}% Plural for cleveref
+
+\providecaptionname{german}{\TransListing}{Code}
+\providecaptionname{german}{\TransListings}{Codes}% Plural for cleveref
+
+\providecaptionname{english}{\TransListOfListings}{List of Code}
+\providecaptionname{german}{\TransListOfListings}{Codeverzeichnis}
 
 \providecaptionname{english}{\TransListOfExamples}{List of Examples}
 \providecaptionname{german}{\TransListOfExamples}{Beispielverzeichnis}
