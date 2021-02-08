@@ -36,6 +36,9 @@ as long as they have this subdirectory intact.
 It is also OS-agnostic
 (with system-installed fonts, calling them by their name can get really out of hand;
 with plain filenames, we know exactly what to call them).
+Some fonts ship with regular LaTeX distributions and are available *without* being explicitly installed by the user.
+TeX Gyre fonts are an example.
+These need to neither be included here nor installed, they are ship with the LaTeX installation (TeXLive).
 
 The distinct advantage of `unicode-math` over its parent `fontspec` is the additional
 feature of a **math font** (`\setmathfont`).
@@ -104,13 +107,11 @@ I don't have more reasons anyway, since otherwise, the programs are quite identi
 
 ## Licenses
 
-As of 2020-06-25, there are these font subdirectories, each containing the fonts and their
-licenses:
+Currently, there are these font subdirectories, each containing the fonts and their licenses:
 
 1. [sans](sans/): The custom license requires written permission by the author to be
   distributed (which it probably technically is by virtue of being included in and publicly
   downloadable from this repo). That permission is attached to the directory.
-2. [roman](roman/): These are licensed so that a complete, unmodified distribution is okay.
-3. [mono](mono/): Same as for roman.
+2. [mono](mono/): These are licensed so that a complete, unmodified distribution is okay.
 
 For more info, refer to the exact licenses.

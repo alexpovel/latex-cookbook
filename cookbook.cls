@@ -300,7 +300,6 @@
 }
 
 \setmainfont[%
-    Path=fonts/roman/,
     Numbers=Lowercase,% Hanging/OldStyle numbers through Lowercase numbers
     % Use asterisk-notation as a placeholder for what it says in brackets {} later:
     UprightFont=*-regular,%
@@ -308,7 +307,7 @@
     ItalicFont=*-italic,%
     BoldItalicFont=*-bolditalic,%
     % Color=Orange2,% Toggle color for debugging (should be xcolor name)
-]{texgyrepagella}
+]{texgyrepagella}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Source: https://fonts.google.com/specimen/Inconsolata
 % (Consolas is considered better but is not free (?))
@@ -342,7 +341,6 @@
 % Source: https://ctan.org/texarchive/fonts/tex-gyre-math/opentype
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setmathfont[%
-    Path=fonts/roman/math/,
     %Set math-font-commands to new versions; use \symbf{} instead of \mathbf{} etc:
     mathrm=sym,%
     mathit=sym,%
@@ -354,14 +352,13 @@
     % e.g. in package chemformula
     NFSSFamily=tgpl,%
     % Color=Green4,% Toggle color for debugging (should be xcolor name)
-]{texgyrepagella-math}%
+]{texgyrepagella-math}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
 
 % Provide a new font family for siunitx to work.
 % See: https://tex.stackexchange.com/a/468031/120853.
 % \newfontfamily is used similarly to \setmainfont etc,
 % see: https://tex.stackexchange.com/a/12568/120853
 \newfontfamily{\unitnumberfont}[
-    Path=fonts/roman/,
     % New font family for typesetting units.
     % Required since otherwise, numbers typeset with \SI/\num etc. from siunitx
     % might be hanging if that feature is turned on in the main font (OldStyle numbers).
@@ -372,7 +369,7 @@
     ItalicFont=*-italic,%
     BoldItalicFont=*-bolditalic,%
     % Color=LightCyan4,% Toggle color for debugging (should be xcolor name)
-]{texgyrepagella}%
+]{texgyrepagella}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
 
 % Looking at CTAN, `fontawesome5' looks much more recent and packs many more symbols
 % in comparison to `fontawesome'.
