@@ -36,7 +36,7 @@ Refer to the contents of that PDF itself to get an idea of how that is achieved.
   In normal Desktop usage, you would download these, install them on your system, and be done.
   They would then be available for use in latex.
   To facilitate usage of this repository and make CI pipelines work easily, installing the fonts is not suitable.
-  Therefore, ship them in this directory and point `fontspec`/`mathspec` to them by filename, solving all our problems.
+  Therefore, ship them in this directory and point `fontspec`/`unicode-math` to them by filename, solving all our problems.
 - [lib](lib/): Library modules, e.g. outsourced latex source code that is better off modularized.
 
   This directory also contains Lua code.
