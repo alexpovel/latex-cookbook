@@ -188,7 +188,7 @@
     \setminted{% Global `minted` aka code syntax highlighting options
         % If code is indented in the LaTeX source, this is reflected in the print.
         % This option automatically removes as much whitespace as the first line of a listing
-        % is indented by (NOTE: DOESN'T CURRENTLY SEEM TO WORK...)
+        % is indented by (note: requires `python` to be available, not only `pygmentize`)
         autogobble=true,
         %
         % Assuming the code to be displayed is written at 80-90 characters per line,

@@ -188,37 +188,37 @@ However, the process is not complex:
         can look like:
 
         \begin{minted}{dockerfile}
-# Get the latest Debian Slim with Python installed
-FROM python:slim
+            # Get the latest Debian Slim with Python installed
+            FROM python:slim
 
-# Update the Debian package repositories and install a Debian package.
-# Agree to installation automatically (`-y`)!
-# This is required because Dockerfiles need to run without user interaction.
-RUN apt-get update && apt-get install -y ffmpeg
+            # Update the Debian package repositories and install a Debian package.
+            # Agree to installation automatically (`-y`)!
+            # This is required because Dockerfiles need to run without user interaction.
+            RUN apt-get update && apt-get install -y ffmpeg
 
-# Copy a file from the building host into the image
-COPY requirements.txt .
+            # Copy a file from the building host into the image
+            COPY requirements.txt .
 
-# Run some shell command, as you would in a normal sh/bash environment.
-# This is a Python-specific command to install Python packages according to some
-# requirements.
-RUN pip install -r requirements.txt
+            # Run some shell command, as you would in a normal sh/bash environment.
+            # This is a Python-specific command to install Python packages according to some
+            # requirements.
+            RUN pip install -r requirements.txt
 
-# Copy more stuff!
-COPY music-converter/ music-converter/
+            # Copy more stuff!
+            COPY music-converter/ music-converter/
 
-# This will be the command the image executes if run.
-# It runs this command as a process and terminates as soon as the process ends
-# (successfully or otherwise).
-# Docker is not like a virtual machine: it is intended to run *one* process, then
-# die. If you need to run it again, just create a new container (instance of a
-# Docker image). Treat containers as *cattle*, not as a *pet*. The
-# container-recreation process is light-weight, fast and the way to go.
-#
-# Of course, this does not stop anyone from running one *long-running* process
-# (as in infinity, `while True`-style). This is still a good use-case for Docker
-# (as are most things!). An example for this is a webserver.
-ENTRYPOINT [ "python", "-m", "music-converter", "/in", "--destination", "/out" ]
+            # This will be the command the image executes if run.
+            # It runs this command as a process and terminates as soon as the process ends
+            # (successfully or otherwise).
+            # Docker is not like a virtual machine: it is intended to run *one* process, then
+            # die. If you need to run it again, just create a new container (instance of a
+            # Docker image). Treat containers as *cattle*, not as a *pet*. The
+            # container-recreation process is light-weight, fast and the way to go.
+            #
+            # Of course, this does not stop anyone from running one *long-running* process
+            # (as in infinity, `while True`-style). This is still a good use-case for Docker
+            # (as are most things!). An example for this is a webserver.
+            ENTRYPOINT [ "python", "-m", "music-converter", "/in", "--destination", "/out" ]
         \end{minted}
 
         The Dockerfile this project uses for LaTeX stuff is here:
@@ -232,9 +232,9 @@ ENTRYPOINT [ "python", "-m", "music-converter", "/in", "--destination", "/out" ]
 
         If you require custom additions, you can always inherit from existing base images:
         \begin{minted}{dockerfile}
-FROM alexpovel/latex
+            FROM alexpovel/latex
 
-# ... Your stuff goes here ...
+            # ... Your stuff goes here ...
         \end{minted}
     \item The \textbf{image} is then built according to the \texttt{Dockerfile} instructions,
         resulting in a large\-/ish file that contains an executable environment.

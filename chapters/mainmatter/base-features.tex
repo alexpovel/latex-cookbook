@@ -121,8 +121,8 @@ easy on the eyes and very readable.
 \paragraph{Old approach}
 The overwhelming majority of \LaTeX{} documents rely on the two lines
 \begin{minted}[linenos=false]{latex}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
 \end{minted}
 This approach is \textbf{outdated} and only required when using \hologo{pdfLaTeX}.
 Since this is what most people still do, the two packages are still required.
@@ -473,7 +473,7 @@ In this document, it will use the math font: \num{1234567890}.
 Physical units are output using \verb|\si|.
 It also has parsing capabilities:
 \begin{minted}[linenos=false]{latex}
-\si{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}
+    \si{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}
 \end{minted}
 will print
 \si{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
@@ -1192,10 +1192,10 @@ The sorting and filtering capabilities are very strong, and of course also Unico
 compatible.
 A minimal \texttt{bib} file for acronyms can be as simple as:
 \begin{minted}[linenos=false]{bib}
-@abbreviation{cont_int,
-    short={CI},
-    long={Continuous Integration},
-}
+    @abbreviation{cont_int,
+        short={CI},
+        long={Continuous Integration},
+    }
 \end{minted}
 For concrete examples, see the files for this document at \texttt{bib/glossaries/}.
 There can be as many keys as required, with custom ones being easily created.
@@ -1204,12 +1204,12 @@ Thus, users of \LaTeX{} who are already familiar with that concept and format
 should have an easy time getting started with \ctanpackage{glossaries-extra}.
 Using it for mathematical symbols can look like:
 \begin{minted}[linenos=false]{bib}
-@symbol{abs_temperature,
-    name={\ensuremath{T}},
-    description={absolute temperature},
-    group={roman},
-    unit={\si{\kelvin}},
-}
+    @symbol{abs_temperature,
+        name={\ensuremath{T}},
+        description={absolute temperature},
+        group={roman},
+        unit={\si{\kelvin}},
+    }
 \end{minted}
 
 \begin{landscape}
