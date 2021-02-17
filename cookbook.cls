@@ -26,7 +26,7 @@
 % This method was chosen to have the language available in a macro, so it may be passed
 % to polyglossia.
 % This approach messes with the forwarding of the language and raises a warning
-% 'Unused global options'; we can probably ignore that for now 
+% 'Unused global options'; we can probably ignore that for now
 % (https://tex.stackexchange.com/a/278172/120853).
 \RequirePackage{kvoptions}
     %[default]{language} % If no default entered: option requires a value:
@@ -1413,7 +1413,7 @@
          -- ++ (-0.25,0)% Left arm pit
          -- ++ (0,{-(4 - \roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(0.8 - 2*\roundingradius},0) arc (270:180:\roundingradius) -- ++ (0,{5 - 2*\roundingradius})% Left arm
          arc (180:90:\roundingradius)-- cycle;% Left shoulder; cycle back to below head
-        
+
         \node[right, transform shape] at (-1.25,-2.5) {\ctrw{\textcolor[RGB]{45,198,214}{\textbf{\textsf{TUHH}}}}};% Chest emblem; transform shape allows node to be affected by 'scale' option
         %
         % \draw[help lines] (-3,-11) grid (3,1);% Debugging grid
@@ -2345,7 +2345,7 @@
 \newcommand*{\symbolplaceholder}{\raisebox{0.3ex}{\dottedsquare}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mean value: horizontal overbar. The built-in options all look poor
 % https://tex.stackexchange.com/a/22134/120853
@@ -2421,7 +2421,7 @@
 % Usage example 3: \deriv*{x} -> partial derivative of x
 % Usage example 4: \deriv[5]{x} -> 5th derivative of x
 
-% \newcommand syntax: 
+% \newcommand syntax:
 % \newcommand{<command>}[<number of arguments>][<defaults>]{<code>}
 
 % I.e., if [<defaults>] is empty, no default values exist.
