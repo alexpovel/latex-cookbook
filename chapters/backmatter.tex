@@ -15,6 +15,51 @@ following blind text.
 
 \Blindtext
 
+\section{Unprocessed data}
+\label{ch:appendix_table}
+
+This is also a good place to put unprocessed data, like \cref{tab:random_long}.
+
+% All following long tables will have the following setting, which could make sense for
+% the appendix.
+\AtBeginEnvironment{longtabu}{\footnotesize}{}{}
+
+\begin{longtabu}{%
+    % ATTENTION: the `tabu` package is unmaintained and a bunch of stuff doesn't work.
+    % See also https://github.com/tabu-issues-for-future-maintainer/tabu.
+    % Pretty bad situation but works okay enough, and we already use `tabu`/`longtable`
+    % anyway for the glossaries in `glossaries-extra`.
+    %
+    @{}% Remove superfluous left horizontal space
+    % NOTE: `X[c]{S}` columns, like in the `tabu` docs, do not really work, see also
+    % https://tex.stackexchange.com/q/70279/120853
+    S% `S` expects what `\num` would: a number
+    s% `s` expects what `\si` would: a unit
+    X[2, l]% double the width factor when computing automatic widths
+    X[1, l, $]% Dollar sign breaks my editor's syntax highlighting
+    @{}% Remove superfluous right horizontal space
+}%
+    \caption[A \texttt{longtable} from the \ctanpackage{tabu} package]{
+        A \texttt{longtable} from the \ctanpackage{tabu} package.
+        It can break across pages but still have a caption.
+        The \ctanpackage{tabu} package allows automatic width scaling:
+        the table is as wide as the text automatically (which sometimes looks bad).
+        There are also automatic numbers (note the horizontal decimal point alignment), units (also from \ctanpackage{siunitx}, not \ctanpackage{tabu}) and math columns.
+        Note how the table rows are generated automatically and randomly, using Lua%
+        \label{tab:random_long}%
+    }\\
+    \toprule
+        Magnitude & Unit & Double-width text & \text{Math column} \\
+    \midrule
+        118.135 & \nano\meter & Foo & f-x=h\\
+        % The following rows look just like that but are generated:
+        \directlua{%
+            N_ROWS = 75
+            dofile("lib/lua/generate_random_table_rows.lua")
+        }
+    \bottomrule
+\end{longtabu}
+
 \chapter{Another appendix chapter}
 
 More stuff can go into the next appendix chapter, for example algorithms and code.
