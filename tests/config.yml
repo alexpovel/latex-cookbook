@@ -19,7 +19,7 @@ file:
   bookmarks: true  # Check if those are present
   # For age, d, h, m and s (or null to skip test) are available. Order matters.
   # Could be useful to detect old files that crept in, e.g. from a cache.
-  max_age: "10m"
+  max_age: "20m"
 
 content:
   required_strings: null
