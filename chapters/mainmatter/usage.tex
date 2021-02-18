@@ -172,6 +172,95 @@ is explained in the
 \href{https://collaborating.tuhh.de/alex/latex-git-cookbook/-/blob/master/README.md}{README}.
 Also, the repository itself is a live demonstration where everything is set up already!
 
+\subsubsection{Slow compilation}
+
+The most prevalent downside to \texttt{latexmk} are longer compilation times.
+The tool examines changes in auxiliary and source files.
+This is made possible by the way \LaTeX{} works with its kind of unique way of writing out auxiliary files (a system of multiple passes).
+Consider a simplified, manual example chain:
+\begin{enumerate}
+    \item You have a \texttt{test.tex} file (and nothing else!), with \texttt{cref} or equivalent cross\-/referencing commands in it.
+    \item You compile the file \emph{once}, \iecfeg{e.g.}\ using \texttt{lualatex}.
+    \item A \texttt{test.aux} file (and probably others, \iecfeg{e.g.}\ \texttt{.toc}) will have been generated, as well as the \abb{portable_document_format} file itself.
+
+        The \abb{portable_document_format} has literal \textbf{??} markers where there should be references.
+        This is because to resolve those references, and print \iecfeg{e.g.}\ the correct page number, \LaTeX{} needs to look into the \texttt{.aux} file.
+        But that file was just generated and was not available yet for the first compilation run.
+    \item Hence, you compile again.
+
+        The \textbf{??} markers are now replaced by their properly spelled\-/out reference.
+        However, what if, hypothetically, one of these \textbf{??} substitutions now reads \emph{very super long reference to page 37 in the document}.
+        It is so long that subsequent content has shifted again.
+        That content is now on different pages.
+        This triggered another change in the auxiliary files.
+    \item \label{item:last_compilation} You compile \emph{again}, the third time.
+        Things have settled, no changes happened this time anymore.
+        You are done.
+\end{enumerate}
+
+\texttt{latexmk} works by detecting this convergence towards a steady\-/state (which may, through bugs, never be reached).
+However, it would compile \emph{an additional} time after \cref{item:last_compilation}, to make sure or because it cannot really be certain (just talking from experience here, not knowledge).
+So while you gain deterministic, automated builds, they will take much longer.
+
+What if you do not care if there are \textbf{??} markers left, undefined entries, shifted pages and so forth, maybe because you are only drafting things up?
+You can simply compile yourself once, manually, \iecfeg{e.g.}\ using \texttt{lualatex}.
+This will speed things up by a long shot, but is considered advanced usage.
+It does, as opposed to \texttt{latexmk}, not \enquote{just work} anymore, and beginners might wonder what those \textbf{??} are.
+Now that you know, you may handle them.
+
+\paragraph{Faster compilation}
+The base \texttt{docker} commands were shown at the beginning of \cref{ch:using-docker}.
+An alternative is to run
+\begin{minted}[linenos=false]{shell}
+    docker run --rm --volume $(pwd):/tex alexpovel/latex -e '$max_repeat=1'
+\end{minted}
+This limits \texttt{latexmk} to only run commands once (\texttt{-e} is for additional Perl code), with the following effects:
+\begin{itemize}
+    \item \texttt{latexmk} might complain that it did not succeed for lack of repeats (including a non\-/zero exit code, meaning failure when it was only partial failure).
+    \item Results are compiled quickly.
+    \item \texttt{latexmk} and its tailor\-/made config is still used under the hood, so you do not have to adjust anything.
+    \item Other commands like \texttt{biber} for bibliography generation might still be run.
+\end{itemize}
+This is probably your best bet to get faster drafting cycles while retaining high likelihood of it working.
+
+\paragraph{Fastest compilation}
+The following method is the most advanced (but not hard at all!).
+To overwrite the Docker image's default, so\-/called \mintinline{dockerfile}{ENTRYPOINT}, which is \texttt{latexmk}, run the command as:
+\begin{minted}[linenos=false]{shell}
+    docker run --rm --volume $(pwd):/tex --entrypoint="lualatex" alexpovel/latex --shell-escape $FILENAME
+\end{minted}
+Notice that you now have to give a filename, like \texttt{cookbook.tex}, since \texttt{lualatex} expects that.
+The above command is exactly like running \emph{only} \texttt{lualatex}, just in the context of that image (with your files made available at \texttt{/tex}).
+The effects of this command are:
+\begin{itemize}
+    \item No \texttt{latexmk} involved at all:
+    \begin{itemize}
+        \item it is therefore the fastest approach,
+        \item but you have to pass all required options yourself (like \texttt{--shell-escape}).
+    \end{itemize}
+    \item No commands like \texttt{biber} run; you have to do that yourself (or use \texttt{latexmk}).
+\end{itemize}
+This is the approach I personally use, while outsourcing the full \texttt{latexmk}\-/based compilations to a server using \abb{continuous_integration}/\abb{continuous_delivery}.
+It affords us the fastest iteration speeds while having a full version available \enquote{in the background}: the best of both worlds and arguably the fastest workflow.
+
+\paragraph{Fastest still slow}
+We cannot compile faster than a naked \texttt{lualatex} run (\texttt{docker} overhead is negligible).
+For the current document you see here, even such a single run takes about one minute.
+Remember that you need upwards of three runs from a \enquote{cold} (no auxiliary files, empty caches, \dots{}) start.
+Single, article\-/size, \texttt{pdflatex}\-/based documents compile in only a few seconds.
+The reasons for the slowness are:
+\begin{itemize}
+    \item \texttt{lualatex} is simply considerably slower than \texttt{pdflatex}
+        (the additional capabilities make up for that many times over).
+    \item This document loads a metric crapton of packages, some of which are very expensive to load, like \ctanpackage{tikz}.
+        This is in the spirit of providing a useful document with numerous examples of various functionalities and packages.
+        You should definitely \textbf{\textcolor{mRed}{comment out the packages you do not need}}.
+    \item If you perform \ctanpackage{pgfplots} calculations within \LaTeX{}, \iecfeg{c.f.}\ \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte,fig:mollier_diagram}, expect significant slowness.
+        For simple plots, this is still much better than having to use an external program, export data, import to \LaTeX{}, repeat on data change (instead of adjusting the equation in \LaTeX{} directly) \iecfeg{etc.}
+    \item \LaTeX{} is not compiled in parallel.
+\end{itemize}
+This document is like an aircraft carrier: modern, feature\-/rich and high\-/impact, but very sluggish.
+
 \subsection{More on Docker}
 
 You do not need to know of the entire chain of how Docker images are created and run.
