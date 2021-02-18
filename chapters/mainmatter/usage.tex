@@ -255,6 +255,10 @@ The reasons for the slowness are:
     \item This document loads a metric crapton of packages, some of which are very expensive to load, like \ctanpackage{tikz}.
         This is in the spirit of providing a useful document with numerous examples of various functionalities and packages.
         You should definitely \textbf{\textcolor{mRed}{comment out the packages you do not need}}.
+    \item Compiling the entire document takes long, so \textbf{\textcolor{mRed}{make use of the \texttt{include} and \texttt{subinclude}} commands and comment out unneeded parts}.
+        The more fine\-/grained you do this, the more control you get.
+        If you cut it down to short (only a handful of \abb{portable_document_format} pages) files, you can work on and compile only those.
+        This method has the highest time saving potential.
     \item If you perform \ctanpackage{pgfplots} calculations within \LaTeX{}, \iecfeg{c.f.}\ \cref{fig:plotting_in_latex,fig:plotting_in_latex_tufte,fig:mollier_diagram}, expect significant slowness.
         For simple plots, this is still much better than having to use an external program, export data, import to \LaTeX{}, repeat on data change (instead of adjusting the equation in \LaTeX{} directly) \iecfeg{etc.}
     \item \LaTeX{} is not compiled in parallel.
