@@ -39,6 +39,10 @@ $warnings_as_errors = 0;
 # Show used CPU time. Looks like: https://tex.stackexchange.com/a/312224/120853
 $show_time = 1;
 
+# Default is 5; we seem to need more owed to the complexity of the document.
+# Actual documents probably don't need this many since they won't use all the features.
+$max_repeat=6;
+
 # --shell-escape option (execution of code outside of latex) is required for the
 #'svg' package.
 # It converts raw SVG files to the PDF+PDF_TEX combo using InkScape.
