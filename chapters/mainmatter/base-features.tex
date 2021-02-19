@@ -855,8 +855,8 @@ We do not have to worry about the specific citation styles
 \verb|\autocite{bibid}| takes care of that, we can then manage its behavior globally.
 
 As such, we can have citations looking like:
-\cites[8]{einstein_zur_1905}[29\psqq]{goossens_latex_1993}[2-9]{knuth_knuth_nodate}%
-[89\psq]{knuth_fundamental_1973}{dirac_principles_1981}
+\cites[8]{einsteinZurElektrodynamikBewegter1905}[29\psqq]{goossensLaTeXCompanion1993}[2-9]{knuthTeXbook1986}%
+[89\psq]{knuthFundamentalAlgorithms1973}{diracPrinciplesQuantumMechanics1981}
 .
 A note may be added to each citation; if this note is an integer number, it is
 automatically taken to be the page number.
@@ -865,7 +865,7 @@ If a following page is to be included in the citation, append \verb|\psq|.
 Otherwise, \verb|\psqq| for \enquote{this page and the following ones}.
 Using \verb|\autocites{}| \iecfeg{etc.}, we can then chain together as many as we want.
 
-\textcite[3]{dirac_principles_1981} does not claim anything, this is just an example
+\textcite[3]{diracPrinciplesQuantumMechanics1981} does not claim anything, this is just an example
 for a \verb|\textcite|, used to implement a citation to be a readable part of the
 sentence.
 There is also a plural form available.
@@ -889,7 +889,7 @@ This is helpful in print, but amazing in digital format, for these page numbers
 are also links.
 This allows readers to very swiftly navigate and jump within the document.
 
-Try it out by following this reference: \cite{dirac_principles_1981},
+Try it out by following this reference: \cite{diracPrinciplesQuantumMechanics1981},
 leading you to the bibliography.
 \label{backref_example}
 It will have this page's number (\cpageref{backref_example}) at the end of its entry.
@@ -897,8 +897,10 @@ Clicking it will land you back here exactly.
 
 \paragraph{Citation Manager}
 To generate the \texttt{*.bib} file from which \LaTeX{} pulls the info in the
-first place, a citation manager is a handy tool to have.
-Zotero is recommendable, but it ultimately does not matter much.
+first place, a citation manager is a must\-/have.
+Zotero
+(especially with its excellent \href{https://retorque.re/zotero-better-bibtex/}{\emph{Better Bibtex}} addon)
+is recommendable, but it ultimately does not matter much.
 Just use \emph{some} manager to keep your actual documents
 (consisting of bibliographical info and the attachments themselves, like e-books)
 and the automatically derived \texttt{*.bib} files in one place,
