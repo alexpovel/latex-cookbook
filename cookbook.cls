@@ -1696,7 +1696,7 @@
             phd,%
             master,%
             bachelor,%
-            best_practices,%
+            best practices,%
         },
         pdfcreator={%
             LaTeX with hyperref,
