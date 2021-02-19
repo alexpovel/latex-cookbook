@@ -493,7 +493,7 @@
 
 \RequirePackage[automark]{scrlayer-scrpage}% Automatically mark
 
-\clearscrheadfoot% Reset defaults
+\clearpairofpagestyles % Reset defaults
 
 % Declare new length (acting as a height) for the vertical bar in the header:
 \newlength{\headerrulelength}
