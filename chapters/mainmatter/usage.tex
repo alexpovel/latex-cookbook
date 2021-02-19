@@ -124,6 +124,7 @@ That way, you just hit the compile button and will be using Docker in the backgr
 with no changes to your workflow.
 
 \subsection{Compilation steps}
+\label{ch:compilation_steps}
 
 You are probably used to running \texttt{pdflatex} or similar on your source files,
 as many times as needed.
@@ -380,13 +381,77 @@ It is a fantastic little program but unsuitable for any serious, longer work.
 The author uses and dearly recommends \href{https://code.visualstudio.com/}{Visual Studio Code},
 using its
 \href{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}{\LaTeX{} Workshop} extension, which provides syntax highlighting, shortcuts and many other useful things.
-VSCode is among the most state\-/of\-/the\-/art editors currently available.
-Being usable for \LaTeX{} is just a nice \enquote{side\-/effect} we can take
-advantage of.
+Visual Studio Code is among the most state\-/of\-/the\-/art editors currently available.
+Being usable for \LaTeX{} is just a nice side\-/effect we can take advantage of.
 It is open\-/source and therefore also has a privacy\-/respecting alternative fork, \emph{VSCodium}.
 
 For a more conventional, complete \abb{integrated_development_environment},
 try \href{https://www.texstudio.org/}{TeXStudio}.
 Like VSCode, it is also
 \href{https://github.com/texstudio-org/texstudio}{open source}.
-TeXStudio will cater to \SI{99}{\percent} of your \LaTeX{} needs, but nothing else (Markdown, \dots{}).
+TeXStudio will cater to \SI{90}{\percent} of your \LaTeX{} needs, but nothing else (Markdown, \dots{}).
+
+\subsubsection{Visual Studio Code}
+
+Using the \href{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}{\emph{LaTeX Workshop}} extension for Visual Studio Code is recommended.
+On its own, Visual Studio Code has no concept of \LaTeX{}, since out of the box, it is much closer to being an editor than an \abb{integrated_development_environment}.
+You increase the program's capabilities by choosing and installing extensions.
+
+The \emph{LaTeX Workshop} extension turns Visual Studio Code into a \LaTeX{} \abb{integrated_development_environment}.
+However, some configuration is needed to make it work alongside the Docker solution.
+\emph{LaTeX Workshop} works using \emph{recipes}, which in turn use \emph{tools}.
+These recipes can be chains like
+\begin{center}
+    \texttt{pdflatex \textrightarrow{} bibtex \textrightarrow{} pdflatex \textrightarrow{} pdflatex} .
+\end{center}
+As argued earlier in \cref{ch:compilation_steps}, that is not a workflow we want to employ here.
+We use our own recipe, which simply calls a tool based on Docker.
+Open the Visual Studio Code settings by either:
+\begin{itemize}
+    \item opening the command palette (\keys{\ctrl{} + \shift{} + P}) and looking for \emph{Preferences: Open Settings (JSON)}
+        (the command palette is one of the defining, core features of Visual Studio Code, it's great!), or
+    \item navigating to \menu{File > Preferences > Settings}, then opening as \abb{js_object_notation}.
+\end{itemize}
+In there, add the new recipe and tool, making sure to enter them into the preexisting lists (Visual Studio Code is very helpful in notifying you of errors, like duplicate keys):
+\begin{minted}{json}
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "Docker",
+            "tools": [
+                "docker"
+            ]
+        },
+\end{minted}
+as well as
+\begin{minted}{json}
+    "latex-workshop.latex.tools":[
+        {
+            "name": "docker",
+            "command": "docker",
+            "args": [
+                "run",
+                "--rm",
+                "--volume=%DIR%:/tex",
+                "alexpovel/latex",
+                "%DOCFILE%"
+            ]
+        },
+\end{minted}
+Note the use of \texttt{\%DOCFILE\%}:
+We are \emph{in} the container at this point, so must not use the \emph{host} full path \texttt{\%DOC\%}, since that does not exist in the container.
+Inside the container, we are in the correct working directory already (\texttt{/tex}), so just the filename suffices (\texttt{\%DOCFILE\%}).
+You can now run
+\begin{center}
+    \menu{LaTeX Workshop: Build with recipe > Docker}
+\end{center}
+from the command palette.
+Notice the freedom and flexibility you have for defining many more recipes.
+In fact, alongside \texttt{latexmk} and classic \texttt{make}, you now have more potential flexibility and automation than one could possibly need.
+For example, I have a recipe that runs \emph{just} \texttt{lualatex}, as discussed at the end of \cref{ch:compilation_steps}.
+
+\paragraph{More Settings}
+For more control, you might want to keep the extension from compiling on every document save:
+\begin{minted}{json}
+    "latex-workshop.latex.autoBuild.run": "never"
+\end{minted}
+See \href{https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile#latex-recipes}{the official documentation} for more.
