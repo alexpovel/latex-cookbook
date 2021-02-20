@@ -12,7 +12,58 @@
         "James-Yu.latex-workshop"
     ],
     "containerEnv": {
+        // Inside the container, we want to compile like we are in CI, hence define this
+        // variable. It's important for the Makefile to select the correct behaviour.
         "CI": "true",
-        "LANG": ""
+        // The base image has this locale:
+        //     $ docker run --rm --entrypoint="locale" alexpovel/latex
+        //     LANG=
+        //     LANGUAGE=
+        //     LC_CTYPE="POSIX"
+        //     LC_NUMERIC="POSIX"
+        //     LC_TIME="POSIX"
+        //     LC_COLLATE="POSIX"
+        //     LC_MONETARY="POSIX"
+        //     LC_MESSAGES="POSIX"
+        //     LC_PAPER="POSIX"
+        //     LC_NAME="POSIX"
+        //     LC_ADDRESS="POSIX"
+        //     LC_TELEPHONE="POSIX"
+        //     LC_MEASUREMENT="POSIX"
+        //     LC_IDENTIFICATION="POSIX"
+        //     LC_ALL=
+        // *However*, starting this very same container in VSCode's Remote Containers,
+        // the locale changes to:
+        //     $ locale
+        //     locale: Cannot set LC_CTYPE to default locale: No such file or directory
+        //     locale: Cannot set LC_MESSAGES to default locale: No such file or directory
+        //     locale: Cannot set LC_ALL to default locale: No such file or directory
+        //     LANG=en_US.UTF-8
+        //     LANGUAGE=
+        //     LC_CTYPE="en_US.UTF-8"
+        //     LC_NUMERIC="en_US.UTF-8"
+        //     LC_TIME="en_US.UTF-8"
+        //     LC_COLLATE="en_US.UTF-8"
+        //     LC_MONETARY="en_US.UTF-8"
+        //     LC_MESSAGES="en_US.UTF-8"
+        //     LC_PAPER="en_US.UTF-8"
+        //     LC_NAME="en_US.UTF-8"
+        //     LC_ADDRESS="en_US.UTF-8"
+        //     LC_TELEPHONE="en_US.UTF-8"
+        //     LC_MEASUREMENT="en_US.UTF-8"
+        //     LC_IDENTIFICATION="en_US.UTF-8"
+        //     LC_ALL=
+        // There's three errors because the container doesn't seem to have the correct
+        // locale files:
+        //     $ locale -a
+        //     locale: Cannot set LC_CTYPE to default locale: No such file or directory
+        //     locale: Cannot set LC_MESSAGES to default locale: No such file or directory
+        //     locale: Cannot set LC_COLLATE to default locale: No such file or directory
+        //     C
+        //     C.UTF-8
+        //     POSIX
+        // This leads to `lualatex` erroring out, see also https://tex.stackexchange.com/q/374303/120853
+        // Using "POSIX" is possible and brings us back to vanilla container locale:
+        "LC_ALL": "POSIX"
     },
 }
