@@ -154,9 +154,10 @@ testing.tex
 # Some weird junk file from VSCode LaTeX Workshop?
 __latexindent_temp.tex
 
-# Include settings file, but nothing else, since that is used as part of the cookbook
+# Include settings files, but nothing else, since that is used as part of the cookbook
 .vscode/*
 !.vscode/settings.json
+!.vscode/extensions.json
 
 organisational/
 
