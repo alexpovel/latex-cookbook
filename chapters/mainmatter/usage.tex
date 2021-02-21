@@ -393,61 +393,85 @@ TeXStudio will cater to \SI{90}{\percent} of your \LaTeX{} needs, but nothing el
 
 \subsubsection{Visual Studio Code}
 
-Using the \href{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}{\emph{LaTeX Workshop}} extension for Visual Studio Code is recommended.
+The repository of this document comes with a \href{https://github.com/microsoft/vscode-dev-containers}{\texttt{.devcontainer}} directory.
+In it is all the configuration necessary to run your development environment \emph{inside} the Docker container entirely.
+To make the magic work, install the \href{https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers}{\emph{Remote -- Containers}} extension.
+Visual Studio Code automatically prompts you to install it when you first open this repository, as configured in \texttt{.vscode/extensions.json}.
+Follow the instructions there on how to download all prerequisites, like of course Docker.
+Visual Studio Code will detect the remote container configuration of this repository automatically.
+If not, run the steps manually:
+\begin{enumerate}
+    \item Open the command palette (\keys{\ctrl{} + \shift{} + P} --- the command palette is one of the defining, core features of Visual Studio Code, it's great!).
+    \item Run \menu{Remote-Containers: Reopen in container}.
+\end{enumerate}
+Your development environment is now \emph{inside} the container.
+Hence, if you ran for example \texttt{latexmk} in the console, it executes the container version.
+This is exactly what we want and previously did using the \texttt{docker run} command.
+
+\paragraph{Extensions}
+There is a small problem.
 On its own, Visual Studio Code has no concept of \LaTeX{}, since out of the box, it is much closer to being an editor than an \abb{integrated_development_environment}.
 You increase the program's capabilities by choosing and installing extensions.
-
+Using the \href{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}{\emph{LaTeX Workshop}} extension for Visual Studio Code is recommended.
+For the container environment, it is installed automatically from the settings found in \texttt{devcontainer.json}.
 The \emph{LaTeX Workshop} extension turns Visual Studio Code into a \LaTeX{} \abb{integrated_development_environment}.
-However, some configuration is needed to make it work alongside the Docker solution.
-\emph{LaTeX Workshop} works using \emph{recipes}, which in turn use \emph{tools}.
-These recipes can be chains like
-\begin{center}
-    \texttt{pdflatex \textrightarrow{} bibtex \textrightarrow{} pdflatex \textrightarrow{} pdflatex} .
-\end{center}
-As argued earlier in \cref{ch:compilation_steps}, that is not a workflow we want to employ here.
-We use our own recipe, which simply calls a tool based on Docker.
-Open the Visual Studio Code settings by either:
+It works using \emph{recipes}, which in turn use \emph{tools}.
+The extension comes with a pre\-/defined \texttt{latexmk} tool:
+\begin{enumerate}
+    \item Open the command palette.
+    \item Run \menu{LaTeX Workshop: Build with recipe > latexmk}.
+\end{enumerate}
+This just runs \texttt{latexmk} within the container.
+As usual using Docker, your host machine does not need a \LaTeX{} installation for this to work.
+If you want, you can stop here --- running \texttt{latexmk} is all that is ever needed.
+Hit \keys{\ctrl{} + \Alt{} + B} to build the project again, using the last used recipe.
+
+\paragraph{Settings}
+You can configure \emph{everything} in Visual Studio Code, including its extensions, in the settings.
+Open them by either:
 \begin{itemize}
-    \item opening the command palette (\keys{\ctrl{} + \shift{} + P}) and looking for \emph{Preferences: Open Settings (JSON)}
-        (the command palette is one of the defining, core features of Visual Studio Code, it's great!), or
+    \item The command palette at \menu{Preferences: Open Settings (JSON)}, or
     \item navigating to \menu{File > Preferences > Settings}, then opening as \abb{js_object_notation}.
 \end{itemize}
-In there, add the new recipe and tool, making sure to enter them into the preexisting lists (Visual Studio Code is very helpful in notifying you of errors, like duplicate keys):
-\begin{minted}{json}
-    "latex-workshop.latex.recipes": [
-        {
-            "name": "Docker",
-            "tools": [
-                "docker"
-            ]
-        },
-\end{minted}
-as well as
-\begin{minted}{json}
-    "latex-workshop.latex.tools":[
-        {
-            "name": "docker",
-            "command": "docker",
-            "args": [
-                "run",
-                "--rm",
-                "--volume=%DIR%:/tex",
-                "alexpovel/latex",
-                "%DOCFILE%"
-            ]
-        },
-\end{minted}
-Note the use of \texttt{\%DOCFILE\%}:
-We are \emph{in} the container at this point, so must not use the \emph{host} full path \texttt{\%DOC\%}, since that does not exist in the container.
-Inside the container, we are in the correct working directory already (\texttt{/tex}), so just the filename suffices (\texttt{\%DOCFILE\%}).
-You can now run
+For example, as discussed at the end of \cref{ch:compilation_steps}, you might want to have a recipe that only runs \texttt{lualatex}, once.
+This is \textbf{already taken care of} for this repository:
+\inputminted{json}{./.vscode/settings.json}
+These are \emph{Workspace Settings}, which \href{https://code.visualstudio.com/docs/getstarted/settings}{take precedence over (global) user settings}.
+As such, they also override all the recipes \emph{LaTeX Workshop} usually comes with.
+You will have to define more recipes yourself.
+
+With the new recipes, you can now run
 \begin{center}
-    \menu{LaTeX Workshop: Build with recipe > Docker}
+    \menu{LaTeX Workshop: Build with recipe > lualatex}
 \end{center}
 from the command palette.
 Notice the freedom and flexibility you have for defining many more recipes.
 In fact, alongside \texttt{latexmk} and classic \texttt{make}, you now have more potential flexibility and automation than one could possibly need.
-For example, I have a recipe that runs \emph{just} \texttt{lualatex}, as discussed at the end of \cref{ch:compilation_steps}.
+
+Using the above \emph{Remote -- Containers} approach, the entire development chain happens inside the container, with your working directory mounted into it.
+This enables:
+\begin{itemize}
+    \item the \emph{LaTeX Workshop} extension to work fully:
+        \begin{itemize}
+            \item SyncTeX works:
+                \begin{itemize}
+                    \item \keys{\ctrl{} + Click} into the \abb{portable_document_format} preview goes to the source code
+                    \item \menu{LaTex Workshop: SyncTeX from cursor} (command palette) goes the other way.
+                \end{itemize}
+            \item Highlighting infos, warnings and errors (\emph{Problems} pane) works
+            \item \href{https://github.com/James-Yu/LaTeX-Workshop/wiki/Intellisense}{IntelliSense} works, providing autocompletion for:
+                \begin{itemize}
+                    \item citations (\texttt{autocite} \iecfeg{etc.}) --- check out the \emph{Citation Browser} in the command palette!
+                    \item references (\texttt{cref} \iecfeg{etc.})
+                    \item and more, like commands
+                \end{itemize}
+            \item Auto\-/Formatting (\keys{\shift{} + \Alt{} + F}) works (\emph{LaTeX Workshop} uses \ctanpackage{latexindent})
+        \end{itemize}
+    \item Your files are persisted normally, despite the container being ephemeral.
+    \item Tools like \texttt{make} work from within the Visual Studio Code terminal.
+        For example, run \texttt{make clean} to clear everything not tracked by git.
+        This is very convenient for a cold start, because \LaTeX{} sometimes gets stuck if auxiliary files are corrupted.
+\end{itemize}
 
 \paragraph{More Settings}
 For more control, you might want to keep the extension from compiling on every document save:
@@ -455,3 +479,8 @@ For more control, you might want to keep the extension from compiling on every d
     "latex-workshop.latex.autoBuild.run": "never"
 \end{minted}
 See \href{https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile#latex-recipes}{the official documentation} for more.
+
+\subsubsection{Other Editors}
+
+You will have to incorporate the \texttt{docker} commands shown in \cref{ch:using-docker} manually.
+Most editors do not support container\-/native developing, so you will go the old\-/school route.

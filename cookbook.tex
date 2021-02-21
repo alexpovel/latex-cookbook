@@ -60,15 +60,10 @@
 %\usepackage{showframe}% Uncomment for debugging (show frames)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Included parts are listed here.
-% Auxiliary files are kept, retaining references, page numbers etc., but
-% compilation speeds are accelerated by only including small document parts.
-% Uncomment only the part work is currently done on, comment out all others.
-\includeonly{%
-    chapters/frontmatter,%
-    chapters/mainmatter,%
-    chapters/backmatter,%
-}%
+
+% The following occurs here so VSCode's 'LaTeX Workshop' extension can find all bib
+% resources (it doesn't seem to look into class files):
+\addbibresource{bib/bibliography.bib}% *.bib file goes here
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Titlepage and document metadata content:
@@ -107,7 +102,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-    \subincludefrom{chapters/}{frontmatter}
-    \subincludefrom{chapters/}{mainmatter}
-    \subincludefrom{chapters/}{backmatter}
+    \import{chapters/}{frontmatter}
+    \import{chapters/}{mainmatter}
+    \import{chapters/}{backmatter}
 \end{document}

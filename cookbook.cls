@@ -777,7 +777,8 @@
     isbn=false,%
 ]{biblatex}%
 
-\addbibresource{bib/bibliography.bib}% *.bib file goes here
+% The `\addbibresource` command moved to the root *.tex file to work for VSCode's
+% LaTeX Workshop extension.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Special Treatment for anything in \nocite{*}
