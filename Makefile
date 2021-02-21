@@ -108,7 +108,7 @@ tex: $(tex_pdfs)  # Builds all *.tex files into PDFs.
 	@$(LATEXMK) $(LATEXMK_FLAGS) $<
 
 PANDOC_TEMPLATE = $(strip $(shell grep "^template:" pandoc/defaults.yaml | cut --delimiter=":" --field=2)).latex
-PANDOC_TEMPLATE_DIR = /usr/share/pandoc/data/templates
+PANDOC_TEMPLATE_DIR = ~/.pandoc/templates
 
 %.pdf: %.md $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE)  # Allows to build any PDF from a corresponding *.md file.
 	$(info Running $(PANDOC) to build $@...)
@@ -123,9 +123,11 @@ $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE):
 	@wget --quiet --show-progress --no-clobber \
 		"https://github.com/Wandmalfarbe/pandoc-latex-template/releases/latest/download/${EISVOGEL_ARCHIVE}"
 	@echo "Extracting $(EISVOGEL_ARCHIVE)..."
-	@tar --extract --file=${EISVOGEL_ARCHIVE} eisvogel.tex
-	@echo "Moving template to $@. This is required for make to work reliably but requires sudo privileges."
-	@sudo mv eisvogel.tex $@
+	@tar --extract --file=${EISVOGEL_ARCHIVE} eisvogel.latex
+# `$(@D)` is directory part of current target:
+	@mkdir --parents $(@D)
+	@mv eisvogel.latex $@
+	@$(RM) $(EISVOGEL_ARCHIVE)
 
 # =====================================================================================
 # Help users install programs required for compilation and help debug.
@@ -165,5 +167,5 @@ clean: mostlyclean  # Runs all other clean jobs, then cleans absolutely everythi
 	@echo "Removing all files ignored by git (.gitignore)..."
 	@echo "For safety, this is done interactively:"
 	@git clean -xd --interactive
-	@echo "Removing pandoc template... (requires sudo access)"
-	@sudo $(RM) $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE)
+	@echo "Removing pandoc template..."
+	@$(RM) $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE)
