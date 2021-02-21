@@ -19,6 +19,8 @@
             "command": "lualatex",
             "args": [
                 "--shell-escape",
+                "--synctex=1",
+                "--recorder",
                 "%DOC%"
             ]
         },
@@ -32,5 +34,6 @@
             ]
         }
     ],
+    "latex-workshop.latex.recipe.default": "lastUsed",
     "latex-workshop.chktex.enabled": true
 }

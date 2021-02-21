@@ -424,6 +424,7 @@ The extension comes with a pre\-/defined \texttt{latexmk} tool:
 This just runs \texttt{latexmk} within the container.
 As usual using Docker, your host machine does not need a \LaTeX{} installation for this to work.
 If you want, you can stop here --- running \texttt{latexmk} is all that is ever needed.
+Hit \keys{\ctrl{} + \Alt{} + B} to build the project again, using the last used recipe.
 
 \paragraph{Settings}
 You can configure \emph{everything} in Visual Studio Code, including its extensions, in the settings.
@@ -464,6 +465,7 @@ This enables:
                     \item references (\texttt{cref} \iecfeg{etc.})
                     \item and more, like commands
                 \end{itemize}
+            \item Auto\-/Formatting (\keys{\shift{} + \Alt{} + F}) works (\emph{LaTeX Workshop} uses \ctanpackage{latexindent})
         \end{itemize}
     \item Your files are persisted normally, despite the container being ephemeral.
     \item Tools like \texttt{make} work from within the Visual Studio Code terminal.
