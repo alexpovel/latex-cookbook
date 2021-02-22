@@ -464,41 +464,6 @@ Hopefully, it spares you some despair.
   delete the `.lua` and `.luc` files of the fonts in question from `luatex-cache/generic/fonts/`.
   For MiKTeX 2.9 on Windows 10, this was found in
   `%USERPROFILE%\AppData\Local\MiKTeX\2.9\luatex-cache`.
-- When using package [`pgf-spectra`](https://ctan.org/pkg/pgf-spectra?lang=en)
-  compilation fails with
-
-  ```text
-  LaTeX Error: File 'spectra.data.tex' not found.
-  ```
-
-  For a solution, see
-  [here](https://tug.org/pipermail/tex-live/2017-January/039591.html), where it says:
-
-  > Hi
-  >
-  > texlive/2016/texmf-dist/tex/latex/pgf-spectra/pgf-spectra.sty
-  >
-  > ends with
-  >
-  > \\input{spectra.data.tex}
-  >
-  > which generates a missing file error if the package is used, the data file
-  > is on ctan but it's misplaced in texlive as
-  >
-  > texlive/2016/texmf-dist/doc/latex/pgf-spectra/spectra.data.tex
-  >
-  > It should be in the tex tree not doc,
-  >
-  > David
-
-  So, get
-  [`spectra.data.tex` from CTAN](http://mirrors.ctan.org/graphics/pgf/contrib/pgf-spectra/spectra.data.tex)
-  and place it accordingly.
-  This can mean placing it in the project root.
-  It would be better to put it next to the package file itself, `pgf-spectra.sty`, but this did not
-  work even after refreshing the package database.
-  This occurred on MiKTeX 2.9.
-  TeXLive seemed fine in version 2019.
 - The error is or is similar to:
 
   ```text
