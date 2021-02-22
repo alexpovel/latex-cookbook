@@ -444,31 +444,6 @@ Hopefully, it spares you some despair.
   \addplot3[surf] table [col sep=comma] {dat.csv};
   ```
 
-- The job is working on `Pulling docker image` [`link to docker image`](.gitlab-ci.yml#L2)
-  for a while, and finally fails with
-
-  ```bash
-  ERROR: Job failed (system failure): Error response from daemon: No such container <some long container ID>
-  ```
-
-  Since, after we ensured the [image](.gitlab-ci.yml#L2) indeed exists, know that cannot be the case,
-  we *Retry* the job from the job page's top right corner:
-
-  ![GitLab Job Retry button](images/bitmaps/readme/gitlab_error-job-failed-no-such-container_retry.png)
-
-  It should work afterwards (it never failed to restart after retrying for me).
-  This will happen once in a while for some reason, perhaps caching.
-  This has been an [active issue](https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4450)
-  for over two years now, with (at time of writing) the most recent comment within the last
-  24 hours.
-  So, it is still in active discussion.
-  It seems to have to do with caching.
-  There does not seem to be a solution yet.
-
-  **This should be fixed now** (at least, ever since the fix was applied, the issue
-  no longer occurred), see
-  [here](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/commit/1af548f726cc9f18b0e001dd21940f0131ecff60).
-  This relies on the `retry` keyword in GitLab CI.
 - When using package [`fontspec`](https://ctan.org/pkg/fontspec)
   (or its derivative [`unicode-math`](https://ctan.org/pkg/unicode-math)),
   compilation fails with
