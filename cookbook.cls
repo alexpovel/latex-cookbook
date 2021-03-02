@@ -1655,7 +1655,7 @@
     % Declare units ourselves:
     % Set as text so it stays a hyphen in math mode, as opposed to minus sign
     \DeclareSIUnit{\volpercent}{Vol.\text{-}\%}
-    \DeclareSIUnit{\kilowatthour}{kWh}%
+    \DeclareSIUnit{\watthour}{Wh}%
     \DeclareSIUnit{\annum}{a}%
     \DeclareSIUnit{\atmosphere}{atm}%
     \DeclareSIUnit{\partspermillion}{ppm}%
@@ -1668,6 +1668,9 @@
     }
     \DeclareSIQualifier{\water}{%
         \glsfmtname{sub.water}%
+    }
+    \DeclareSIQualifier{\thermal}{%
+        \glsfmtname{sub.thermal}%
     }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

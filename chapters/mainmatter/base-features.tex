@@ -480,6 +480,9 @@ will print
 The mode in which units with negative exponents are displayed can be changed,
 \iecfeg{e.g.}\ fractions can be used:
 \si[per-mode=fraction]{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
+You can also use \verb|\DeclareSIQualifier| to create textual subscripts for units,
+further specifying them, or create entirely custom units using \verb|\DeclareSIUnit|.
+An example for both combined is: \si[per-mode=fraction]{\mega\watthour\thermal\per\meter\cubed}.
 
 The \verb|\SI{<quantity>}{<unit>}| command essentially combines \verb|\num| and
 \verb|\si|, inserting a small space in between, for correct typesetting.
