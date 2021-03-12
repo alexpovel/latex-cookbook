@@ -11,7 +11,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Refer to https://www.overleaf.com/learn/latex/Writing_your_own_class
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{cookbook}[2021-02-03 v3.0.0 cookbook class]
+\ProvidesClass{cookbook}[2021-03-12 v3.1.0 cookbook class]
 
 % Fail early and give useful information on the required engine.
 % This helps users who do not read the documentation beforehand, by promoting the
