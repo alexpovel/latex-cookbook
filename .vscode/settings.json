@@ -35,5 +35,6 @@
         }
     ],
     "latex-workshop.latex.recipe.default": "lastUsed",
-    "latex-workshop.chktex.enabled": true
+    "latex-workshop.chktex.enabled": true,
+    "latex-workshop.latex.autoBuild.run": "never",
 }
