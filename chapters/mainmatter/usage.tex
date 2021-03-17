@@ -144,7 +144,7 @@ Once Perl is installed (of course, the Docker image already contains it),
 the entire document can be compiled by \textbf{simply calling \texttt{latexmk}}.
 You do not even have to provide a \texttt{*.tex} file argument.
 By default, \texttt{latexmk} will simply compile all found \texttt{*.tex} files.
-The core ingredient to this magic process is the \texttt{.latexmkrc} configuration file.
+\textbf{The core ingredient to this magic process is the \texttt{.latexmkrc} configuration file}.
 You can find it in the repository root directory.
 It is tailored to this document and does not need to be touched if the compilation
 process itself has not changed.
@@ -249,10 +249,11 @@ We cannot compile faster than a naked \texttt{lualatex} run (\texttt{docker} ove
 For the current document you see here, even such a single run takes about one minute.
 Remember that you need upwards of three runs from a \enquote{cold} (no auxiliary files, empty caches, \dots{}) start.
 Single, article\-/size, \texttt{pdflatex}\-/based documents compile in only a few seconds.
-The reasons for the slowness are:
+The reasons for the slowness are, among others:
 \begin{itemize}
     \item \texttt{lualatex} is simply considerably slower than \texttt{pdflatex}
         (the additional capabilities make up for that many times over).
+        One reason is the time spent dealing with (system) fonts.
     \item This document loads a metric crapton of packages, some of which are very expensive to load, like \ctanpackage{tikz}.
         This is in the spirit of providing a useful document with numerous examples of various functionalities and packages.
         You should definitely \textbf{\textcolor{mRed}{comment out the packages you do not need}}.
