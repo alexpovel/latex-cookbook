@@ -11,7 +11,7 @@ contains two documents:
    [badge](https://docs.gitlab.com/ee/user/project/badges.html) on top of the
    [project homepage](https://collaborating.tuhh.de/alex/latex-git-cookbook)):
 
-   [![Download README](images/vectors/gitlab/Download-README-critical.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/README.pdf?job=build_pandoc)
+   [![Download README](images/vectors/gitlab/Download-README-critical.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/README.pdf?job=README.pdf)
 
    **The README covers git and Continuous Delivery.**
 2. A [LaTeX document](cookbook.tex), usable as a cookbook (different "recipes" to
@@ -21,7 +21,7 @@ contains two documents:
    LaTeX source using Docker.
    It is also available for download:
 
-   [![Download PDF](images/vectors/gitlab/Download-Cookbook-informational.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=build_latex)
+   [![Download PDF](images/vectors/gitlab/Download-Cookbook-informational.svg)](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=tex)
 
 ## git
 
