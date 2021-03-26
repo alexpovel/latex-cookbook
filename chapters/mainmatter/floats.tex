@@ -1330,11 +1330,11 @@ about indices or column numbers.
 \subsubsection{Using MATLAB2Ti\textit{k}Z}
 
 \href{https://github.com/matlab2tikz/matlab2tikz}{MATLAB2Ti\textit{k}Z} is a tool to
-convert MATLAB figures to \LaTeX{}, see \cref{fig:matlab2tikz}.
+convert MATLAB figures to \LaTeX{}, see \cref{fig:matlab2tikz_vanilla}.
 Notice that by default, it exports using whitespace (tabs) as column separators,
-which might differ from what you set as a global option in \verb|\pgfplotstableset|.
+which might differ from what is set as a global option in \verb|\pgfplotstableset|.
 
-\begin{figure}
+\begin{figure}\ContinuedFloat*
     \ffigbox[\FBwidth]{%
         \caption[%
             A vanilla \href{https://github.com/matlab2tikz/matlab2tikz}{MATLAB2Ti\textit{k}Z}
@@ -1347,12 +1347,100 @@ which might differ from what you set as a global option in \verb|\pgfplotstables
             and you miss out on many useful features, like \ctanpackage{siunitx} or
             \ctanpackage{glossaries-extra}.
             A more frictionless approach is to export plain-text (CSV) data from MATLAB,
-            and import it into \LaTeX{}, see \cref{fig:diffuser}%
+            and import it into \LaTeX{}, see \cref{fig:diffuser,fig:matlab2tikz_pgfplots}%
         }%
-        \label{fig:matlab2tikz}%
+        \label{fig:matlab2tikz_vanilla}%
     }{%
         % Can't use `subimport', since import is not from any child directory.
+        % Note that changing plot scaling/size for matlab2tikz is apparently very
+        % awkward: https://tex.stackexchange.com/a/173490/120853
         \import{data/}{matlab2tikz_table_example}
+    }
+\end{figure}
+
+\Cref{fig:matlab2tikz_pgfplots} is the same plot, but generated directly in \LaTeX{}, without
+relying on MATLAB2Ti\textit{k}Z---using the latter, a plethora of things break since it
+hard\-/codes a bunch of stuff.
+\Cref{fig:matlab2tikz_pgfplots} is only around 30 lines of code (arrived at after only a couple of hours\dots{})!
+
+\begin{figure}
+    \ffigbox[\FBwidth]{
+        \caption[%
+            Same data as \cref{fig:matlab2tikz_vanilla} but plotted in \LaTeX{} directly, using only the provided raw data%
+        ]{%
+            Same data as \cref{fig:matlab2tikz_vanilla} but plotted in \LaTeX{} directly, using only the provided raw data.
+            Note how this allows for a consistent style and unlocks all other, usual features found in this template.
+            Also take a look at the source data to see what \emph{tidy data} looks like, a data format most suitable for data processing%
+        }
+        \label{fig:matlab2tikz_pgfplots}
+    }{%
+        \pgfplotstableread{data/matlab2tikz_table_example_data.csv}{\matlabtikztable}%
+        \begin{tikzpicture}
+            \begin{axis}[%
+                regularplot,%
+                width=0.9\linewidth,
+                %
+                localstyle/.style={% Common, local plot style options
+                    only marks,% Scatter plot, do not connect marks
+                    error bars/y dir=both,% Y errors in both directions, positive and negative
+                    error bars/y explicit,% Absolute, not relative, values
+                },
+                % Modify x labels, drop scientific notation, see also
+                % https://tex.stackexchange.com/a/119888/120853
+                xticklabel style={
+                    /pgf/number format/fixed,
+                    /pgf/number format/precision=5
+                },
+                scaled x ticks=false,
+                %
+                xlabel={\glsdesc{sym.reynolds_number} \sym{reynolds_number}},%
+                x unit={\glsunit{sym.reynolds_number}},
+                ylabel={\glsdesc{sym.drag_coefficient} \sym{drag_coefficient}},%
+                y unit={\glsunit{sym.drag_coefficient}},
+                % Table namespace, options for all tables:
+                table/y=Drag_Coefficient,
+                % Data sources for the requested error bars:
+                table/y error plus=Drag_Coefficient_Error_Pos,
+                table/y error minus=Drag_Coefficient_Error_Neg,
+                % We're going to filter using NaN a lot, don't spam logs:
+                filter discard warning=false,
+            ]%
+                % We essentially have this same issue:
+                % https://tex.stackexchange.com/questions/264330/grouping-data-in-pgfplots
+                %
+                % Trying to group well-structured data by some other columns.
+                % It's not currently possible, but the below is a decent enough
+                % surrogate:
+                % Generate plots in a loop; pretty neat and automated with one
+                % core downside: we can't just say `groupby(pressure, temperature)`
+                % as we could in e.g. pandas, Excel PowerPivot and many others.
+                % That's inconvenient but it's understandable pgfplots/tex (whose
+                % job is to *plot*, not to mangle and process data) can't
+                % deliver this.
+                % Note how grouping data this way is AMAZING and dearly recommended
+                % for any serious data work:
+                % https://vita.had.co.nz/papers/tidy-data.pdf
+                \foreach\pressure/\temperature in {
+                        9/30,%
+                        13.2/45,%
+                        16.6/55%
+                }{
+                    \addplot+ [
+                        localstyle,
+                        table/x expr={
+                            % Ternary filter: https://tex.stackexchange.com/a/412235/120853
+                            \thisrow{Pressure}==\pressure?\thisrow{Reynolds}:nan
+                        },
+                    ] table {\matlabtikztable};
+                    % Expansion in `foreach` is problematic with legend printing;
+                    % use this special command version, see also
+                    % https://tex.stackexchange.com/a/317015/120853
+                    \addlegendentryexpanded{
+                        \SI{\pressure}{\bar}/\SI{\temperature}{\degreeCelsius}
+                    }
+                }
+            \end{axis}%
+        \end{tikzpicture}
     }
 \end{figure}
 
