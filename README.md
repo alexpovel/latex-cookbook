@@ -1,6 +1,4 @@
 [![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/built-with-resentment.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/compatibility-club-penguin.svg)](https://forthebadge.com)
 
 # A LaTeX Cookbook, git and Continuous Delivery
