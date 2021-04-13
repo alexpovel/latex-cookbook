@@ -514,7 +514,8 @@ Hopefully, it spares you some despair.
 
 These are valid not only for LaTeX files, but most text-based source files:
 
-- For the love of God, use `UTF-8` or higher for text encoding.
+- For the love of God, use `UTF-8` (and *only* `UTF-8`, not [anything higher](https://news.ycombinator.com/item?id=26737049))
+  for text encoding.
   Stop using `Windows 1252`, `Latin` etc.
   Existing files can be easily updated to UTF-8 without much danger for regression
   (*i.e.*, introducing errors).
