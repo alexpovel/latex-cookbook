@@ -40,8 +40,9 @@ $warnings_as_errors = 0;
 $show_time = 1;
 
 # Default is 5; we seem to need more owed to the complexity of the document.
-# Actual documents probably don't need this many since they won't use all the features.
-$max_repeat=6;
+# Actual documents probably don't need this many since they won't use all features,
+# plus won't be compiling from cold each time.
+$max_repeat=7;
 
 # --shell-escape option (execution of code outside of latex) is required for the
 #'svg' package.
