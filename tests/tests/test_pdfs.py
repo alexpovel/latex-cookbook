@@ -142,9 +142,6 @@ def test_metadata(pdf, config):
             assert content == expectation, msg
 
 
-@pytest.mark.skip(
-    reason="Too much trouble when restarting old pipelines, with little benefit."
-)
 def test_freshness(pdf, config):
     """Tests if file is recently created or stale (e.g. from cache).
 
