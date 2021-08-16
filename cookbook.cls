@@ -1631,6 +1631,11 @@
 \RequirePackage{siunitx}% Typesetting physical units correctly
     \sisetup{%
         detect-all,% Detect surrounding font context, like weight, italics etc.
+        %
+        % ATTENTION: this is currently compiled using `siunitx` in version 2.8d.
+        % From version 3.0.0, `text-rm` and many other commands are deprecated.
+        % Instead, use `text-font-command = \unitnumberfont` in the future.
+        % See also https://github.com/josephwright/siunitx/issues/532 .
         text-rm=\unitnumberfont,% https://tex.stackexchange.com/a/468031/120853
         %
         % Alternative range-phrase:
