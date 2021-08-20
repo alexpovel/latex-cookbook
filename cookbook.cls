@@ -845,6 +845,10 @@
         }%
     }%
 
+\RequirePackage{tabularray}% Powerful, up and coming package
+    \UseTblrLibrary{booktabs}% Get `\toprule` etc. for tabularrays
+    \UseTblrLibrary{siunitx}% Get S column type
+
 \RequirePackage{multirow}% Cells spanning multiple rows (like multicolumn)
 
 \RequirePackage{booktabs}% Pretty tables; an absolute must

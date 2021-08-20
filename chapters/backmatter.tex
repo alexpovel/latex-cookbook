@@ -20,45 +20,271 @@ following blind text.
 
 This is also a good place to put unprocessed data, like \cref{tab:random_long}.
 
-% All following long tables will have the following setting, which could make sense for
-% the appendix.
-\AtBeginEnvironment{longtabu}{\footnotesize}{}{}
-
-\begin{longtabu}{%
-    % ATTENTION: the `tabu` package is unmaintained and a bunch of stuff doesn't work.
-    % See also https://github.com/tabu-issues-for-future-maintainer/tabu.
-    % Pretty bad situation but works okay enough, and we already use `tabu`/`longtable`
-    % anyway for the glossaries in `glossaries-extra`.
-    %
-    @{}% Remove superfluous left horizontal space
-    % NOTE: `X[c]{S}` columns, like in the `tabu` docs, do not really work, see also
-    % https://tex.stackexchange.com/q/70279/120853
-    S% `S` expects what `\num` would: a number
-    s% `s` expects what `\si` would: a unit
-    X[2, l]% double the width factor when computing automatic widths
-    X[1, l, $]% Dollar sign breaks my editor's syntax highlighting
-    @{}% Remove superfluous right horizontal space
-}%
-    \caption[A \texttt{longtable} from the \ctanpackage{tabu} package]{
-        A \texttt{longtable} from the \ctanpackage{tabu} package.
-        It can break across pages but still have a caption.
-        The \ctanpackage{tabu} package allows automatic width scaling:
-        the table is as wide as the text automatically (which sometimes looks bad).
-        There are also automatic numbers (note the horizontal decimal point alignment), units (also from \ctanpackage{siunitx}, not \ctanpackage{tabu}) and math columns.
-        Note how the table rows are generated automatically and randomly, using Lua%
-        \label{tab:random_long}%
-    }\\
+% The following is an experimental table based on the new and promising-looking
+% tabularray package. If it matures and proves useful, we might want to employ it
+% everywhere.
+\begin{longtblr}[%
+        caption={%
+            A \texttt{longtblr} from the new \ctanpackage{tabularray} package.
+            It introduces many new features and concepts and is based on a new interface.
+            For example, this table breaks across pages and has an automatically sized column%
+        },
+        entry={A \texttt{longtblr} from the new \ctanpackage{tabularray} package.},
+        label={tab:random_long},
+        note{1}={Some footnote.},
+        remark{Note}={Some general hint regarding the table, which might span multiple lines.},
+    ]{
+        colspec={
+            S% An siunitx number column; takes numbers as input and formats them; like \num
+            c% `s` column has been removed from siunitx version 3 and above
+            X% Variable-width column; will be as wide as needed to fill width
+            c
+        },
+        column{2}={% Second column contains siunitx units
+            cmd={\unit}% \unit replaces \si in siunitx version 3 and above
+        },
+        column{4}={% Fourth column contains math content, so prepend and append math mode
+            preto=\(,
+            appto=\),
+        },
+        rowhead=1,% 'number of the first rows of the table appear in every page'
+        row{odd}={gray!20},
+        row{1}={white},
+        row{2-Z}={font=\footnotesize},% X, Y and Z dynamically refer to the last three lines
+    }%
     \toprule
-        Magnitude & Unit & Double-width text & \text{Math column} \\
+        {{{Magnitude}}} & Unit & Variable-width text & \text{Math column} \\
     \midrule
-        118.135 & \nano\meter & Foo & f-x=h\\
-        % The following rows look just like that but are generated:
-        \directlua{%
-            N_ROWS = 75
-            dofile("lib/lua/generate_random_table_rows.lua")
-        }
+        10.0 & \meter & Some rather long text that will get broken up. & x = y\\
+        % From here on: randomly generated rows, using a Lua script previously part of
+        % this repo (check git log).
+        37.13 & \giga\degreeCelsius & Foo & H^i=f\\
+        496.111 & \kilo\bar & Yeet & a-P=d\\
+        0.23 & \milli\meter & Baz & C^u=o\\
+        3.30 & \nano\watt & Baz & I+Y=C\\
+        0.6 & \kilo\ohm & C & p+n=t\\
+        5.845 & \bar & B & Y^H=x\\
+        7.343 & \nano\newton & Yeet & Z/z=c\\
+        403.0 & \giga\newton & Foo & a^Z=v\\
+        312.81 & \nano\candela & Bar & I-l=g\\
+        0.457 & \pascal & B & f+Q=i\\
+        545.773 & \kilo\degreeCelsius & Bar & i+j=W\\
+        76.5 & \newton & Hello World & o/q=A\\
+        67.20 & \ampere & Hello World & T^e=M\\
+        2.571 & \giga\gram & Foo & O+o=j\\
+        285.542 & \nano\pascal & A & o+T=Z\\
+        12.458 & \volt & A & k/K=b\\
+        668.0 & \volt & B & p+E=o\\
+        799.923 & \kilo\meter & Hello World & p^j=X\\
+        413.0 & \nano\degreeCelsius & Foo & j^s=l\\
+        86.64 & \milli\gram & Yeet & F^k=C\\
+        50.931 & \nano\candela & A & T^j=M\\
+        0.75 & \kelvin & Yeet & X/g=z\\
+        0.184 & \milli\kelvin & This is a longer text that will probably span multiple lines in the table because it is overly wide. & i+k=K\\
+        24.0 & \giga\kelvin & Baz & R+H=a\\
+        583.56 & \nano\ampere & B & R+C=r\\
+        4.92 & \giga\pascal & This is a longer text that will probably span multiple lines in the table because it is overly wide. & P/O=z\\
+        196.104 & \giga\watt & This is a longer text that will probably span multiple lines in the table because it is overly wide. & u^R=g\\
+        11.2 & \giga\volt & C & q+P=R\\
+        60.14 & \nano\bar & Bar & E^B=B\\
+        347.91 & \milli\ampere & Baz & u^t=M\\
+        563.70 & \ohm & Baz & S/y=D\\
+        0.43 & \milli\kelvin & Yeet & w/z=u\\
+        3.851 & \milli\kelvin & A & m/Z=c\\
+        0.74 & \gram & Foo & b^d=F\\
+        0.98 & \nano\ohm & Yeet & m/w=G\\
+        942.0 & \giga\candela & Hello World & T^I=S\\
+        426.661 & \nano\ampere & Hello World & b/n=H\\
+        663.729 & \giga\newton & Yeet & j+D=Z\\
+        0.65 & \nano\candela & C & J-s=E\\
+        0.29 & \bar & B & f+J=M\\
+        433.72 & \watt & Foo & s^k=r\\
+        0.96 & \nano\gram & C & H/P=m\\
+        51.79 & \nano\volt & Baz & b/G=b\\
+        0.744 & \kilo\watt & B & G^C=X\\
+        0.9 & \candela & B & H+i=U\\
+        416.71 & \giga\kelvin & Foo & H^j=I\\
+        447.0 & \degreeCelsius & Bar & N+o=K\\
+        0.65 & \degreeCelsius & Yeet & K-h=F\\
+        0.954 & \nano\pascal & Hello World & z+Y=J\\
+        874.234 & \nano\watt & Baz & M+i=w\\
+        0.14 & \volt & This is a longer text that will probably span multiple lines in the table because it is overly wide. & Q+i=v\\
+        4.427 & \milli\newton & Baz & B/B=p\\
+        5.4 & \kilo\gram & This is a longer text that will probably span multiple lines in the table because it is overly wide. & t/A=w\\
+        0.60 & \candela & B & n^P=K\\
+        163.0 & \kilo\ampere & Yeet & M+w=b\\
+        53.911 & \ohm & Yeet & E-y=a\\
+        61.0 & \giga\candela & Yeet & T-M=E\\
+        0.686 & \kilo\candela & Foo & d^a=f\\
+        6.354 & \bar & A & F/L=G\\
+        2.88 & \kilo\degreeCelsius & Bar & M^r=T\\
+        283.457 & \milli\gram & Hello World & D-E=u\\
+        490.455 & \meter & Hello World & S/u=E\\
+        960.1 & \ampere & Yeet & r/M=q\\
+        884.0 & \bar & B & w^R=v\\
+        824.9 & \kilo\watt & Baz & Z-t=T\\
+        91.6 & \volt & Yeet & E/o=s\\
+        45.0 & \newton & Baz & Z-m=P\\
+        75.0 & \nano\watt & C & Y-U=R\\
+        778.0 & \milli\kelvin & Foo & x^j=L\\
+        0.885 & \milli\watt & C & u^S=G\\
+        70.49 & \milli\candela & Yeet & z^R=r\\
+        185.0 & \kilo\gram & Bar & O+T=A\\
+        4.880 & \giga\ohm & A & F/U=q\\
+        0.78 & \giga\kelvin & Bar & m+C=E\\
+        712.36 & \nano\bar & This is a longer text that will probably span multiple lines in the table because it is overly wide. & Z+D=p\\
+        37.13 & \giga\degreeCelsius & Foo & H^i=f\\
+        496.111 & \kilo\bar & Yeet & a-P=d\\
+        0.23 & \milli\meter & Baz & C^u=o\\
+        3.30 & \nano\watt & Baz & I+Y=C\\
+        0.6 & \kilo\ohm & C & p+n=t\\
+        5.845 & \bar & B & Y^H=x\\
+        7.343 & \nano\newton & Yeet & Z/z=c\\
+        403.0 & \giga\newton & Foo & a^Z=v\\
+        312.81 & \nano\candela & Bar & I-l=g\\
+        0.457 & \pascal & B & f+Q=i\\
+        545.773 & \kilo\degreeCelsius & Bar & i+j=W\\
+        76.5 & \newton & Hello World & o/q=A\\
+        67.20 & \ampere & Hello World & T^e=M\\
+        2.571 & \giga\gram & Foo & O+o=j\\
+        285.542 & \nano\pascal & A & o+T=Z\\
+        12.458 & \volt & A & k/K=b\\
+        668.0 & \volt & B & p+E=o\\
+        799.923 & \kilo\meter & Hello World & p^j=X\\
+        413.0 & \nano\degreeCelsius & Foo & j^s=l\\
+        86.64 & \milli\gram & Yeet & F^k=C\\
+        50.931 & \nano\candela & A & T^j=M\\
+        0.75 & \kelvin & Yeet & X/g=z\\
+        0.184 & \milli\kelvin & This is a longer text that will probably span multiple lines in the table because it is overly wide. & i+k=K\\
+        24.0 & \giga\kelvin & Baz & R+H=a\\
+        583.56 & \nano\ampere & B & R+C=r\\
+        4.92 & \giga\pascal & This is a longer text that will probably span multiple lines in the table because it is overly wide. & P/O=z\\
+        196.104 & \giga\watt & This is a longer text that will probably span multiple lines in the table because it is overly wide. & u^R=g\\
+        11.2 & \giga\volt & C & q+P=R\\
+        60.14 & \nano\bar & Bar & E^B=B\\
+        347.91 & \milli\ampere & Baz & u^t=M\\
+        563.70 & \ohm & Baz & S/y=D\\
+        0.43 & \milli\kelvin & Yeet & w/z=u\\
+        3.851 & \milli\kelvin & A & m/Z=c\\
+        0.74 & \gram & Foo & b^d=F\\
+        0.98 & \nano\ohm & Yeet & m/w=G\\
+        942.0 & \giga\candela & Hello World & T^I=S\\
+        426.661 & \nano\ampere & Hello World & b/n=H\\
+        663.729 & \giga\newton & Yeet & j+D=Z\\
+        0.65 & \nano\candela & C & J-s=E\\
+        0.29 & \bar & B & f+J=M\\
+        433.72 & \watt & Foo & s^k=r\\
+        0.96 & \nano\gram & C & H/P=m\\
+        51.79 & \nano\volt & Baz & b/G=b\\
+        0.744 & \kilo\watt & B & G^C=X\\
+        0.9 & \candela & B & H+i=U\\
+        416.71 & \giga\kelvin & Foo & H^j=I\\
+        447.0 & \degreeCelsius & Bar & N+o=K\\
+        0.65 & \degreeCelsius & Yeet & K-h=F\\
+        0.954 & \nano\pascal & Hello World & z+Y=J\\
+        874.234 & \nano\watt & Baz & M+i=w\\
+        0.14 & \volt & This is a longer text that will probably span multiple lines in the table because it is overly wide. & Q+i=v\\
+        4.427 & \milli\newton & Baz & B/B=p\\
+        5.4 & \kilo\gram & This is a longer text that will probably span multiple lines in the table because it is overly wide. & t/A=w\\
+        0.60 & \candela & B & n^P=K\\
+        163.0 & \kilo\ampere & Yeet & M+w=b\\
+        53.911 & \ohm & Yeet & E-y=a\\
+        61.0 & \giga\candela & Yeet & T-M=E\\
+        0.686 & \kilo\candela & Foo & d^a=f\\
+        6.354 & \bar & A & F/L=G\\
+        2.88 & \kilo\degreeCelsius & Bar & M^r=T\\
+        283.457 & \milli\gram & Hello World & D-E=u\\
+        490.455 & \meter & Hello World & S/u=E\\
+        960.1 & \ampere & Yeet & r/M=q\\
+        884.0 & \bar & B & w^R=v\\
+        824.9 & \kilo\watt & Baz & Z-t=T\\
+        91.6 & \volt & Yeet & E/o=s\\
+        45.0 & \newton & Baz & Z-m=P\\
+        75.0 & \nano\watt & C & Y-U=R\\
+        778.0 & \milli\kelvin & Foo & x^j=L\\
+        0.885 & \milli\watt & C & u^S=G\\
+        70.49 & \milli\candela & Yeet & z^R=r\\
+        185.0 & \kilo\gram & Bar & O+T=A\\
+        4.880 & \giga\ohm & A & F/U=q\\
+        0.78 & \giga\kelvin & Bar & m+C=E\\
+        712.36 & \nano\bar & This is a longer text that will probably span multiple lines in the table because it is overly wide. & Z+D=p\\
+        37.13 & \giga\degreeCelsius & Foo & H^i=f\\
+        496.111 & \kilo\bar & Yeet & a-P=d\\
+        0.23 & \milli\meter & Baz & C^u=o\\
+        3.30 & \nano\watt & Baz & I+Y=C\\
+        0.6 & \kilo\ohm & C & p+n=t\\
+        5.845 & \bar & B & Y^H=x\\
+        7.343 & \nano\newton & Yeet & Z/z=c\\
+        403.0 & \giga\newton & Foo & a^Z=v\\
+        312.81 & \nano\candela & Bar & I-l=g\\
+        0.457 & \pascal & B & f+Q=i\\
+        545.773 & \kilo\degreeCelsius & Bar & i+j=W\\
+        76.5 & \newton & Hello World & o/q=A\\
+        67.20 & \ampere & Hello World & T^e=M\\
+        2.571 & \giga\gram & Foo & O+o=j\\
+        285.542 & \nano\pascal & A & o+T=Z\\
+        12.458 & \volt & A & k/K=b\\
+        668.0 & \volt & B & p+E=o\\
+        799.923 & \kilo\meter & Hello World & p^j=X\\
+        413.0 & \nano\degreeCelsius & Foo & j^s=l\\
+        86.64 & \milli\gram & Yeet & F^k=C\\
+        50.931 & \nano\candela & A & T^j=M\\
+        0.75 & \kelvin & Yeet & X/g=z\\
+        0.184 & \milli\kelvin & This is a longer text that will probably span multiple lines in the table because it is overly wide. & i+k=K\\
+        24.0 & \giga\kelvin & Baz & R+H=a\\
+        583.56 & \nano\ampere & B & R+C=r\\
+        4.92 & \giga\pascal & This is a longer text that will probably span multiple lines in the table because it is overly wide. & P/O=z\\
+        196.104 & \giga\watt & This is a longer text that will probably span multiple lines in the table because it is overly wide. & u^R=g\\
+        11.2 & \giga\volt & C & q+P=R\\
+        60.14 & \nano\bar & Bar & E^B=B\\
+        347.91 & \milli\ampere & Baz & u^t=M\\
+        563.70 & \ohm & Baz & S/y=D\\
+        0.43 & \milli\kelvin & Yeet & w/z=u\\
+        3.851 & \milli\kelvin & A & m/Z=c\\
+        0.74 & \gram & Foo & b^d=F\\
+        0.98 & \nano\ohm & Yeet & m/w=G\\
+        942.0 & \giga\candela & Hello World & T^I=S\\
+        426.661 & \nano\ampere & Hello World & b/n=H\\
+        663.729 & \giga\newton & Yeet & j+D=Z\\
+        0.65 & \nano\candela & C & J-s=E\\
+        0.29 & \bar & B & f+J=M\\
+        433.72 & \watt & Foo & s^k=r\\
+        0.96 & \nano\gram & C & H/P=m\\
+        51.79 & \nano\volt & Baz & b/G=b\\
+        0.744 & \kilo\watt & B & G^C=X\\
+        0.9 & \candela & B & H+i=U\\
+        416.71 & \giga\kelvin & Foo & H^j=I\\
+        447.0 & \degreeCelsius & Bar & N+o=K\\
+        0.65 & \degreeCelsius & Yeet & K-h=F\\
+        0.954 & \nano\pascal & Hello World & z+Y=J\\
+        874.234 & \nano\watt & Baz & M+i=w\\
+        0.14 & \volt & This is a longer text that will probably span multiple lines in the table because it is overly wide. & Q+i=v\\
+        4.427 & \milli\newton & Baz & B/B=p\\
+        5.4 & \kilo\gram & This is a longer text that will probably span multiple lines in the table because it is overly wide. & t/A=w\\
+        0.60 & \candela & B & n^P=K\\
+        163.0 & \kilo\ampere & Yeet & M+w=b\\
+        53.911 & \ohm & Yeet & E-y=a\\
+        61.0 & \giga\candela & Yeet & T-M=E\\
+        0.686 & \kilo\candela & Foo & d^a=f\\
+        6.354 & \bar & A & F/L=G\\
+        2.88 & \kilo\degreeCelsius & Bar & M^r=T\\
+        283.457 & \milli\gram & Hello World & D-E=u\\
+        490.455 & \meter & Hello World & S/u=E\\
+        960.1 & \ampere & Yeet & r/M=q\\
+        884.0 & \bar & B & w^R=v\\
+        824.9 & \kilo\watt & Baz & Z-t=T\\
+        91.6 & \volt & Yeet & E/o=s\\
+        45.0 & \newton & Baz & Z-m=P\\
+        75.0 & \nano\watt & C & Y-U=R\\
+        778.0 & \milli\kelvin & Foo & x^j=L\\
+        0.885 & \milli\watt & C & u^S=G\\
+        70.49 & \milli\candela & Yeet & z^R=r\\
+        185.0 & \kilo\gram & Bar & O+T=A\\
+        4.880 & \giga\ohm & A & F/U=q\\
+        0.78 & \giga\kelvin & Bar & m+C=E\\
+        712.36 & \nano\bar & This is a longer text that will probably span multiple lines in the table because it is overly wide. & Z+D=p\\
     \bottomrule
-\end{longtabu}
+\end{longtblr}
 
 \chapter{Another appendix chapter}
 
