@@ -1664,6 +1664,7 @@
     \DeclareSIUnit{\annum}{a}%
     \DeclareSIUnit{\atmosphere}{atm}%
     \DeclareSIUnit{\partspermillion}{ppm}%
+    \DeclareSIUnit{\bar}{bar}% https://tex.stackexchange.com/a/598473/120853
 
     % Unit qualifiers, i.e. subscripts.
     % We already have a dedicated system (bib file with glossaries-extra) for subscripts
