@@ -31,32 +31,22 @@ To use the image, you can use the [example](tests/minimal.tex) provided in this 
 The parts making up the command are:
 
 - The last line is the location on [DockerHub](https://hub.docker.com/repository/docker/alexpovel/latex).
-  Without specifying a [*tag*](https://hub.docker.com/repository/docker/alexpovel/latex/tags?page=1),
-  the default `latest` is implied.
+  Without specifying a [*tag*](https://hub.docker.com/repository/docker/alexpovel/latex/tags?page=1), the default `latest` is implied.
   See [below](#historic-builds) for more options.
 - The `--rm` option removes the container after a successful run.
-  This is generally desired since containers are not supposed to be stateful:
-  once their process terminates, the container terminates, and it can be considered junk.
-- Providing a `--volume`, in this case [`tests/`](./tests/) in the current working directory,
-  is required for the container to find files to work on.
+  This is generally desired since containers are not supposed to be stateful: once their process terminates, the container terminates, and it can be considered junk.
+- Providing a `--volume`, in this case [`tests/`](./tests/) in the current working directory, is required for the container to find files to work on.
   It has to be *mounted* to a location *inside* the container.
-  This has to be whatever the last `WORKDIR` instruction in the [Dockerfile](Dockerfile) is,
-  e.g. `/tex`.
+  This has to be whatever the last `WORKDIR` instruction in the [Dockerfile](Dockerfile) is, e.g. `/tex`.
 
   Otherwise, you can always override the `WORKDIR` using the `--workdir` option.
-  This is the directory in which the Docker container's process works in and expects to
-  find files.
+  This is the directory in which the Docker container's process works in and expects to find files.
 - Note that there is no command given, e.g. there is nothing *after* `alexpovel/latex`.
-  In this form, the container runs as an executable (just as if you ran `lualatex` or
-  similar commands), where the program to be executed is determined by the `ENTRYPOINT`
-  instruction in the [Dockerfile](Dockerfile).
+  In this form, the container runs as an executable (just as if you ran `lualatex` or similar commands), where the program to be executed is determined by the `ENTRYPOINT` instruction in the [Dockerfile](Dockerfile).
 
-  For example, if the `ENTRYPOINT` is set to `latexmk`, running the above command will
-  execute `latexmk` in the container's context, without you having to specify it.
+  For example, if the `ENTRYPOINT` is set to `latexmk`, running the above command will execute `latexmk` in the container's context, without you having to specify it.
 
-  (`latexmk` is a recipe-like tool that automates LaTeX document compilation by running
-  `lualatex`, `biber` and whatever else required for compilation as many times as
-  needed for proper PDF output (so references like `??` in the PDF are resolved).
+  (`latexmk` is a recipe-like tool that automates LaTeX document compilation by running `lualatex`, `biber` and whatever else required for compilation as many times as needed for proper PDF output (so references like `??` in the PDF are resolved).
   It does this by detecting that auxiliary files no longer change (steady-state).
   The tool is best configured using its config file, `.latexmkrc`.)
 
@@ -70,70 +60,42 @@ The parts making up the command are:
     -c
   ```
 
-  to run, if `latexmk` is the `ENTRYPOINT`, the equivalent of `latexmk -c`
-  ([cleaning auxiliary files](https://mg.readthedocs.io/latexmk.html#cleaning-up)).
+  to run, if `latexmk` is the `ENTRYPOINT`, the equivalent of `latexmk -c` ([cleaning auxiliary files](https://mg.readthedocs.io/latexmk.html#cleaning-up)).
 
-  To **overwrite** the `ENTRYPOINT`, e.g. because you want to run only `lualatex`,
-  use the `--entrypoint` option, e.g. `--entrypoint="lualatex"`.
-  Similarly, you can work inside of the container directly, e.g. for debugging, using
-  `--entrypoint="bash"`.
+  To **overwrite** the `ENTRYPOINT`, e.g. because you want to run only `lualatex`, use the `--entrypoint` option, e.g. `--entrypoint="lualatex"`.
+  Similarly, you can work inside of the container directly, e.g. for debugging, using `--entrypoint="bash"`.
 
 ## Approach
 
-This Dockerfile is based on a custom TeXLive installer using their
-[`install-tl` tool](https://www.tug.org/texlive/doc/install-tl.html),
-instead of
-[Debian's `texlive-full`](https://packages.debian.org/search?searchon=names&keywords=texlive-full).
-Other, smaller `texlive-` collections would be
-[available](https://packages.debian.org/search?suite=default&section=all&arch=any&searchon=names&keywords=texlive),
-but TeXLive cannot install missing packages on-the-fly,
-[unlike MiKTeX](https://miktex.org/howto/miktex-console/).
-Therefore, images should come with all desirable packages in place; installing them after
-the fact in running containers using [`tlmgr`](https://www.tug.org/texlive/tlmgr.html)
-is the wrong approach (containers are only meant to be run; if they are incomplete,
-modify the *image*, ordinarily by modifying the `Dockerfile`).
+This Dockerfile is based on a custom TeXLive installer using their [`install-tl` tool](https://www.tug.org/texlive/doc/install-tl.html), instead of [Debian's `texlive-full`](https://packages.debian.org/search?searchon=names&keywords=texlive-full).
+Other, smaller `texlive-` collections would be [available](https://packages.debian.org/search?suite=default&section=all&arch=any&searchon=names&keywords=texlive), but TeXLive cannot install missing packages on-the-fly, [unlike MiKTeX](https://miktex.org/howto/miktex-console/).
+Therefore, images should come with all desirable packages in place; installing them after the fact in running containers using [`tlmgr`](https://www.tug.org/texlive/tlmgr.html) is the wrong approach (containers are only meant to be run; if they are incomplete, modify the *image*, ordinarily by modifying the `Dockerfile`).
 
 This approach has the following advantages:
 
-- Using ["vanilla" TeXLive](https://www.tug.org/texlive/debian.html)
-  affords us the latest packages directly from the source, while the official
-  Debian package might lag behind a bit.
-  This is often not relevant, but has bitten me several times while working with the
-  latest packages.
+- Using ["vanilla" TeXLive](https://www.tug.org/texlive/debian.html) affords us the latest packages directly from the source, while the official   Debian package might lag behind a bit.
+  This is often not relevant, but has bitten me several times while working with the latest packages.
 - The installation can be adjusted better.
-  For example, *multiple GBs* of storage/image size are saved by omitting unneeded PDF
-  documentation files.
-- We can install arbitrary TeXLive versions, as long as they are the
-  [current](https://tug.org/texlive/acquire-netinstall.html)
-  or an
-  archived (<ftp://tug.org/historic/systems/texlive/>)
-  version.
-  Otherwise, to obtain [older or even obsolete TeXLive installations](#historic-builds),
-  one would have to also obtain a corresponding Debian version.
-  This way, we can choose a somewhat recent Debian version and simply install an old
-  TeXLive into it.
+  For example, *multiple GBs* of storage/image size are saved by omitting unneeded PDF documentation files.
+- We can install arbitrary TeXLive versions, as long as they are the [current](https://tug.org/texlive/acquire-netinstall.html) or an archived (<ftp://tug.org/historic/systems/texlive/>) version.
+  Otherwise, to obtain [older or even obsolete TeXLive installations](#historic-builds), one would have to also obtain a corresponding Debian version.
+  This way, we can choose a somewhat recent Debian version and simply install an old TeXLive into it.
 
-  Eligible archive versions are those year directories (`2019`, `2020`, ...) present
-  at the above FTP link that have a `tlnet-final` subdirectory.
-  This is (speculating here) a frozen, aka final, version, put online the day the *next*
-  major release goes live.
-  For example, version `2021` released on 2021-04-01 and `2020` received its `tlnet-final`
-  subdirectory that same day.
+  Eligible archive versions are those year directories (`2019`, `2020`, ...) present at the above FTP link that have a `tlnet-final` subdirectory.
+  This is (speculating here) a frozen, aka final, version, put online the day the *next* major release goes live.
+  For example, version `2021` released on 2021-04-01 and `2020` received its `tlnet-final` subdirectory that same day.
 
-The `install-tl` tool is configured via a [*Profile* file](config/texlive.profile), see also
-the [documentation](https://www.tug.org/texlive/doc/install-tl.html#PROFILES).
+The `install-tl` tool is configured via a [*Profile* file](config/texlive.profile), see also the [documentation](https://www.tug.org/texlive/doc/install-tl.html#PROFILES).
 This enables unattended, pre-configured installs, as required for a Docker installation.
 
 ---
 
-The (official?) [`texlive/texlive` image](https://hub.docker.com/r/texlive/texlive) follows
-[the same approach](https://hub.docker.com/layers/texlive/texlive/latest/images/sha256-70fdbc1d9596c8eeb4a80c71a8eb3a5aeb63bed784112cbdb87f740e28de7a80?context=explore).
-However, there are a bunch of things this Dockerfile does differently that warrant not
-building `FROM` that image:
+The (official?) [`texlive/texlive` image](https://hub.docker.com/r/texlive/texlive) follows [the same approach](https://hub.docker.com/layers/texlive/texlive/latest/images/sha256-70fdbc1d9596c8eeb4a80c71a8eb3a5aeb63bed784112cbdb87f740e28de7a80?context=explore).
+However, there are a bunch of things this Dockerfile does differently that warrant not building `FROM` that image:
 
 - a user-editable, thus more easily configurable [profile](config/texlive.profile).
-  This is mainly concerning the picked package *collections*. Unchecking (putting a `0`)
-  unused ones saves around 500MB at the time of writing.
+  This is mainly concerning the picked package *collections*.
+  Unchecking (putting a `0`) unused ones saves around 500MB at the time of writing.
 - more elaborate support for [historic versions](#historic-builds)
 - an installation procedure incorporating a proper `USER`
 
@@ -143,48 +105,30 @@ Things they do that do not happen here:
 
 ### Historic Builds
 
-LaTeX is a slow world, and many documents/templates in circulation still rely on
-outdated practices or packages.
+LaTeX is a slow world, and many documents/templates in circulation still rely on outdated practices or packages.
 This can be a huge hassle.
-Maintaining an old LaTeX distribution next to a current one on the same host is
-not fun.
-This is complicated by the fact that (La)TeX seems to do things differently than pretty much
-everything else.
+Maintaining an old LaTeX distribution next to a current one on the same host is not fun.
+This is complicated by the fact that (La)TeX seems to do things differently than pretty much everything else.
 For this, Docker is the perfect tool.
 
-This image can be built (`docker build`) with different build `ARG`s, and the build
-process will figure out the proper way to handle installation.
-There is a [script](texlive.sh) to handle getting and installing TeXLive from the
-proper location ([current](https://www.tug.org/texlive/acquire-netinstall.html) or
-[archive](ftp://tug.org/historic/systems/texlive/)).
+This image can be built (`docker build`) with different build `ARG`s, and the build process will figure out the proper way to handle installation.
+There is a [script](texlive.sh) to handle getting and installing TeXLive from the proper location ([current](https://www.tug.org/texlive/acquire-netinstall.html) or [archive](ftp://tug.org/historic/systems/texlive/)).
 Refer to the [Dockerfile](Dockerfile) for the available `ARG`s (all `ARG` have a default).
-These are handed to the build process via the
-[`--build-arg` option](https://docs.docker.com/engine/reference/commandline/build/#options).
+These are handed to the build process via the [`--build-arg` option](https://docs.docker.com/engine/reference/commandline/build/#options).
 
-Note that for a *specific* TeXLive version to be picked, it needs to be present in their
-[archives](ftp://tug.org/historic/systems/texlive/).
-The *current* TeXLive is not present there (it's not historic), but is available under
-the `latest` Docker tag.
-As such, if for example `2020` is the *current* TeXLive, and the image is to be based on
-Debian 10, there is *no* `debian-10-texlive-2020` tag.
+Note that for a *specific* TeXLive version to be picked, it needs to be present in their [archives](ftp://tug.org/historic/systems/texlive/).
+The *current* TeXLive is not present there (it's not historic), but is available under the `latest` Docker tag.
+As such, if for example `2020` is the *current* TeXLive, and the image is to be based on Debian 10, there is *no* `debian-10-texlive-2020` tag.
 You would obtain this using the `latest` tag.
-As soon as TeXLive 2020 is superseded and consequently moved to the archives,
-the former tag can become available.
+As soon as TeXLive 2020 is superseded and consequently moved to the archives, the former tag can become available.
 
-To build an array of different versions automatically, DockerHub provides
-[advanced options](https://docs.docker.com/docker-hub/builds/advanced/) in the form of
-hooks, e.g. a [build hook](hooks/build).
+To build an array of different versions automatically, DockerHub provides [advanced options](https://docs.docker.com/docker-hub/builds/advanced/) in the form of hooks, e.g. a [build hook](hooks/build).
 These are bash scripts that override the default DockerHub build process.
-At build time, DockerHub provides
-[environment variables](https://docs.docker.com/docker-hub/builds/advanced/#environment-variables-for-building-and-testing)
-which can be used in the build hook to forward these into the Dockerfile build process.
-As such, by just specifying the image *tags* on DockerHub, we can build corresponding
-images automatically (see also
-[here](https://web.archive.org/web/20201005132636/https://dev.to/samuelea/automate-your-builds-on-docker-hub-by-writing-a-build-hook-script-13fp)).
+At build time, DockerHub provides [environment variables](https://docs.docker.com/docker-hub/builds/advanced/#environment-variables-for-building-and-testing) which can be used in the build hook to forward these into the Dockerfile build process.
+As such, by just specifying the image *tags* on DockerHub, we can build corresponding images automatically (see also [here](https://web.archive.org/web/20201005132636/https://dev.to/samuelea/automate-your-builds-on-docker-hub-by-writing-a-build-hook-script-13fp)).
 For more info on this, see [below](#on-dockerhub).
 
-The approximate [matching of Debian to TeXLive versions](https://www.tug.org/texlive/debian.html)
-is (see also [here](https://www.debian.org/releases/) and [here](https://www.debian.org/distrib/archive).):
+The approximate [matching of Debian to TeXLive versions](https://www.tug.org/texlive/debian.html) is (see also [here](https://www.debian.org/releases/) and [here](https://www.debian.org/distrib/archive).):
 
 | Debian Codename | Debian Version | TeXLive Version |
 | --------------- | :------------: | :-------------: |
@@ -208,12 +152,10 @@ Using `install-tl`, older versions of TeXLive can be installed on modern Debian 
 
 #### Issues
 
-Using [*obsolete* Debian releases](https://www.debian.org/releases/) comes with a long
-list of headaches.
+Using [*obsolete* Debian releases](https://www.debian.org/releases/) comes with a long list of headaches.
 As such, Debian versions do not reach too far back.
 It does not seem worth the effort.
-Instead, it seems much easier to install older TeXLive versions onto reasonably recent
-Debians.
+Instead, it seems much easier to install older TeXLive versions onto reasonably recent Debians.
 
 Issues I ran into are:
 
@@ -226,11 +168,8 @@ Issues I ran into are:
   E: Some index files failed to download, they have been ignored, or old ones used instead.
   ```
 
-  As such, there needs to be a [dynamic way to update `/etc/apt/sources.list`](https://github.com/alexpovel/latex-extras-docker/blob/fa9452c236079a65563daff22767b2b637dd80c6/adjust_sources_list.sh)
-  if the Debian version to be used in an archived one, see also
-  [here](https://web.archive.org/web/20201007095943/https://www.prado.lt/using-old-debian-versions-in-your-sources-list).
-- `RUN wget` (or `curl` etc.) via `HTTPS` will fail for older releases, e.g. GitHub
-  rejected the connection due to the outdated TLS version of the old release (Debian 6/TeXLive 2015):
+  As such, there needs to be a [dynamic way to update `/etc/apt/sources.list`](https://github.com/alexpovel/latex-extras-docker/blob/fa9452c236079a65563daff22767b2b637dd80c6/adjust_sources_list.sh) if the Debian version to be used in an archived one, see also [here](https://web.archive.org/web/20201007095943/https://www.prado.lt/using-old-debian-versions-in-your-sources-list).
+- `RUN wget` (or `curl` etc.) via `HTTPS` will fail for older releases, e.g. GitHub rejected the connection due to the outdated TLS version of the old release (Debian 6/TeXLive 2015):
 
   ```text
   Connecting to github.com|140.82.121.4|:443... connected.
@@ -252,10 +191,8 @@ Issues I ran into are:
   E: There are problems and -y was used without --force-yes
   ```
 
-  According to `man apt-get`, `--force-yes` is both deprecated and absolutely not
-  recommended.
-  The correct course here is to `--allow-unauthenticated`, however this would also
-  affect the build process for modern versions, where authentication *did not* fail.
+  According to `man apt-get`, `--force-yes` is both deprecated and absolutely not recommended.
+  The correct course here is to `--allow-unauthenticated`, however this would also affect the build process for modern versions, where authentication *did not* fail.
   The official Debian archives are probably trustworthy, but this is still an issue.
 - A more obscure issue is (Debian 7/TeXLive 2011):
 
@@ -266,45 +203,32 @@ Issues I ran into are:
   ```
 
   While the error message itself is crystal-clear, debugging this is probably a nightmare.
-- Tools like `pandoc`, which was released in [2006](https://pandoc.org/releases.html),
-  limit the earliest possible Debian version as long as the tool's installation is part
-  of the Dockerfile.
-  In this example, 2006 should in any case be early enough (if not, update your LaTeX
-  file to work with more recent versions, that is probably decidedly less work).
+- Tools like `pandoc`, which was released in [2006](https://pandoc.org/releases.html), limit the earliest possible Debian version as long as the tool's installation is part of the Dockerfile.
+  In this example, 2006 should in any case be early enough (if not, update your LaTeX file to work with more recent versions, that is probably decidedly less work).
 
 ## Custom Tools
 
 The auxiliary tools are (for the actual, up-to-date list, see the [Dockerfile](Dockerfile)):
 
-- A *Java Runtime Environment* for [`bib2gls`](https://ctan.org/pkg/bib2gls) from the
-  [`glossaries-extra` package](https://www.ctan.org/pkg/glossaries-extra).
+- A *Java Runtime Environment* for [`bib2gls`](https://ctan.org/pkg/bib2gls) from the [`glossaries-extra` package](https://www.ctan.org/pkg/glossaries-extra).
 
-  `bib2gls` takes in `*.bib` files with glossary, symbol, index and other definitions
-  and applies sorting, filtering etc.
+  `bib2gls` takes in `*.bib` files with glossary, symbol, index and other definitions and applies sorting, filtering etc.
   For this, it requires Java.
-- [`inkscape`](https://inkscape.org/) because the [`svg`](https://ctan.org/pkg/svg)
-  package needs it.
+- [`inkscape`](https://inkscape.org/) because the [`svg`](https://ctan.org/pkg/svg) package needs it.
   We only require the CLI, however there is no "no-GUI" version available.
   Headless Inkscape is [currently in the making](https://web.archive.org/web/20201007100140/https://wiki.inkscape.org/wiki/index.php/Future_Architecture).
 
-  Using that package, required PDFs and PDF_TEXs are only generated at build-time
-  (on the server or locally) and treated as a cache.
-  As such, they can be discarded freely and are regenerated in the next compilation run,
-  using `svg`, which calls `inkscape`.
-  Therefore, the `svg` package gets rid of all the PDF/PDF_TEX intermediate junk and lets us
-  deal with the true source -- `*.svg` files -- directly.
-  These files are really [XML](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics),
-  ergo text-based, ergo suitable for VCS like `git` (as opposed to binary PDFs).
+  Using that package, required PDFs and PDF_TEXs are only generated at build-time (on the server or locally) and treated as a cache.
+  As such, they can be discarded freely and are regenerated in the next compilation run, using `svg`, which calls `inkscape`.
+  Therefore, the `svg` package gets rid of all the PDF/PDF_TEX intermediate junk and lets us deal with the true source -- `*.svg` files -- directly.
+  These files are really [XML](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics), ergo text-based, ergo suitable for VCS like `git` (as opposed to binary PDFs).
 
-  Being an external tool, `svg`/`inkscape` also requires the `--shell-escape` option to
-  `lualatex` etc. for writing outside files.
+  Being an external tool, `svg`/`inkscape` also requires the `--shell-escape` option to `lualatex` etc. for writing outside files.
 - [`gnuplot`](http://www.gnuplot.info/) for `contour gnuplot` commands for `addplot3` in `pgfplots`.
   So essentially, an external add-on for the magnificent `pgfplots` package.
-  For `gnuplot` to write computed results to a file for `pgfplots` to read,
-  `--shell-escape` is also required.
+  For `gnuplot` to write computed results to a file for `pgfplots` to read, `--shell-escape` is also required.
 - [`pandoc`](https://pandoc.org/) as a very flexible, convenient markup conversion tool.
-  For example, it can convert Markdown (like this very [README](README.md)) to PDF
-  via LaTeX:
+  For example, it can convert Markdown (like this very [README](README.md)) to PDF via LaTeX:
 
   ```bash
   pandoc README.md --output=README.pdf  # pandoc infers what to do from suffixes
@@ -312,8 +236,7 @@ The auxiliary tools are (for the actual, up-to-date list, see the [Dockerfile](D
 
   The default output is usable, but not very pretty.
   This is where *templates* come into play.
-  A very tidy and well-made such template is
-  [*Eisvogel*](https://github.com/Wandmalfarbe/pandoc-latex-template).
+  A very tidy and well-made such template is [*Eisvogel*](https://github.com/Wandmalfarbe/pandoc-latex-template).
   Its installation is not via a (Debian) package, so it has to be downloaded specifically.
   For this, additional requirements are:
 
@@ -321,9 +244,7 @@ The auxiliary tools are (for the actual, up-to-date list, see the [Dockerfile](D
   - `librsvg2-bin` for the `rsvg-convert` tool.
     This is used by `pandoc` to convert SVGs when embedding them into the new PDF.
 
-  Note that `pandoc` and its *Eisvogel* template can draw
-  [metadata from a YAML header](https://pandoc.org/MANUAL.html#metadata-variables),
-  for example:
+  Note that `pandoc` and its *Eisvogel* template can draw [metadata from a YAML header](https://pandoc.org/MANUAL.html#metadata-variables), for example:
 
   ```yaml
   ---
@@ -337,51 +258,38 @@ The auxiliary tools are (for the actual, up-to-date list, see the [Dockerfile](D
   ```
 
   among other metadata variables.
-  *Eisvogel* uses it to fill the document with info, *e.g.* the PDF header and
-  footer.
+  *Eisvogel* uses it to fill the document with info, *e.g.* the PDF header and footer.
 
-  `pandoc` is not required for LaTeX work, but is convenient to have at the ready for
-  various conversion jobs.
+  `pandoc` is not required for LaTeX work, but is convenient to have at the ready for various conversion jobs.
 
 ## Building
 
 The proper way to access these images is via DockerHub.
 
-### On DockerHub
+### On DockerHub ([Requires Pro Plan](https://docs.docker.com/docker-hub/builds/))
 
-This repository and its [Dockerfile](Dockerfile) are built into the corresponding image
-continuously and made available on [DockerHub](https://hub.docker.com/repository/docker/alexpovel/latex).
+This repository and its [Dockerfile](Dockerfile) used to be built into the corresponding image continuously and made available on [DockerHub](https://hub.docker.com/repository/docker/alexpovel/latex).
 
-There, the automated build process looks somewhat like:
+There, the automated build process looked somewhat like:
 
 ![DockerHub Build Rules](images/dockerhub_build_rules.png)
 
-The DockerHub build process combines these build rules with the [build hook](hooks/build)
-to automatically build and tag images as specified by those rules.
+The DockerHub build process combines these build rules with the [build hook](hooks/build) to automatically build and tag images as specified by those rules.
 
 For the currently available tags, see [here](https://hub.docker.com/repository/docker/alexpovel/latex/tags?page=1).
 
 ### Locally
 
-The Dockerfile can of course also be built locally.
-If you desire to use non-default `ARG`s, the build might look like:
+The Dockerfile is now built locally and pushed manually.
+The [build script](hooks/build) works both locally and on the DockerHub infrastructure.
+Since it is a bash script, for Windows you'll want to run it using [WSL](https://docs.microsoft.com/en-us/windows/wsl/install):
 
 ```bash
-export TL_VERSION="<version>"
-export BASE_OS="<Linux distro name>"
-export OS_VERSION="<version corresponding to that name, e.g. '8' or 'buster' (Debian)>"
-
-docker build . \
-  --build-arg TL_VERSION=${TL_VERSION} \
-  --build-arg BASE_OS=${BASE_OS} \
-  --build-arg OS_VERSION=${OS_VERSION} \
-  --tag <some>/<name>:${BASE_OS}-${OS_VERSION}-texlive-${TL_VERSION}
+IMAGE_NAME="alexpovel/latex:latest"  # Or any other 'namespace/name:tag' combination you like
+./hooks/build
 ```
 
-Essentially, you would want to emulate what the [build hook](hooks/build) does.
-
-This process can take a very long time, especially when downloading from the TeXLive/TUG
-archives.
+This process can take a very long time (if you have all collections selected in the [profile](config/texlive.profile)), especially when downloading from the TeXLive/TUG archives.
 For developing/debugging, it is advisable to download the archive files once.
 E.g. for TexLive 2014, you would want this directory: <ftp://tug.org/historic/systems/texlive/2014/tlnet-final/>.
 Download in one go using:
@@ -391,8 +299,5 @@ wget --recursive --no-clobber ftp://tug.org/historic/systems/texlive/2014/tlnet-
 ```
 
 The `--no-clobber` option allows you to restart the download at will.
-Then, work with the `--repository=/some/local/path` option of `install-tl`,
-after [copying the archive directory into the image at build time](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#understand-build-context)
-(see also [here](https://tex.stackexchange.com/a/374651/120853)).
-Having a local copy circumvents [unstable connections](https://tex.stackexchange.com/q/370686/120853)
-and minimizes unnecessary load onto TUG servers.
+Then, work with the `--repository=/some/local/path` option of `install-tl`, after [copying the archive directory into the image at build time](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#understand-build-context) (see also [here](https://tex.stackexchange.com/a/374651/120853)).
+Having a local copy circumvents [unstable connections](https://tex.stackexchange.com/q/370686/120853) and minimizes unnecessary load onto TUG servers.
