@@ -287,41 +287,24 @@
 ]{unicode-math}% Builds onto fontspec and loads it automatically
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% By explicitly including the actual font files in the project and also
-% calling them explicitly, we ensure tight compatibility across machines and
-% time (as opposed to relying on them being installed as system fonts for every user).
-% The configuration has been confirmed to work with MiKTeX and TeXLive on
-% Windows as well as TeXLive on Linux (Debian).
+% Fonts shipped with TeXLive from here: https://tug.org/FontCatalogue/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Source: https://ctan.org/texarchive/fonts/tex-gyre/opentype
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\defaultfontfeatures{% Options common for all fonts
-    Extension=.otf,
-}
 
 \setmainfont[%
     Numbers=Lowercase,% Hanging/OldStyle numbers through Lowercase numbers
-    % Use asterisk-notation as a placeholder for what it says in brackets {} later:
-    UprightFont=*-regular,%
-    BoldFont=*-bold,%
-    ItalicFont=*-italic,%
-    BoldItalicFont=*-bolditalic,%
     % Color=Orange2,% Toggle color for debugging (should be xcolor name)
-]{texgyrepagella}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
+]{TeX Gyre Pagella}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Source: https://fonts.google.com/specimen/Inconsolata
 % (Consolas is considered better but is not free (?))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setmonofont[%
-    Path=fonts/mono/,
     % Inconsolata doesn't have italics font, so fake it. Discouraged but should
     % only occur in a few places in code and not be noticable there. Inconsolata
     % is too nice to give up on it for lack of italics. See also
     % https://tex.stackexchange.com/a/183220/120853
     AutoFakeSlant,
     Scale=MatchLowercase,% Prettier when using inline-code alongside our main font
-    UprightFont=*-medium,%
-    BoldFont=*-bold,%
     % Color=DodgerBlue3,% Toggle color for debugging (should be xcolor name)
 ]{inconsolata}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -329,14 +312,8 @@
 % Viable alternative: https://fonts.google.com/specimen/Fira+Sans
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \setsansfont[%
-    Path=fonts/sans/,
-    UprightFont=*_R_45b,%
-    BoldFont=*_B_45b,%
-    ItalicFont=*_I_45b,%
-    BoldItalicFont=*_BI_45b,%
-    SmallCapsFont=*_SC_45b,%
     % Color=Red3,% Toggle color for debugging (should be xcolor name)
-]{Fontin_Sans}%
+]{Merriweather Sans}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Source: https://ctan.org/texarchive/fonts/tex-gyre-math/opentype
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -352,7 +329,7 @@
     % e.g. in package chemformula
     NFSSFamily=tgpl,%
     % Color=Green4,% Toggle color for debugging (should be xcolor name)
-]{texgyrepagella-math}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
+]{TeX Gyre Pagella Math}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
 
 % Provide a new font family for siunitx to work.
 % See: https://tex.stackexchange.com/a/468031/120853.
@@ -364,12 +341,8 @@
     % might be hanging if that feature is turned on in the main font (OldStyle numbers).
     % To ensure these physical numbers are always upright, set Numbers:
     Numbers=Uppercase,
-    UprightFont=*-regular,%
-    BoldFont=*-bold,%
-    ItalicFont=*-italic,%
-    BoldItalicFont=*-bolditalic,%
     % Color=LightCyan4,% Toggle color for debugging (should be xcolor name)
-]{texgyrepagella}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
+]{TeX Gyre Pagella}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
 
 % Looking at CTAN, `fontawesome5' looks much more recent and packs many more symbols
 % in comparison to `fontawesome'.
