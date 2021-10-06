@@ -9,7 +9,7 @@ pages:
     # This is either a mapping of <name>.pdf to <allowed papersize>, or one value for
     # *all* PDFs, for example: `papersize: "a4"`.
     # Possible values: https://papersize.readthedocs.io/en/latest/#papersize.parse_papersize
-    cookbook: "a5"
+    cookbook: "a4"
     README: "a4"
 
 file:
