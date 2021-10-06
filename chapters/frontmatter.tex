@@ -8,21 +8,6 @@
 \maketitle% Print main title page
 \subimport{frontmatter/}{colophon}
 
-\makeatletter
-    % Switch titlepage style around
-    \ifdefstring{\cookbook@titlestyle}{book}{%
-        \renewcommand*{\cookbook@titlestyle}{thesis}%
-    }{%
-        \renewcommand*{\cookbook@titlestyle}{book}%
-    }
-    \subtitle{An alternative title page style}
-    %
-    % Run this file again, since it contains the \renewcommand definitions
-    \subimport{other/}{titlepage.tex}
-\makeatother
-
-\maketitle% Print alternative title page
-
 \frontmatter% In KOMAScript, resets pagenumber, uses Roman numerals etc.
 
 % Note that \subincludefrom{}{} cannot be nested, therefore us \subimport

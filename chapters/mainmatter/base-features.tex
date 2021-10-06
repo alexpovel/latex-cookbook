@@ -646,8 +646,7 @@ Refer to the package documentation for a list of all the available symbols.
 
 Closely related to the previous \lcnamecref{ch:fonts_text} are the language features.
 Currently, there are two supported languages: English and German.
-See for yourself in the file responsible for the translations,
-\verb|cookbook-translations.sty|.
+See for yourself in the file responsible for the translations, \verb|translations.tex|.
 It leverages the \verb|\providecaptionname{}| command from KOMA\-/Script.
 Given the name of that command, it is probably a misuse and not its purpose, but
 it worked better than its alternatives.
@@ -658,7 +657,7 @@ Note that \ctanpackage{polyglossia} requires the language to be passed to its
 \verb|\setdefaultlanguage{}| command.
 It will normally not work by just specifying a global document language.
 However, you can pass a global language to the \verb|language=| keyword in the
-options to \verb|\documentclass{cookbook}|, and it will be picked up correctly.
+options to \verb|\documentclass{acp}|, and it will be picked up correctly.
 
 The chosen language option will also be forwarded to various other packages, like
 \ctanpackage{enquote} for quotations and \ctanpackage{siunitx} for localization of
