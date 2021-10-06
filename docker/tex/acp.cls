@@ -73,9 +73,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Translations for somewhat automatic internationalization
-\input{lib/translations.tex}
-
 \RequirePackage{scrhack}% Fixes for packages incompatible with KOMA features
 
 \RequirePackage{import}% Relative path imports
@@ -83,6 +80,202 @@
 \RequirePackage[super]{nth}% For ordinal numbers, like \nth{1} -> 1^{st}
 
 \RequirePackage{etoolbox}% Programming facilities
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Translations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Providing localization that are not automatically covered by polyglossia.
+% The commands are provided by KOMAscript.
+% Maintaining the list is not the easiest, but currently likely the best approach.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colophon
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransCompiledOn}{Compiled on}
+\providecaptionname{german}{\TransCompiledOn}{Kompiliert am}
+
+\providecaptionname{english}{\TransLatexClass}{Class}
+\providecaptionname{german}{\TransLatexClass}{Klasse}
+
+\providecaptionname{english}{\TransGenerator}{Generator}
+\providecaptionname{german}{\TransGenerator}{Generiert durch}
+
+\providecaptionname{english}{\TransCensorNotice}{CENSORED VERSION}
+\providecaptionname{german}{\TransCensorNotice}{ZENSIERTE VERSION}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Task
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransPlaceDate}{Place \& Date}
+\providecaptionname{german}{\TransPlaceDate}{Ort \& Datum}
+
+\providecaptionname{english}{\TransTopic}{Topic}
+\providecaptionname{german}{\TransTopic}{Thema}
+
+\providecaptionname{english}{\TransTask}{Task}
+\providecaptionname{german}{\TransTask}{Problemstellung}
+
+\providecaptionname{english}{\TransFor}{For}
+\providecaptionname{german}{\TransFor}{Für}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Declaration of Authorship
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransAuthorshipDeclTitle}{Declaration of Authorship}
+\providecaptionname{german}{\TransAuthorshipDeclTitle}{Erklärung zur Eigenständigkeit}
+
+%
+% No warranty these wordings are valid in your case!
+%
+\providecaptionname{english}{\TransAuthorshipDeclText}{%
+    I, \@author{}, hereby declare to be the sole, independent author of the
+    \@documenttype{} submitted here.
+    No other than the cited references have been used.
+    Any content directly or indirectly obtained from external sources has been marked up as such.
+    This thesis has neither been submitted to a second examination authority nor been published.%
+}%
+
+\providecaptionname{german}{\TransAuthorshipDeclText}{%
+    Hiermit bestätige ich, \@author{}, der alleinige und selbstständige Autor der hier
+    vorgelegten \@documenttype{} zu sein.
+    Keine anderen als die angegebenen Quellen wurden benutzt.
+    Jeglicher aus externen Quellen direkt oder indirekt bezogene Inhalt ist als solcher markiert.
+    Diese Arbeit wurde weder einer anderen Prüfungsbehörde vorgelegt noch veröffentlicht.
+}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cleveref
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransReaction}{Reaction}
+\providecaptionname{german}{\TransReaction}{Reaktion}
+\providecaptionname{english}{\TransReactions}{Reactions}
+\providecaptionname{german}{\TransReactions}{Reaktionen}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Glossary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransGreek}{Greek}
+\providecaptionname{german}{\TransGreek}{Griech.}
+
+\providecaptionname{english}{\TransRoman}{Roman}
+\providecaptionname{german}{\TransRoman}{Röm.}
+
+\providecaptionname{english}{\TransOther}{Other}
+\providecaptionname{german}{\TransOther}{Andere}
+
+\providecaptionname{english}{\TransTerms}{Terms}
+\providecaptionname{german}{\TransTerms}{Begriffe}
+
+\providecaptionname{english}{\TransNames}{Names}
+\providecaptionname{german}{\TransNames}{Namen}
+
+\providecaptionname{english}{\TransAcronyms}{Acronyms}
+\providecaptionname{german}{\TransAcronyms}{Akronyme}
+
+\providecaptionname{english}{\TransSubscripts}{Subscripts}
+\providecaptionname{german}{\TransSubscripts}{Indizes}
+
+\providecaptionname{english}{\TransSuperscripts}{Superscripts}
+\providecaptionname{german}{\TransSuperscripts}{Hochgest.}
+
+\providecaptionname{english}{\TransSubSuperTitle}{Sub- and Superscripts}
+\providecaptionname{german}{\TransSubSuperTitle}{Indizes}
+
+\providecaptionname{english}{\TransUnit}{Unit}
+\providecaptionname{german}{\TransUnit}{Einheit}
+
+\providecaptionname{english}{\TransPhysicalQuantity}{Phys.\ Qtt.}
+\providecaptionname{german}{\TransPhysicalUnit}{Phys.\ Größe}
+
+\providecaptionname{english}{\TransFirstUse}{\nth{1} Use}
+\providecaptionname{german}{\TransFirstUse}{Einführ.}
+
+\providecaptionname{english}{\TransShort}{Short}
+\providecaptionname{german}{\TransShort}{Kurz}
+
+\providecaptionname{english}{\TransContinued}{continued}
+\providecaptionname{german}{\TransContinued}{fortgesetzt}
+
+\providecaptionname{english}{\TransGlossaryLegend}{
+    Marked (\specificsymbolmark) symbols possess a mass\-/specific variant in which
+    the symbol is written in lowercase and the unit is extended by
+    \si[per-mode=reciprocal]{\per\kilogram}.
+    Alternative symbols are specified following the \alternativesymbolmark{} mark.
+    International symbols are specified in brackets.%
+}
+\providecaptionname{german}{\TransGlossaryLegend}{
+    Markierte (\specificsymbolmark) Symbole besitzen eine massenspezifische Variante,
+    bei der das Symbol als Kleinbuchstabe gesetzt und die Einheit entsprechend um
+    \si[per-mode=reciprocal]{\per\kilogram} erweitert wird.
+    Alternative Symbole sind nach \alternativesymbolmark{} angegeben,
+    internationale Symbole in eckigen Klammern.%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SCRLayer
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransBlankPage}{Rest of this page intentionally left blank.}
+\providecaptionname{german}{\TransBlankPage}{Rest der Seite absichtlich freigelassen.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lists of ...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransIllustrativeElements}{Illustrative Elements}
+\providecaptionname{german}{\TransIllustrativeElements}{Veranschaulichende Elemente}
+
+\providecaptionname{english}{\TransListOfIllustrations}{List of Illustrations}
+\providecaptionname{german}{\TransListOfIllustrations}{Illustrationsverzeichnis}
+
+\providecaptionname{english}{\TransListing}{Code Listing}
+\providecaptionname{english}{\TransListings}{Code Listings}% Plural for cleveref
+
+\providecaptionname{german}{\TransListing}{Code}
+\providecaptionname{german}{\TransListings}{Codes}% Plural for cleveref
+
+\providecaptionname{english}{\TransListOfListings}{List of Code}
+\providecaptionname{german}{\TransListOfListings}{Codeverzeichnis}
+
+\providecaptionname{english}{\TransListOfExamples}{List of Examples}
+\providecaptionname{german}{\TransListOfExamples}{Beispielverzeichnis}
+
+\providecaptionname{english}{\TransExample}{Example}
+\providecaptionname{german}{\TransExample}{Beispiel}
+\providecaptionname{english}{\TransExamples}{Examples}
+\providecaptionname{german}{\TransExamples}{Beispiele}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransFurtherReadingTitle}{Further Reading}
+\providecaptionname{german}{\TransFurtherReadingTitle}{Weitere Literatur}
+
+\providecaptionname{english}{\TransFurtherReadingText}{%
+    The following references were used in this work but not cited in the text body;
+    they are provided here as\-/is.
+}
+\providecaptionname{german}{\TransFurtherReadingText}{%
+    Die folgenden Quellen wurden im Rahmen dieser Arbeit benutzt, jedoch nicht
+    explizit zitiert.
+    Sie sind hier der Vollständigkeit halber aufgeführt.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Other
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\providecaptionname{english}{\TransConstant}{const}
+\providecaptionname{german}{\TransConstant}{konst}
+
+\providecaptionname{english}{\TransAdaptedFrom}{Adapted from}
+\providecaptionname{german}{\TransAdaptedFrom}{Adaptiert von}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tweaks and improvements for amsmath; also loads amsmath.
@@ -388,11 +581,77 @@
 
 % Generate some control sequences which contain metadata, which can be inserted e.g.
 % into the PDF metadata (e.g. to have the exact git commit SHA of a build).
-% Do not use Lua code in `\directlua`, way too annoying with all the escaping (see:
-% https://www.overleaf.com/learn/latex/Articles/An_Introduction_to_LuaTeX_(Part_2):_Understanding_%5Cdirectlua
-% ). Just execute an outside, proper file.
+% See % https://www.overleaf.com/learn/latex/Articles/An_Introduction_to_LuaTeX_(Part_2):_Understanding_%5Cdirectlua
+% for how to inline Lua code in TeX.
+% It's an absolute abomination; the below code first passes through TeX, gets expanded,
+% then gets processed by Lua.
+% Hence, there is a lot of escaping going on.
 \directlua{%
-    dofile("lib/lua/envvar_newcommands.lua")
+    local function get_cmd_stdout(cmd)
+        % -- See: https://stackoverflow.com/a/326715/11477374
+        local fh = assert(io.popen(cmd))
+        local first_line = assert(fh:read())
+        fh:close()
+        return first_line
+    end
+%
+    % -- Environment variables as used e.g. in GitLab CI.
+    % -- Otherwise, e.g. when developing locally, use commands as a fallback.
+    local macro_content_sources = {
+        GitRefName = {
+            env = "CI_COMMIT_REF_NAME",
+            cmd = "git rev-parse --abbrev-ref HEAD",
+        },
+        GitShortSHA = {
+            env = "CI_COMMIT_SHORT_SHA",
+            cmd = "git rev-parse --short HEAD",
+        },
+    }
+%
+    for macro_name, content_sources in pairs(macro_content_sources) do
+        % -- Default: check for environment variable:
+        local env = content_sources.env
+        local cmd = content_sources.cmd
+        % -- Default value:
+        local content = "n.a."
+        local env_content = os.getenv(env)
+%
+        % -- Empty string evaluates to true:
+        if env_content and env_content \noexpand~= "" then
+            texio.write_nl("Found and will be using environment variable '"..env.."'.")
+            content = env_content
+        else
+            texio.write_nl("Environment variable '"..env.."' undefined or empty, trying fallback command.")
+            % -- luatex reference for shell escape:
+            % -- "0 means disabled, 1 means anything is permitted, and 2 is restricted"
+            if status.shell_escape == 1 then
+                local cmd_success, cmd_stdout = pcall(get_cmd_stdout, cmd)
+                if cmd_success then
+                    texio.write_nl("Fallback command '"..cmd.."' succeeded.")
+                    content = cmd_stdout
+                else
+                    texio.write_nl("Fallback command '"..cmd.."' unsuccessful.")
+                end
+            else
+                texio.write_nl("shell-escape is disabled, cannot use fallback command.")
+            end
+        end
+%
+        % -- Shouldn't happen, would be programmer error, therefore assert Python-style
+        assert(content, "Content not defined (neither success nor fallback present)")
+%
+        % --[[
+        %     The `content` can contain unprintable characters, like underscores in git branch
+        %     names. Towards this end, use detokenize in the macro itself, which will make all
+        %     characters printable (assigns category code 12). See also:
+        %     https://www.overleaf.com/learn/latex/Articles/An_Introduction_to_LuaTeX_(Part_2):_Understanding_%5Cdirectlua
+        % --]]
+        local escaped_content = "\unexpanded{\\detokenize{"..content.."}"}
+%
+        texio.write_nl("Providing new macro '"..macro_name.."' with contents: '"..escaped_content.."'.")
+        % --  Set a macro (newcommand) see also: https://tex.stackexchange.com/a/450892/120853
+        token.set_macro(macro_name, escaped_content)
+    end
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -437,8 +696,120 @@
 % and can later be set however often required (\setkomafont)
 \newkomafont{documenttype}{\usekomafont{subtitle}\footnotesize}
 
-% Get titlepage definition from an outside file
-\input{chapters/other/titlepage.tex}
+% Emulating a budget 'case' switch statement here
+
+% \ifstrequal from etoolbox doesn't work, it does not expand macros.
+% Use \ifdefstring from same package,
+% see also https://tex.stackexchange.com/a/451937/120853
+
+\ifdefstring{\acp@titlestyle}{thesis}{
+    % These exist already, overwrite:
+    \setkomafont{title}{\sffamily\bfseries\Huge}
+    \setkomafont{subtitle}{\normalfont\normalsize\sffamily}
+    \setkomafont{author}{\sffamily\bfseries}
+    \setkomafont{publishers}{\sffamily}
+%
+    % One same line as subtitle, so should look the same; inherit style:
+    \setkomafont{date}{\usekomafont{subtitle}}
+%
+    \setkomafont{documenttype}{\usekomafont{subtitle}\footnotesize}
+%
+    \renewcommand{\maketitle}{%
+        \begin{titlepage}
+            \hfill%
+            %
+            % 2nd optional argument is height, required for \vfill etc. to work
+            \begin{minipage}[b][1\textheight]{0.05\textwidth}%
+                \color{black}\rule{0.15em}{\textheight}% Vertical line
+                \hfill%
+            \end{minipage}% This comment char is important to suppress linebreak
+            %
+            \begin{minipage}[b][1\textheight]{0.75\textwidth}
+                \vspace{4\baselineskip}
+                {\usekomafont{documenttype}\faGraduationCap{}\ \@documenttype{}\hspace{0.5em}}
+                \hrulefill
+                \begin{spacing}{1.1}% In case of multi-line titles, more relaxed spacing
+                    \usekomafont{title}\raggedright\@title
+                \end{spacing}
+                \hrule
+                \vspace{0.8\baselineskip}
+                {%
+                    \usekomafont{author}%
+                    % Tabular enables \and and \\ syntax
+                    \begin{tabular}[t]{@{}l@{}}%
+                        \@author
+                    \end{tabular}
+                }%
+                \hfill
+                {\usekomafont{date}\@date}\par
+                \vfill
+                {\usekomafont{subtitle}\@subtitle}\par
+                \vspace{2\baselineskip}
+                {%
+                    \usekomafont{publishers}%
+                    \begin{tabular}[t]{@{}l@{}}%
+                        \@publishers
+                    \end{tabular}
+                }\par
+                \vspace{0.2ex}% Also required for \vfill as something to 'fill against'
+            \end{minipage}
+        \end{titlepage}
+    }%
+}{%
+    % Else: nothing; faking a 'case' environment
+}
+
+\ifdefstring{\acp@titlestyle}{book}{
+    % These exist already, overwrite:
+    \setkomafont{title}{\sffamily\bfseries\Huge}
+    \setkomafont{subtitle}{\itshape}
+    \setkomafont{author}{\scshape\Large}
+    \setkomafont{date}{\normalfont\normalsize\sffamily}
+    \setkomafont{publishers}{\scshape}
+%
+    % One same line as date, so should look the same; inherit style:
+    \setkomafont{documenttype}{\usekomafont{date}}
+%
+    \renewcommand{\maketitle}{%
+        \begin{titlepage}
+            \hfill%
+            %
+            % 2nd optional argument is height, required for \vfill etc. to work
+            \begin{minipage}[b][1\textheight]{0.05\textwidth}%
+                \color{black}\rule{0.15em}{\textheight}% Vertical line
+                \hfill%
+            \end{minipage}% This comment char is important to suppress linebreak
+            %
+            \begin{minipage}[b][1\textheight]{0.75\textwidth}
+                \vspace{2\baselineskip}
+                {\usekomafont{author}
+                    % Tabular enables \and and \\ syntax
+                    \begin{tabular}[t]{@{}l@{}}%
+                        \@author
+                    \end{tabular}
+                }\par
+                \vspace{1.5\baselineskip}
+                \begin{spacing}{1.1}% In case of multi-line titles, more relaxed spacing
+                    \usekomafont{title}\raggedright\@title
+                \end{spacing}
+                \hrule
+                \vspace{0.8\baselineskip}
+                {\usekomafont{documenttype}\@subtitle}
+                \hfill
+                {\usekomafont{date}\@date}\par
+                \vfill
+                {\usekomafont{publishers}
+                \begin{tabular}[t]{@{}l@{}}%
+                    \@publishers
+                    \end{tabular}
+                }\par
+                \vspace{0.2ex}% Also required for \vfill as something to 'fill against'
+            \end{minipage}
+        \end{titlepage}
+    }%
+}{
+    % Else: nothing; faking a 'case' environment
+}%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1158,7 +1529,10 @@
     \def\nodetext{#2}
 }
 
-\tikzset{%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Various thermodynamic/mechanical/technical shapes, usable in regular TikZ graphics.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tikzset{
     >=stealth',% Global arrow style
     symmetrycross/.style={%
         % Style for a center-cross to mark symmetry in technical drawings.
@@ -1567,9 +1941,585 @@
     level indicator/.default={0.25em}
 }
 
+\pgfdeclareshape{valve}{%
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough
+    \inheritanchorborder[from=rectangle]
+    \inheritanchor[from=rectangle]{north}
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{mid}
+    \inheritanchor[from=rectangle]{mid west}
+    \inheritanchor[from=rectangle]{mid east}
+    \inheritanchor[from=rectangle]{base}
+    \inheritanchor[from=rectangle]{base west}
+    \inheritanchor[from=rectangle]{base east}
+    \inheritanchor[from=rectangle]{south}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
 
-% PGF shape definitions for thermodynamic pictures, icons, ...
-\input{lib/thermo_pgf.tex}
+    \backgroundpath{%
+        % Store lower left in xa/ya and upper right in xb/yb
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        % Construct main path, basically 'two triangles touching'
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+            \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+            \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+            \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+        \pgfpathclose
+    }
+}
+
+\pgfdeclareshape{threeway valve}{
+    % This is asymetrical and stuff, so inheriting from the base valve is a bit hopeless, I don't know how to do it properly
+
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough
+    \inheritanchorborder[from=rectangle]
+
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{mid}
+    \inheritanchor[from=rectangle]{mid west}
+    \inheritanchor[from=rectangle]{mid east}
+    \inheritanchor[from=rectangle]{base}
+    \inheritanchor[from=rectangle]{base west}
+    \inheritanchor[from=rectangle]{base east}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
+
+    % These have shifted now, since the three-point valve middle is not the node center anymore:
+    \anchor{center}{
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xa + 0.5*0.75*(\pgf@xb - \pgf@xa)}
+        \pgfmathsetlength\pgf@y{\pgf@ya + 0.5*(\pgf@yb - \pgf@ya)}
+    }
+    \anchor{north}{
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \southwest \pgf@xa=\pgf@x
+        \pgfmathsetlength\pgf@x{\pgf@xa + 0.5*0.75*(\pgf@xb - \pgf@xa)}
+        \pgfmathsetlength\pgf@y{\pgf@yb}
+    }
+    \anchor{south}{
+        \northeast \pgf@xb=\pgf@x
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xa + 0.5*0.75*(\pgf@xb - \pgf@xa)}
+        \pgfmathsetlength\pgf@y{\pgf@ya}
+    }
+
+    % The triangles meeting at their middle, each with an aspect ratio of 0.75 (base) to 0.5 (height)
+    \backgroundpath{
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        \pgfpathmoveto{\southwest}
+        \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*(\pgf@xb - \pgf@xa)}{\pgf@yb}}
+        \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+        \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*0.5*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.5*(\pgf@yb - \pgf@ya)}}% Valve centerpoint
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+        \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*0.5*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.5*(\pgf@yb - \pgf@ya)}}% Valve centerpoint
+        \pgfpathlineto{\pgfpoint{\pgf@xa + 0.75*(\pgf@xb - \pgf@xa)}{\pgf@ya}}
+        \pgfpathclose
+    }
+}
+
+\pgfdeclareshape{fourway valve}{%
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough
+    \inheritanchorborder[from=rectangle]
+    \inheritanchor[from=rectangle]{north}
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{mid}
+    \inheritanchor[from=rectangle]{mid west}
+    \inheritanchor[from=rectangle]{mid east}
+    \inheritanchor[from=rectangle]{base}
+    \inheritanchor[from=rectangle]{base west}
+    \inheritanchor[from=rectangle]{base east}
+    \inheritanchor[from=rectangle]{south}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
+
+    \backgroundpath{%
+        % Store lower left in xa/ya and upper right in xb/yb
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        % This yields four triangles meeting in the middle, each with an aspect ratio of 0.6/1.
+        % Construct main path, basically 'two triangles touching'
+        \pgfpathmoveto{\pgfpoint{\pgf@xa + 0.2*(\pgf@xb - \pgf@xa)}{\pgf@ya}}
+            \pgfpathlineto{\pgfpoint{\pgf@xa + 0.8*(\pgf@xb - \pgf@xa)}{\pgf@yb}}
+            \pgfpathlineto{\pgfpoint{\pgf@xa + 0.2*(\pgf@xb - \pgf@xa)}{\pgf@yb}}
+            \pgfpathlineto{\pgfpoint{\pgf@xa + 0.8*(\pgf@xb - \pgf@xa)}{\pgf@ya}}
+        \pgfpathclose
+
+        % Do the same again in the horizontal direction:
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+            \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+            \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+            \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+        \pgfpathclose
+    }
+}
+
+\pgfdeclareshape{controlvalve}{
+    \inheritsavedanchors[from=valve]
+    \inheritanchorborder[from=valve]
+    \inheritanchor[from=valve]{north}
+    \inheritanchor[from=valve]{north west}
+    \inheritanchor[from=valve]{north east}
+    \inheritanchor[from=valve]{center}
+    \inheritanchor[from=valve]{west}
+    \inheritanchor[from=valve]{east}
+    \inheritanchor[from=valve]{mid}
+    \inheritanchor[from=valve]{mid west}
+    \inheritanchor[from=valve]{mid east}
+    \inheritanchor[from=valve]{base}
+    \inheritanchor[from=valve]{base west}
+    \inheritanchor[from=valve]{base east}
+    \inheritanchor[from=valve]{south}
+    \inheritanchor[from=valve]{south west}
+    \inheritanchor[from=valve]{south east}
+
+    \inheritbackgroundpath[from={valve}]
+
+    \beforebackgroundpath{%
+        % Store lower left in xa/ya and upper right in xb/yb
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        % Extension line to control wheel:
+        \pgfpathmoveto{\pgfpoint{(\pgf@xa + \pgf@xb)/2}{(\pgf@ya + \pgf@yb)/2}}
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{(\pgf@ya + \pgf@yb)/2}}
+
+        % The factors 0.3, 0.4 and 0.3 need to add up to 1 to give a symmetrical, nice semicircle.
+        % Factor 0.4 is divided by 2 to give the radius
+        \pgfpathmoveto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.3*(\pgf@yb - \pgf@ya)}}
+        \pgfpatharc{-90}{90}{0.4/2*(\pgf@yb - \pgf@ya)}
+        \pgfpathclose
+        \pgfsetfillcolor{black}
+        \pgfusepath{fill, stroke}
+    }
+}
+
+\pgfdeclareshape{pump}{%
+    \inheritsavedanchors[from=circle]%
+    \inheritanchorborder[from=circle]
+    \inheritbackgroundpath[from={circle}]
+    \inheritanchor[from=circle]{center}
+    \inheritanchor[from=circle]{north}
+    \inheritanchor[from=circle]{south}
+    \inheritanchor[from=circle]{west}
+    \inheritanchor[from=circle]{east}
+
+    \beforebackgroundpath{
+        % The simple-most approach:
+        \pgfpathmoveto{\pgf@anchor@pump@west}
+            \pgfpathlineto{\pgf@anchor@pump@north}
+            \pgfpathlineto{\pgf@anchor@pump@east}
+        \pgfusepath{stroke}
+    }
+}
+
+\pgfdeclareshape{compressor}{%
+    \inheritsavedanchors[from=circle]%
+    \inheritanchorborder[from=circle]%
+    \inheritbackgroundpath[from={circle}]%
+    \inheritanchor[from=circle]{center}%
+    \inheritanchor[from=circle]{north}%
+    \inheritanchor[from=circle]{south}%
+    \inheritanchor[from=circle]{west}%
+    \inheritanchor[from=circle]{east}%
+
+    % Circle has savedanchor of 'centerpoint' and saveddim of 'radius', that's it
+
+    \beforebackgroundpath{
+        \centerpoint \pgf@yc=\pgf@y
+
+        % Pythagorean theorem is enough here.
+        % Assumption is that default compressor shape 'points to the right'.
+        % This is important to get coorect behaviour out of the 'sloped' node option!
+
+        % Idea (Example for top right point):
+        % 1. Go to center point.
+        % 2. On y-axis, move a fraction of the radius up. This is the y-portion of our top-right coordinate point.
+        % 3. On x-axis, move as far right as Pythagorean theorem dictates (hypotenuse is the radius vector, other known length is the y-length we just specified)
+        % 4. Repeat process to draw and move accordingly; don't forget squares and sqrt() in correct places.
+
+        \pgfmathsetmacro{\upperyfraction}{0.3}% y-coordinate of the upper points is \upperyfraction*\radius to the sides of the centerpoint
+        \pgfmathsetmacro{\loweryfraction}{0.7}% y-coordinate of the lower points is \loweryfraction*\radius to the sides of the centerpoint
+
+        \foreach \signdirection in {1, -1}{% For left and right side
+            % Upper (always same x-dimension, only y switches sign):
+            \pgfpathmoveto{\pgfpoint{sqrt(\radius^2 - (\pgf@yc + \upperyfraction*\radius)^2)}{\pgf@yc + \signdirection*\upperyfraction*\radius}}
+            % Bottom (always same x-dimension, only y switches sign):
+            \pgfpathlineto{\pgfpoint{-1*sqrt(\radius^2 - (\pgf@yc - \loweryfraction*\radius)^2)}{\pgf@yc + \signdirection*\loweryfraction*\radius}}
+        }
+
+        \pgfusepath{stroke}
+    }
+}
+
+\pgfdeclareshape{heat exchanger}{
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+    \inheritanchorborder[from=rectangle]
+    % Doesn't hurt to also inherit specific anchors:
+    \inheritanchor[from=rectangle]{north}
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{mid}
+    \inheritanchor[from=rectangle]{mid west}
+    \inheritanchor[from=rectangle]{mid east}
+    \inheritanchor[from=rectangle]{base}
+    \inheritanchor[from=rectangle]{base west}
+    \inheritanchor[from=rectangle]{base east}
+    \inheritanchor[from=rectangle]{south}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
+
+    \inheritbackgroundpath[from={rectangle}]
+
+    % Anchor to 'in' port of heat exchanger.
+    % This code does not get executed necessarily; we cannot use the \pgfsetmacros from below.
+    % A solution is probably \pgfkeys, but this will do for now.
+    % IT NEEDS MANUAL ADJUSTING IF THE SHAPE IS CHANGED.
+    \anchor{in}{%
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xa + (1 - 0.7)/2*(\pgf@xb - \pgf@xa)}
+        \pgfmathsetlength\pgf@y{\pgf@ya - 0.3*(\pgf@yb - \pgf@ya)}
+    }
+    \anchor{out}{%
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xb - (1 - 0.7)/2*(\pgf@xb - \pgf@xa)}
+        \pgfmathsetlength\pgf@y{\pgf@ya - 0.3*(\pgf@yb - \pgf@ya)}
+    }
+
+    \beforebackgroundpath{
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        \pgfmathsetmacro{\heatsymbolextension}{0.3}% How far out the 'legs' extend out of the rectangle as a fraction of the overall node's height
+        \pgfmathsetmacro{\heatsymbolwidth}{0.7}% The inner drawing's width as a fraction of the node's overall width
+        \pgfmathsetmacro{\heatsymbolheight}{0.8}% How high the inner drawing reaches as a fraction of the node's overall height (at 1, it touches the upper rectangle border)
+        \pgfmathsetmacro{\heatsymbolindentation}{0.3}% How 'indented' the triangle is, i.e. the vertical distance between the inner drawings highest point and the triangle's down-pointing 'tip'
+
+        \pgfpathmoveto{\pgfpoint{\pgf@xa + (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya - \heatsymbolextension*(\pgf@yb - \pgf@ya)}}% Bottom left corner
+        \pgfpathlineto{\pgfpoint{\pgf@xa + (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \heatsymbolheight*(\pgf@yb - \pgf@ya)}}% Straight line up
+        \pgfpathlineto{\pgfpoint{\pgf@xa + 0.5*(\pgf@xb - \pgf@xa)}{\pgf@ya + (\heatsymbolheight - \heatsymbolindentation)*(\pgf@yb - \pgf@ya)}}% Line down, to the right; x-coordinate is the middle of the node
+        \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \heatsymbolheight*(\pgf@yb - \pgf@ya)}}% Line up, to the right
+        \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \heatsymbolwidth)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya - \heatsymbolextension*(\pgf@yb - \pgf@ya)}}% Line straight down
+        \pgfusepath{stroke}
+    }
+}
+
+\pgfdeclareshape{simple heat exchanger}{% Just a cross-out rectangle
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+    \inheritanchorborder[from=rectangle]
+    % Doesn't hurt to also inherit specific anchors:
+    \inheritanchor[from=rectangle]{north}
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{mid}
+    \inheritanchor[from=rectangle]{mid west}
+    \inheritanchor[from=rectangle]{mid east}
+    \inheritanchor[from=rectangle]{base}
+    \inheritanchor[from=rectangle]{base west}
+    \inheritanchor[from=rectangle]{base east}
+    \inheritanchor[from=rectangle]{south}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
+
+    \inheritbackgroundpath[from={rectangle}]
+
+    \beforebackgroundpath{
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Top left corner
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}% Bottom right corner
+        \pgfusepath{stroke}
+    }
+}
+
+\pgfkeys{/pgf/.cd,
+    radiator offset x/.initial=0.3em,
+    radiator offset y/.initial=0.3em
+}
+\pgfdeclareshape{radiator}{%
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+    \inheritanchorborder[from=rectangle]
+    % Doesn't hurt to also inherit specific anchors:
+    \inheritanchor[from=rectangle]{north}
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{mid}
+    \inheritanchor[from=rectangle]{mid west}
+    \inheritanchor[from=rectangle]{mid east}
+    \inheritanchor[from=rectangle]{base}
+    \inheritanchor[from=rectangle]{base west}
+    \inheritanchor[from=rectangle]{base east}
+    \inheritanchor[from=rectangle]{south}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
+
+    \saveddimen{\xoffset}{% https://tex.stackexchange.com/a/181283/120853
+        \pgfmathsetlength\pgf@x{\pgfkeysvalueof{/pgf/radiator offset x}}
+    }
+    \saveddimen{\yoffset}{
+        \pgfmathsetlength\pgf@y{\pgfkeysvalueof{/pgf/radiator offset y}}
+    }
+
+    % In the middle of the right surface:
+    \anchor{right}{%
+        \southwest \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xb + \xoffset/2}
+        \pgfmathsetlength\pgf@y{(\pgf@ya + \pgf@yb)/2 + \yoffset/2}
+    }
+    % In the middle of the top surface:
+    \anchor{top}{%
+        \southwest \pgf@xa=\pgf@x
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \pgfmathsetlength\pgf@x{(\pgf@xa + \pgf@xb)/2 + \xoffset/2}
+        \pgfmathsetlength\pgf@y{\pgf@yb + \yoffset/2}
+    }
+    % Exit at the thermostat:
+    \anchor{exit}{%
+        \southwest \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xb + \xoffset/2}
+        \pgfmathsetlength\pgf@y{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya) + \yoffset/2}
+    }
+    % Lower exit on the right side, below the thermostat:
+    \anchor{lower exit}{%
+        \southwest \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xb + \xoffset/2}
+        \pgfmathsetlength\pgf@y{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya) + \yoffset/2}
+    }
+    % Entry in the bottom left somewhere:
+    \anchor{lower entry}{%
+    \northeast \pgf@yb=\pgf@y
+    \southwest \pgf@ya=\pgf@y% x is now given implicitly
+    \pgfmathsetlength\pgf@y{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}
+    }
+
+    % Alternative entry in the top left somewhere:
+    \anchor{upper entry}{%
+        \northeast \pgf@yb=\pgf@y
+        \southwest \pgf@ya=\pgf@y% x is now given implicitly
+        \pgfmathsetlength\pgf@y{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}
+    }
+
+    % Front surface is inherited from rectangle:
+    \inheritbackgroundpath[from={rectangle}]
+
+    % Background is inherited already, so add behind background path:
+    \behindbackgroundpath{%
+        % Store lower left in xa/ya and upper right in xb/yb
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        % Top surface:
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Top left
+        \pgfpathlineto{\pgfpointadd{\pgfpoint{\pgf@xa}{\pgf@yb}}{\pgfqpoint{\xoffset}{\yoffset}}}% Top left plus offset vector
+        \pgfpathlineto{\pgfpointadd{\northeast}{\pgfqpoint{\xoffset}{\yoffset}}}% Top right (northeast) plus offset vector
+        \pgfpathlineto{\northeast}
+        \pgfpathclose
+
+        % Access current fillcolor as specified by user
+        % Make sides darker than current fill color for some 3D effect
+        \colorlet{currentfill}{\tikz@fillcolor}
+        \pgfsetfillcolor{currentfill!90!black}
+        \pgfusepath{fill, stroke}
+
+        % Right surface:
+        \pgfpathmoveto{\northeast}
+        \pgfpathlineto{\pgfpointadd{\northeast}{\pgfqpoint{\xoffset}{\yoffset}}}% Top right corner plus offset vector
+        \pgfpathlineto{\pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@ya}}{\pgfqpoint{\xoffset}{\yoffset}}}% Bottom right corner plus offset vector
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}% Bottom right corner
+        \pgfpathclose
+        \pgfsetfillcolor{currentfill!80!black}% Even darker than top surface
+        \pgfusepath{fill, stroke}
+
+        % Draw an ellipse to fake a thermostat or pipe exit.
+        % Position it at 0.8 / 80% height
+        % Ellipse axes are confusing and I did not do it properly fully
+        \pgfpathellipse{\pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}{\pgfpointscale{0.5}{\pgfqpoint{\xoffset}{\yoffset}}}}{\pgfpoint{0.2*\xoffset}{0.2*\yoffset}}{\pgfpoint{0pt}{1pt}}
+        \pgfsetfillcolor{black}
+        \pgfusepath{fill}
+    }
+    % Background is already the inherited rectangle. Draw on top of it with beforebackgroundpath
+    \beforebackgroundpath{
+        % Store lower left in xa/ya and upper right in xb/yb
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        % Draw vertical lines on top of front surface:
+        \foreach \posfraction in {0.2, 0.4, ..., 0.8}{
+            \pgfpathmoveto{\pgfpoint{\pgf@xa + \posfraction*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
+            \pgfpathlineto{\pgfpoint{\pgf@xa + \posfraction*(\pgf@xb - \pgf@xa)}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
+            \pgfusepath{stroke}
+        }
+    }
+}
+
+\pgfdeclareshape{vented radiator}{
+    \inheritsavedanchors[from=radiator]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+    \inheritanchorborder[from=radiator]
+    % Doesn't hurt to also inherit specific anchors:
+    \inheritanchor[from=radiator]{north}
+    \inheritanchor[from=radiator]{north west}
+    \inheritanchor[from=radiator]{north east}
+    \inheritanchor[from=radiator]{center}
+    \inheritanchor[from=radiator]{west}
+    \inheritanchor[from=radiator]{east}
+    \inheritanchor[from=radiator]{mid}
+    \inheritanchor[from=radiator]{mid west}
+    \inheritanchor[from=radiator]{mid east}
+    \inheritanchor[from=radiator]{base}
+    \inheritanchor[from=radiator]{base west}
+    \inheritanchor[from=radiator]{base east}
+    \inheritanchor[from=radiator]{south}
+    \inheritanchor[from=radiator]{south west}
+    \inheritanchor[from=radiator]{south east}
+
+    % Inherit our special nodes:
+    \inheritanchor[from=radiator]{right}
+    \inheritanchor[from=radiator]{top}
+    \inheritanchor[from=radiator]{exit}
+    \inheritanchor[from=radiator]{lower entry}
+    \inheritanchor[from=radiator]{upper entry}
+
+    % Inherit all stuff from base radiator:
+    \inheritbackgroundpath[from={radiator}]
+    \inheritbehindbackgroundpath[from={radiator}]
+    \inheritbeforebackgroundpath[from={radiator}]
+
+    % Anchor for the ventilation point.
+    % I tried with \savedanchor, but it didn't work so we have to repeat the calculations for the ventilation device
+    \anchor{ventilation}{%
+        \southwest \pgf@xa=\pgf@x
+        \northeast \pgf@yb=\pgf@y
+        \pgfmathsetlength\pgf@x{\pgf@xa - 3pt}
+        \pgfmathsetlength\pgf@y{\pgf@yb - 3pt}
+    }
+
+    \behindforegroundpath{
+        \southwest \pgf@xa=\pgf@x
+        \northeast \pgf@yb=\pgf@y
+
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Top left corner
+        \pgfpatharc{90}{270}{3pt}% Arc from top-top left corner down with specified radius in last argument
+        \pgfsetfillcolor{black}
+        \pgfusepath{fill}
+    }
+}
+
+\pgfdeclareshape{sensor}{
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+    \inheritanchorborder[from=rectangle]
+    % Doesn't hurt to also inherit specific anchors:
+    \inheritanchor[from=rectangle]{north}
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{south}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
+
+    \backgroundpath{
+        % Store lower left in xa/ya and upper right in xb/yb
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        \pgfpathmoveto{\pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@yb}}% Upper middle
+        \pgfpathlineto{\pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@ya + 0.3*(\pgf@yb - \pgf@ya)}}% Down the middle, to 1/4 of the node height
+
+        % These are percentages of the node height.
+        % At each percentage/fraction of the height, draw a centered line with a width of a certain percentage (fractionlength) of the overall node width
+        \foreach \fractionheight/\fractionlength in {
+            0.3/1,%
+            0.15/0.75,%
+            0/0.5%
+        }{
+            % One horizontal line on this height:
+            \pgfpathmoveto{\pgfpoint{\pgf@xa + (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+            \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+        }
+    }
+}
+
+\pgfdeclareshape{levelindicator}{
+    \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough. Rectangle has to 'saved anchors': southwest and northeast
+    \inheritanchorborder[from=rectangle]
+    % Doesn't hurt to also inherit specific anchors:
+    \inheritanchor[from=rectangle]{north}
+    \inheritanchor[from=rectangle]{north west}
+    \inheritanchor[from=rectangle]{north east}
+    % \inheritanchor[from=rectangle]{center}
+    \inheritanchor[from=rectangle]{west}
+    \inheritanchor[from=rectangle]{east}
+    \inheritanchor[from=rectangle]{south}
+    \inheritanchor[from=rectangle]{south west}
+    \inheritanchor[from=rectangle]{south east}
+
+    % When no other anchor is specified, nodes are placed by their 'center' anchor.
+    % Change it here to be the lower pointy triangle bit, as opposed to the rectangle center.
+    % That way, the triangle always points onto the fluid surface if placed as a node on a drawn line representing this surface
+    \anchor{center}{%
+        \southwest \pgf@xa=\pgf@x
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+        % Lower pointy bit of triangle, as below:
+        \pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@yb - sqrt(3)*((\pgf@xb - \pgf@xa)/2)}
+    }
+
+    \backgroundpath{
+        % Store lower left in xa/ya and upper right in xb/yb
+        \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+        \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}% Upper left corner
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}% Upper right corner
+        \pgfpathlineto{\pgfpoint{\pgf@xa + (\pgf@xb - \pgf@xa)/2}{\pgf@yb - sqrt(3)*((\pgf@xb - \pgf@xa)/2)}}% Forming an equilateral triangle
+        \pgfpathclose
+
+        % These are percentages of the node height.
+        % At each percentage/fraction of the height, draw a centered line with a width of a certain percentage (fractionlength) of the overall node width
+        \foreach \fractionheight/\fractionlength in {
+            0.3/1,%
+            0.15/0.75,%
+            0/0.5%
+        }{
+            % One horizontal line on this height:
+            \pgfpathmoveto{\pgfpoint{\pgf@xa + (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+            \pgfpathlineto{\pgfpoint{\pgf@xb - (1 - \fractionlength)/2*(\pgf@xb - \pgf@xa)}{\pgf@ya + \fractionheight*(\pgf@yb - \pgf@ya)}}
+        }
+    }
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,5 +1,414 @@
 % This file includes various thermodynamic shapes, usable in regular TikZ graphics.
 
+
+\tikzset{
+    symmetrycross/.style={%
+        % Style for a center-cross to mark symmetry in technical drawings.
+        % Styles have one argument per default. Use it for size,
+        % but also provide a default
+        draw,
+        cross out,% From shapes library
+        thin,
+        dashdotted,
+        rotate=45,
+        minimum size=#1,% This is an argument
+    },
+    symmetrycross/.default={2em},
+    pipecrosssection/.style={
+        circle,
+        minimum size=#1,
+        draw=black!90!red,
+        ultra thick,% Simulate thick pipe around it
+        fill=MediumFluid
+    },
+    pipecrosssection/.default={0.5em},
+    arrowlabel/.style={ % Style for labels along arrows
+        pos=#1,
+        text=black,% Overwrite in case encapsulating draw command is white etc.
+        draw=none,% Do not draw border
+        fill=white,
+        inner sep=1.5pt,
+        rounded corners,
+    },
+    arrowlabel/.default={0.5}, % Default for position: middle
+    wall/.style={ % For all walls, e.g. in crosssections of pipes, ...
+        draw,
+        thick,
+        fill=#1,
+        line join=round,
+        rounded corners=0.5,
+    },
+    wall/.default={g5},
+    fluid/.style={ % For all fluids
+        fill=#1,
+    },
+    fluid/.default={MediumFluid},
+    flowarrow/.style 2 args={% A style for squiggly arrows, for flows:
+        ->,
+        line join=round,
+        thick,
+        dashed,
+        decorate,
+        decoration={
+            snake, % alternatives: snake, zigzag
+            segment length=#1,
+            amplitude=#2,
+            % Stop with decoration at start and end by the given length and just draw
+            % a line:
+            pre=lineto,
+            post=lineto,
+            pre length=1em,
+            post length=1em
+        },
+    },
+    annotationarrow/.style={%
+        % A style intended to point a line with a thick black dot at its end onto
+        % elements to give further explanations.
+        % Since we shorten the line START, any line using this style should originate
+        % from the place where the shortening is supposed to take place.
+        % Further explanation here:
+        % https://tex.stackexchange.com/a/115268/120853
+        % Simply call -* (or any other similar command) after annoationarrow if the
+        % direction should be inverted.
+        *-,
+        shorten <=-(1.8pt + 1.4\pgflinewidth),%
+    },
+    flowarrow/.default={3em}{2em},% {<INVERSE FREQUENCY>}{<AMPLITUDE>}
+    origindot/.style={ % A simple small dot for coordinate starts/origins
+        circle,
+        fill=#1,
+        inner sep=0pt,
+        minimum width=0.4em
+    },
+    origindot/.default={black},
+    add node at x/.style 2 args={% https://tex.stackexchange.com/a/93968/120853
+        % Add node on a plot by just specifying its x-position.
+        % The corresponding y/value is computed automatically!
+        name path global=plot line,
+        /pgfplots/execute at end plot visualization/.append={
+                \begingroup
+                \@ifnextchar[{\parsenode}{\parsenode[]}#2\pgf@nil
+            \path [name path global=position line #1-1]
+                ({axis cs:#1,0}|-{rel axis cs:0,0}) --
+                ({axis cs:#1,0}|-{rel axis cs:0,1});
+            \path [xshift=1pt, name path global=position line #1-2]
+                ({axis cs:#1,0}|-{rel axis cs:0,0}) --
+                ({axis cs:#1,0}|-{rel axis cs:0,1});
+            \path [
+                name intersections={
+                    of={plot line and position line #1-1},
+                    name=left intersection
+                },
+                name intersections={
+                    of={plot line and position line #1-2},
+                    name=right intersection
+                },
+                label node/.append style={pos=1}
+            ] (left intersection-1) -- (right intersection-1)
+            node [label node]{\nodetext};
+            \endgroup
+        }
+    },
+    shorten <>/.style={% Allow shortening of both ends simultaneously
+        shorten >=#1,
+        shorten <=#1,
+    },
+    circlednum/.style={% Used for a custom circled number command
+        shape=circle,
+        draw,
+        inner sep=2pt,
+        fill=white
+    }%,
+    % A reusable little 'pic' for a common radiator.
+    % Further down, we also declare a 'shape' for a radiator. A 'shape' is a node shape with anchors etc. and intended to be used to connect nodes together, like in a circuit diagram.
+    % A 'pic' is really just a reusable picture that can be put anywhere, but it (by the package author) not intended to be connected etc.
+    % This pic is prettier than the shape below. The pic should be used for large radiator images where more detail is desired.
+    radiator/.pic={
+        \tikzset{%
+            every path/.style={
+                    draw,
+                    thick,
+                    line join=round,
+                    line cap=round,% End of lines
+                    fill=g5,
+                    pic actions,% Whatever is used in \pic[<drawing options>], e.g. dashed, is propagated to this drawing
+                },
+        }
+        % Base measurements. Default unit is centimeter
+        \pgfmathsetmacro{\radiatorheight}{2}
+        \pgfmathsetmacro{\radiatorwidth}{3}
+        \pgfmathsetmacro{\radiatordepth}{0.5}
+
+        % Right surface:
+        \begin{scope}[canvas is yz plane at x=\radiatorwidth]
+            \draw[fill=g4] (0,0) rectangle (\radiatorheight,\radiatordepth);
+
+            % Fake the thermostat a bit:
+            \draw[fill=g3] (0.8*\radiatorheight,0.5*\radiatordepth) circle (0.2*\radiatordepth);
+
+            % Generate some coordinates in analogy to regular tikz naming convetions:
+            \foreach \yfrac/\zfrac/\coordname in {%
+                    0.5/0.5/center,%
+                    0/0.5/south,%
+                    1/0.5/north,%
+                    0.5/0/east,
+                    0.5/1/west,
+                    0/0/south east,%
+                    0/1/south west,%
+                    1/1/north east,%
+                    1/0/north west,%
+                    0.8/0.5/thermostat%
+                }{
+                    \coordinate (-right \coordname) at (\yfrac*\radiatorheight,\zfrac*\radiatordepth);
+                }
+        \end{scope}
+
+        % Top surface:
+        \begin{scope}[canvas is xz plane at y=\radiatorheight]
+            \draw (0,0) rectangle (\radiatorwidth,\radiatordepth);
+
+            % "Hollow space" inside the radiator:
+            \draw[fill=g2, rounded corners=0.75] (0.05*\radiatorwidth,0.3*\radiatordepth) rectangle (0.95*\radiatorwidth,0.7*\radiatordepth);
+
+            % Generate some coordinates in analogy to regular tikz naming convetions:
+            \foreach \xfrac/\zfrac/\coordname in {%
+                    0.5/0.5/center,%
+                    0.5/1/south,%
+                    0.5/0/north,%
+                    1/0.5/east,
+                    0/0.5/west,
+                    1/1/south east,%
+                    0/1/south west,%
+                    1/0/north east,%
+                    0/0/north west%
+                }{
+                    \coordinate (-top \coordname) at (\xfrac*\radiatorwidth,\zfrac*\radiatordepth);
+                }
+        \end{scope}
+
+        % Front surface:
+        \begin{scope}[canvas is xy plane at z=\radiatordepth]
+            \draw (0,0) rectangle (\radiatorwidth,\radiatorheight);
+
+            \foreach \posfraction in {0.1, 0.2, ..., 0.9}
+                {%
+                    \draw[
+                        thick,
+                        preaction={draw, ultra thick, g3},
+                    ] (\posfraction*\radiatorwidth, 0.1*\radiatorheight) -- (\posfraction*\radiatorwidth, 0.9*\radiatorheight);
+                }
+            % Generate some coordinates in analogy to regular tikz naming convetions:
+            \foreach \xfrac/\yfrac/\coordname in {%
+                    0.5/0.5/center,%
+                    0.5/0/south,%
+                    0.5/1/north,%
+                    1/0.5/east,
+                    0/0.5/west,
+                    1/0/south east,%
+                    0/0/south west,%
+                    1/1/north east,%
+                    0/1/north west%
+                }{
+                    \coordinate (-front \coordname) at (\xfrac*\radiatorwidth,\yfrac*\radiatorheight);
+                }
+            \node at (-front center) {\ctrw{\tikzpictext}};% value of "pic text" key is stored in \tikzpictext macro
+        \end{scope}
+
+        % Coordinates for convenience:
+        \coordinate (-thermostat) at (-right thermostat);
+        \coordinate (-entry) at ($(-front north west)!0.2!(-front south west)$);
+        \coordinate (-exit) at ($(-right south)!0.2!(-right north)$);
+        \coordinate (-left center) at (-front west|--right center);% To have an exact opposite of the visible 'center right' position
+
+        % Debugging coordinate system:
+        % \draw[->] (0,0,0) -- (1,0,0) node[right] {\(x\)};
+        % \draw[->] (0,0,0) -- (0,1,0) node[left] {\(y\)};
+        % \draw[->] (0,0,0) -- (0,0,1) node[above] {\(z\)};
+    },
+    TUHHuman/.pic={% A human member of TUHH. Hilarious......
+        \pgfmathsetmacro{\roundingradius}{0.4}
+        \filldraw[pic actions] (0,0) circle (1);% Head
+        %
+        % Use arc over just specifying 'rounded corners', because rounded corners are absolute and aren't affected by 'scale'
+        \filldraw[pic actions]
+        (0,-1.2)% Below head
+        -- ++ (2.5-\roundingradius,0) arc (90:0:\roundingradius)% Right shoulder
+        -- ++ (0,{-(5 - 2*\roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(0.8 - 2*\roundingradius)},0) arc (270:180:\roundingradius) -- ++ (0,{4 - \roundingradius})% Right arm
+        -- ++ (-0.25,0)% Right arm pit
+        -- ++ (0,{-(8 - \roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(1 - 2*\roundingradius)},0) arc (270:180:\roundingradius) -- ++ (0,{4 - 2*\roundingradius}) arc (0:90:\roundingradius)% Right leg
+        -- ++ ({-(1 - 2*\roundingradius)},0)% Gap between legs
+        arc (90:180:\roundingradius) -- ++ (0,{-(4 - 2*\roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(1 - 2*\roundingradius)},0) arc (270:180:\roundingradius) -- ++ (0,{8 - \roundingradius})% Left leg
+        -- ++ (-0.25,0)% Left arm pit
+        -- ++ (0,{-(4 - \roundingradius)}) arc (0:-90:\roundingradius) -- ++ ({-(0.8 - 2*\roundingradius},0) arc (270:180:\roundingradius) -- ++ (0,{5 - 2*\roundingradius})% Left arm
+        arc (180:90:\roundingradius)-- cycle;% Left shoulder; cycle back to below head
+
+        \node[right, transform shape] at (-1.25,-2.5) {\ctrw{\textcolor[RGB]{45,198,214}{\textbf{\textsf{TUHH}}}}};% Chest emblem; transform shape allows node to be affected by 'scale' option
+        %
+        % \draw[help lines] (-3,-11) grid (3,1);% Debugging grid
+    },
+    boilercylinder/.style={
+        cylinder,% Shapes lib
+        draw,
+        thick,
+        shape border rotate=90,
+        aspect=0.3,% Flatten
+        cylinder uses custom fill,
+        % cylinder body fill=g5,% For regular filling, use these and comment out the colors at the bottom here
+        % cylinder end fill=g4,%
+        left color=HotFluid!70,
+        middle color=orange!20,
+        right color=g4,
+        shading angle=180,
+    },
+    % Still use a pic so we can flexible add stuff to all boilers later one, like a burner on the bottom left side:
+    boiler/.pic={
+        \node[
+            boilercylinder,
+            minimum width=4em,
+            minimum height=6em,
+            pic actions,% Whatever is used in \pic[<drawing options>], e.g. dashed, is propagated to this drawing
+        ] () {\ctrw{\tikzpictext}};% Empty coordinate is important for namespace stuff
+    },
+    equalizing tank/.style={
+        circle split,
+        draw,
+        solid,% In case surrounding context is dashed etc.
+        -,% As opposed to arrows etc.
+        fill=white,
+        double,
+        minimum width=#1,
+    },
+    equalizing tank/.default={1.5em},
+    pipe/.style={% (Water) pipes between devices. For a pipe without arrow line end, call it as e.g. \draw[pipe, -]
+        line width=#1,
+        double=MediumFluid,
+        double distance={1*#1},
+        -{Triangle Cap []. Fast Triangle[] Fast Triangle[] Fast Triangle[]},% dot represents line end
+        line join=round,
+    },
+    pipe/.default={1.5pt},
+    valve/.style={
+        shape=valve,
+        draw,
+        solid,% In case surrounding context is dashed etc.
+        -,% As opposed to arrows etc.
+        fill=white,
+        rounded corners=0.5,
+        rotate=90,% We probably need the horizontal version more often. Also, this way, \draw ... node[midway, valve, sloped] {}; works out of the box
+        minimum width=0.6*#1,% Fixed aspect ratio
+        minimum height=#1,
+    },
+    valve/.default={1em},
+    control valve/.style={% Same node style but different shape
+        valve,
+        % blue!10,
+        shape=controlvalve,
+    },
+    threeway valve/.style={
+        valve,
+        shape=threeway valve,
+        minimum width=0.85*#1,% Scale it a bit...
+        minimum height=#1,
+    },
+    threeway valve/.default={1em},
+    fourway valve/.style={
+        valve,
+        rotate=-90,% It's symmetrical, no need to rotate; undo inherited rotation
+        shape=fourway valve,
+        minimum width=#1,% Fixed aspect ratio, square
+        minimum height=#1,
+    },
+    fourway valve/.default={1em},
+    threeway control valve/.style={
+        threeway valve,
+        shape=threewaycontrolvalve,
+    },
+    radiator/.style={
+        shape=radiator,
+        draw,
+        fill=g6,
+        line join=round,
+        minimum width=#1,
+        minimum height=(2/3)*#1,% Fixed aspect ratio
+    },
+    radiator/.default={3em},
+    vented radiator/.style={
+        radiator,% Inherit from style
+        shape=vented radiator,% Different shape
+    },
+    pump/.style={
+        shape=pump,
+        draw,
+        solid,% In case surrounding context is dashed etc.
+        -,% As opposed to arrows etc.
+        fill=white,
+        line join=round,
+        minimum width=#1,
+        rounded corners=0.5,% Alter rounded corners in case surrounding style has them
+    },
+    pump/.default={1.5em},
+    compressor/.style={
+        shape=compressor,
+        draw,
+        solid,
+        -,
+        fill=white,
+        line join=round,
+        minimum size=#1,
+        sloped,% Because why not
+    },
+    compressor/.default={1.5em},
+    heat exchanger/.style={
+        shape=heat exchanger,
+        draw,
+        solid,
+        -,
+        fill=white,
+        line join=round,
+        rounded corners=0.5,
+        minimum width=#1,
+        minimum height=0.5*#1,% Fixed aspect ratio
+        sloped,% Because why not
+    },
+    heat exchanger/.default={1.5em},
+    simple heat exchanger/.style={
+        shape=simple heat exchanger,
+        draw,
+        solid,
+        -,
+        fill=white,
+        line join=round,
+        minimum width=#1,
+        minimum height=2/3*#1,% Fixed aspect ratio
+        sloped,% Because why not
+    },
+    simple heat exchanger/.default={1.5em},
+    sensor/.style={% A vertical stroke with with three horizontal lines of decreasing width underneath
+        shape=sensor,
+        draw,
+        solid,
+        -,
+        line join=round,
+        line cap=round,
+        minimum width=#1,
+        minimum height=2*#1
+    },
+    sensor/.default={0.5em},
+    level indicator/.style={% An upside-down triangle with three horizontal lines of decreasing width underneath
+        shape=levelindicator,
+        draw,
+        fill=white,
+        solid,
+        -,
+        line join=round,
+        line cap=round,
+        minimum width=#1,
+        minimum height=2*#1,
+        inner sep=1.5pt,
+    },
+    level indicator/.default={0.25em}
+}
+
 \pgfdeclareshape{valve}{%
     \inheritsavedanchors[from=rectangle]% Inherit from rectangle, should be good enough
     \inheritanchorborder[from=rectangle]
@@ -121,7 +530,7 @@
             \pgfpathlineto{\pgfpoint{\pgf@xa + 0.2*(\pgf@xb - \pgf@xa)}{\pgf@yb}}
             \pgfpathlineto{\pgfpoint{\pgf@xa + 0.8*(\pgf@xb - \pgf@xa)}{\pgf@ya}}
         \pgfpathclose
-    
+
         % Do the same again in the horizontal direction:
         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya + 0.2*(\pgf@yb - \pgf@ya)}}
             \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya + 0.8*(\pgf@yb - \pgf@ya)}}
@@ -160,7 +569,7 @@
         % Extension line to control wheel:
         \pgfpathmoveto{\pgfpoint{(\pgf@xa + \pgf@xb)/2}{(\pgf@ya + \pgf@yb)/2}}
         \pgfpathlineto{\pgfpoint{\pgf@xb}{(\pgf@ya + \pgf@yb)/2}}
-    
+
         % The factors 0.3, 0.4 and 0.3 need to add up to 1 to give a symmetrical, nice semicircle.
         % Factor 0.4 is divided by 2 to give the radius
         \pgfpathmoveto{\pgfpoint{\pgf@xb}{\pgf@ya + 0.3*(\pgf@yb - \pgf@ya)}}
@@ -214,7 +623,7 @@
         % 2. On y-axis, move a fraction of the radius up. This is the y-portion of our top-right coordinate point.
         % 3. On x-axis, move as far right as Pythagorean theorem dictates (hypotenuse is the radius vector, other known length is the y-length we just specified)
         % 4. Repeat process to draw and move accordingly; don't forget squares and sqrt() in correct places.
-    
+
         \pgfmathsetmacro{\upperyfraction}{0.3}% y-coordinate of the upper points is \upperyfraction*\radius to the sides of the centerpoint
         \pgfmathsetmacro{\loweryfraction}{0.7}% y-coordinate of the lower points is \loweryfraction*\radius to the sides of the centerpoint
 
@@ -412,7 +821,7 @@
         \colorlet{currentfill}{\tikz@fillcolor}
         \pgfsetfillcolor{currentfill!90!black}
         \pgfusepath{fill, stroke}
-    
+
         % Right surface:
         \pgfpathmoveto{\northeast}
         \pgfpathlineto{\pgfpointadd{\northeast}{\pgfqpoint{\xoffset}{\yoffset}}}% Top right corner plus offset vector
