@@ -21,15 +21,12 @@ set -u
 # https://docs.docker.com/docker-hub/builds/advanced/
 # https://web.archive.org/web/20201002130055/https://dev.to/samuelea/automate-your-builds-on-docker-hub-by-writing-a-build-hook-script-13fp
 
-BUILD_DATE=$(date --utc +%Y-%m-%dT%H:%M:%S%Z)
-
 cut_tag_field() { echo "$DOCKER_TAG" | cut --delimiter="-" --fields="$1"; }
 
 # Assign some (dynamic) default values if variables undefined.
 # This is compatible with the DockerHub infrastructure where these are defined
 # (see https://docs.docker.com/docker-hub/builds/advanced/) but also allows easy
 # local execution.
-: "${SOURCE_COMMIT:=$(git rev-parse HEAD)}" # https://stackoverflow.com/a/28085062
 : "${DOCKER_TAG:=latest}" # https://stackoverflow.com/a/28085062
 
 # This will fail if compiling locally where this env var is (probably) not defined,
@@ -37,7 +34,6 @@ cut_tag_field() { echo "$DOCKER_TAG" | cut --delimiter="-" --fields="$1"; }
 : "${IMAGE_NAME:=$1}" # https://stackoverflow.com/a/28085062
 
 echo "Using Docker tag '$DOCKER_TAG'."
-echo "Version control reference is '$SOURCE_COMMIT'."
 echo "Building with image name '$IMAGE_NAME'."
 
 if [[ "$DOCKER_TAG" == "latest" ]]
@@ -72,8 +68,6 @@ else
 fi
 
 docker build \
-    --build-arg VCS_REF="$SOURCE_COMMIT" \
-    --build-arg BUILD_DATE="$BUILD_DATE" \
     --build-arg BASE_OS="$BASE_OS" \
     --build-arg OS_VERSION="$OS_VERSION" \
     --build-arg TL_VERSION="$TL_VERSION" \

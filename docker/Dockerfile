@@ -137,25 +137,32 @@ RUN \
 
 FROM base as main
 
-# Metadata
-ARG BUILD_DATE="n/a"
-ARG VCS_REF="n/a"
-
 ARG TL_VERSION="latest"
 ARG TL_PROFILE="texlive.profile"
+# Auxiliary, intermediate file:
+ARG TMP_TL_PROFILE="${TL_PROFILE}.tmp"
 
-# Label according to http://label-schema.org/rc1/ to have some metadata in the image.
-# This is important e.g. to know *when* an image was built. Depending on that, it can
-# contain different software versions (even if the base image is specified as a fixed
-# version).
-LABEL \
-    maintainer="Alex Povel <alex.povel@tuhh.de>" \
-    org.label-schema.build-date=${BUILD_DATE} \
-    org.label-schema.description="TeXLive with most packages, JavaRE, Inkscape, pandoc and more" \
-    org.label-schema.url="https://collaborating.tuhh.de/alex/latex-git-cookbook" \
-    org.label-schema.vcs-url="https://github.com/alexpovel/latex-extras-docker" \
-    org.label-schema.vcs-ref=${VCS_REF} \
-    org.label-schema.schema-version="1.0"
+# Layer with graphical and auxiliary tools
+# Put as early as possible in Dockerfile since this should rarely change (cache-friendly)
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+    # headless, 25% of normal size:
+    default-jre-headless \
+    # No headless inkscape available currently:
+    inkscape \
+    # nox (no X Window System): CLI version, 10% of normal size:
+    gnuplot-nox \
+    # For various conversion tasks, e.g. EPS -> PDF (for legacy support):
+    ghostscript
+
+# Pandoc layer; not required for LaTeX compilation, but useful for document conversions
+# Put as early as possible in Dockerfile since this should rarely change (cache-friendly)
+RUN apt-get update && \
+    apt-get install --yes --no-install-recommends \
+    # librsvg2 for 'rsvg-convert' used by pandoc to convert SVGs when embedding
+    # into PDF
+    librsvg2-bin \
+    pandoc
 
 # User to install and run LaTeX as.
 # This is a security and convenience measure: by default, containers run as root.
@@ -169,30 +176,38 @@ LABEL \
 ARG USER="tex"
 RUN useradd --create-home ${USER}
 
+# Label according to http://label-schema.org/rc1/ to have some metadata in the image.
+# This is important e.g. to know *when* an image was built. Depending on that, it can
+# contain different software versions (even if the base image is specified as a fixed
+# version).
+LABEL \
+    maintainer="Alex Povel <alex.povel@tuhh.de>" \
+    org.label-schema.description="TeXLive with most packages, JavaRE, Inkscape, pandoc and more" \
+    org.label-schema.vcs-url="https://collaborating.tuhh.de/alex/latex-git-cookbook" \
+    org.label-schema.schema-version="1.0"
+
 ARG INSTALL_DIR="/install"
 WORKDIR ${INSTALL_DIR}
 
 # Copy custom file containing TeXLive installation instructions
-COPY config/${TL_PROFILE} .
+COPY config/${TL_PROFILE} ${TMP_TL_PROFILE}
 COPY --from=downloads /install-tl/ /texlive.sh ./
+
+# Move to where pandoc looks for templates, see https://pandoc.org/MANUAL.html#option--data-dir
+COPY --from=downloads /eisvogel.latex /home/${USER}/.pandoc/templates/
 
 # Global wget config file, see the comments in that file for more info and the rationale.
 # Location of that file depends on system, e.g.: https://askubuntu.com/a/368050
 COPY config/.wgetrc /etc/wgetrc
 
-# Move to where pandoc looks for templates, see https://pandoc.org/MANUAL.html#option--data-dir
-COPY --from=downloads /eisvogel.latex /home/${USER}/.pandoc/templates/
-
 # "In-place" `envsubst` run is a bit more involved, see also:
 # https://stackoverflow.com/q/35078753/11477374.
-RUN tmpfile=$(mktemp) && \
-    cp ${TL_PROFILE} tmpfile && \
-    echo "Using profile file (indent purely visual):" && \
-    cat ${TL_PROFILE} | envsubst | tee tmpfile | sed "s/^/\t/" && \
-    mv tmpfile ${TL_PROFILE}
+# Do not use `mktemp`, will break Docker caching since it's a new file each time.
+RUN cat "$TMP_TL_PROFILE" | envsubst | tee "$TL_PROFILE" && \
+    rm "$TMP_TL_PROFILE"
 
 # (Large) LaTeX layer
-RUN ./texlive.sh install ${TL_VERSION}
+RUN ./texlive.sh install "$TL_VERSION"
 
 # Remove no longer needed installation workdir.
 # Cannot run this earlier because it would be recreated for any succeeding `RUN`
@@ -200,26 +215,6 @@ RUN ./texlive.sh install ${TL_VERSION}
 # Therefore, change `WORKDIR` first, then delete the old one.
 WORKDIR /${USER}
 RUN rm --recursive ${INSTALL_DIR}
-
-# Layer with graphical and auxiliary tools
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends \
-    # headless, 25% of normal size:
-    default-jre-headless \
-    # No headless inkscape available currently:
-    inkscape \
-    # nox (no X Window System): CLI version, 10% of normal size:
-    gnuplot-nox \
-    # For various conversion tasks, e.g. EPS -> PDF (for legacy support):
-    ghostscript
-
-# Pandoc layer; not required for LaTeX compilation, but useful for document conversions
-RUN apt-get update && \
-    apt-get install --yes --no-install-recommends \
-    # librsvg2 for 'rsvg-convert' used by pandoc to convert SVGs when embedding
-    # into PDF
-    librsvg2-bin \
-    pandoc
 
 USER ${USER}
 
@@ -230,6 +225,10 @@ USER ${USER}
 # Warning: This is USER-specific. If the current `USER` for which we run this is not
 # the container user, the font will be regenerated for that new user.
 RUN luaotfload-tool --update || echo "luaotfload-tool did not succeed, skipping."
+
+# Make our class file available for the entire latex/TeXLive installation, see also
+# https://tex.stackexchange.com/a/1138/120853
+COPY tex/acp.cls /home/${USER}/texmf/tex/latex/acp.cls
 
 # The default parameters to the entrypoint; overridden if any arguments are given to
 # `docker run`.

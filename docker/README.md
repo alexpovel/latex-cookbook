@@ -8,7 +8,7 @@ To see how to build the image, also see [below](#building).
 
 ## Quick Intro
 
-To use the image, you can use the [example](tests/minimal.tex) provided in this repository:
+To use the image, you can use the [example](tex/minimal-working-example.tex) provided in this repository:
 
 - Bash:
 
