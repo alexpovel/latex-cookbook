@@ -65,6 +65,11 @@ The parts making up the command are:
   To **overwrite** the `ENTRYPOINT`, e.g. because you want to run only `lualatex`, use the `--entrypoint` option, e.g. `--entrypoint="lualatex"`.
   Similarly, you can work inside of the container directly, e.g. for debugging, using `--entrypoint="bash"`.
 
+### Image
+
+For the above to work, the `alexpovel/latex` image needs to be available on whatever your default image registry is (usually [DockerHub](https://hub.docker.com/)).
+If it's not available for pulling (i.e., downloading) from there, you can build this image locally, see [below](#building).
+
 ## Approach
 
 This Dockerfile is based on a custom TeXLive installer using their [`install-tl` tool](https://www.tug.org/texlive/doc/install-tl.html), instead of [Debian's `texlive-full`](https://packages.debian.org/search?searchon=names&keywords=texlive-full).
