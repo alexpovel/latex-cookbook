@@ -1,0 +1,4 @@
+# Bash is wrong, it is really a plain-text file.
+# However, it gets us comment highlighting (hiding/grey)
+# and is close enough.
+*.profile linguist-language=bash

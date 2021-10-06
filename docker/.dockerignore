@@ -1,0 +1,6 @@
+# On building, the Docker daemon receives the entire build context (this directory)
+# recursively. To speed this up (by almost nothing in this case), exclude what is
+# sent.
+images/
+hooks/
+tests/
