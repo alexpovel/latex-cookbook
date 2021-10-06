@@ -230,6 +230,11 @@ RUN luaotfload-tool --update || echo "luaotfload-tool did not succeed, skipping.
 # https://tex.stackexchange.com/a/1138/120853
 COPY tex/acp.cls /home/${USER}/texmf/tex/latex/acp.cls
 
+USER root
+# Give back control to own user files; might be root-owned from previous copying processes
+RUN chown --recursive ${USER}:${USER} /home/${USER}/
+USER ${USER}
+
 # The default parameters to the entrypoint; overridden if any arguments are given to
 # `docker run`.
 # `lualatex` usage for `latexmk` implies PDF generation, otherwise DVI is generated.
