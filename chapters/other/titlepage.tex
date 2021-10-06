@@ -5,7 +5,7 @@
 % Use \ifdefstring from same package,
 % see also https://tex.stackexchange.com/a/451937/120853
 
-\ifdefstring{\cookbook@titlestyle}{thesis}{
+\ifdefstring{\acp@titlestyle}{thesis}{
     % These exist already, overwrite:
     \setkomafont{title}{\sffamily\bfseries\Huge}
     \setkomafont{subtitle}{\normalfont\normalsize\sffamily}
@@ -62,7 +62,7 @@
     % Else: nothing; faking a 'case' environment
 }
 
-\ifdefstring{\cookbook@titlestyle}{book}{
+\ifdefstring{\acp@titlestyle}{book}{
     % These exist already, overwrite:
     \setkomafont{title}{\sffamily\bfseries\Huge}
     \setkomafont{subtitle}{\itshape}

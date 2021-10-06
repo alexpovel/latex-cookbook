@@ -36,7 +36,7 @@
     \ProcessKeyvalOptions*
 
 \PassOptionsToClass{%
-    \cookbook@language,% Scheme: \filename@keyoption
+    \acp@language,% Scheme: \filename@keyoption
     twoside,% For printing two-sided documents
     % 'List of (Tables, Figures, ...)' gets pushed down one hierarchical level:
     % listof=leveldown,
@@ -63,7 +63,7 @@
 
 \LoadClass{\@baseclass}% Finally, load the base class
 
-\RequirePackage[\cookbook@language]{tracklang}% Language Tracking
+\RequirePackage[\acp@language]{tracklang}% Language Tracking
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -584,9 +584,9 @@
     % expanded and skipped.
     % Next, the second \expandafter is looked at. It sees the token { next, saving it
     % for later.
-    % \cookbook@language is then expanded fully, to the current language.
+    % \acp@language is then expanded fully, to the current language.
     % What is left is a properly working string, \setdefaultlanguage{<language string>}
-    \expandafter\setdefaultlanguage\expandafter{\cookbook@language }
+    \expandafter\setdefaultlanguage\expandafter{\acp@language }
 
     % Whatever main language (setmainlanguage = setdefaultlanguage) was loaded, we want
     % the "other" one (since we expect only English and German) to be available as a
@@ -874,7 +874,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{censor}
-    \ifcookbook@censoring
+    \ifacp@censoring
         % censor package censors by default; do nothing if censoring requested
         % TeX doesn't have \ifnot or similar, see also
         % https://tex.stackexchange.com/q/386093/120853
@@ -1734,7 +1734,7 @@
     % \csname is then executed next. It scans ahead to its matching \endcsname,
     % "performing full expansion as it goes" (Quote from
     %  https://tex.stackexchange.com/a/430557/120853).
-    % In that process, \cookbook@language is expanded to the value it was given in the
+    % In that process, \acp@language is expanded to the value it was given in the
     % document options through kvoptions.
     % Now, \csname finishes and presents a token \text<language>, e.g. \textenglish.
     % LaTeX starts over; \expandafter is now gone, so it reads \let\text<language> ...
@@ -1748,7 +1748,7 @@
     %
     % Idea from https://tex.stackexchange.com/a/230197/120853
     \pdfstringdefDisableCommands{%
-        \expandafter\let\csname text\cookbook@language\endcsname \relax%
+        \expandafter\let\csname text\acp@language\endcsname \relax%
     }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2567,7 +2567,7 @@
 % and PackageErrors, but not Warnings.
 
 \newcommand*{\@documenttype}{%
-    \ClassWarning{cookbook}{No \noexpand\documenttype given}%{\@ehc}%
+    \ClassWarning{acp}{No \noexpand\documenttype given}%{\@ehc}%
 }
 
 % Student ID number
@@ -2575,7 +2575,7 @@
     \renewcommand*{\@idnumber}{#1}%
 }
 \newcommand*{\@idnumber}{%
-    \ClassWarning{cookbook}{No \noexpand\idnumber given}%{\@ehc}%
+    \ClassWarning{acp}{No \noexpand\idnumber given}%{\@ehc}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
