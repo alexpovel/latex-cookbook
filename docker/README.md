@@ -291,8 +291,10 @@ Since it is a bash script, for Windows you'll want to run it using [WSL](https:/
 
 ```bash
 IMAGE_NAME="alexpovel/latex:latest"  # Or any other 'namespace/name:tag' combination you like
-./hooks/build
+./hooks/build "$IMAGE_NAME"
 ```
+
+Refer to the script for all the available configuration environment variables.
 
 This process can take a very long time (if you have all collections selected in the [profile](config/texlive.profile)), especially when downloading from the TeXLive/TUG archives.
 For developing/debugging, it is advisable to download the archive files once.
