@@ -494,11 +494,27 @@ Refer to the package documentation for more.
 \subsubsection{Chemistry}
 
 Closely related to purely mathematical equations are chemical ones,
-as shown in \cref{reac:meaningless}.
-\begin{chemreac}\label{reac:meaningless}
-    \ch{C + O2 -> CO2}
-\end{chemreac}
-This functionality is basic, but easily edited and built upon.
+as shown in \cref{reac:carbon-oxidation}.
+% As with the `equations` environment, the starred environment variant omits
+% numbering.
+\begin{reaction}[%
+    Carbon~Oxidation% This is a description/caption going into the list of reactions
+]
+    % Quotes around `label` are important for escaping, see
+    % https://tex.stackexchange.com/q/596722/120853
+    C + O2 -> CO2 "\label{reac:carbon-oxidation}"
+\end{reaction}
+Aligned arrays of multiple chemical reaction equations are also possible, as
+demonstrated in \cref{reac:nitrogen-oxidation-one,reac:nitrogen-oxidation-two}.
+\begin{reactions}
+    % For usage of `\sb`, see https://tex.stackexchange.com/a/48818/120853 and
+    % https://tex.stackexchange.com/a/271498/120853 .
+    % In an array of multiple reactions, we need \AddRxnDesc, see the docs.
+    N2 + O &<->[\(k\sb{1}\)] NO + N
+        \AddRxnDesc{First~Zeldovich~mechanism} "\label{reac:nitrogen-oxidation-one}" \\
+    N + O2 &<->[\(k\sb{2}\)] NO + O
+        \AddRxnDesc{Second~Zeldovich~mechanism} "\label{reac:nitrogen-oxidation-two}"
+\end{reactions}
 Single chemical compounds are invoked using \verb|\chcpd|, as demonstrated in
 \cref{eq:boie}.
 \begin{equation}\label{eq:boie}
@@ -523,21 +539,17 @@ Single chemical compounds are invoked using \verb|\chcpd|, as demonstrated in
     }
 \end{equation}
 
-These commands are provided by \ctanpackage{chemformula}, a stand\-/alone package
-that heavily builds on \ctanpackage{chemmacros} of the same author.
+These commands are provided by \ctanpackage{chemmacros} and its \ctanpackage{chemformula}
+module.
 Those packages are very capable, so more complex chemistry can also be typeset:
-\begin{gather*}
-    \ch{^{227}_{90}Th+}\\
-    \ch{[Cu(NH3)4]^2+}\\
-    \ch{RNO2^{-.}}\\
-    \ch{CH+CH}\\
-    \ch{\{[CH2=CH-CH2]- <-> {}[CH2-CH=CH2]- \}}\\
-    \ch{
-        H2C-C+C-CH=CH+ + CrO4^2-
-        <=>[x][y]
-        2.5 Cl^{-.} + 3_1/2 Na*OH_{(aq)} + !(name)( A^n )
-    }
-\end{gather*}
+\begin{reactionsgather*}
+    ^{227}_{90}Th+\\
+    [Cu(NH3)4]^2+\\
+    RNO2^{-.}\\
+    CH+CH\\
+    \{[CH2=CH-CH2]- <-> {}[CH2-CH=CH2]- \}\\
+    H2C-C+C-CH=CH+ + CrO4^2- <=>[x][y] 2.5 Cl^{-.} + 3_1/2 Na*OH_{(aq)} + !(name)( A^n )
+\end{reactionsgather*}
 All these examples are courtesy of the documentations of these two packages.
 
 \subsection{Sans-Serif}

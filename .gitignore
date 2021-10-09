@@ -175,6 +175,8 @@ dirty_directory/
 *.aux
 *.lof
 *.log
+# List of Reactions (`chemmacros`):
+*.lor
 *.lot
 *.fls
 *.out

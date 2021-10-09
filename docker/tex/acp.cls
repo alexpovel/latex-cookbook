@@ -519,7 +519,7 @@
     mathtt=sym,%
     % 'tpgl': 'TexGyrePagellaLining'.
     % This 'NFSS' style is required for \fontfamily{nfss-code}\selectfont to work,
-    % e.g. in package chemformula
+    % e.g. in package chemmacros/chemformula
     NFSSFamily=tgpl,%
     % Color=Green4,% Toggle color for debugging (should be xcolor name)
 ]{TeX Gyre Pagella Math}% Load existing fond, see also https://tex.stackexchange.com/a/351100/120853
@@ -2529,29 +2529,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RequirePackage{chemformula}% \ch{}, \chcpd[]{compound} etc.
-    \setchemformula{%
-        font-family={tgpl}% Use math font family
+\RequirePackage{chemmacros}% \ch{}, \chcpd[]{compound} etc.
+    \usechemmodule{all}% `all` includes `chemformula`
+    \chemsetup{%
+        formula=chemformula,%
+        chemformula/font-family=tgpl,% Use math font family
     }
 
-    % Provide a new environment for chemical reactions.
-    % I tried the syntax from the 'environ' package and also the \NewDocumentEnvironment
-    % command from 'xparse', but none of them worked especially well, so it's back to
-    % plain syntax, unfortunately.
-    \newcounter{chemreac}[chapter]
-    %
-    \newenvironment{chemreac}{%
-        \addtocounter{equation}{-1}
-        \renewcommand*{\theequation}{\textbf{R}\thechapter.\thechemreac}
-        \begin{equation}
-            % Our counter is called 'chemreac', however it seems that cref always uses
-            % the 'type' of the last \refstepcounter{} called.
-            % Therefore, step our custom counter after equation starts
-            % see https://tex.stackexchange.com/a/239121/120853
-            \refstepcounter{chemreac}
-    }{%
-        \end{equation}%
-    }%
+    % Some new custom environments. Very simple definitions that behave just like the
+    % widely known AMSMath math environment as specified in the last argument.
+    \NewChemReaction{reactionsgather}{gather}% Like AMSmath's `gather`
+    \NewChemReaction{reactionsgather*}{gather*}
+
+    % Sort reaction counter underneath chapter, see
+    % https://tex.stackexchange.com/questions/530210/how-to-cross-reference-reactions-in-chemmacros-chapter#comment1340793_530210
+    \renewcommand*{\thereaction}{\thechapter.\arabic{reaction}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -3150,10 +3142,6 @@
     % \Crefname (capitalised) is not required; when it is not present but \Cref{} is
     % called, it uses \MakeUppercase on \crefname definitions.
     % However, if LaTeX macros are used in the definition, it is required.
-    \crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
-    \Crefname{chemreac}{\TransReaction{}}{\TransReactions{}}
-    \creflabelformat{chemreac}{#2\textbf{R}#1#3}% No (1), but 1, aka remove parentheses
-
     % Code listings, see `minted` package.
     % Introduce a new <type> called `code`, then make the (existing) counter `listing`
     % use it by aliasing. Modifying `listing` directly with `\crefname{listing}...`
