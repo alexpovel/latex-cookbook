@@ -711,14 +711,14 @@ the main document language and is currently not able to be switched dynamically.
                     \begin{english}\SI{100.2}{\meter}\end{english} &
                     % polyglossia \begin{<language>} environment seems to introduce
                     % empty lines in paragraph columns; remove them manually.
-                    \vspace{-\baselineskip}
-                    \begin{english}
-                        \glossaryname{},
+                    \vspace{-\baselineskip}% This is guesswork; haven't figured this out yet
+                    \begin{english}%
+                        \glossaryname{},%
                         \cref{fig:censorbox},
                         \cref{tab:main_font_examples},
                         \cref{ch:base-features}
                     \end{english} &
-                    \vspace{-\baselineskip}
+                    \vspace{-\baselineskip}% This is guesswork; haven't figured this out yet
                     \begin{english}
                         This is a random text intended to show of hyphenation and line
                         endings in the respective language.
@@ -733,14 +733,14 @@ the main document language and is currently not able to be switched dynamically.
                 German &
                     \begin{german}\enquote{Zitat!}\end{german} &
                     \begin{german}\SI{100.2}{\meter}\end{german} &
-                    \vspace{-\baselineskip}
+                    \vspace{-\baselineskip}% This is guesswork; haven't figured this out yet
                     \begin{german}
                         \glossaryname{},
                         \cref{fig:censorbox},
                         \cref{tab:main_font_examples},
                         \cref{ch:base-features}
                     \end{german} &
-                    \vspace{-\baselineskip}
+                    \vspace{-\baselineskip}% This is guesswork; haven't figured this out yet
                     \begin{german}
                         Dies ist ein zufälliger Text, der die Worttrennungsregeln und
                         Satzenden der jeweiligen Sprache demonstrieren soll.
@@ -751,7 +751,6 @@ the main document language and is currently not able to be switched dynamically.
                         Silbentrennungsregeln und -fähigkeiten des
                         \ctanpackage{polyglossia} Pakets.
                     \end{german}%
-                    \vspace{-\baselineskip}
                 \\
             \bottomrule
         \end{tabular}
