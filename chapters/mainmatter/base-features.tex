@@ -178,12 +178,14 @@ Some display-style math examples follow.
         }
         \label{eq:highlighted}
     \\
-        \sum_{\sym{count} = \num{0}}^{\sym{component}}
-            \begin{pmatrix}
-                \sym{count} \\ \sym{component}
-            \end{pmatrix}
-        =
-        \num{2}^{\sym{count}}
+        \mathbf{% This is how you do bold math
+            \sum_{\sym{count} = \num{0}}^{\sym{component}}
+                \begin{pmatrix}
+                    \sym{count} \\ \sym{component}
+                \end{pmatrix}
+            =
+            \num{2}^{\sym{count}}
+        }
     \\
         % This equation does not make sense.
         \brackets*{
@@ -441,8 +443,9 @@ It is capable of parsing number constructs:
     l
     l
 }
-    \verb|\num{1.0}| & \num{1.0} & \multirow{2}{*}{(Localisation)}\\
+    \verb|\num{1.0}| & \num{1.0} & \multirow{3}{*}{(Localisation)}\\
     \verb|\num{1,0}| & \num{1,0} & \\
+    \verb|\num{1.0}| & \begin{german}\num{1.0}\end{german} (German) & \\
     \verb|\num{1.2e3}| & \num{1.2e3} & \\
     \verb|\num{1.2e-7}| & \num{1.2e-7} & \\
     \verb|\num{-e7}| & \num{-e7} & \\
