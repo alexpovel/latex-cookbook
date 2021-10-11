@@ -2549,7 +2549,19 @@
 
 \RequirePackage{siunitx}% Typesetting physical units correctly
     \sisetup{%
-        detect-all,% Detect surrounding font context, like weight, italics etc.
+        % For siunitx v3, the following block replaces what used to be
+        % `detect-all` (removed in that release, see
+        % https://github.com/josephwright/siunitx/blob/main/CHANGELOG.md#v300 ).
+        % It allows the `siunitx` output to match surrounding text/math (italics/bold/...,
+        % roman/sans/... etc. as much as possible)
+        mode=match,
+        propagate-math-font=true,
+        reset-math-version=false,
+        reset-text-family=false,
+        reset-text-series=false,
+        reset-text-shape=false,% Not part of official fix, but still added (see https://collaborating.tuhh.de/alex/latex-git-cookbook/-/issues/8)
+        text-family-to-math=true,
+        text-series-to-math=true,
         %
         % Requires siunitx v3+, see also https://tex.stackexchange.com/a/468031/120853,
         % https://github.com/josephwright/siunitx/issues/532 :
