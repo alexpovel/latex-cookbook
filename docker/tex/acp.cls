@@ -2559,8 +2559,6 @@
         % en-dash via '--', but inside \text{}, so it's not 'two minus signs'
         % range-phrase={\,\text{--}\,},
         range-units=single,% single: Print unit only once, at end
-        math-micro=\text{µ},% https://tex.stackexchange.com/a/54915/120853
-        text-micro=µ,
         per-mode=symbol,
         %
         binary-units, % Allow "GB" for gigabyte etc., which isn't strictly SI but useful
