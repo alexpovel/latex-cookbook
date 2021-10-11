@@ -308,8 +308,8 @@ No need for tedious repetition.
                     \\
                     &
                         \multicolumn{7}{c}{{[--]}} &
-                        \(\brackets*{\si{\kilogram\per\meter\cubed}}\) &
-                        \(\brackets*{\si{\mega\joule\per\kilogram}}\)
+                        \(\brackets*{\unit{\kilogram\per\meter\cubed}}\) &
+                        \(\brackets*{\unit{\mega\joule\per\kilogram}}\)
                     \\
                 \cmidrule(lr){2-8}% truncate left and right
                     &
@@ -993,7 +993,7 @@ lines that effectively do something useful.
                     \pgfkeys{/pgf/fpu/output format=fixed}
                     \pgfmathparse{AmbientPressure/1e5}
                     %
-                    For \SI[round-mode=figures, round-precision=1]{\pgfmathresult}{\bar}
+                    For \qty[round-mode=figures, round-precision=1]{\pgfmathresult}{\bar}
                     air pressure.%
                     %
                     \pgfkeys{/pgf/fpu=false}
@@ -1116,7 +1116,7 @@ lines that effectively do something useful.
                 %
                 \addlegendimage{color=rdylbu2, ultra thick, dashdotted}
                 \addlegendentry{%
-                    Specific Enthalpy in \si{\kilo\joule\per\kilogram\dryair}%
+                    Specific Enthalpy in \unit{\kilo\joule\per\kilogram\dryair}%
                 }
 
                 % Add nodes and connect them. Connect the one we are currently
@@ -1436,7 +1436,7 @@ hard\-/codes a bunch of stuff.
                     % use this special command version, see also
                     % https://tex.stackexchange.com/a/317015/120853
                     \addlegendentryexpanded{
-                        \SI{\pressure}{\bar}/\SI{\temperature}{\degreeCelsius}
+                        \qty{\pressure}{\bar}/\qty{\temperature}{\degreeCelsius}
                     }
                 }
             \end{axis}%

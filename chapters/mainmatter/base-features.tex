@@ -473,25 +473,25 @@ If the roman text font uses hanging numerals (like:
 number needs to be typeset, \verb|\num| is also required.
 In this document, it will use the math font: \num{1234567890}.
 
-Physical units are output using \verb|\si|.
+Physical units are output using \verb|\unit|.
 It also has parsing capabilities:
 \begin{minted}[linenos=false]{latex}
-    \si{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}
+    \unit{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}
 \end{minted}
 will print
-\si{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
+\unit{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
 The mode in which units with negative exponents are displayed can be changed,
 \iecfeg{e.g.}\ fractions can be used:
-\si[per-mode=fraction]{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
+\unit[per-mode=fraction]{\meter\cubed\kelvin\per\kilogram\squared\per\giga\watt\per\degreeCelsius}.
 You can also use \verb|\DeclareSIQualifier| to create textual subscripts for units,
 further specifying them, or create entirely custom units using \verb|\DeclareSIUnit|.
-An example for both combined is: \si[per-mode=fraction]{\mega\watthour\thermal\per\meter\cubed}.
+An example for both combined is: \unit[per-mode=fraction]{\mega\watthour\thermal\per\meter\cubed}.
 
-The \verb|\SI{<quantity>}{<unit>}| command essentially combines \verb|\num| and
-\verb|\si|, inserting a small space in between, for correct typesetting.
+The \verb|\qty{<quantity>}{<unit>}| command essentially combines \verb|\num| and
+\verb|\unit|, inserting a small space in between, for correct typesetting.
 No or full spaces are wrong and painful to read.
 
-There are also commands to print ranges: \SIrange{20}{50}{\meter}.
+There are also commands to print ranges: \qtyrange{20}{50}{\meter}.
 Refer to the package documentation for more.
 
 \subsubsection{Chemistry}
@@ -711,7 +711,7 @@ the main document language and is currently not able to be switched dynamically.
                     % However, that command can break due to macro expansion stuff,
                     % if it contains macros and not just plain text.
                     \begin{english}\enquote{Quote!}\end{english} &
-                    \begin{english}\SI{100.2}{\meter}\end{english} &
+                    \begin{english}\qty{100.2}{\meter}\end{english} &
                     % polyglossia \begin{<language>} environment seems to introduce
                     % empty lines in paragraph columns; remove them manually.
                     \vspace{-\baselineskip}% This is guesswork; haven't figured this out yet
@@ -735,7 +735,7 @@ the main document language and is currently not able to be switched dynamically.
                 \\
                 German &
                     \begin{german}\enquote{Zitat!}\end{german} &
-                    \begin{german}\SI{100.2}{\meter}\end{german} &
+                    \begin{german}\qty{100.2}{\meter}\end{german} &
                     \vspace{-\baselineskip}% This is guesswork; haven't figured this out yet
                     \begin{german}
                         \glossaryname{},
@@ -1226,7 +1226,7 @@ Using it for mathematical symbols can look like:
         name={\ensuremath{T}},
         description={absolute temperature},
         group={roman},
-        unit={\si{\kelvin}},
+        unit={\unit{\kelvin}},
     }
 \end{minted}
 

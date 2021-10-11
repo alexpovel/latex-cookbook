@@ -204,14 +204,14 @@
 \providecaptionname{english}{\TransGlossaryLegend}{
     Marked (\specificsymbolmark) symbols possess a mass\-/specific variant in which
     the symbol is written in lowercase and the unit is extended by
-    \si[per-mode=reciprocal]{\per\kilogram}.
+    \unit[per-mode=reciprocal]{\per\kilogram}.
     Alternative symbols are specified following the \alternativesymbolmark{} mark.
     International symbols are specified in brackets.%
 }
 \providecaptionname{german}{\TransGlossaryLegend}{
     Markierte (\specificsymbolmark) Symbole besitzen eine massenspezifische Variante,
     bei der das Symbol als Kleinbuchstabe gesetzt und die Einheit entsprechend um
-    \si[per-mode=reciprocal]{\per\kilogram} erweitert wird.
+    \unit[per-mode=reciprocal]{\per\kilogram} erweitert wird.
     Alternative Symbole sind nach \alternativesymbolmark{} angegeben,
     internationale Symbole in eckigen Klammern.%
 }
@@ -530,7 +530,7 @@
 % see: https://tex.stackexchange.com/a/12568/120853
 \newfontfamily{\unitnumberfont}[
     % New font family for typesetting units.
-    % Required since otherwise, numbers typeset with \SI/\num etc. from siunitx
+    % Required since otherwise, numbers typeset with \qty/\num etc. from siunitx
     % might be hanging if that feature is turned on in the main font (OldStyle numbers).
     % To ensure these physical numbers are always upright, set Numbers:
     Numbers=Uppercase,
@@ -1435,7 +1435,7 @@
     },%
     % These comment lines (visual separation) are super important.
     % Empty lines will throw errors here!
-    unit code/.code 2 args={\si{#1#2}},% Use siunitx for units library
+    unit code/.code 2 args={\unit{#1#2}},% Use siunitx for units library
     unit markings={slash space},% The proper way... apparently?
     %
     % Fix micro unit display, see https://tex.stackexchange.com/a/224574/120853:
@@ -3247,7 +3247,7 @@
 % '1.2 ppm CO2' etc., with correct, specified spacing.
 \newcommand*{\chemamount}[3]{%
     \ensuremath{%
-        \SI{#1}{#2}%
+        \qty{#1}{#2}%
         \;% Medium-sized space
         \chcpd{#3}%
     }%
@@ -3453,7 +3453,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % To print: 45/55 °C
 \newcommand*{\temperaturepair}[2]{%
-    \SIrange[%
+    \qtyrange[%
         range-phrase={/},%
         range-units=single%
     ]{#1}{#2}{\degreeCelsius}%
