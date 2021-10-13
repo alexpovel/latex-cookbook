@@ -8,8 +8,12 @@
         "terminal.integrated.shell.linux": "/bin/bash"
     },
     // Add the IDs of extensions you want installed when the container is created.
+    // Browse for extensions here: https://marketplace.visualstudio.com/
+    // then look for 'Unique Identifier' on the extension's page.
     "extensions": [
-        "James-Yu.latex-workshop"
+        "James-Yu.latex-workshop",
+        "streetsidesoftware.code-spell-checker",
+        "streetsidesoftware.code-spell-checker-german"
     ],
     "containerEnv": {
         // Inside the container, we want to compile like we are in CI, hence define this
