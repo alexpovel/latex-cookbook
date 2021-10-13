@@ -1,6 +1,16 @@
 # ARGs before the first FROM are global and usable in all stages
-ARG BASE_OS=debian
-ARG OS_VERSION=testing
+
+ARG BASE_OS="debian"
+
+# Tag of the base OS image
+ARG OS_VERSION="testing"
+
+# TeXLive version. This will be used by the `texlive.sh` script to determine what to
+# download and install. `latest` will fetch the latest version available on their servers.
+# Alternatively, you can specify *a past year* and it will download that version
+# from the TeXLive archives and use it (can take a long time).
+# For available years, see ftp://tug.org/historic/systems/texlive/ .
+ARG TL_VERSION="latest"
 
 # Image with layers as used by all succeeding steps
 FROM ${BASE_OS}:${OS_VERSION} as base
@@ -109,7 +119,6 @@ FROM base as downloads
 # This also happens when the *value* contains 'TEX'.
 # `ARG`s are only set during Docker image build-time, so this warning should be void.
 
-ARG TL_VERSION=latest
 ARG TL_INSTALL_ARCHIVE="install-tl-unx.tar.gz"
 ARG EISVOGEL_ARCHIVE="Eisvogel.tar.gz"
 ARG INSTALL_TL_DIR="install-tl"
@@ -137,7 +146,6 @@ RUN \
 
 FROM base as main
 
-ARG TL_VERSION="latest"
 ARG TL_PROFILE="texlive.profile"
 # Auxiliary, intermediate file:
 ARG TMP_TL_PROFILE="${TL_PROFILE}.tmp"
