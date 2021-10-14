@@ -119,6 +119,9 @@ FROM base as downloads
 # This also happens when the *value* contains 'TEX'.
 # `ARG`s are only set during Docker image build-time, so this warning should be void.
 
+# Renew (https://stackoverflow.com/a/53682110):
+ARG TL_VERSION
+
 ARG TL_INSTALL_ARCHIVE="install-tl-unx.tar.gz"
 ARG EISVOGEL_ARCHIVE="Eisvogel.tar.gz"
 ARG INSTALL_TL_DIR="install-tl"
@@ -145,6 +148,9 @@ RUN \
 
 
 FROM base as main
+
+# Renew (https://stackoverflow.com/a/53682110):
+ARG TL_VERSION
 
 ARG TL_PROFILE="texlive.profile"
 # Auxiliary, intermediate file:
