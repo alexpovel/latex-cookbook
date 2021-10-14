@@ -8,24 +8,23 @@ To see how to build the image, also see [below](#building).
 
 ## Quick Intro
 
-To use the image, you can use the [example](tex/minimal-working-example.tex) provided in this repository:
+If you use [VSCode Remote Containers](https://code.visualstudio.com/docs/remote/containers), the below does not apply.
+There is no need to run manual `docker` invocations on the host.
+
+---
+
+[Install Docker](https://docs.docker.com/get-docker/), navigate to your project directory, then run the image as follows:
 
 - Bash:
 
   ```bash
-  docker run \
-    --rm \
-    --volume $(pwd)/tests:/tex \
-    alexpovel/latex
+  docker run --rm --volume $(pwd):/tex alexpovel/latex
   ```
 
 - PowerShell:
 
   ```powershell
-  docker run `
-    --rm `
-    --volume ${PWD}/tests:/tex `
-    alexpovel/latex
+  docker run --rm --volume ${PWD}:/tex alexpovel/latex
   ```
 
 The parts making up the command are:
@@ -35,7 +34,7 @@ The parts making up the command are:
   See [below](#historic-builds) for more options.
 - The `--rm` option removes the container after a successful run.
   This is generally desired since containers are not supposed to be stateful: once their process terminates, the container terminates, and it can be considered junk.
-- Providing a `--volume`, in this case [`tests/`](./tests/) in the current working directory, is required for the container to find files to work on.
+- Providing a `--volume`, in this case the current working directory aka pwd, is required for the container to find files to work on.
   It has to be *mounted* to a location *inside* the container.
   This has to be whatever the last `WORKDIR` instruction in the [Dockerfile](Dockerfile) is, e.g. `/tex`.
 
@@ -53,11 +52,7 @@ The parts making up the command are:
   Any options to the `ENTRYPOINT` executable are given at the end of the command, e.g.:
 
   ```bash
-  docker run \
-    --rm \
-    --volume $(pwd)/tests:/tex \
-    alexpovel/latex \
-    -c
+  docker run --rm --volume $(pwd)/tests:/tex alexpovel/latex -c
   ```
 
   to run, if `latexmk` is the `ENTRYPOINT`, the equivalent of `latexmk -c` ([cleaning auxiliary files](https://mg.readthedocs.io/latexmk.html#cleaning-up)).
@@ -274,29 +269,16 @@ The proper way to access these images is via DockerHub.
 ### On DockerHub ([Requires Pro Plan](https://docs.docker.com/docker-hub/builds/))
 
 This repository and its [Dockerfile](Dockerfile) used to be built into the corresponding image continuously and made available on [DockerHub](https://hub.docker.com/repository/docker/alexpovel/latex).
-
-There, the automated build process looked somewhat like:
-
-![DockerHub Build Rules](images/dockerhub_build_rules.png)
-
-The DockerHub build process combines these build rules with the [build hook](hooks/build) to automatically build and tag images as specified by those rules.
+This process now requires a Pro plan and was therefore retired.
 
 For the currently available tags, see [here](https://hub.docker.com/repository/docker/alexpovel/latex/tags?page=1).
 
 ### Locally
 
 The Dockerfile is now built locally and pushed manually.
-The [build script](hooks/build) works both locally and on the DockerHub infrastructure.
-Since it is a bash script, for Windows you'll want to run it using [WSL](https://docs.microsoft.com/en-us/windows/wsl/install):
+Refer to the Dockerfile for all the available configuration environment variables (`ARG`s).
 
-```bash
-IMAGE_NAME="alexpovel/latex:latest"  # Or any other 'namespace/name:tag' combination you like
-./hooks/build "$IMAGE_NAME"
-```
-
-Refer to the script for all the available configuration environment variables.
-
-This process can take a very long time (if you have all collections selected in the [profile](config/texlive.profile)), especially when downloading from the TeXLive/TUG archives.
+The build can take a very long time (if you have all collections selected in the [profile](config/texlive.profile)), especially when downloading from the TeXLive/TUG archives.
 For developing/debugging, it is advisable to download the archive files once.
 E.g. for TexLive 2014, you would want this directory: <ftp://tug.org/historic/systems/texlive/2014/tlnet-final/>.
 Download in one go using:
