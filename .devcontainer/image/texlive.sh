@@ -27,6 +27,7 @@ check_path() {
 
 if [[ $# != 2 ]]; then
     echoerr "Unsuitable number of arguments given."
+    echoerr "Got arguments: $*"
     usage
     # From /usr/include/sysexits.h
     exit 64
