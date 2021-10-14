@@ -9,6 +9,9 @@ usage() {
     echo "Usage: $0 get_installer|install latest|version (YYYY)"
 }
 
+# From: https://stackoverflow.com/a/2990533/11477374
+echoerr() { echo "$@" 1>&2; }
+
 check_path() {
     # The following test assumes the most basic program, `tex`, is present, see also
     # https://www.tug.org/texlive/doc/texlive-en/texlive-en.html#x1-380003.5
@@ -28,9 +31,6 @@ if [[ $# != 2 ]]; then
     # From /usr/include/sysexits.h
     exit 64
 fi
-
-# From: https://stackoverflow.com/a/2990533/11477374
-echoerr() { echo "$@" 1>&2; }
 
 # Bind CLI arguments to explicit names:
 ACTION=${1}
