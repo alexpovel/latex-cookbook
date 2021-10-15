@@ -27,16 +27,6 @@ Refer to the contents of that PDF itself to get an idea of how that is achieved.
 - [chapters](chapters/): Your content source `tex` files.
   Splitting up files, putting them there and then running `\include` or `\input` on them is a good way of modularisation.
 - [data](data/): For example, raw tabular data from experiments.
-- [fonts](fonts/): Font files if they are not commonly shipped with latex distributions.
-  A lot of fonts are available for use in latex (using `fontspec`) if you just install a latex distribution, for example [TeX Gyre Pagella](https://ctan.org/pkg/tex-gyre-pagella) or [Fontawesome](https://ctan.org/pkg/fontawesome5).
-  Conveniently, we do not need to bring these ourselves.
-  This also saves us the hassle of keeping them up-to-date.
-
-  However, some other, more specialized or non-free fonts we have to bring ourselves.
-  In normal Desktop usage, you would download these, install them on your system, and be done.
-  They would then be available for use in latex.
-  To facilitate usage of this repository and make CI pipelines work easily, installing the fonts is not suitable.
-  Therefore, ship them in this directory and point `fontspec`/`unicode-math` to them by filename, solving all our problems.
 - [lib](lib/): Library modules, e.g. outsourced latex source code that is better off modularized.
 
   This directory also contains Lua code.
