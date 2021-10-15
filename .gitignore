@@ -1,3 +1,6 @@
+# This file tells git what files *not* to track in its version control.
+# Specific files, general suffixes, whole directories etc. can be specified.
+
 # ======================================================================================
 # Python (https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore)
 # ======================================================================================

@@ -1,3 +1,8 @@
+# This file configures the GitLab Continuous Integration system,
+# and as such has little to do with core git, the version control system.
+# See also here: https://docs.gitlab.com/ee/ci/quick_start/#create-a-gitlab-ciyml-file
+# It relies heavily on the Makefile, also part of this repository.
+
 # ======================================================================================
 # ======================================================================================
 # Global defaults, overwritable in each job

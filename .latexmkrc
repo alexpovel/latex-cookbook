@@ -1,6 +1,31 @@
 #!/bin/env perl
 
-# Shebang is only to get syntax highlighting right across GitLab, GitHub and IDEs.
+# This file contains instructions and configurations for the `latexmk` program.
+# That program is somewhat like `make`, but tailored to LaTeX.
+# LaTeX has a distinct characteristic of regularly requiring *multiple runs* of
+# the same program (e.g. `lualatex`) before the build is finished.
+# It's a *multi-pass* system.
+# In the intermediary runs, latex generates auxiliary files responsible for resolving
+# references, links, tables of content etc.
+
+# `latexmk` knows about these dependencies (otherwise we tell it in this very config
+# file, see below), detects these and runs latex (and other, outside programs)
+# accordingly.
+
+# Now, why do we need *both* `latexmk` and `make`?
+# Both automate builds.
+
+# `latexmk` is not powerful enough to cover all use cases.
+# `make` is more general and more suitable to be integrated in CI.
+# For our latex needs, `make` basically only delegates to `latexmk`.
+# We **do not** call e.g. `lualatex` multiple times manually from `make`:
+# this logic is left to `latexmk` and `.latexmkrc`.
+# However, `make` can also do much more, e.g. cover `pandoc`, clean-up operations etc.
+# Therefore, `make` and `latexmkrc` *together* are just super powerful and useful.
+
+
+# The shebang at the top  is only to get syntax highlighting right across GitLab,
+# GitHub and IDEs.
 # This file is not meant to be run, but read by `latexmk`.
 
 # ======================================================================================

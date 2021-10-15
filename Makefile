@@ -1,3 +1,25 @@
+# This file contains instructions for the GNU `make` program: https://www.gnu.org/software/make/
+#
+# The program is quite old, very stable, ubiquitous and widely used.
+# It is a staple in the Linux world.
+# There are ways to get it to run on Windows, but I haven't tried any.
+# Use WSL (https://docs.microsoft.com/en-us/windows/wsl/install-win10) instead and
+# save yourself the headaches.
+
+# `make` runs steps according to this very `Makefile` in order to arrive at a target,
+# like a PDF compiled with latex.
+# It checks all the dependencies automatically and only updates the target if changes
+# in the sources are detected.
+
+# The idea is that this project's PDFs can be compiled by simply calling e.g.
+# `make file.pdf` *both locally and in CI*.
+# Without make, we would otherwise have very different build steps in local and CI
+# environments.
+# Additionally, using `make`, the CI instructions (.gitlab-ci.yml) can be simplified
+# considerably, leading to decoupling.
+# Moving CI systems then becomes much easier.
+
+
 # =====================================================================================
 # =====================================================================================
 # Prerequisites

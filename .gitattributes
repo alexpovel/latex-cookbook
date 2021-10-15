@@ -1,3 +1,6 @@
+# This file tells platforms like GitLab how to treat certain files, e.g.
+# for syntax highlighting.
+
 # GitLab uses the Rouge Ruby gem; for available languages, see:
 # https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers
 
