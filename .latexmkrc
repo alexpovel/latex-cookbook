@@ -82,7 +82,7 @@ $biber = "biber --validate-datamodel %O %S";
 # run.xml: biber runs
 # glg: glossaries log
 # glstex: generated from glossaries-extra
-push @generated_exts, 'loe', 'lol', 'run.xml', 'glg', 'glstex';
+push @generated_exts, 'loe', 'lol', 'lor', 'run.xml', 'glg', 'glstex';
 
 # Also delete the *.glstex files from package glossaries-extra. Problem is,
 # that that package generates files of the form "basename-digit.glstex" if
