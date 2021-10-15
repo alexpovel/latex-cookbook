@@ -14,7 +14,7 @@ pages:
 
 file:
   # File sizes in human-readable format, or null to ignore.
-  min_size: "100K"  # Some rough minimum, maybe useful to detect corrupted files
+  min_size: "10K"  # Some rough minimum, maybe useful to detect corrupted files
   max_size: "5M"
   bookmarks: true  # Check if those are present
   # For age, d, h, m and s (or null to skip test) are available. Order matters.
