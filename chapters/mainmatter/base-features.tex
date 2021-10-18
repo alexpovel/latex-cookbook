@@ -10,8 +10,10 @@ likely using \hologo{pdfLaTeX} as your engine.
 This is the go\-/to default for generating \abb{portable_document_format} output.
 Its most popular modern alternatives are \hologo{XeLaTeX} and \hologo{LuaLaTeX}.
 These two offer various new, shiny features, chief among which is Unicode
-support through the package \ctanpackage{unicode-math}, which builds onto
-\ctanpackage{fontspec} and extends it by capabilities for math fonts.
+support through the \ctanpackage{unicode-math} package, which builds onto
+\ctanpackage{fontspec} and extends it with math fonts capabilities.
+Note that these packages \emph{require} \hologo{XeLaTeX} or \hologo{LuaLaTeX} use:
+\hologo{pdfLaTeX} is \emph{old} and will no longer work.
 More on that in \cref{ch:fonts_text}.
 
 \hologo{LuaLaTeX} is preferred over \hologo{XeLaTeX} for the following reasons:
@@ -20,12 +22,18 @@ More on that in \cref{ch:fonts_text}.
         \contour{black}{\textcolor{white}{this}}, works.
         For an application of that, see \cref{fig:bitmap_tikz} on
         \cpageref{fig:bitmap_tikz}.
-        Getting \ctanpackage{contour} to work on \hologo{XeLaTeX} is somewhat impossible.
+        Getting \ctanpackage{contour} to work on \hologo{XeLaTeX} is somewhat impossible,
+        see also
+        \href{https://tex.stackexchange.com/questions/421970/contour-text-in-xelatex}{here},
+        \href{https://tex.stackexchange.com/questions/354410/how-should-the-effects-of-manipulating-specials-be-switched-off}{here},
+        \href{https://tex.stackexchange.com/questions/225637/how-to-add-outline-to-a-character-under-xelatex}{here} and
+        \href{https://tex.stackexchange.com/questions/25221/outlined-characters}{here}.
     \item \hologo{LuaLaTeX} allocates as much memory as it happens to need.
         The ancient limitations of \TeX{} are easily reached by packages like
         \ctanpackage{tikz} and \ctanpackage{pgfplots}.
         Circumventing that either feels hacky, or actually is hacky.
-        \texttt{tikzexternalize} is a great module, but has a long list of caveats.
+        \texttt{tikzexternalize} is a great module, but has some caveats, like
+        breakage of clickable references.
         It solves a problem that should no longer exist in the first place.
     \item The fantastic \ctanpackage{microtype} package has a number of unavailable
         functionalities when using \hologo{XeLaTeX}.
@@ -44,8 +52,8 @@ hit compile, wait, done%
 Using high-quality fonts is one goal.
 This includes the fantastic
 \href{https://ctan.org/texarchive/fonts/tex-gyre/opentype}{\TeX Gyre fonts},
-of which the \textit{\href{https://en.wikipedia.org/wiki/Palatino}{Palatino}}
-(by Hermann Zapf) clone \textit{\href{https://ctan.org/pkg/tex-gyre-pagella}{Pagella}}
+of which the \emph{\href{https://en.wikipedia.org/wiki/Palatino}{Palatino}}
+(by Hermann Zapf) clone \emph{\href{https://ctan.org/pkg/tex-gyre-pagella}{Pagella}}
 was chosen for this document.
 It comes with an accompanying
 \href{https://ctan.org/texarchive/fonts/tex-gyre-math/opentype}{math font}
@@ -56,7 +64,20 @@ of the same name%
     that is bogus and can be ignored.
 }%
 .
-Using both fonts together is made possible by the \ctanpackage{unicode-math} package.
+There are not very many high\-/quality free fonts with a math companion available,
+see also \href{https://tex.stackexchange.com/a/425099/120853}{this compilation}.
+A similar compilation of \enquote{nice} fonts is
+\href{https://tex.stackexchange.com/a/59706/120853}{found here},
+however that is specifically for \hologo{pdfLaTeX}, not \hologo{LuaLaTeX}.
+The font choice can be changed with relative ease in the options for the
+\ctanpackage{unicode-math} package.
+If a new font does not provide at least the same array of features,
+parts of the document might break!
+For reference, there is a list of
+\href{http://mirrors.ctan.org/macros/unicodetex/latex/unicode-math/unimath-symbols.pdf}{symbols defined by \ctanpackage{unicode-math}}.
+
+Using both normal and maths fonts in conjunction is made possible through the
+\ctanpackage{unicode-math} package.
 As such, an exact match of the text and math fonts is achieved.
 This is important but often overlooked.
 However, such a match is often plain unavailable in the typesetting tool at hand.
@@ -119,7 +140,7 @@ Notice the balanced line endings and low number of hyphenation;
 easy on the eyes and very readable.
 
 \paragraph{Old approach}
-The overwhelming majority of \LaTeX{} documents rely on the two lines
+The overwhelming majority of \LaTeX{} documents relies on the two lines
 \begin{minted}[linenos=false]{latex}
     \usepackage[T1]{fontenc}
     \usepackage[utf8]{inputenc}
@@ -129,7 +150,7 @@ Since this is what most people still do, the two packages are still required.
 However, these two packages should at least not be used for \emph{new} work anymore!
 Using \hologo{LuaLaTeX}, they are not required anymore:
 \begin{itemize}
-    \item input encoding is automatically UTF-8 (as it should be in 2020),
+    \item input encoding is automatically UTF-8 (as it should be in \verb|$CURRENTYEAR|),
     \item font encoding is also not required, since fully capable fonts are used,
         which come with all the glyphs required.
 \end{itemize}
