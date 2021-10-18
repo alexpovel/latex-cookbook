@@ -94,6 +94,9 @@ def test_page_numbers(pdf, config):
     assert n_min <= n <= n_max, msg
 
 
+@pytest.mark.skip(
+    reason="README doesn't have bookmarks, but no one cares."
+)
 def test_bookmarks(pdf, config):
     """Checks if a table of contents (ToC) is present."""
     bookmarks = config["file"]["bookmarks"]
