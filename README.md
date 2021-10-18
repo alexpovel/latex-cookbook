@@ -17,39 +17,6 @@ This very README is also made available for [download as a PDF](https://collabor
 
 ## Appendix
 
-### Hints for source files
-
-These are valid not only for LaTeX files, but most text-based source files:
-
-- For the love of God, use `UTF-8` (and *only* `UTF-8`, not [anything higher](https://news.ycombinator.com/item?id=26737049))
-  for text encoding.
-  Stop using `Windows 1252`, `Latin` etc.
-  Existing files can be easily updated to UTF-8 without much danger for regression
-  (*i.e.*, introducing errors).
-- Put each sentence, or even part of a sentence, and each instruction onto its own line.
-  This is very important to `diff` files properly, aka `git diff`.
-  Generally, [keep lines short](https://tex.stackexchange.com/q/325505/120853).
-- In a similar vein, use indentation appropriately. Indent using **4 spaces**.
-  There are schools of thought that advocate two spaces, or also one tab.
-  Ultimately, that does not really matter.
-  'Four spaces' just seems to generally win the fight for a common coding style,
-  bringing us to the next point.
-- **Be consistent**. Even if you pull your own custom stuff, at least be consistent in doing so.
-  This makes things predictable, the code will be easier to read, and also more easily
-  changed programmatically.
-  GNU/Linux and by extension Windows using
-  [Windows Subsystem for Linux](https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux)
-  has a very wide range of tools that make search, and search-and-replace, and various other
-  operations for plain text files easy.
-  The same is true for similar tools in IDEs.
-  However, if the text is scattered and the style was mangled and fragmented into various
-  sub-styles, this becomes very hard.
-  For example, one person might use `$<math>$` for inline-LaTeX math, another the
-  ([preferred](https://tex.stackexchange.com/q/510/120853)) `\(<math>\)` style.
-  Suddenly, you would have to search for both versions to find all inline-math.
-  So stay consistent. If you work on pre-existing documents, use the established style.
-  If you change it, change it fully, and not just for newly added work.
-
 ### Hints on Fonts
 
 We use beautiful, capable fonts based on
