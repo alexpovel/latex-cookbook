@@ -9,6 +9,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2021-10-18
+
+### Added
+
+- `matlab2tikz` improved alternative showcase using `pgfplots` (0910bca)
+- Important badges of high importance for important information (d19b8d9)
+- Hint on `parskip` usage to remove paragraph indentation in favor of vertical space (a292f6b)
+- Support for *Acronyms* glossary title localization (86c0be1)
+- New package for tables, `tabularray` (6825ff9, 480b400)
+- Docker image source (merged in c584129)
+- Additional math/unit font examples (2e3a582)
+
+### Fixed
+
+- Display of dimensionless quantities (5f8dc71)
+- Tabular vertical excess white space (e5f983e)
+
+### Changed
+
+- usage of `chemmacros` over `chemformula` (e379fa9, c26d613)
+- `siunitx` settings and usage to support [major version 3](https://github.com/josephwright/siunitx/blob/v3.0.0/CHANGELOG.md#v300) (bb931a9, 4fc2caf, 6747a36, 190bc89, e83902a, 82977ce)
+- Docker image source (b50eb6f, f10005e, 548dca9, a8fff45, afa8407, 3a0b4f0, a57a4ec)
+- massive simplification/moving of README content (f8f4d3f, 2925463, 2840312, a99df09, bcb4d69)
+
+### Removed
+
+- LaTeX Workshop automatic compilation on save (6b0d313)
+- Old files (6fbdc2e, 04eb8fe, 096331c, b37316d, cdc285d)
+
 ## [3.1.0] - 2021-03-12
 
 ### Added
