@@ -1,8 +1,12 @@
 {
     "name": "LaTeX",
-    "build": {
-        "dockerfile": "image/Dockerfile",
-    },
+    // Either build the local Dockerfile directly (which can take hours due to slow
+    // TeXLive servers):
+    // "build": {
+    //     "dockerfile": "image/Dockerfile",
+    // },
+    // or rather use a pre-existing image and simply download from DockerHub:
+    "image": "alexpovel/latex",
     // Set *default* container specific settings.json values on container create.
     "settings": {
         "terminal.integrated.defaultProfile.linux": "bash"
