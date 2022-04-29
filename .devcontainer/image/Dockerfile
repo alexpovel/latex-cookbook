@@ -228,7 +228,6 @@ RUN ./texlive.sh install "$TL_VERSION"
 # instructions.
 # Therefore, change `WORKDIR` first, then delete the old one.
 WORKDIR /${USER}
-RUN rm --recursive ${INSTALL_DIR}
 
 USER ${USER}
 
