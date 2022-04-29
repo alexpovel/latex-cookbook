@@ -957,7 +957,7 @@
 
 % Proper quotation support, mainly through \enquote
 \RequirePackage[
-    autostyle=true,% true always adapst quotes to current language
+    autostyle=true,% true always adapts quotes to current language
 ]
 {csquotes}
     % Add itshape to beginning (beg) of display quote environments:
