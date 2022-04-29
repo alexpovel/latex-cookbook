@@ -2514,7 +2514,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{chemmacros}% \ch{}, \chcpd[]{compound} etc.
-    \usechemmodule{all}% `all` includes `chemformula`
     \chemsetup{%
         formula=chemformula,%
         chemformula/font-family=tgpl,% Use math font family
