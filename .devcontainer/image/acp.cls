@@ -2542,7 +2542,7 @@
         reset-math-version=false,
         reset-text-family=false,
         reset-text-series=false,
-        reset-text-shape=false,% Not part of official fix, but still added (see https://collaborating.tuhh.de/alex/latex-git-cookbook/-/issues/8)
+        reset-text-shape=false,% Not part of official fix, but still added (see https://collaborating.tuhh.de/alex/latex-cookbook/-/issues/8)
         text-family-to-math=true,
         text-series-to-math=true,
         %

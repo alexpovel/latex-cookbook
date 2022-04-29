@@ -197,7 +197,7 @@ RUN useradd --create-home ${USER}
 LABEL \
     maintainer="Alex Povel <alex.povel@tuhh.de>" \
     org.label-schema.description="TeXLive with most packages, JavaRE, Inkscape, pandoc and more" \
-    org.label-schema.vcs-url="https://collaborating.tuhh.de/alex/latex-git-cookbook" \
+    org.label-schema.vcs-url="https://collaborating.tuhh.de/alex/latex-cookbook" \
     org.label-schema.schema-version="1.0"
 
 ARG INSTALL_DIR="/install"

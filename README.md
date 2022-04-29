@@ -11,4 +11,4 @@
 
 This repo contains a [LaTeX](https://en.wikipedia.org/wiki/LaTeX) [document](cookbook.tex), usable as a cookbook (different "recipes" to achieve various things in LaTeX) and also as a template.
 The resulting PDF covers LaTeX-specific topics and instructions on compiling the LaTeX source.
-It is available for [**download**](https://collaborating.tuhh.de/alex/latex-git-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=tex).
+It is available for [**download**](https://collaborating.tuhh.de/alex/latex-cookbook/-/jobs/artifacts/master/raw/cookbook.pdf?job=tex).
