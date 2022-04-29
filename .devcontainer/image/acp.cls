@@ -937,23 +937,7 @@
     % secondary language. This is very convenient if for example a thesis is in English,
     % but certain parts have to be in German, e.g. for legal reasons. A simple switch
     % \begin{german} ... \end{german} would then achieve that.
-    %
-    % Note that we can also do \setotherlanguages{english, german, ...}, for a
-    % one-stop-shop, but that would also mean loading the main language as an "other"
-    % language, which has "trouble" written all over it. Therefore, choose this weak/
-    % somewhat manual approach.
-    \iflanguageloaded{english}{%
-        \setotherlanguage{german}%
-    }{%
-        % Nested ifs are ugly, but case-switch is not available and
-        % flat, subsequent ifs could load the first language both as a main and
-        % as an "other" language
-        \iflanguageloaded{german}{%
-            \setotherlanguage{english}%
-        }{%
-            % False: do nothing
-        }
-    }%
+    \setotherlanguages{german,english}
 
 % Proper quotation support, mainly through \enquote
 \RequirePackage[
