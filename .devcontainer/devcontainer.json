@@ -1,11 +1,22 @@
 {
     "name": "LaTeX",
-    // Either build the local Dockerfile directly (which can take hours due to slow
-    // TeXLive servers):
+    // Instead of *building* the accompanying Dockerfile and its whole context, like:
+    //
     // "build": {
     //     "dockerfile": "image/Dockerfile",
     // },
-    // or rather use a pre-existing image and simply download from DockerHub:
+    //
+    // simply download the prepared image the author has already uploaded, based on
+    // what's found inside the `image/` directory.
+    // Advantages:
+    // - build process is slow (downloads from TeX servers), each user doing it every
+    //   time is too much. It can take *hours* in worst-cases
+    // - build might fail for various reasons
+    // It is much easier to download the ready-made image.
+    // Disadvantages:
+    // - cannot easily iterate on the Docker image, need to go through Docker Hub.
+    //   Recourse: simply change the below to use the *local image temporarily*
+    // - Upstream image on Docker Hub might not be the latest
     "image": "alexpovel/latex",
     // Set *default* container specific settings.json values on container create.
     "settings": {
