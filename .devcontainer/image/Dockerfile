@@ -241,7 +241,7 @@ RUN luaotfload-tool --update || echo "luaotfload-tool did not succeed, skipping.
 
 # Make our class file available for the entire latex/TeXLive installation, see also
 # https://tex.stackexchange.com/a/1138/120853
-COPY acp.cls /home/${USER}/texmf/tex/latex/acp.cls
+COPY acp.cls /home/${USER}/texmf/tex/latex/
 
 USER root
 # Give back control to own user files; might be root-owned from previous copying processes
