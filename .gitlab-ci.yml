@@ -26,7 +26,7 @@ default:
     # example:
     # https://collaborating.tuhh.de/alex/latex-cookbook/-/jobs/553678
     # with its "ERROR: Job failed: failed to pull image".
-    # There is nothing that can currently be done except for retrying (see 
+    # There is nothing that can currently be done except for retrying (see
     # Ticket#2022010509000459 from servicedesk).
     # Having to retry has been an issue in the past too, see also
     # https://collaborating.tuhh.de/alex/latex-cookbook/-/commit/f9dc86b1b40ec9626d9bcfc027e8e466b5348ba0
