@@ -1,14 +1,12 @@
 [tool.poetry]
 name = "tests"
-version = "3.1.0"
+version = "4.0.0"
 description = "Checks for PDFs."
 authors = ["Alex Povel <alex.povel@tuhh.de>"]
 
 [tool.poetry.dependencies]
-python = "3.7.9"
-pymupdf = "1.18.2"
-profanity-check = "1.0.3"
-scikit-learn = "0.20.2"
+python = "^3.10"
+pymupdf = "^1.19.0"
 pytest = "^6.1.2"
 PyYAML = "^5.3.1"
 python-dateutil = "^2.8.1"

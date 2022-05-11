@@ -15,7 +15,6 @@ Idea from: https://blog.martisak.se/2020/05/16/latex-test-cases/
 import math
 from collections import namedtuple
 from datetime import datetime as dt
-from itertools import compress
 from pathlib import Path
 from typing import List
 from warnings import warn
@@ -25,7 +24,6 @@ import pytest
 import yaml  # PyYAML
 from dateutil.parser import parse as parse_date
 from papersize import parse_papersize
-from profanity_check import predict
 
 from tests.utils import (
     fix_tzoffset,
@@ -60,22 +58,6 @@ def pdf(request):  # HAS to be named 'request'
     doc.close()
 
 
-def test_profanity(pdf, config):
-    if config["content"]["profanity_allowed"]:
-        pytest.skip("Profanity is allowed, ignoring test.")
-    for page in pdf:
-        lines = page.text.splitlines()
-        if lines:
-            predictions = predict(lines)  # exception raised if argument empty
-            # Compressing loses information on line number. Not too bad because that is
-            # imprecise anyway, page number should be enough.
-            # Cast to list because iterator evaluates to True even if empty.
-            profanities = list(compress(lines, predictions))
-            assert (
-                not profanities
-            ), f"Profanities {profanities} found on page {page.number + 1}!"
-
-
 def test_page_numbers(pdf, config):
     """Tests that number of pages is within limits.
 
@@ -94,9 +76,7 @@ def test_page_numbers(pdf, config):
     assert n_min <= n <= n_max, msg
 
 
-@pytest.mark.skip(
-    reason="README doesn't have bookmarks, but no one cares."
-)
+@pytest.mark.skip(reason="README doesn't have bookmarks, but no one cares.")
 def test_bookmarks(pdf, config):
     """Checks if a table of contents (ToC) is present."""
     bookmarks = config["file"]["bookmarks"]
