@@ -71,7 +71,7 @@ default:
     stage: test
     # Would be ideal to read the image tag from `pyproject.toml`, i.e. the poetry project
     # file. See also: https://gitlab.com/gitlab-org/gitlab/-/issues/34202#note_444271649.
-    image: python:3.7.9
+    image: python:3.10
     variables:
         PIP_DOWNLOAD_DIR: ".pip"
     before_script:
