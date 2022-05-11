@@ -53,7 +53,7 @@ If it does, `poetry` will complain to you accordingly.
 In such a case, [`pyenv`](https://github.com/pyenv/pyenv) has worked well for me to set
 up a suitable, local or system-wide Python interpreter of *any* desired version.
 
-The [setup for the CI pipeline](../.gitlab-ci.yml) is quite different.
+The setup for the CI pipeline (GitHub Actions) is quite different.
 Take a look if you like, but the steps there are not applicable to local usage.
 
 ## Running

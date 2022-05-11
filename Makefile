@@ -15,8 +15,8 @@
 # `make file.pdf` *both locally and in CI*.
 # Without make, we would otherwise have very different build steps in local and CI
 # environments.
-# Additionally, using `make`, the CI instructions (.gitlab-ci.yml) can be simplified
-# considerably, leading to decoupling.
+# Additionally, using `make`, the CI instructions (.gitlab-ci.yml, GitHub actions etc.)
+# can be simplified considerably, leading to decoupling.
 # Moving CI systems then becomes much easier.
 
 
@@ -65,6 +65,9 @@ PANDOC_FLAGS = --defaults=pandoc/defaults.yaml
 # See also:
 # https://www.gnu.org/software/make/manual/html_node/Conditional-Syntax.html#Conditional-Syntax
 # https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+#
+# That same environment variable is defined for GitHub Actions as well:
+# https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
 ifdef CI
 	# In container, run commands directly:
 	LATEXMK = latexmk

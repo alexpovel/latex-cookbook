@@ -1,19 +1,10 @@
-# This file tells platforms like GitLab how to treat certain files, e.g.
-# for syntax highlighting.
-
-# GitLab uses the Rouge Ruby gem; for available languages, see:
-# https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers
-
 # bib -> latex does not help much, since it is also not valid latex, but at
 # least highlights comments (%) correctly
 *.bib linguist-language=latex
-*.bib gitlab-language=latex
 
 # Bash is wrong, it is really a plain-text file.
-# However, it gets us comment highlighting (hiding/grey)
-# and is close enough.
+# However, it gets us comment highlighting (hiding/grey) and is close enough.
 *.profile linguist-language=bash
-*.profile gitlab-language=bash
 
 # Do not include git config files in archives (e.g. when downloading as ZIP):
 .git* export-ignore
