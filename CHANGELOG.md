@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0] - 2022-05-11
+
+### Added
+
+- GitHub Actions configuration (b847c85)
+
+  This is supposed to replace the GitLab config.
+
+### Changed
+
+- GitLab references to point to GitHub instead (7a33ee3)
+- Updated Python test suite from 3.7 to 3.10 (0733c83)
+- Simplified `polyglossia` language loading (053b87d)
+- Switched VSCode Remote Containers config from building to downloading image (4efd364).
+
+  When new users first use this template, it is extremely frustrating for them to have to *build* the entire Docker image from scratch themselves, which can take very long.
+  Simply download the existing one from DockerHub, which is much faster.
+
+### Removed
+
+- GitLab-specific content (config files, documentation, ...) (7a33ee3)
+- Deprecated `chemmacros` `usechemmodule` macro (0909097)
+- Profanity check in PDF test (0733c83)
+
 ## [4.0.0] - 2021-10-18
 
 ### Added
