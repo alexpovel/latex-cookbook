@@ -1,0 +1,46 @@
+name: Building and testing
+on: [push]
+jobs:
+  building:
+    runs-on: ubuntu-latest
+    container:
+      image: alexpovel/latex
+      # Need root, otherwise this exact issue occurs:
+      # https://github.community/t/permission-problems-when-checking-out-code-as-part-of-github-action/202263
+      options: --user root
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Run preflight checks
+        run: make preflight
+      - name: Build all LaTeX PDFs
+        run: make tex
+      - name: Build README PDF
+        run: make README.pdf
+      - name: Archive compilation artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: pdfs
+          path: ./*.pdf
+          if-no-files-found: error
+  testing:
+    needs: building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+      - name: Install Python dependencies
+        working-directory: ./tests  # Needs to find pyproject.toml file
+        run: poetry install
+      - name: Test the suite itself
+        run: make test-self
+      - uses: actions/download-artifact@v3
+        with:
+          name: pdfs  # Specify name, else it'll be downloaded to a subdirectory
+      - name: Test generated PDFs
+        run: make test-pdfs
