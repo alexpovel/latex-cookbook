@@ -91,30 +91,10 @@ make test-self
 make test-pdfs
 ```
 
-## Troubleshooting
-
-- This project uses [`profanity-check`](https://pypi.org/project/profanity-check/).
-  For now, mainly just for fun, but perhaps it can be useful in the future.
-  That package makes heavy use of *ARTIFICIAL INTELLIGENCE™*.
-  As a result, it seems to be more sensitive about what dependencies it requires.
-  Due to [this issue](https://github.com/vzhou842/profanity-check/issues/15), this
-  project is using Python 3.7 for the time being.
-
-### Side note
+## Side note
 
 Sadly, an inherent issue is that [PDF parsing/text extraction](https://news.ycombinator.com/item?id=22473263)
 is incredibly hard.
 Visually, PDFs might look fine to human eyes, but trying to tell a computer, in an
 automated fashion, what *it* sees and have it parse that correctly is as of today
 basically impossible.
-
-This is also the reason for the hardship of converting back and forth between document
-formats.
-Converting *to* PDF works beautifully all the time.
-It is the way to go (please stop emailing Word documents for simple, to-be-read-only
-documents: use PDF).
-However, trying to read a PDF into Word will break a lot of the content.
-This is true even for the most modern tools like Office 2019 with an Acrobat Pro 2020
-"backend", where there's arguably a *lot* of genuine business demand (and therefore, $$)
-for such a feature.
-Still, no dice yet.
