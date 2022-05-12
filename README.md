@@ -20,7 +20,7 @@ The following is simply a brief overview of the features contained in this repo.
 
     If you open this repository in [Visual Studio Code](https://code.visualstudio.com/), it should automatically put you into the correct Docker container environment for development, and just work™.
     See [here](.devcontainer/README.md) for more info.
-  - in the image, [`pandoc`](https://pandoc.org/) is available with the [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) template, allowing beautiful PDFs to be generated from Markdown (like this README)
+  - in the image, [`pandoc`](https://pandoc.org/) is available with the [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) template, allowing beautiful PDFs to be generated from Markdown (like this README: download it from the latest [Actions artifacts](https://github.com/alexpovel/latex-cookbook/actions); it currently looks lackluster because this README is mainly PNGs)
 - [tests](tests/config.yml) for your PDF, using Python to ensure some (basic) properties of your output adhere to expectations
 - a [Makefile](Makefile) to facilitate ease of use and platform independence (commands like `make file.pdf` work locally as well as in CI pipelines)
 
