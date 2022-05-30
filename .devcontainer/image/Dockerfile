@@ -20,65 +20,65 @@ FROM ${BASE_OS}:${OS_VERSION} as base
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
-        # wget for `install-tl` script to download TeXLive, and other downloads.
-        wget \
-        # In a similar vein, `curl` is required by various tools, or is just very
-        # nice to have for various scripting tasks.
-        curl \
-        # wget/install-tl requires capability to check certificate validity.
-        # Without this, executing `install-tl` fails with:
-        #
-        # install-tl: TLPDB::from_file could not initialize from: https://<mirror>/pub/ctan/systems/texlive/tlnet/tlpkg/texlive.tlpdb
-        # install-tl: Maybe the repository setting should be changed.
-        # install-tl: More info: https://tug.org/texlive/acquire.html
-        #
-        # Using `install-tl -v`, found out that mirrors use HTTPS, for which the
-        # underlying `wget` (as used by `install-tl`) returns:
-        #
-        # ERROR: The certificate of '<mirror>' is not trusted.
-        # ERROR: The certificate of '<mirror>' doesn't have a known issuer.
-        #
-        # This is resolved by installing:
-        ca-certificates \
-        # Update Perl, otherwise: "Can't locate Pod/Usage.pm in @INC" in install-tl
-        # script; Perl is already installed, but do not use `upgrade`, see
-        # https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
-        perl \
-        # Install `latexindent` Perl dependencies.
-        # Found these using this method: https://unix.stackexchange.com/a/506964/374985
-        # List of `latexindent` dependencies is here:
-        # https://latexindentpl.readthedocs.io/en/latest/appendices.html#linux,
-        # see also the helper script at
-        # https://github.com/cmhughes/latexindent.pl/blob/master/helper-scripts/latexindent-module-installer.pl
-        #
-        # Installing via Debian system packages because installing the modules via
-        # `cpanm` requires `gcc` and I wanted to avoid installing that (~200MB).
-        #
-        # YAML::Tiny:
-        libyaml-tiny-perl \
-        # File::HomeDir:
-        libfile-homedir-perl \
-        # Unicode:GCString:
-        libunicode-linebreak-perl \
-        # Log::Log4perl:
-        liblog-log4perl-perl \
-        # Log::Dispatch:
-        liblog-dispatch-perl \
-        # Usually, `latexmk` is THE tool to use to automate, in a `make`-like style,
-        # LaTeX (PDF) file generation. However, if that is not enough, the following
-        # will fill the gaps and cover all other use cases:
-        make \
-        # Get `envsubst` to replace environment variables in files with their actual
-        # values.
-        gettext-base \
-        # Using the LaTeX package `minted` for syntax highlighting of source code
-        # snippets. It's much more powerful than the alternative `listings` (which is
-        # pure TeX: no outside dependencies but limited functionality) but requires
-        # Python's `pygments` package:
-        python3 \
-        python3-pygments \
-        # Required to embed git metadata into PDF from within Docker container:
-        git
+    # wget for `install-tl` script to download TeXLive, and other downloads.
+    wget \
+    # In a similar vein, `curl` is required by various tools, or is just very
+    # nice to have for various scripting tasks.
+    curl \
+    # wget/install-tl requires capability to check certificate validity.
+    # Without this, executing `install-tl` fails with:
+    #
+    # install-tl: TLPDB::from_file could not initialize from: https://<mirror>/pub/ctan/systems/texlive/tlnet/tlpkg/texlive.tlpdb
+    # install-tl: Maybe the repository setting should be changed.
+    # install-tl: More info: https://tug.org/texlive/acquire.html
+    #
+    # Using `install-tl -v`, found out that mirrors use HTTPS, for which the
+    # underlying `wget` (as used by `install-tl`) returns:
+    #
+    # ERROR: The certificate of '<mirror>' is not trusted.
+    # ERROR: The certificate of '<mirror>' doesn't have a known issuer.
+    #
+    # This is resolved by installing:
+    ca-certificates \
+    # Update Perl, otherwise: "Can't locate Pod/Usage.pm in @INC" in install-tl
+    # script; Perl is already installed, but do not use `upgrade`, see
+    # https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
+    perl \
+    # Install `latexindent` Perl dependencies.
+    # Found these using this method: https://unix.stackexchange.com/a/506964/374985
+    # List of `latexindent` dependencies is here:
+    # https://latexindentpl.readthedocs.io/en/latest/appendices.html#linux,
+    # see also the helper script at
+    # https://github.com/cmhughes/latexindent.pl/blob/master/helper-scripts/latexindent-module-installer.pl
+    #
+    # Installing via Debian system packages because installing the modules via
+    # `cpanm` requires `gcc` and I wanted to avoid installing that (~200MB).
+    #
+    # YAML::Tiny:
+    libyaml-tiny-perl \
+    # File::HomeDir:
+    libfile-homedir-perl \
+    # Unicode:GCString:
+    libunicode-linebreak-perl \
+    # Log::Log4perl:
+    liblog-log4perl-perl \
+    # Log::Dispatch:
+    liblog-dispatch-perl \
+    # Usually, `latexmk` is THE tool to use to automate, in a `make`-like style,
+    # LaTeX (PDF) file generation. However, if that is not enough, the following
+    # will fill the gaps and cover all other use cases:
+    make \
+    # Get `envsubst` to replace environment variables in files with their actual
+    # values.
+    gettext-base \
+    # Using the LaTeX package `minted` for syntax highlighting of source code
+    # snippets. It's much more powerful than the alternative `listings` (which is
+    # pure TeX: no outside dependencies but limited functionality) but requires
+    # Python's `pygments` package:
+    python3 \
+    python3-pygments \
+    # Required to embed git metadata into PDF from within Docker container:
+    git
 
 # The `minted` LaTeX package provides syntax highlighting using the Python `pygmentize`
 # package. That package also installs a callable script, which `minted` uses, see
