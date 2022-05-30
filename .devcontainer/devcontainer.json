@@ -3,7 +3,8 @@
     // Instead of *building* the accompanying Dockerfile and its whole context, like:
     //
     // "build": {
-    //     "dockerfile": "image/Dockerfile",
+    //     "context": "..",
+    //     "dockerfile": "image/Dockerfile"
     // },
     //
     // simply download the prepared image the author has already uploaded, based on

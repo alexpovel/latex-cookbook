@@ -29,7 +29,7 @@
 # The following are "special targets", see:
 # https://www.gnu.org/software/make/manual/html_node/Special-Targets.html#Special-Targets
 # A phony target: not a file, just some routine.
-.PHONY: all clean mostlyclean clean-aux clean-pdf tex preflight help
+.PHONY: all clean mostlyclean clean-aux clean-pdf tex preflight help image
 
 # =====================================================================================
 # Helper tool, adjusted from:
@@ -164,6 +164,13 @@ preflight:  # Performs checks to ensure prerequisites for compilation are met.
 	@echo "Libraries OK."
 # Output looks like: https://tex.stackexchange.com/a/311753/120853
 	@$(LATEXMK) --commands
+
+# =====================================================================================
+# Docker
+# =====================================================================================
+
+image: ./.devcontainer/image/Dockerfile
+	@docker build --tag alexpovel/latex:local --file $< .
 
 # =====================================================================================
 # Testing.

@@ -12,6 +12,8 @@ ARG OS_VERSION="testing"
 # For available years, see ftp://tug.org/historic/systems/texlive/ .
 ARG TL_VERSION="latest"
 
+ARG _BUILD_CONTEXT_PREFIX=".devcontainer/image/"
+
 # Image with layers as used by all succeeding steps
 FROM ${BASE_OS}:${OS_VERSION} as base
 
@@ -121,12 +123,13 @@ FROM base as downloads
 
 # Renew (https://stackoverflow.com/a/53682110):
 ARG TL_VERSION
+ARG _BUILD_CONTEXT_PREFIX
 
 ARG TL_INSTALL_ARCHIVE="install-tl-unx.tar.gz"
 ARG EISVOGEL_ARCHIVE="Eisvogel.tar.gz"
 ARG INSTALL_TL_DIR="install-tl"
 
-COPY texlive.sh .
+COPY ./${_BUILD_CONTEXT_PREFIX}/texlive.sh .
 
 RUN \
     # Get appropriate installer for the TeXLive version to be installed:
@@ -151,6 +154,7 @@ FROM base as main
 
 # Renew (https://stackoverflow.com/a/53682110):
 ARG TL_VERSION
+ARG _BUILD_CONTEXT_PREFIX
 
 ARG TL_PROFILE="texlive.profile"
 # Auxiliary, intermediate file:
@@ -204,7 +208,7 @@ ARG INSTALL_DIR="/install"
 WORKDIR ${INSTALL_DIR}
 
 # Copy custom file containing TeXLive installation instructions
-COPY config/${TL_PROFILE} ${TMP_TL_PROFILE}
+COPY ${_BUILD_CONTEXT_PREFIX}/config/${TL_PROFILE} ${TMP_TL_PROFILE}
 COPY --from=downloads /install-tl/ /texlive.sh ./
 
 # Move to where pandoc looks for templates, see https://pandoc.org/MANUAL.html#option--data-dir
@@ -212,7 +216,7 @@ COPY --from=downloads /eisvogel.latex /home/${USER}/.pandoc/templates/
 
 # Global wget config file, see the comments in that file for more info and the rationale.
 # Location of that file depends on system, e.g.: https://askubuntu.com/a/368050
-COPY config/.wgetrc /etc/wgetrc
+COPY ${_BUILD_CONTEXT_PREFIX}/config/.wgetrc /etc/wgetrc
 
 # "In-place" `envsubst` run is a bit more involved, see also:
 # https://stackoverflow.com/q/35078753/11477374.
