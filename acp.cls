@@ -1360,6 +1360,13 @@
     groupplots,
 }%
 
+% Define tikzstyles for the Flow Chart
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=40mm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [ellipse, minimum width=35mm, minimum height=10mm,text width=35mm,text centered,inner xsep=-1ex, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=40mm, minimum height=1cm, text centered, text width=40mm, draw=black, fill=orange!30]
+\tikzstyle{decision} = [signal, signal to=east and west,minimum width=40mm, minimum height=1cm,text width=40mm,text centered,inner xsep=-1ex, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Colour Cycle for plots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
