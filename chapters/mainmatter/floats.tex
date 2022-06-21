@@ -709,6 +709,42 @@ Note that the package is stand\-/alone, but uses \idx{tikz} under the hood
     }
 \end{figure}
 
+\subsection{Flowcharts}
+
+Drawing flowcharts is possible with Tikz. An example can be found in \cref{fig:flowchart_example}. The style definitions for the nodes can be found in the
+acp.cls.
+
+\begin{figure}
+    \ffigbox[\FBwidth]{
+        \caption{Example for a Flowchart}
+        \label{fig:flowchart_example}
+    }{%
+        \footnotesize
+        \begin{tikzpicture}[node distance=1cm]
+            
+            \node (start) [startstop] {Start};
+            \node (in1) [io, below=of start] {Input};
+            \node (pro1) [process, below=of in1] {Process 1};
+            \node (dec1) [decision, below=of pro1] {Decision 1};
+            \node (pro2a) [process, below=of dec1] {Process 2a text text text text text text text text text text};
+            \node (pro2b) [process, right=of dec1] {Process 2b};
+            \node (out1) [io, below=of pro2a] {Output};
+            \node (stop) [startstop, below=of out1] {Stop};
+            
+            \draw [arrow] (start) -- (in1);
+            \draw [arrow] (in1) -- (pro1);
+            \draw [arrow] (pro1) -- (dec1);
+            \draw [arrow] (pro1.west) -| ++(-0.5,0) node[anchor=east] {Maybe} |- (pro2a.west);
+            \draw [arrow] (dec1) -- node[anchor=east] {yes} (pro2a);
+            \draw [arrow] (dec1) -- node[anchor=south] {no} (pro2b);
+            \draw [arrow] (pro2b) |- (pro1);
+            \draw [arrow] (pro2a) -- (out1);
+            \draw [arrow] (out1) -- (stop);
+            
+        \end{tikzpicture}
+    }
+\end{figure}
+
 \subsection{Plotting}
 
 If you rely on tools like \texttt{matlab2tikz}, this is for you.
