@@ -424,6 +424,8 @@
         name=\TransListing{},
         listname=\TransListOfListings{},
     }
+    % Create a new environment for breaking code listings across pages.
+    \newenvironment{longlisting}{\captionsetup{type=listing}}{}
     % Setup for referencing the floats correctly is done in `cleveref` settings!
 
     % In code environments, to be able to copy from the PDF (despite that not being a good
