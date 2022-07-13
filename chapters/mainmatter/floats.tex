@@ -722,7 +722,7 @@ The style definitions for the nodes can be found in the class file.
     }{%
         \footnotesize
         \begin{tikzpicture}[node distance=1cm]
-            
+
             \node (start) [startstop] {Start};
             \node (in1) [io, below=of start] {Input};
             \node (pro1) [process, below=of in1] {Process 1};
@@ -731,7 +731,7 @@ The style definitions for the nodes can be found in the class file.
             \node (pro2b) [process, right=of dec1] {Process 2b};
             \node (out1) [io, below=of pro2a] {Output};
             \node (stop) [startstop, below=of out1] {Stop};
-            
+
             \draw [arrow] (start) -- (in1);
             \draw [arrow] (in1) -- (pro1);
             \draw [arrow] (pro1) -- (dec1);
@@ -741,7 +741,7 @@ The style definitions for the nodes can be found in the class file.
             \draw [arrow] (pro2b) |- (pro1);
             \draw [arrow] (pro2a) -- (out1);
             \draw [arrow] (out1) -- (stop);
-            
+
         \end{tikzpicture}
     }
 \end{figure}
