@@ -1,15 +1,15 @@
 {
     "latex-workshop.latex.recipes": [
         {
-            "name": "lualatex",
-            "tools": [
-                "lualatex"
-            ]
-        },
-        {
             "name": "latexmk",
             "tools": [
                 "latexmk"
+            ]
+        },
+        {
+            "name": "lualatex",
+            "tools": [
+                "lualatex"
             ]
         }
     ],
@@ -34,7 +34,7 @@
             ]
         }
     ],
-    "latex-workshop.latex.recipe.default": "lastUsed",
+    "latex-workshop.latex.recipe.default": "first",
     "latex-workshop.linting.chktex.enabled": true,
     "latex-workshop.linting.run": "onSave",
     "latex-workshop.latex.autoBuild.run": "never",
