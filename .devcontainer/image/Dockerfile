@@ -81,6 +81,9 @@ RUN apt-get update && \
     python3-pygments \
     # Required to embed git metadata into PDF from within Docker container:
     git
+    # Required to use pdfunite for merging PDF files. Ghostscript is causing
+    # trouble with Mozilla Firefox's PDF Reader.
+    poppler-utils
 
 # The `minted` LaTeX package provides syntax highlighting using the Python `pygmentize`
 # package. That package also installs a callable script, which `minted` uses, see
