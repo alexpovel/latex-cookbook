@@ -251,14 +251,14 @@ files = [
 
 [[package]]
 name = "papersize"
-version = "1.2.0"
+version = "1.3.0"
 description = "Paper size related tools"
 category = "main"
 optional = false
 python-versions = "<4,>=3.7"
 files = [
-    {file = "papersize-1.2.0-py3-none-any.whl", hash = "sha256:0a76d2188502518ffb2c06a0f2f7b5aa43265e8e692c9edd8eafd4a9eeac6d8f"},
-    {file = "papersize-1.2.0.tar.gz", hash = "sha256:5a2d3a206f5e7ce62fd14fff2442b21520b5c214630c3387d8c561bb9625fbcb"},
+    {file = "papersize-1.3.0-py3-none-any.whl", hash = "sha256:52651ddf156239d528bee9db4fb95fe13742941d0213d32e7439bd2d52d6b25f"},
+    {file = "papersize-1.3.0.tar.gz", hash = "sha256:39ff6a5a6d3869c5d62a64b642eedf930023b5b9b2162ce9bc12d045a60bca89"},
 ]
 
 [[package]]
@@ -592,4 +592,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "d8888fa69d44430eee433349b5ef485dc99886f615b408227f9081bb8ef173e2"
+content-hash = "822e1095ec56d07693280d2f607e1bdfe0f5b97974dbed30f5452c86f15737ec"
