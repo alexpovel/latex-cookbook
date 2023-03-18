@@ -19,21 +19,24 @@
     //   Recourse: simply change the below to use the *local image temporarily*
     // - Upstream image on Docker Hub might not be the latest
     "image": "alexpovel/latex",
-    // Set *default* container specific settings.json values on container create.
-    "settings": {
-        "terminal.integrated.defaultProfile.linux": "bash"
+    "customizations": {
+        "vscode": {
+            // Set *default* container specific settings.json values on container create.
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            // Browse for extensions here: https://marketplace.visualstudio.com/
+            // then look for 'Unique Identifier' on the extension's page.
+            "extensions": [
+                "James-Yu.latex-workshop",
+                "streetsidesoftware.code-spell-checker",
+                "streetsidesoftware.code-spell-checker-german"
+            ]
+        }
     },
-    // Add the IDs of extensions you want installed when the container is created.
-    // Browse for extensions here: https://marketplace.visualstudio.com/
-    // then look for 'Unique Identifier' on the extension's page.
-    "extensions": [
-        "James-Yu.latex-workshop",
-        "streetsidesoftware.code-spell-checker",
-        "streetsidesoftware.code-spell-checker-german"
-    ],
     "containerEnv": {
-        // Inside the container, we want to compile like we are in CI, hence define this
-        // variable. It's important for the Makefile to select the correct behaviour.
+        // Inside the container, act as though we're in CI. Important for the Makefile.
         "CI": "true",
         // The base image has this locale:
         //     $ docker run --rm --entrypoint="locale" alexpovel/latex
@@ -85,5 +88,5 @@
         // This leads to `lualatex` erroring out, see also https://tex.stackexchange.com/q/374303/120853
         // Using "POSIX" is possible and brings us back to vanilla container locale:
         "LC_ALL": "POSIX"
-    },
+    }
 }
