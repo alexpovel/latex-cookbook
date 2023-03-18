@@ -167,8 +167,9 @@ ARG TMP_TL_PROFILE="${TL_PROFILE}.tmp"
 # Put as early as possible in Dockerfile since this should rarely change (cache-friendly)
 RUN apt-get update && \
     apt-get install --yes --no-install-recommends \
-    # headless, 25% of normal size:
-    default-jre-headless \
+    # cannot use `default-jre-headless` version (25% of normal size), see
+    # https://github.com/alexpovel/latex-cookbook/issues/17
+    default-jre \
     # No headless inkscape available currently:
     inkscape \
     # nox (no X Window System): CLI version, 10% of normal size:
