@@ -13,7 +13,7 @@ python-dateutil = "^2.8.1"
 PaperSize = "^1.3.0"
 
 [tool.poetry.dev-dependencies]
-ipython = "^8.11.0"
+ipython = "^8.13.2"
 black = "^23.3"
 
 [build-system]
