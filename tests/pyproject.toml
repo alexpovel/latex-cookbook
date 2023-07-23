@@ -6,7 +6,7 @@ authors = ["Alex Povel <alex.povel@tuhh.de>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pymupdf = "^1.19.0"
+pymupdf = "^1.22.5"
 pytest = "^7.4.0"
 PyYAML = "^6.0"
 python-dateutil = "^2.8.1"
