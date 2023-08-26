@@ -7,6 +7,58 @@ The resulting PDF covers LaTeX-specific topics and instructions on compiling the
 
 See the [releases page](https://github.com/alexpovel/latex-cookbook/releases) for more downloads.
 
+> [!IMPORTANT]
+> This project is not archived, and [issues are still
+> addressed](https://github.com/alexpovel/latex-cookbook/issues/17). However, the
+> document is regarded as "done" and no new feature development actively happens. As LaTeX is a glacially slow-moving target, the document
+> should be useful, valid and buildable for many years to come still.
+>
+> There is a [fork
+> maintained](https://collaborating.tuhh.de/m21/public/theses/itt-latex-template) by
+> former coworkers of the author, at the research institute this template originated
+> from as well. Active development is still happening there.
+
+## Getting started
+
+After installing [Docker](https://www.docker.com/) (and git), building works out of the
+box:
+
+- Bash:
+
+  ```console
+  $ git clone git@github.com:alexpovel/latex-cookbook.git
+  $ cd latex-cookbook
+  $ docker run --rm --volume $(pwd):/tex alexpovel/latex
+  $ xdg-open cookbook.pdf
+  ```
+
+- PowerShell:
+
+  ```powershell
+  PS> git clone git@github.com:alexpovel/latex-cookbook.git
+  PS> cd latex-cookbook
+  PS> docker run --rm --volume ${PWD}:/tex alexpovel/latex
+  PS> Invoke-Item cookbook.pdf
+  ```
+
+The [entrypoint](https://docs.docker.com/engine/reference/builder/#entrypoint) is
+[`latexmk`](https://ctan.org/pkg/latexmk?lang=en), which when given no arguments (as
+done here) runs on all found `*.tex` files, which in this case is only the root's [main
+file](./cookbook.tex).
+
+> [!NOTE]
+> Should this fail to compile (this is a bug, please report!), feel free to try other
+> images. When `alexpovel/latex` was built,
+> [`texlive/texlive`](https://hub.docker.com/r/texlive/texlive) did not exist yet.
+> **That image is strongly recommended**, as it is actively maintained by the actual
+> authors of TeXLive. If tools are missing, like `inkscape`, build your own image `FROM
+> texlive/texlive`, then install required software.
+>
+> Alternatively, there is [a
+> fork](https://collaborating.tuhh.de/m21/public/theses/latex_dockerfile) for the image
+> as well, accompanying the [template
+> fork](https://collaborating.tuhh.de/m21/public/theses/itt-latex-template).
+
 ## Features
 
 The [PDF itself][download] has much more to say on this and is meant to speak for itself, visually.
