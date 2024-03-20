@@ -14,7 +14,7 @@ PaperSize = "^1.3.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "^8.14.0"
-black = "^23.7"
+black = "^24.3"
 
 [build-system]
 requires = ["poetry>=0.12"]
