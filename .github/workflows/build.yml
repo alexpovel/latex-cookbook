@@ -10,7 +10,7 @@ jobs:
       options: --user root
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Run preflight checks
         run: make preflight
       - name: Build all LaTeX PDFs
@@ -18,7 +18,7 @@ jobs:
       - name: Build README PDF
         run: make README.pdf
       - name: Archive compilation artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: pdfs
           path: ./*.pdf
@@ -27,20 +27,25 @@ jobs:
     needs: building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
-      - uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: false
+          python-version: "3.14"
+          cache: "pip"
       - name: Install Python dependencies
-        working-directory: ./tests  # Needs to find pyproject.toml file
-        run: poetry install
+        working-directory: ./tests # Needs to find pyproject.toml file
+        run: >
+          python -m venv .venv
+          && . .venv/bin/activate
+          && pip install .
       - name: Test the suite itself
-        run: make test-self
-      - uses: actions/download-artifact@v3
+        run: >
+          . .venv/bin/activate
+          && make test-self
+      - uses: actions/download-artifact@v8
         with:
-          name: pdfs  # Specify name, else it'll be downloaded to a subdirectory
+          name: pdfs # Specify name, else it'll be downloaded to a subdirectory
       - name: Test generated PDFs
-        run: make test-pdfs
+        run: >
+          . .venv/bin/activate
+          && make test-pdfs

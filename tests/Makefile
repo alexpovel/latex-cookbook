@@ -5,7 +5,7 @@ SELF_DIR = $(dir $(lastword $(MAKEFILE_LIST)))
 
 # No Docker image available for this yet. Refer to the CI config to configure this for
 # local use.
-TEST = poetry run pytest
+TEST = pytest
 TESTS_DIR = tests
 
 .PHONY: test test-self test-pdfs

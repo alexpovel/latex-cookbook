@@ -16,61 +16,23 @@ and iterate much faster.
 
 ## Setup
 
-There are two steps to this.
-This is unfortunately not as easy as it could be, owed to the nature of Python's
-ecosystem.
-
-### Python dependencies
-
-The project uses [poetry](https://python-poetry.org/docs/#installation) for dependency
-management.
-Once you have it installed according to their documentation, it is very easy to pull in
-the dependencies of this project.
-In the directory containing [the `poetry` config file](pyproject.toml), run
+Run
 
 ```bash
-poetry install
+python -m venv .venv
+. .venv/bin/activate
+pip install .
 ```
 
-This will pull the precise requirements needed from the [lock file](poetry.lock).
-Otherwise, it uses the config file.
-That's it... almost.
-
-### Python itself
-
-You will also need a suitable Python interpreter, aka Python version.
-This is "Python itself".
-If your system's Python *is* compatible with what is listed in the [config](pyproject.toml),
-you do not need to do anything.
-The easiest way to test this is to just run:
-
-```bash
-poetry run pytest
-```
-
-and see if it fails.
-If it does, `poetry` will complain to you accordingly.
-In such a case, [`pyenv`](https://github.com/pyenv/pyenv) has worked well for me to set
-up a suitable, local or system-wide Python interpreter of *any* desired version.
-
-The setup for the CI pipeline (GitHub Actions) is quite different.
-Take a look if you like, but the steps there are not applicable to local usage.
+in the directory containing [pyproject.toml](./pyproject.toml).
 
 ## Running
 
 After the setup, you can simply run:
 
 ```bash
-poetry run pytest
+pytest
 ```
-
-Prepending everything with `poetry run` will make sure all commands run in the suitable
-[virtual environment](https://docs.python.org/3/tutorial/venv.html) with the correct
-packages installed in the correct versions, as well as using the Python version set up
-using `pyenv`, if any.
-
-Any sub-commands or flags after `pytest` are courtesy of `pytest`, not `poetry`.
-There, you can for example specify which tests to run.
 
 ### Makefile
 
