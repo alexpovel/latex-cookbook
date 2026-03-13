@@ -7,7 +7,7 @@ from pathlib import Path
 _THIS_DIR = Path(__file__).parent
 
 # `resolve` gets rid of ".." representation, important for `relative_to` to work.
-_PROJECT_ROOT = (_THIS_DIR / ".." / "..").resolve()
+PROJECT_ROOT = (_THIS_DIR / ".." / "..").resolve()
 
 
 def parse_size(size: str) -> int:

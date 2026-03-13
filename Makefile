@@ -140,18 +140,19 @@ PANDOC_TEMPLATE_DIR = ~/.pandoc/templates
 	@$(PANDOC) $(PANDOC_FLAGS) --output=$@ $<
 
 EISVOGEL_ARCHIVE = Eisvogel.tar.gz
+EISVOGEL_VERSION = 3.4.0
 
 # The `$(info ...)` function gives out-of-order logging, while `echo` works with the
 # `wget` progress display.
 $(PANDOC_TEMPLATE_DIR)/$(PANDOC_TEMPLATE):
 	@echo "Template not found at $@, downloading..."
 	@wget --quiet --show-progress --no-clobber \
-		"https://github.com/Wandmalfarbe/pandoc-latex-template/releases/latest/download/${EISVOGEL_ARCHIVE}"
+		"https://github.com/Wandmalfarbe/pandoc-latex-template/releases/download/v${EISVOGEL_VERSION}/${EISVOGEL_ARCHIVE}"
 	@echo "Extracting $(EISVOGEL_ARCHIVE)..."
-	@tar --extract --file=${EISVOGEL_ARCHIVE} eisvogel.latex
+	@tar --extract --file=${EISVOGEL_ARCHIVE} Eisvogel-${EISVOGEL_VERSION}/eisvogel.latex
 # `$(@D)` is directory part of current target:
 	@mkdir --parents $(@D)
-	@mv eisvogel.latex $@
+	@mv "Eisvogel-${EISVOGEL_VERSION}/eisvogel.latex" $@
 	@$(RM) $(EISVOGEL_ARCHIVE)
 
 # =====================================================================================

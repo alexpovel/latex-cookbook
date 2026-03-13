@@ -3,7 +3,7 @@ See also: https://stackoverflow.com/q/34466027/11477374
 List of hooks: https://pytest.org/en/latest/reference.html#hook-reference
 """
 
-from tests.utils import _PROJECT_ROOT
+from tests.utils import PROJECT_ROOT
 
 
 def pytest_make_parametrize_id(config, val, argname):
@@ -18,7 +18,7 @@ def pytest_make_parametrize_id(config, val, argname):
     """
     try:
         # Shorten filepath significantly, in relation to project root.
-        val = val.relative_to(_PROJECT_ROOT)
+        val = val.relative_to(PROJECT_ROOT)
     except AttributeError:
         pass
     return str(val)

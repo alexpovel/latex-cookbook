@@ -151,6 +151,8 @@ cython_debug/
 # Only ignore root level PDF, since images/vectors might be in PDF format.
 /*.pdf
 
+Eisvogel*/
+
 # Testing environment
 testing.tex
 
