@@ -40,12 +40,12 @@ jobs:
           && pip install .
       - name: Test the suite itself
         run: >
-          . .venv/bin/activate
+          . ./tests/.venv/bin/activate
           && make test-self
       - uses: actions/download-artifact@v8
         with:
           name: pdfs # Specify name, else it'll be downloaded to a subdirectory
       - name: Test generated PDFs
         run: >
-          . .venv/bin/activate
+          . ./tests/.venv/bin/activate
           && make test-pdfs
